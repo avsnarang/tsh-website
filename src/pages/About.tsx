@@ -6,6 +6,7 @@ import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
 import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
+import { useSEO } from '../lib/seo';
 
 const campuses = [
   {
@@ -32,6 +33,12 @@ const campuses = [
 ];
 
 export default function About() {
+  useSEO({
+    title: "About Us | The Scholars' Home",
+    description: "Learn about The Scholars' Home's legacy of educational excellence since 2003. Discover our mission, vision, and commitment to nurturing future leaders.",
+    url: "https://tsh.edu.in/about"
+  });
+
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section */}

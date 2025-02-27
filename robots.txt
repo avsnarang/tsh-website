@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://tsh.edu.in/sitemap.xml
+
+# Disallow admin and private routes
+Disallow: /admin-portal/
+Disallow: /alumni/profile/

@@ -53,6 +53,12 @@ export default function NavLinks({ textColor, isMenuOpen }: NavLinksProps) {
             >
               What our Leaders Say
             </Link>
+            <Link 
+              to="/scholarship" 
+              className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
+            >
+              Scholarship
+            </Link>
           </div>
         )}
       </div>
@@ -98,6 +104,7 @@ export default function NavLinks({ textColor, isMenuOpen }: NavLinksProps) {
 
       {[
         { to: "/academics", text: "Academics" },
+        { to: "/scholarship", text: "Scholarship" },
         { to: "/co-curricular", text: "Co-curricular" },
         { to: "/alumni", text: "Alumni" },
         { to: "/invites", text: "Events" },

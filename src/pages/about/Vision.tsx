@@ -3,8 +3,15 @@ import Container from '../../components/ui/Container';
 import { Target, Compass, Star, Award } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
+import { useSEO } from '../../lib/seo';
 
 export default function Vision() {
+  useSEO({
+    title: "Vision & Mission | The Scholars' Home",
+    description: "Explore The Scholars' Home's vision and mission for educational excellence. Learn about our core values and strategic objectives for shaping tomorrow's leaders.",
+    url: "https://tsh.edu.in/about/vision"
+  });
+
   return (
     <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
       <Container>

@@ -1,8 +1,15 @@
 import React from 'react';
 import Container from '../../components/ui/Container';
 import { Brain, Heart, Star, Users, BookOpen } from 'lucide-react';
+import { useSEO } from '../../lib/seo';
 
 export default function SeniorSecondary() {
+  useSEO({
+    title: "Senior Secondary School | The Scholars' Home",
+    description: "Senior secondary education at The Scholars' Home. Specialized streams in Science, Commerce, and Humanities with expert faculty guidance.",
+    url: "https://tsh.edu.in/academics/senior-secondary"
+  });
+
   return (
     <div className="pt-32 pb-24">
       <Container>

@@ -142,7 +142,7 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
               </button>
             </div>
             <div className="prose prose-lg">
-              {selectedMessage.fullMessage.split('\n\n').map((paragraph, index) => (
+              {selectedMessage?.fullMessage?.split('\n\n').map((paragraph: string, index: number) => (
                 <TextReveal key={index} delay={0.2 + index * 0.1}>
                   <p className="text-neutral-dark/80 mb-4">
                     {paragraph}

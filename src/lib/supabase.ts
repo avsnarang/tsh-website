@@ -10,34 +10,42 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Create Supabase client with enhanced error handling
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    persistSession: true,
+    persistSession: true, // Keep user logged in after page refresh
     autoRefreshToken: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    storage: localStorage,
+    storageKey: 'tsh-auth-token',
+    flowType: 'pkce'
   },
   global: {
     fetch: async (...args) => {
       const maxRetries = 3;
       let lastError;
+      let attempt = 0;
 
-      for (let i = 0; i < maxRetries; i++) {
+      while (attempt < maxRetries) {
         try {
           const response = await fetch(...args);
           if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const error = new Error(`HTTP error! status: ${response.status}`);
+            console.error('Supabase request failed', {
+              url: args[0],
+              status: response.status,
+              body: await response.text()
+            });
+            throw error;
           }
           return response;
         } catch (err) {
           lastError = err;
-          // Only retry on network errors or 5xx server errors
-          const shouldRetry = err instanceof TypeError || 
-            (err instanceof Error && err.message.includes('status: 5'));
+          attempt++;
           
-          if (!shouldRetry || i === maxRetries - 1) {
+          if (attempt === maxRetries) {
             throw new Error('Failed to connect to database. Please try again later.');
           }
           
           // Exponential backoff
-          await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
         }
       }
       throw lastError;
@@ -50,6 +58,8 @@ supabase.auth.onAuthStateChange((event, session) => {
   if (event === 'SIGNED_OUT') {
     // Clear any cached data
     supabase.removeAllChannels();
+  } else if (event === 'TOKEN_REFRESHED') {
+    console.log('Auth token refreshed successfully');
   }
 });
 

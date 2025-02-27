@@ -9,6 +9,8 @@ import CampusAchievements from '../../components/campus/CampusAchievements';
 import LeadershipMessages from '../../components/campus/LeadershipMessages';
 import Container from '../../components/ui/Container';
 import { MapPin, Phone, Mail } from 'lucide-react';
+import { useSEO } from '../../lib/seo';
+import { generateCampusSchema } from '../../lib/schemas/campusSchema';
 
 // Convert URL parameter to campusInfo key format
 const getCampusKey = (urlParam: string): CampusKey | null => {
@@ -24,12 +26,26 @@ const getCampusKey = (urlParam: string): CampusKey | null => {
   }
 };
 
+const campusNames = {
+  'paonta-sahib': 'Paonta Sahib',
+  'juniors': 'Juniors',
+  'majra': 'Majra'
+};
+
 export default function CampusHome() {
   const { campus } = useParams<{ campus: string }>();
 
   const campusKey = campus ? getCampusKey(campus) : null;
   const info = campusKey ? campusInfo[campusKey] : null;
   const contact = campusKey ? contactInfo[campusKey] : null;
+
+  useSEO({
+    title: `${campusNames[campus as keyof typeof campusNames] || ''} Campus | The Scholars' Home`,
+    description: info?.description || "Explore our campus facilities, programs, and achievements. Join The Scholars' Home for excellence in education.",
+    url: `https://tsh.edu.in/campus/${campus}`,
+    image: info?.facilities[0]?.image || "https://tsh.edu.in/campus.jpg",
+    schema: info && campus ? generateCampusSchema(info, campus) : undefined
+  });
 
   if (!info || !contact) {
     return <Navigate to="/campuses" replace />;

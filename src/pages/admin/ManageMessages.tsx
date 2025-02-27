@@ -39,7 +39,7 @@ export default function ManageMessages() {
 
   useEffect(() => {
     if (!user) {
-      navigate('/admin-portal/login');
+      navigate('/admin/login');
       return;
     }
     fetchMessages();
@@ -224,7 +224,7 @@ export default function ManageMessages() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between gap-4 mb-8">
             <Link
-              to="/admin-portal/dashboard"
+              to="/admin/dashboard"
               className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -293,7 +293,7 @@ export default function ManageMessages() {
                       <div className="flex items-center gap-2">
                         <Button
                           onClick={() => handleEdit(message)}
-                          variant="outline"
+                          variant="edit"
                           className="flex items-center gap-2"
                         >
                           <Pencil className="h-4 w-4" />
@@ -301,8 +301,8 @@ export default function ManageMessages() {
                         </Button>
                         <Button
                           onClick={() => setShowDeleteConfirm(message.id)}
-                          variant="outline"
-                          className="flex items-center gap-2 text-red-500 hover:text-red-600 hover:border-red-500"
+                          variant="delete"
+                          className="flex items-center gap-2"
                         >
                           <Trash2 className="h-4 w-4" />
                           Delete
@@ -440,7 +440,7 @@ export default function ManageMessages() {
                     setEditingMessage(null);
                     resetForm();
                   }}
-                  variant="outline"
+                  variant="outline2"
                 >
                   Cancel
                 </Button>
@@ -466,7 +466,7 @@ export default function ManageMessages() {
             </p>
             <div className="flex justify-end gap-4">
               <Button
-                variant="outline"
+                variant="outline2"
                 onClick={() => setShowDeleteConfirm(null)}
               >
                 Cancel

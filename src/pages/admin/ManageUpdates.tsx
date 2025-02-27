@@ -116,7 +116,7 @@ export default function ManageUpdates() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between gap-4 mb-8">
             <Link
-              to="/admin-portal/dashboard"
+              to="/admin/dashboard"
               className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -243,7 +243,7 @@ export default function ManageUpdates() {
               <div className="flex justify-end gap-4">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="outline2"
                   onClick={() => {
                     setShowForm(false);
                     setEditingUpdate(null);

@@ -13,7 +13,7 @@ export default function AdminDashboard() {
   const handleSignOut = async () => {
     try {
       await signOut();
-      navigate('/admin-portal/login');
+      navigate('/admin/login');
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -33,8 +33,8 @@ export default function AdminDashboard() {
               </div>
               <Button
                 onClick={handleSignOut}
-                variant="outline"
-                className="flex items-center gap-2 text-red-500 hover:text-red-600 hover:border-red-500"
+                variant="delete"
+                className="flex items-center gap-2"
               >
                 <LogOut className="h-5 w-5" />
                 Sign Out
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <Link
-                  to="/admin-portal/testimonials"
+                  to="/admin/testimonials"
                   className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
                 >
                   <MessageSquare className="h-12 w-12 text-primary mb-4" />
@@ -62,7 +62,7 @@ export default function AdminDashboard() {
                 </Link>
 
                 <Link
-                  to="/admin-portal/gallery"
+                  to="/admin/gallery"
                   className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
                 >
                   <Image className="h-12 w-12 text-primary mb-4" />
@@ -73,7 +73,7 @@ export default function AdminDashboard() {
                 </Link>
 
                 <Link
-                  to="/admin-portal/messages"
+                  to="/admin/messages"
                   className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
                 >
                   <FileText className="h-12 w-12 text-primary mb-4" />
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <Link
-                  to="/admin-portal/events"
+                  to="/admin/events"
                   className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
                 >
                   <Calendar className="h-12 w-12 text-primary mb-4" />
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
                 </Link>
 
                 <Link
-                  to="/admin-portal/updates"
+                  to="/admin/updates"
                   className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
                 >
                   <Bell className="h-12 w-12 text-primary mb-4" />
@@ -115,13 +115,13 @@ export default function AdminDashboard() {
                 </Link>
 
                 <Link
-                  to="/admin-portal/students"
+                  to="/admin/students"
                   className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
                 >
                   <Users className="h-12 w-12 text-primary mb-4" />
-                  <h3 className="text-xl text-neutral-dark mb-2">Students</h3>
+                  <h3 className="text-xl text-neutral-dark mb-2">Student Data</h3>
                   <p className="text-neutral-dark/80">
-                    Manage student data and admission numbers
+                    Upload and manage student admission records
                   </p>
                 </Link>
               </div>

@@ -6,6 +6,7 @@ import { User, Briefcase, MapPin, GraduationCap, ArrowRight, Quote } from 'lucid
 import Title from '../../components/utils/Title';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
+import { useSEO } from '../../lib/seo';
 
 interface AlumniProfile {
   id: string;
@@ -22,6 +23,12 @@ export default function AlumniSuccess() {
   const [profiles, setProfiles] = useState<AlumniProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  useSEO({
+    title: "Alumni Success Stories | The Scholars' Home",
+    description: "Read inspiring success stories of The Scholars' Home alumni. Discover how our graduates are making their mark in various fields.",
+    url: "https://tsh.edu.in/alumni/success"
+  });
 
   useEffect(() => {
     fetchProfiles();

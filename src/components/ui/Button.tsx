@@ -1,8 +1,8 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'outline' | 'cta' | 'cta-green';
+interface ButtonProps extends Omit<HTMLMotionProps<"button">, "variant"> {
+  variant?: 'primary' | 'outline' | 'outline2' | 'cta' | 'cta-green' | 'download' | 'edit' | 'delete';
   children: React.ReactNode;
 }
 
@@ -25,9 +25,25 @@ export default function Button({ variant = 'primary', children, className = '', 
       hover:shadow-lg hover:shadow-orange/20
     `,
     outline: `
-      border-2 border-neutral-light text-neutral-light
-      hover:bg-neutral-light/10
-      hover:shadow-lg hover:shadow-neutral-light/20
+      bg-white/10 backdrop-blur-sm
+      border-2 border-white
+      text-white
+      hover:bg-white/20
+      hover:shadow-lg hover:shadow-white/20
+    `,
+    outline2: `
+      bg-white/10 backdrop-blur-sm
+      border-2 border-[#00501b]
+      text-[#00501b]
+      hover:bg-white/20
+      hover:shadow-lg hover:shadow-white/20
+    `,
+    redOutline: `
+      bg-white/10 backdrop-blur-sm
+      border-2 border-[#FF0000]
+      text-[#FF0000]
+      hover:bg-[B53737]
+      hover:shadow-lg hover:shadow-[B53737]/20
     `,
     cta: `
       bg-orange text-neutral-light
@@ -42,6 +58,21 @@ export default function Button({ variant = 'primary', children, className = '', 
       ring-2 ring-green/30
       hover:ring-4 hover:ring-green/50
       hover:shadow-[0_0_30px_rgba(0,80,27,0.6)]
+    `,
+    edit: `
+      bg-green text-neutral-light
+      hover:bg-green-dark
+      hover:shadow-lg hover:shadow-green/20
+    `,
+    delete: `
+      bg-[#FF0000] text-neutral-light
+      hover:bg-[#B53737]
+      hover:shadow-lg hover:shadow-red/20
+    `,
+    download: `
+      bg-[#A65A20] text-neutral-light
+      hover:bg-orange-dark
+      hover:shadow-lg hover:shadow-orange/20
     `
   };
 
@@ -100,11 +131,11 @@ export default function Button({ variant = 'primary', children, className = '', 
   }
 
   return (
-    <button 
+    <motion.button 
       className={`${baseStyles} ${variants[variant]} ${className}`}
       {...props}
     >
       {children}
-    </button>
+    </motion.button>
   );
 }

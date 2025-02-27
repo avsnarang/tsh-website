@@ -6,6 +6,7 @@ import Button from '../components/ui/Button';
 import Title from '../components/utils/Title';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
+import { useSEO } from '../lib/seo';
 
 const programs = [
   {
@@ -94,6 +95,12 @@ const stats = [
 
 export default function Academics() {
   const navigate = useNavigate();
+
+  useSEO({
+    title: "Academics | The Scholars' Home",
+    description: "Explore our comprehensive academic programs from pre-primary to senior secondary. CBSE curriculum with focus on holistic development and excellence.",
+    url: "https://tsh.edu.in/academics"
+  });
 
   return (
     <div className="min-h-screen bg-neutral-light">

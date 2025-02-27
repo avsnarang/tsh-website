@@ -39,8 +39,13 @@ export default function EventGallery() {
       const { data, error } = await supabase
         .from('gallery_events')
         .select(`
-          *,
-          gallery_images (
+          id,
+          title,
+          description,
+          date,
+          campus,
+          primary_image_id,
+          gallery_images!gallery_images_event_id_fkey (
             id,
             image_url,
             caption
@@ -112,19 +117,19 @@ export default function EventGallery() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
           {event.gallery_images.map((image, index) => (
             <div
               key={image.id}
-              className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+              className="group relative break-inside-avoid rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 inline-block w-full"
             >
               <img
                 src={image.image_url}
                 alt={image.caption || `${event.title} - Image ${index + 1}`}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
               />
               {image.caption && (
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-neutral-dark/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-neutral-dark/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
                   <p className="text-neutral-light">{image.caption}</p>
                 </div>
               )}
