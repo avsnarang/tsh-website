@@ -11,7 +11,7 @@ import Container from './ui/Container';
 import Button from './ui/Button';
 import Logo from './ui/Logo';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 interface NavItem {
   icon: React.ElementType;
@@ -298,7 +298,6 @@ export default function Navbar() {
 
   return (
     <>
-      <SpeedInsights />
       <nav className="fixed w-full z-50 pt-4">
         <Container>
           <motion.div 
