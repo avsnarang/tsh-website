@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, MapPin, Users } from 'lucide-react';
+import { Calendar, MapPin, Users, Ban } from 'lucide-react';
 import { Invite } from '../../types/invite';
 import Button from '../ui/Button';
 
@@ -33,24 +33,32 @@ export default function InviteCard({ invite, onRSVP }: InviteCardProps) {
                 <MapPin className="h-4 w-4 shrink-0" />
                 <span className="truncate">{invite.location}</span>
               </div>
-              {invite.maxCapacity && (
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{invite.rsvpCount} / {invite.maxCapacity} attending</span>
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 shrink-0" />
+                <span className="truncate">
+                  {invite.rsvpCount} {invite.rsvpCount === 1 ? 'guest' : 'guests'} attending
+                  {invite.maxCapacity && ` (${invite.maxCapacity - invite.rsvpCount} spots left)`}
+                </span>
+              </div>
             </div>
           </div>
 
           <p className="text-neutral-light/90 line-clamp-2">{invite.description}</p>
 
-          <Button
-            onClick={() => onRSVP(invite.id)}
-            className="w-full backdrop-blur-sm bg-white/20 hover:bg-white/30"
-            variant="outline"
-          >
-            View Invitation
-          </Button>
+          {invite.acceptingRsvps ? (
+            <Button
+              onClick={() => onRSVP(invite.id)}
+              className="w-full backdrop-blur-sm bg-white/20 hover:bg-white/30"
+              variant="outline"
+            >
+              View Invitation
+            </Button>
+          ) : (
+            <div className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-red-500/20 backdrop-blur-sm text-white rounded-lg">
+              <Ban className="h-5 w-5" />
+              RSVPs Closed
+            </div>
+          )}
         </div>
       </div>
     </div>

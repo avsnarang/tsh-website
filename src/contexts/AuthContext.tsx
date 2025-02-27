@@ -19,12 +19,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        // Refresh token if session exists
+        supabase.auth.refreshSession();
+      }
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (_event === 'TOKEN_REFRESHED') {
+        console.log('Auth token refreshed successfully');
+      }
       setUser(session?.user ?? null);
       setLoading(false);
     });
@@ -36,8 +43,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      const { data, error } = await supabase.auth.signInWithPassword({ 
+        email, 
+        password,
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      
+      if (error) {
+        console.error('Sign in error:', error);
+        throw error;
+      }
+
+      // Ensure we have a valid session
+      if (!data.session) {
+        throw new Error('No session returned from sign in');
+      }
     } catch (error) {
       console.error('Error signing in:', error);
       throw error;

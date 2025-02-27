@@ -11,6 +11,12 @@ export interface Invite {
   maxCapacity?: number;
   maxGuestsPerRsvp: number;
   requiresAdmissionNumber: boolean;
+  acceptingRsvps: boolean;
+  userRsvp?: {
+    status: 'attending' | 'not_attending' | 'maybe';
+    guests: number;
+    admission_number?: string;
+  };
 }
 
 export interface RSVPResponse {

@@ -26,8 +26,8 @@ export default function AdminSetup() {
       if (error) throw error;
       
       // If management users already exist, redirect to login
-      if (count > 0) {
-        navigate('/admin-portal/login');
+      if (count !== null && count > 0) {
+        navigate('/admin/login');
       }
     } catch (err) {
       console.error('Error checking management setup:', err);
@@ -74,7 +74,7 @@ export default function AdminSetup() {
 
       if (signInError) throw signInError;
 
-      navigate('/admin-portal/dashboard');
+      navigate('/admin/dashboard');
     } catch (err: any) {
       console.error('Setup error:', err);
       setError(err.message || 'Failed to create admin account');

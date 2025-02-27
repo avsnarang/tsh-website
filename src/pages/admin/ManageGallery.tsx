@@ -18,6 +18,7 @@ interface GalleryEvent {
   description: string;
   date: string;
   campus: string;
+  primary_image_id?: string;
   gallery_images: GalleryImage[];
 }
 
@@ -26,6 +27,8 @@ interface FormData {
   description: string;
   date: string;
   campus: string;
+  primary_image_id: string;
+  primary_image_url: string;
   images: { url: string; caption: string; }[];
 }
 
@@ -38,18 +41,21 @@ export default function ManageGallery() {
   const [showEventForm, setShowEventForm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [editingEvent, setEditingEvent] = useState<GalleryEvent | null>(null);
+  const [bulkUrls, setBulkUrls] = useState('');
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
     date: '',
     campus: '',
+    primary_image_id: '',
+    primary_image_url: '',
     images: [{ url: '', caption: '' }]
   });
 
   useEffect(() => {
     // Check authentication
     if (!user) {
-      navigate('/admin-portal/login');
+      navigate('/admin/login');
       return;
     }
 
@@ -63,7 +69,7 @@ export default function ManageGallery() {
           .single();
 
         if (error || !data) {
-          navigate('/admin-portal/login');
+          navigate('/admin/login');
           return;
         }
 
@@ -71,7 +77,7 @@ export default function ManageGallery() {
         fetchEvents();
       } catch (error) {
         console.error('Error checking management access:', error);
-        navigate('/admin-portal/login');
+        navigate('/admin/login');
       }
     };
 
@@ -86,8 +92,13 @@ export default function ManageGallery() {
       const { data, error } = await supabase
         .from('gallery_events')
         .select(`
-          *,
-          gallery_images (
+          id,
+          title,
+          description,
+          date,
+          campus,
+          primary_image_id,
+          gallery_images!gallery_images_event_id_fkey (
             id,
             image_url,
             caption
@@ -118,7 +129,9 @@ export default function ManageGallery() {
             title: formData.title,
             description: formData.description,
             date: formData.date,
-            campus: formData.campus
+            campus: formData.campus,
+            primary_image_id: formData.primary_image_id || null,
+            primary_image_url: formData.primary_image_url || null
           })
           .eq('id', editingEvent.id);
 
@@ -152,7 +165,9 @@ export default function ManageGallery() {
             title: formData.title,
             description: formData.description,
             date: formData.date,
-            campus: formData.campus
+            campus: formData.campus,
+            primary_image_id: null,
+            primary_image_url: formData.primary_image_url || null
           })
           .select()
           .single();
@@ -170,7 +185,49 @@ export default function ManageGallery() {
             }))
           );
 
+        // Update primary image if first image exists
         if (imagesError) throw imagesError;
+        
+        if (formData.primary_image_id) {
+          // Get the actual image ID from the newly inserted images
+          const { data: images } = await supabase
+            .from('gallery_images')
+            .select('id')
+            .eq('event_id', eventData.id)
+            .order('created_at', { ascending: true });
+
+          if (images && images.length > 0) {
+            const primaryIndex = parseInt(formData.primary_image_id);
+            const primaryImage = images[primaryIndex];
+            
+            if (primaryImage) {
+              const { error: updateError } = await supabase
+                .from('gallery_events')
+                .update({ primary_image_id: primaryImage.id })
+                .eq('id', eventData.id);
+
+              if (updateError) throw updateError;
+            }
+          }
+        } else {
+          // Set first image as primary if no primary image is selected
+          const { data: firstImage } = await supabase
+            .from('gallery_images')
+            .select('id')
+            .eq('event_id', eventData.id)
+            .order('created_at', { ascending: true })
+            .limit(1)
+            .single();
+
+          if (firstImage) {
+            const { error: updateError } = await supabase
+              .from('gallery_events')
+              .update({ primary_image_id: firstImage.id })
+              .eq('id', eventData.id);
+
+            if (updateError) throw updateError;
+          }
+        }
       }
 
       await fetchEvents();
@@ -179,6 +236,17 @@ export default function ManageGallery() {
       console.error('Error saving event:', error);
       setError('Failed to save event');
     }
+  };
+
+  const handlePrimaryImageChange = (imageId: string) => {
+    setFormData(prev => {
+      // If clicking the current primary image, unset it
+      if (prev.primary_image_id === imageId) {
+        return { ...prev, primary_image_id: '' };
+      }
+      // Otherwise, set the new primary image
+      return { ...prev, primary_image_id: imageId };
+    });
   };
 
   const handleDelete = async (eventId: string) => {
@@ -206,6 +274,8 @@ export default function ManageGallery() {
       description: '',
       date: '',
       campus: '',
+      primary_image_id: '',
+      primary_image_url: '',
       images: [{ url: '', caption: '' }]
     });
     setShowEventForm(false);
@@ -242,12 +312,46 @@ export default function ManageGallery() {
       description: event.description,
       date: event.date,
       campus: event.campus,
+      primary_image_id: event.primary_image_id || '',
+      primary_image_url: '',
       images: event.gallery_images.map(img => ({
         url: img.image_url,
         caption: img.caption
       }))
     });
     setShowEventForm(true);
+  };
+
+  const handleBulkUrlsPaste = () => {
+    if (!bulkUrls.trim()) return;
+
+    // Split by commas, clean up URLs, and validate
+    const urls = bulkUrls
+      .split(',')
+      .map(url => url.trim())
+      .filter(url => {
+        try {
+          new URL(url);
+          return true;
+        } catch {
+          return false;
+        }
+      });
+
+    if (urls.length === 0) {
+      setError('No valid URLs found in the input');
+      return;
+    }
+
+    // Update form data with new images
+    setFormData(prev => ({
+      ...prev,
+      images: urls.map(url => ({ url, caption: '' }))
+    }));
+
+    // Clear bulk input
+    setBulkUrls('');
+    setError('');
   };
 
   if (loading) {
@@ -266,7 +370,7 @@ export default function ManageGallery() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between gap-4 mb-8">
             <Link
-              to="/admin-portal/dashboard"
+              to="/admin/dashboard"
               className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -332,14 +436,19 @@ export default function ManageGallery() {
                     </div>
                   </div>
                   <p className="text-neutral-dark/80 mb-4">{event.description}</p>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {event.gallery_images.map((image: GalleryImage) => (
+                  <div className="flex gap-4">
+                    {event.gallery_images.slice(0, 3).map((image: GalleryImage, idx) => (
                       <div key={image.id} className="relative aspect-square rounded-lg overflow-hidden">
                         <img
                           src={image.image_url}
-                          alt={image.caption}
-                          className="w-full h-full object-cover"
+                          alt={image.caption || event.title}
+                          className="w-14 h-14 object-cover"
                         />
+                        {event.primary_image_id === image.id && (
+                          <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                            <span className="text-xs text-white bg-primary/80 px-2 py-1 rounded-full">Primary</span>
+                          </div>
+                        )}
                         {image.caption && (
                           <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 text-neutral-light p-2 text-sm">
                             {image.caption}
@@ -347,6 +456,11 @@ export default function ManageGallery() {
                         )}
                       </div>
                     ))}
+                    {event.gallery_images.length > 3 && (
+                      <div className="flex items-center text-primary">
+                        <span>+{event.gallery_images.length - 3} more</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -419,13 +533,68 @@ export default function ManageGallery() {
                 </select>
               </div>
 
-              <div className="space-y-4">
+              <div>
+                <label className="block text-neutral-dark mb-2">Primary Image URL (Optional)</label>
+                <div className="space-y-2">
+                  <input
+                    type="url"
+                    value={formData.primary_image_url}
+                    onChange={(e) => setFormData(prev => ({ ...prev, primary_image_url: e.target.value }))}
+                    placeholder="https://example.com/primary-image.jpg"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  <p className="text-sm text-neutral-dark/60">
+                    Enter a URL for the primary image. This will be used as the main image for the event.
+                  </p>
+                  {formData.primary_image_url && (
+                    <img 
+                      src={formData.primary_image_url} 
+                      alt="Primary image preview" 
+                      className="w-32 h-32 object-cover rounded-lg border-2 border-primary"
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {/* Bulk URL Input */}
+                <div className="space-y-4 p-4 bg-neutral-light/50 rounded-xl">
+                  <h4 className="text-lg font-semibold text-neutral-dark">Bulk Add Images</h4>
+                  <p className="text-sm text-neutral-dark/80">
+                    Paste image URLs separated by commas. Each URL should be a direct link to an image.
+                  </p>
+                  <div className="space-y-2">
+                    <textarea
+                      value={bulkUrls}
+                      onChange={(e) => setBulkUrls(e.target.value)}
+                      placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg, ..."
+                      className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32 font-mono text-sm"
+                    ></textarea>
+                    <Button
+                      type="button"
+                      onClick={handleBulkUrlsPaste}
+                      variant="edit"
+                      className="w-full"
+                    >
+                      Add Images from URLs
+                    </Button>
+                  </div>
+                  {formData.images.length > 0 && (
+                    <div className="text-sm text-primary">
+                      {formData.images.length} image{formData.images.length !== 1 ? 's' : ''} ready to be added
+                      {formData.images.some(img => !img.caption) && (
+                        <span className="block mt-1 text-orange">Tip: Add captions to your images below</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex justify-between items-center">
                   <label className="text-neutral-dark">Images</label>
                   <Button
                     type="button"
                     onClick={addImageField}
-                    variant="outline"
+                    variant="edit"
                     className="flex items-center gap-2"
                   >
                     <Plus className="h-4 w-4" />
@@ -437,14 +606,33 @@ export default function ManageGallery() {
                   <div key={index} className="space-y-4 p-4 bg-neutral-light rounded-lg">
                     <div>
                       <label className="block text-neutral-dark mb-2">Image URL</label>
-                      <input
-                        type="url"
-                        value={image.url}
-                        onChange={(e) => updateImageField(index, 'url', e.target.value)}
-                        placeholder="https://drive.google.com/uc?export=view&id=YOUR_FILE_ID"
-                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                        required
-                      />
+                      <div className="flex gap-4">
+                        <input
+                          type="url"
+                          value={image.url}
+                          onChange={(e) => updateImageField(index, 'url', e.target.value)}
+                          placeholder="https://example.com/image.jpg"
+                          className="flex-grow px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          required
+                          onBlur={(e) => {
+                            const url = e.target.value.trim();
+                            if (url && !url.match(/^https?:\/\/.+/)) {
+                              setError('Please enter a valid URL starting with http:// or https://');
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          onClick={() => handlePrimaryImageChange(index.toString())}
+                          variant={formData.primary_image_id === index.toString() ? 'cta' : 'outline'}
+                          className="shrink-0"
+                        >
+                          {formData.primary_image_id === index.toString() ? 'Primary Image' : 'Set as Primary'}
+                        </Button>
+                      </div>
+                      {image.url && (
+                        <img src={image.url} alt="" className="mt-2 w-14 h-14 object-cover rounded" />
+                      )}
                     </div>
                     <div>
                       <label className="block text-neutral-dark mb-2">Caption</label>
@@ -452,6 +640,7 @@ export default function ManageGallery() {
                         type="text"
                         value={image.caption}
                         onChange={(e) => updateImageField(index, 'caption', e.target.value)}
+                        placeholder="Enter a description for this image"
                         className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
@@ -459,8 +648,7 @@ export default function ManageGallery() {
                       <Button
                         type="button"
                         onClick={() => removeImageField(index)}
-                        variant="outline"
-                        className="text-red-500 hover:text-red-600"
+                        variant="redOutline"
                       >
                         Remove Image
                       </Button>
@@ -473,7 +661,7 @@ export default function ManageGallery() {
                 <Button
                   type="button"
                   onClick={resetForm}
-                  variant="outline"
+                  variant="outline2"
                 >
                   Cancel
                 </Button>
@@ -500,7 +688,7 @@ export default function ManageGallery() {
             </p>
             <div className="flex justify-end gap-4">
               <Button
-                variant="outline"
+                variant="outline2"
                 onClick={() => setShowDeleteConfirm(null)}
               >
                 Cancel

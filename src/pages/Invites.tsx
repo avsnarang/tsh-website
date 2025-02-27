@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import Title from '../components/utils/Title';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
+import { useSEO } from '../lib/seo'; 
 
 export default function Invites() {
   const { user } = useAuth();
@@ -16,6 +17,12 @@ export default function Invites() {
   const [error, setError] = useState('');
   const [selectedInvite, setSelectedInvite] = useState<Invite | null>(null);
   const [success, setSuccess] = useState('');
+
+  useSEO({
+    title: "School Events | The Scholars' Home",
+    description: "Stay updated with upcoming events at The Scholars' Home. RSVP for school functions, celebrations, and special occasions.",
+    url: "https://tsh.edu.in/invites"
+  });
 
   useEffect(() => {
     fetchEvents();
@@ -38,7 +45,8 @@ export default function Invites() {
           cover_image,
           max_capacity,
           max_guests_per_rsvp,
-          requires_admission_number
+          requires_admission_number,
+          accepting_rsvps
         `)
         .order('date', { ascending: true })
         .gte('date', new Date().toISOString().split('T')[0]); // Only get upcoming events
@@ -48,12 +56,11 @@ export default function Invites() {
       // Get RSVP counts and user's RSVP status for each event
       const eventsWithDetails = await Promise.all(
         (eventsData || []).map(async (event) => {
-          // Get total RSVP count
-          const { count } = await supabase
-            .from('event_rsvps')
-            .select('*', { count: 'exact', head: true })
-            .eq('event_id', event.id)
-            .eq('status', 'attending');
+          // Get total guests count using the function with correct parameter name
+          const { data: totalGuests, error: countError } = await supabase
+            .rpc('get_event_total_guests', { p_event_id: event.id });
+
+          if (countError) throw countError;
 
           // Get user's RSVP if logged in
           let userRsvp = null;
@@ -78,10 +85,11 @@ export default function Invites() {
             coverImage: event.cover_image,
             maxCapacity: event.max_capacity,
             maxGuestsPerRsvp: event.max_guests_per_rsvp,
-            requiresAdmissionNumber: event.requires_admission_number,
+            requiresAdmissionNumber: true, // Always require admission number
             status: 'upcoming',
-            rsvpCount: count || 0,
-            userRsvp
+            rsvpCount: totalGuests || 0,
+            userRsvp,
+            acceptingRsvps: event.accepting_rsvps
           };
         })
       );
@@ -96,13 +104,12 @@ export default function Invites() {
   };
 
   const handleRSVP = (inviteId: string) => {
-    if (!user) {
-      setError('Please sign in to RSVP for events');
-      return;
-    }
-
     const invite = events.find(inv => inv.id === inviteId);
     if (invite) {
+      if (!invite.acceptingRsvps) {
+        setError('RSVPs are no longer being accepted for this event');
+        return;
+      }
       setSelectedInvite(invite);
     }
   };
@@ -112,34 +119,48 @@ export default function Invites() {
     guests: number,
     admissionNumber?: string
   ) => {
-    if (!user || !selectedInvite) return;
+    if (!selectedInvite) return;
 
     try {
       setError('');
+      
+      // Always require admission number
+      if (!admissionNumber) {
+        setError('Please provide and verify student admission number');
+        return;
+      }
 
       // Check if user already has an RSVP
-      const { data: existingRsvp } = await supabase
-        .from('event_rsvps')
-        .select('id')
-        .eq('event_id', selectedInvite.id)
-        .eq('user_id', user.id)
-        .maybeSingle();
+      let existingRsvpId: string | null = null;
+      
+      if (user) {
+        // If user is logged in, check based on user ID
+        const { data: userRsvp } = await supabase
+          .from('event_rsvps')
+          .select('id')
+          .eq('event_id', selectedInvite.id)
+          .eq('user_id', user.id)
+          .maybeSingle();
+          
+        if (userRsvp) {
+          existingRsvpId = userRsvp.id;
+        }
+      }
 
       const rsvpData = {
         event_id: selectedInvite.id,
-        user_id: user.id,
+        user_id: user?.id || null,
         status,
         guests,
-        admission_number: admissionNumber,
-        updated_at: new Date().toISOString()
+        admission_number: admissionNumber
       };
 
-      if (existingRsvp) {
+      if (existingRsvpId) {
         // Update existing RSVP
         const { error: updateError } = await supabase
           .from('event_rsvps')
           .update(rsvpData)
-          .eq('id', existingRsvp.id);
+          .eq('id', existingRsvpId);
 
         if (updateError) throw updateError;
       } else {

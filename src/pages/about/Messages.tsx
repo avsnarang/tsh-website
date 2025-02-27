@@ -7,15 +7,42 @@ import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMessages } from '../../contexts/MessagesContext';
+import { useSEO } from '../../lib/seo';
 
 export default function Messages() {
   const { messages, loading } = useMessages();
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
 
+  useSEO({
+    title: "Leadership Messages | The Scholars' Home",
+    description: "Read inspiring messages from The Scholars' Home's leadership team. Discover their vision and guidance for our educational community.",
+    url: "https://tsh.edu.in/about/messages"
+  });
+
   // Filter messages for leadership page
   const leadershipMessages = messages.filter(msg => 
     msg.display_locations.includes('all') || msg.display_locations.includes('leadership')
   );
+
+  // Function to handle modal open/close
+  const handleModalOpen = (message: LeadershipMessage) => {
+    setSelectedMessage(message);
+    // Prevent background scrolling
+    document.body.style.overflow = 'hidden';
+  };
+
+  const handleModalClose = () => {
+    setSelectedMessage(null);
+    // Re-enable background scrolling
+    document.body.style.overflow = 'unset';
+  };
+
+  // Cleanup on unmount
+  React.useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
   return (
     <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
@@ -115,7 +142,7 @@ export default function Messages() {
                               whileTap={{ scale: 0.98 }}
                             >
                               <Button
-                                onClick={() => setSelectedMessage(leader)}
+                                onClick={() => handleModalOpen(leader)}
                                 className="flex items-center gap-2"
                               >
                                 Read Full Message
@@ -141,16 +168,10 @@ export default function Messages() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-3xl max-h-[85vh] overflow-y-auto relative"
+                className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] flex flex-col"
               >
-                <button
-                  onClick={() => setSelectedMessage(null)}
-                  className="absolute top-4 right-4 p-2 hover:bg-neutral-dark/10 rounded-full transition-colors z-10"
-                >
-                  <X className="h-6 w-6 text-neutral-dark" />
-                </button>
-
-                <div className="flex items-center gap-6 mb-8">
+                {/* Header */}
+                <div className="flex items-center gap-6 mb-8 shrink-0">
                   <div className="w-24 h-24 bg-primary-light/20 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
                     {selectedMessage.photo_url ? (
                       <img
@@ -163,7 +184,7 @@ export default function Messages() {
                       <User className="h-12 w-12 text-primary" />
                     )}
                   </div>
-                  <div>
+                  <div className="flex-grow">
                     <TextReveal>
                       <h2 className="text-2xl font-semibold text-neutral-dark">{selectedMessage.name}</h2>
                     </TextReveal>
@@ -171,12 +192,19 @@ export default function Messages() {
                       <p className="text-lg text-primary">{selectedMessage.role}</p>
                     </TextReveal>
                   </div>
+                  <button
+                    onClick={handleModalClose}
+                    className="p-2 hover:bg-neutral-dark/10 rounded-full transition-colors shrink-0"
+                  >
+                    <X className="h-6 w-6 text-neutral-dark" />
+                  </button>
                 </div>
 
-                <div className="prose prose-lg max-w-none">
-                  {selectedMessage.fullMessage.split('\n\n').map((paragraph, index) => (
+                {/* Message Content - Scrollable */}
+                <div className="flex-grow overflow-y-auto pr-4 space-y-4 custom-scrollbar">
+                  {selectedMessage.fullMessage?.split('\n\n').map((paragraph: string, index: number) => (
                     <TextReveal key={index} delay={0.2 + index * 0.1}>
-                      <p className="text-neutral-dark/80 text-base leading-relaxed mb-4">
+                      <p className="text-neutral-dark/80 text-lg leading-relaxed">
                         {paragraph}
                       </p>
                     </TextReveal>

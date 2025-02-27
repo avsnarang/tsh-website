@@ -247,7 +247,7 @@ export default function ManageEvents() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between gap-4 mb-8">
             <Link
-              to="/admin-portal/dashboard"
+              to="/admin/dashboard"
               className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />

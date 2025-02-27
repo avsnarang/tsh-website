@@ -41,7 +41,7 @@ export default function Testimonials() {
         if (featuredError) throw featuredError;
 
         const testimonials = featuredData
-          ?.map(item => item.alumni_profiles)
+          ?.flatMap(item => item.alumni_profiles)
           .filter(Boolean) as AlumniTestimonial[];
 
         if (testimonials.length === 0) {

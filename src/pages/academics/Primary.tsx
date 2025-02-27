@@ -1,8 +1,15 @@
 import React from 'react';
 import Container from '../../components/ui/Container';
 import { Brain, Heart, Star, Users, BookOpen } from 'lucide-react';
+import { useSEO } from '../../lib/seo';
 
 export default function Primary() {
+  useSEO({
+    title: "Primary School | The Scholars' Home",
+    description: "Primary education program at The Scholars' Home. Building strong foundations through comprehensive curriculum and personalized attention.",
+    url: "https://tsh.edu.in/academics/primary"
+  });
+
   return (
     <div className="pt-32 pb-24">
       <Container>

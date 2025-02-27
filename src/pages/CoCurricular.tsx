@@ -6,6 +6,7 @@ import Button from '../components/ui/Button';
 import Title from '../components/utils/Title';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
+import { useSEO } from '../lib/seo';
 
 const activities = [
   {
@@ -75,6 +76,12 @@ const stats = [
 
 export default function CoCurricular() {
   const navigate = useNavigate();
+
+  useSEO({
+    title: "Co-Curricular Activities | The Scholars' Home",
+    description: "Explore our diverse co-curricular programs including performing arts, sports, visual arts, and clubs. Nurturing talents beyond academics.",
+    url: "https://tsh.edu.in/co-curricular"
+  });
 
   return (
     <div className="min-h-screen bg-neutral-light">

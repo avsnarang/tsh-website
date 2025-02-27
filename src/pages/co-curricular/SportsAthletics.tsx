@@ -1,8 +1,15 @@
 import React from 'react';
 import Container from '../../components/ui/Container';
 import { Trophy, Target, Users, Medal } from 'lucide-react';
+import { useSEO } from '../../lib/seo';
 
 export default function SportsAthletics() {
+  useSEO({
+    title: "Sports & Athletics | The Scholars' Home",
+    description: "Excellence in sports and athletics at The Scholars' Home. Professional coaching and world-class facilities for comprehensive physical development.",
+    url: "https://tsh.edu.in/co-curricular/sports-athletics"
+  });
+
   return (
     <div className="pt-32 pb-24">
       <Container>

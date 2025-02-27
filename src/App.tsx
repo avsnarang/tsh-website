@@ -8,9 +8,11 @@ import { AuthProvider } from './contexts/AuthContext';
 import { MessagesProvider } from './contexts/MessagesContext';
 import PageTransition from './components/animations/PageTransition';
 import RequireAdmin from './components/auth/RequireAdmin';
+import { usePageTracking } from './lib/analytics';
 
 // Pages
 import Home from './pages/Home';
+import Home2 from './pages/Home-2';
 import About from './pages/About';
 import Vision from './pages/about/Vision';
 import Messages from './pages/about/Messages';
@@ -38,6 +40,7 @@ import Profile from './pages/alumni/Profile';
 import Directory from './pages/alumni/Directory';
 import Invites from './pages/Invites';
 import Admissions from './pages/Admissions';
+import Scholarship from './pages/Scholarship';
 
 // Admin Portal
 import AdminLogin from './pages/admin/AdminLogin';
@@ -48,9 +51,11 @@ import ManageGallery from './pages/admin/ManageGallery';
 import ManageMessages from './pages/admin/ManageMessages';
 import ManageEvents from './pages/admin/ManageEvents';
 import ManageUpdates from './pages/admin/ManageUpdates';
+import ManageStudents from './pages/admin/ManageStudents';
 
 function AnimatedRoutes() {
   const location = useLocation();
+  usePageTracking(); // Add analytics tracking
 
   return (
     <AnimatePresence mode="wait">
@@ -59,19 +64,21 @@ function AnimatedRoutes() {
         <main className="flex-grow">
           <Routes location={location} key={location.pathname}>
             {/* Admin Portal Routes */}
-            <Route path="/admin-portal/login" element={<AdminLogin />} />
-            <Route path="/admin-portal/setup" element={<AdminSetup />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/setup" element={<AdminSetup />} />
             <Route element={<RequireAdmin />}>
-              <Route path="/admin-portal/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin-portal/testimonials" element={<ManageTestimonials />} />
-              <Route path="/admin-portal/gallery" element={<ManageGallery />} />
-              <Route path="/admin-portal/messages" element={<ManageMessages />} />
-              <Route path="/admin-portal/events" element={<ManageEvents />} />
-              <Route path="/admin-portal/updates" element={<ManageUpdates />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/testimonials" element={<ManageTestimonials />} />
+              <Route path="/admin/gallery" element={<ManageGallery />} />
+              <Route path="/admin/messages" element={<ManageMessages />} />
+              <Route path="/admin/events" element={<ManageEvents />} />
+              <Route path="/admin/updates" element={<ManageUpdates />} />
+              <Route path="/admin/students" element={<ManageStudents />} />
             </Route>
 
             {/* Main Routes */}
             <Route path="/" element={<Home />} />
+            <Route path="/home-2" element={<Home2 />} />
             <Route path="/about" element={<About />} />
             <Route path="/about/vision" element={<Vision />} />
             <Route path="/about/messages" element={<Messages />} />
@@ -99,6 +106,7 @@ function AnimatedRoutes() {
             <Route path="/alumni/directory" element={<Directory />} />
             <Route path="/invites" element={<Invites />} />
             <Route path="/admissions" element={<Admissions />} />
+            <Route path="/scholarship" element={<Scholarship />} />
           </Routes>
         </main>
         <Footer />

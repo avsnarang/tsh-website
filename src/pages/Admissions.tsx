@@ -6,6 +6,8 @@ import Button from '../components/ui/Button';
 import Container from '../components/ui/Container';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
+import { trackEvent } from '../lib/analytics';
+import { useSEO } from '../lib/seo';
 
 const getRegistrationLink = (location: string) => {
   switch (location) {
@@ -99,6 +101,12 @@ const getCampusLocation = (location: string) => {
 };
 
 export default function Admissions() {
+  useSEO({
+    title: "Admissions 2025-26 | The Scholars' Home",
+    description: "Join The Scholars' Home for the academic year 2025-26. Information about admission process, eligibility, and campus-specific details.",
+    url: "https://tsh.edu.in/admissions"
+  });
+
   return (
     <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
       <Container>
@@ -222,6 +230,11 @@ export default function Admissions() {
                           href={getRegistrationLink(branch.location)}
                           target="_blank"
                           rel="noopener noreferrer"
+                          onClick={() => trackEvent('Registration Button Clicked', {
+                            campus: branch.location,
+                            button_location: 'card',
+                            registration_url: getRegistrationLink(branch.location)
+                          })}
                         >
                           <Button 
                             variant="cta-green"

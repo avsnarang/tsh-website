@@ -1,8 +1,15 @@
 import React from 'react';
 import Container from '../../components/ui/Container';
 import { Brain, Heart, Star, Users, BookOpen } from 'lucide-react';
+import { useSEO } from '../../lib/seo';
 
 export default function Middle() {
+  useSEO({
+    title: "Middle School | The Scholars' Home",
+    description: "Middle school education at The Scholars' Home. Fostering critical thinking and comprehensive development for grades 6-8.",
+    url: "https://tsh.edu.in/academics/middle"
+  });
+
   return (
     <div className="pt-32 pb-24">
       <Container>

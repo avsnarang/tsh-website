@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase';
 import Title from '../components/utils/Title';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
+import { useSEO } from '../lib/seo';
 
 interface GalleryImage {
   id: string;
@@ -38,6 +39,12 @@ export default function Gallery() {
     fetchGalleryEvents();
   }, []);
 
+  useSEO({
+    title: "Photo Gallery | The Scholars' Home",
+    description: "Browse through our photo gallery showcasing school events, activities, and memorable moments at The Scholars' Home.",
+    url: "https://tsh.edu.in/gallery"
+  });
+
   const fetchGalleryEvents = async () => {
     try {
       setLoading(true);
@@ -46,8 +53,13 @@ export default function Gallery() {
       const { data, error } = await supabase
         .from('gallery_events')
         .select(`
-          *,
-          gallery_images (
+          id,
+          title,
+          description,
+          date,
+          campus,
+          primary_image_id,
+          gallery_images!gallery_images_event_id_fkey (
             id,
             image_url,
             caption
@@ -204,13 +216,19 @@ export default function Gallery() {
                     <Link
                       key={event.id}
                       to={`/gallery/${event.id}`}
-                      className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
+                      className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
                     >
-                      <div className="relative h-64 overflow-hidden">
+                      <div className="relative overflow-hidden">
                         <img
-                          src={event.gallery_images[0]?.image_url || 'https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=2066&q=80'}
+                          src={
+                            event.primary_image_url || // First try primary_image_url
+                            (event.primary_image_id ? // Then try to find image by primary_image_id
+                              event.gallery_images.find(img => img.id === event.primary_image_id)?.image_url
+                            : event.gallery_images[0]?.image_url) || // Fall back to first image
+                            'https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=2066&q=80' // Default fallback
+                          }
                           alt={event.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-neutral-dark/80 to-transparent" />
                         <div className="absolute bottom-4 left-4 right-4">

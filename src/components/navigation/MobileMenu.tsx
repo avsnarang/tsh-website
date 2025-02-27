@@ -10,7 +10,8 @@ import {
   Users,
   Calendar,
   Image,
-  Phone
+  Phone,
+  Award
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Button from '../ui/Button';
@@ -157,6 +158,20 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
                 <div className="flex items-center gap-3">
                   <BookOpen className="h-5 w-5" />
                   Academics
+                </div>
+                <ChevronRight className="h-5 w-5" />
+              </Link>
+            </motion.div>
+
+            <motion.div variants={itemVariants}>
+              <Link 
+                to="/scholarship" 
+                className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
+                onClick={handleLinkClick}
+              >
+                <div className="flex items-center gap-3">
+                  <Award className="h-5 w-5" />
+                  Scholarship
                 </div>
                 <ChevronRight className="h-5 w-5" />
               </Link>

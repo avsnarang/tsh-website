@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, User, X } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useSEO } from '../lib/seo';
 import Hero from '../components/Hero';
 import Features from '../components/Features';
 import Achievements from '../components/achievements/Achievements';
@@ -17,6 +18,12 @@ export default function Home() {
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
   const [messages, setMessages] = useState<LeadershipMessage[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useSEO({
+    title: "The Scholars' Home | Excellence in Education Since 2003",
+    description: "Join The Scholars' Home for world-class education and holistic development. CBSE-affiliated school offering comprehensive education from pre-primary to senior secondary levels.",
+    url: "https://tsh.edu.in"
+  });
 
   useEffect(() => {
     const fetchMessages = async () => {

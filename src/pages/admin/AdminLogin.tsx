@@ -58,7 +58,7 @@ export default function AdminLogin() {
         throw new Error('Unauthorized access');
       }
 
-      navigate('/admin-portal/dashboard');
+      navigate('/admin/dashboard');
     } catch (err: any) {
       setError(err.message || 'Failed to sign in');
     } finally {
@@ -81,7 +81,7 @@ export default function AdminLogin() {
               </p>
             </div>
             <Button
-              onClick={() => navigate('/admin-portal/setup')}
+              onClick={() => navigate('/admin/setup')}
               className="w-full"
             >
               Create Admin Account

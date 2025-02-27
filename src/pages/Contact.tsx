@@ -5,6 +5,7 @@ import Title from '../components/utils/Title';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
 import Button from '../components/ui/Button';
+import { useSEO } from '../lib/seo';
 
 const contactInfo = [
   {
@@ -41,6 +42,12 @@ const stats = [
 ];
 
 export default function Contact() {
+  useSEO({
+    title: "Contact Us | The Scholars' Home",
+    description: "Get in touch with The Scholars' Home. Contact information for all our campuses and admission inquiries.",
+    url: "https://tsh.edu.in/contact"
+  });
+
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section */}

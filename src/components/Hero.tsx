@@ -8,6 +8,7 @@ import { schoolInfo } from '../data/schoolData';
 import AnimatedCounter from './animations/AnimatedCounter';
 import { supabase } from '../lib/supabase';
 import NewsTicker from './NewsTicker';
+import { trackCTAClick } from '../lib/analytics';
 
 export default function Hero() {
   const [latestUpdate, setLatestUpdate] = useState('');
@@ -31,8 +32,6 @@ export default function Hero() {
       }
     };
 
-    fetchLatestUpdate();
-
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
         x: (e.clientX / window.innerWidth) * 100,
@@ -41,6 +40,7 @@ export default function Hero() {
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    fetchLatestUpdate();
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
@@ -52,9 +52,9 @@ export default function Hero() {
         style={{
           background: `
             radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
-            rgba(0, 80, 27, 0.08) 0%,
-            rgba(0, 80, 27, 0.05) 20%,
-            rgba(0, 80, 27, 0.02) 40%,
+            rgba(0, 80, 27, 0.15) 0%,
+            rgba(0, 80, 27, 0.1) 20%,
+            rgba(0, 80, 27, 0.05) 40%,
             rgba(0, 0, 0, 0) 60%),
             linear-gradient(to bottom right, #F4F8F6, #E8F1EC)
           `
@@ -123,7 +123,11 @@ export default function Hero() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Link to="/admissions" className="flex-1">
+              <Link 
+                to="/admissions" 
+                onClick={() => trackCTAClick('Apply Now', 'home', 'primary')}
+                className="flex-1"
+              >
                 <Button 
                   variant="cta" 
                   className="w-full h-14 flex items-center justify-center gap-2 text-lg"
@@ -132,10 +136,14 @@ export default function Hero() {
                   Apply Now
                 </Button>
               </Link>
-              <Link to="/campuses" className="flex-1">
+              <Link 
+                to="/campuses" 
+                onClick={() => trackCTAClick('Explore Campuses', 'home', 'secondary')}
+                className="flex-1"
+              >
                 <Button 
-                  variant="outline" 
-                  className="w-full h-14 flex items-center justify-center gap-2 text-lg group border-primary text-primary hover:bg-primary/5"
+                  variant="outline2" 
+                  className="w-full h-14 flex items-center justify-center gap-2 text-lg group"
                 >
                   Explore Campuses
                   <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
