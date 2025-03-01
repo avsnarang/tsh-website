@@ -16,13 +16,14 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "declaration": false,
+    "declarationMap": false
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
   "files": [],
   "references": [
-    { "path": "./tsconfig.app.json" }, 
-    { "path": "./tsconfig.node.json" }
+    { "path": "./tsconfig.app.json" }
   ]
 }
