@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Container from '../../components/ui/Container';
 import { supabase, checkSupabaseConnection } from '../../lib/supabase';
-import { ArrowLeft, Plus, Pencil, AlertTriangle, Calendar, MapPin, X, Upload, Download } from 'lucide-react';
+import { ArrowLeft, Plus, Pencil, AlertTriangle, CalendarIcon, MapPin, X, Upload, Download } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../contexts/AuthContext';
+"use client";
+import { Calendar } from "../../components/ui/calendar";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { ClockIcon } from "lucide-react";
 
 interface Event {
   id: string;
@@ -33,6 +38,8 @@ interface FormData {
 }
 
 export default function ManageEvents() {
+  const id = useId();
+  const [date, setDate] = useState<Date | undefined>(new Date());
   const navigate = useNavigate();
   const { user } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
@@ -322,7 +329,7 @@ export default function ManageEvents() {
                       </h3>
                       <div className="flex items-center gap-4 text-primary mt-2">
                         <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
+                          <CalendarIcon className="h-4 w-4" />
                           <span>{event.date} at {event.time}</span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -425,27 +432,48 @@ export default function ManageEvents() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <div>
-                  <label className="block text-neutral-dark mb-2">Date</label>
-                  <input
-                    type="date"
-                    value={formData.date}
-                    onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-neutral-dark mb-2">Time</label>
-                  <input
-                    type="time"
-                    value={formData.time}
-                    onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    required
-                  />
+                  <label className="block text-neutral-dark mb-2">Date and Time</label>
+                  <div className="rounded-md border">
+                    <Calendar 
+                      mode="single" 
+                      className="p-2" 
+                      selected={date} 
+                      onSelect={(newDate) => {
+                        setDate(newDate);
+                        if (newDate) {
+                          setFormData(prev => ({ 
+                            ...prev, 
+                            date: newDate.toISOString().split('T')[0]
+                          }));
+                        }
+                      }} 
+                    />
+                    <div className="border-t p-3">
+                      <div className="flex items-center gap-3">
+                        <Label htmlFor={id} className="text-xs">
+                          Enter time
+                        </Label>
+                        <div className="relative grow">
+                          <Input
+                            id={id}
+                            type="time"
+                            step="1"
+                            value={formData.time}
+                            onChange={(e) => setFormData(prev => ({ 
+                              ...prev, 
+                              time: e.target.value 
+                            }))}
+                            className="peer appearance-none ps-9 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                          />
+                          <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                            <ClockIcon size={16} aria-hidden="true" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 

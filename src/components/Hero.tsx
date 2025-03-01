@@ -1,268 +1,238 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Users, Star, GraduationCap } from 'lucide-react';
-import { motion } from 'framer-motion';
-import Container from './ui/Container';
+import { useEffect, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import Button from './ui/Button';
-import { schoolInfo } from '../data/schoolData';
-import AnimatedCounter from './animations/AnimatedCounter';
-import { supabase } from '../lib/supabase';
-import NewsTicker from './NewsTicker';
-import { trackCTAClick } from '../lib/analytics';
 
 export default function Hero() {
-  const [latestUpdate, setLatestUpdate] = useState('');
+  const { scrollY } = useScroll();
+  const [isMounted, setIsMounted] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    const fetchLatestUpdate = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('latest_updates')
-          .select('content')
-          .eq('is_active', true)
-          .single();
-
-        if (error) throw error;
-        if (data) {
-          setLatestUpdate(data.content);
-        }
-      } catch (error) {
-        console.error('Error fetching latest update:', error);
-      }
-    };
+    setIsMounted(true);
 
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
+        x: e.clientX,
+        y: e.clientY
       });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    fetchLatestUpdate();
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  return (
-    <div id="home" className="relative min-h-screen overflow-hidden bg-[#F4F8F6]">
-      {/* Interactive Background */}
-      <div 
-        className="absolute inset-0 transition-opacity duration-300"
-        style={{
-          background: `
-            radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
-            rgba(0, 80, 27, 0.15) 0%,
-            rgba(0, 80, 27, 0.1) 20%,
-            rgba(0, 80, 27, 0.05) 40%,
-            rgba(0, 0, 0, 0) 60%),
-            linear-gradient(to bottom right, #F4F8F6, #E8F1EC)
-          `
-        }}
-      />
+  const y1 = useTransform(scrollY, [0, 500], [0, -100]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Grid Pattern */}
+  return (
+    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-green-50 to-green-100">
+      {/* Texture Overlay */}
+      <div className="absolute inset-0 z-0">
+        {/* Noise Texture */}
         <div 
-          className="absolute inset-0 opacity-20 transition-opacity duration-300" 
-          style={{ 
-            backgroundImage: 'linear-gradient(to right, rgba(0, 80, 27, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 80, 27, 0.1) 1px, transparent 1px)',
-            backgroundSize: '4rem 4rem'
+          className="absolute inset-0 opacity-[0.15] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '128px 128px'
           }}
         />
         
-        {/* Glowing Orbs */}
-        <motion.div 
-          className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-primary/5 rounded-full blur-[120px] mix-blend-multiply"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
+        {/* Diagonal Lines Pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 1px,
+                rgba(0, 80, 27, 0.05) 1px,
+                rgba(0, 80, 27, 0.05) 2px
+              )
+            `,
+            backgroundSize: '8px 8px'
           }}
         />
-        <motion.div 
-          className="absolute bottom-1/4 right-1/4 w-[35rem] h-[35rem] bg-orange/5 rounded-full blur-[100px] mix-blend-multiply"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut"
+
+        {/* Dot Pattern (existing) */}
+        <div 
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 2px 2px, rgba(0, 80, 27, 0.15) 1px, transparent 0)
+            `,
+            backgroundSize: '32px 32px'
           }}
         />
       </div>
 
-      <Container className="relative">
-        <div className="min-h-screen grid lg:grid-cols-2 gap-12 items-center py-24">
-          {/* Left Column - Content */}
-          <div className="space-y-8">
+      {/* Enhanced Mouse follower - adjusted for better visibility with new texture */}
+      <motion.div
+        className="pointer-events-none fixed z-10 h-[500px] w-[500px] rounded-full mix-blend-multiply"
+        animate={{
+          x: mousePosition.x - 250,
+          y: mousePosition.y - 250,
+        }}
+        transition={{
+          type: "spring",
+          damping: 30,
+          stiffness: 200,
+          mass: 0.5,
+        }}
+      >
+        <div className="absolute inset-0 rounded-full bg-green-300/50 blur-[100px]" />
+        <div className="absolute inset-0 rounded-full bg-orange-300/40 blur-[100px] animate-pulse" />
+      </motion.div>
+
+      {/* Gradient Accents - adjusted opacity for better balance with texture */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-200/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-200/20 rounded-full blur-3xl" />
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-20 container mx-auto px-4 h-screen flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-8 pt-20 md:pt-0"
+          >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="space-y-6 pt-8"
+              transition={{ duration: 0.6 }}
+              className="flex items-center gap-2 px-3 py-2 bg-white/40 backdrop-blur-sm rounded-full w-fit"
             >
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl text-neutral-dark font-display leading-tight">
-                {schoolInfo.tagline}
-              </h1>
-              <p className="text-xl text-primary/90 max-w-xl">
-                Join a legacy of excellence where we nurture future leaders through world-class education and holistic development.
-              </p>
+              <Sparkles className="text-primary h-5 w-5" />
+              <span className="text-primary font-body font-semibold tracking-wider text-sm">
+                NURTURING MINDS SINCE 2003
+              </span>
             </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="font-display text-6xl lg:text-7xl leading-tight"
+            >
+              <span className="text-primary">Where Learning</span>
+              <span className="block text-orange mt-2">Comes Alive!</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="font-body text-xl text-primary/80 leading-relaxed"
+            >
+              Join our vibrant community where creativity meets excellence. 
+              Experience world-class education with a perfect blend of 
+              traditional values and modern innovation.
+            </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-4"
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="flex items-center gap-8"
             >
-              <Link 
-                to="/admissions" 
-                onClick={() => trackCTAClick('Apply Now', 'home', 'primary')}
-                className="flex-1"
+              <Button
+                variant="cta-green"
+                className="group relative overflow-hidden px-10 py-5 text-lg"
               >
-                <Button 
-                  variant="cta" 
-                  className="w-full h-14 flex items-center justify-center gap-2 text-lg"
-                >
-                  <GraduationCap className="h-6 w-6" />
-                  Apply Now
-                </Button>
-              </Link>
-              <Link 
-                to="/campuses" 
-                onClick={() => trackCTAClick('Explore Campuses', 'home', 'secondary')}
-                className="flex-1"
-              >
-                <Button 
-                  variant="outline2" 
-                  className="w-full h-14 flex items-center justify-center gap-2 text-lg group"
-                >
-                  Explore Campuses
-                  <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-            </motion.div>
+                <span className="relative z-10 flex items-center gap-3">
+                  Begin Your Journey
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
+                </span>
+              </Button>
 
-            {/* Stats Section */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="space-y-6"
-            >
-              {/* Legacy Highlight */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="bg-primary/5 p-6 rounded-2xl border border-primary/10 backdrop-blur-sm"
-              >
-                <div className="flex items-center justify-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
-                    <Star className="h-8 w-8 text-primary" />
-                  </div>
-                  <div className="text-center">
-                    <AnimatedCounter 
-                      value="21+"
-                      className="text-4xl md:text-5xl font-display text-primary"
-                    />
-                    <div className="text-sm md:text-base text-primary/80 mt-1">Years of Legacy</div>
-                  </div>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full bg-primary animate-pulse" />
+                  <span className="text-primary font-body font-semibold">
+                    Admissions Open
+                  </span>
                 </div>
-              </motion.div>
-
-              {/* Other Stats */}
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { icon: Users, label: 'Students', value: '1700+' },
-                  { icon: BookOpen, label: 'Expert Faculty', value: '100+' }
-                ].map((stat, index) => (
-                  <motion.div 
-                    key={index}
-                    whileHover={{ scale: 1.02 }}
-                    className="text-center p-4 rounded-xl bg-white/50 hover:bg-white/80 transition-colors duration-300 border border-primary/5"
-                  >
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/5 mb-3">
-                      <stat.icon className="h-6 w-6 text-primary/80" />
-                    </div>
-                    <AnimatedCounter 
-                      value={stat.value}
-                      className="text-2xl md:text-3xl font-display text-neutral-dark"
-                    />
-                    <div className="text-sm text-primary/80 mt-1">{stat.label}</div>
-                  </motion.div>
-                ))}
+                <div className="text-primary/60 font-body text-sm pl-6">
+                  Limited seats available
+                </div>
               </div>
             </motion.div>
-          </div>
 
-          {/* Right Column - Image Grid */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="grid grid-cols-3 gap-8 pt-8 border-t border-primary/20"
+            >
+              {[
+                { value: "1200+", label: "Happy Students" },
+                { value: "98%", label: "Board Results" },
+                { value: "25+", label: "Activities" }
+              ].map((stat, index) => (
+                <div key={index}>
+                  <div className="font-display text-3xl text-orange mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="font-body text-primary/70 text-sm">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Right Image Grid */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="relative grid grid-cols-2 gap-4 h-[600px]"
+            transition={{ duration: 0.8 }}
+            style={{ opacity }}
+            className="hidden lg:grid grid-cols-12 gap-4 h-[600px]"
           >
-            <div className="relative h-full">
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-                className="h-[calc(50%-8px)] mb-4"
+            {/* Main Large Image */}
+            <motion.div
+              style={{ y: y1 }}
+              className="col-span-8 row-span-2 rounded-2xl overflow-hidden shadow-2xl"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                alt="Campus Life"
+                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+              />
+            </motion.div>
+
+            {/* Side Images */}
+            <div className="col-span-4 space-y-4">
+              <motion.div
+                style={{ y: y1 }}
+                className="rounded-2xl overflow-hidden shadow-2xl h-[280px]"
               >
-                <img 
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=2066&q=80"
-                  alt="Students in classroom"
-                  className="w-full h-full object-cover rounded-2xl shadow-lg"
+                <img
+                  src="https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                  alt="Science Lab"
+                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                 />
               </motion.div>
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-                className="h-[calc(50%-8px)]"
+              <motion.div
+                style={{ y: y1 }}
+                className="rounded-2xl overflow-hidden shadow-2xl h-[280px]"
               >
-                <img 
-                  src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-                  alt="School campus"
-                  className="w-full h-full object-cover rounded-2xl shadow-lg"
-                />
-              </motion.div>
-            </div>
-            <div className="relative h-full mt-12">
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-                className="h-[calc(50%-8px)] mb-4"
-              >
-                <img 
-                  src="https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-                  alt="Students studying"
-                  className="w-full h-full object-cover rounded-2xl shadow-lg"
-                />
-              </motion.div>
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-                className="h-[calc(50%-8px)]"
-              >
-                <img 
-                  src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2022&q=80"
-                  alt="School activities"
-                  className="w-full h-full object-cover rounded-2xl shadow-lg"
+                <img
+                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                  alt="Student Life"
+                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                 />
               </motion.div>
             </div>
           </motion.div>
         </div>
-      </Container>
-
-      {/* News Ticker */}
-      <NewsTicker latestUpdate={latestUpdate} />
+      </div>
     </div>
   );
 }
