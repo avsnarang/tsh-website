@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { ArrowLeft, Plus, Pencil, AlertTriangle, User, X } from 'lucide-react';
@@ -11,8 +11,16 @@ interface Testimonial {
   name: string;
   batch: string;
   content: string;
-  image_url?: string;
-  source_type?: string;
+  image_url: string;
+  source_type: string;
+}
+
+interface FormData {
+  name: string;
+  batch: string;
+  content: string;
+  image_url: string;
+  source_type: string;
 }
 
 export default function ManageTestimonials() {
@@ -24,12 +32,15 @@ export default function ManageTestimonials() {
   const [showForm, setShowForm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     batch: '',
     content: '',
-    image_url: ''
+    image_url: '',
+    source_type: 'alumni'
   });
+  const [success, setSuccess] = useState<string>('');
+  const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
 
   useEffect(() => {
     if (!user) {
@@ -95,6 +106,22 @@ export default function ManageTestimonials() {
     } catch (error) {
       console.error('Error creating testimonial:', error);
       setError('Failed to create testimonial');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('testimonials')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setTestimonials(prev => prev.filter(t => t.id !== id));
+      setSuccess('Testimonial deleted successfully');
+    } catch (error) {
+      setError('Failed to delete testimonial');
     }
   };
 
