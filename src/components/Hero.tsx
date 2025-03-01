@@ -1,92 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import Button from './ui/Button';
 
 export default function Hero() {
   const { scrollY } = useScroll();
-  const [isMounted, setIsMounted] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    setIsMounted(true);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: e.clientX,
-        y: e.clientY
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   const y1 = useTransform(scrollY, [0, 500], [0, -100]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-green-50 to-green-100">
-      {/* Texture Overlay */}
+      {/* Minimalist Texture Overlay */}
       <div className="absolute inset-0 z-0">
-        {/* Noise Texture */}
-        <div 
-          className="absolute inset-0 opacity-[0.15] mix-blend-overlay"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-            backgroundRepeat: 'repeat',
-            backgroundSize: '128px 128px'
-          }}
-        />
-        
-        {/* Diagonal Lines Pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.07]"
+        {/* Subtle Grid Pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage: `
-              repeating-linear-gradient(
-                -45deg,
-                transparent,
-                transparent 1px,
-                rgba(0, 80, 27, 0.05) 1px,
-                rgba(0, 80, 27, 0.05) 2px
-              )
+              linear-gradient(to right, rgba(0, 80, 27, 0.05) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(0, 80, 27, 0.05) 1px, transparent 1px)
             `,
-            backgroundSize: '8px 8px'
+            backgroundSize: "40px 40px",
           }}
         />
 
-        {/* Dot Pattern (existing) */}
-        <div 
-          className="absolute inset-0 opacity-[0.07]"
+        {/* Subtle Dot Pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage: `
               radial-gradient(circle at 2px 2px, rgba(0, 80, 27, 0.15) 1px, transparent 0)
             `,
-            backgroundSize: '32px 32px'
+            backgroundSize: "20px 20px",
           }}
         />
       </div>
 
-      {/* Enhanced Mouse follower - adjusted for better visibility with new texture */}
-      <motion.div
-        className="pointer-events-none fixed z-10 h-[500px] w-[500px] rounded-full mix-blend-multiply"
-        animate={{
-          x: mousePosition.x - 250,
-          y: mousePosition.y - 250,
-        }}
-        transition={{
-          type: "spring",
-          damping: 30,
-          stiffness: 200,
-          mass: 0.5,
-        }}
-      >
-        <div className="absolute inset-0 rounded-full bg-green-300/50 blur-[100px]" />
-        <div className="absolute inset-0 rounded-full bg-orange-300/40 blur-[100px] animate-pulse" />
-      </motion.div>
-
-      {/* Gradient Accents - adjusted opacity for better balance with texture */}
+      {/* Gradient Accents */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-200/30 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-200/20 rounded-full blur-3xl" />
@@ -130,8 +80,8 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="font-body text-xl text-primary/80 leading-relaxed"
             >
-              Join our vibrant community where creativity meets excellence. 
-              Experience world-class education with a perfect blend of 
+              Join our vibrant community where creativity meets excellence.
+              Experience world-class education with a perfect blend of
               traditional values and modern innovation.
             </motion.p>
 
@@ -173,7 +123,7 @@ export default function Hero() {
               {[
                 { value: "1200+", label: "Happy Students" },
                 { value: "98%", label: "Board Results" },
-                { value: "25+", label: "Activities" }
+                { value: "25+", label: "Activities" },
               ].map((stat, index) => (
                 <div key={index}>
                   <div className="font-display text-3xl text-orange mb-1">
@@ -201,7 +151,7 @@ export default function Hero() {
               className="col-span-8 row-span-2 rounded-2xl overflow-hidden shadow-2xl"
             >
               <img
-                src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                src="https://images.tsh.edu.in/homepage/grid_1.jpg"
                 alt="Campus Life"
                 className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
               />
@@ -214,8 +164,8 @@ export default function Hero() {
                 className="rounded-2xl overflow-hidden shadow-2xl h-[280px]"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                  alt="Science Lab"
+                  src="https://images.tsh.edu.in/homepage/grid_2.jpg"
+                  alt="Music"
                   className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                 />
               </motion.div>
@@ -224,8 +174,8 @@ export default function Hero() {
                 className="rounded-2xl overflow-hidden shadow-2xl h-[280px]"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                  alt="Student Life"
+                  src="https://images.tsh.edu.in/homepage/grid_4.jpg"
+                  alt="Dance"
                   className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                 />
               </motion.div>
