@@ -47,7 +47,7 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminSetup from './pages/admin/AdminSetup';
 import ManageTestimonials from './pages/admin/ManageTestimonials';
-import ManageGallery from './pages/admin/ManageGallery';
+import AdminGallery from './pages/admin/AdminGallery';
 import ManageMessages from './pages/admin/ManageMessages';
 import ManageEvents from './pages/admin/ManageEvents';
 import ManageUpdates from './pages/admin/ManageUpdates';
@@ -69,7 +69,7 @@ function AnimatedRoutes() {
             <Route element={<RequireAdmin />}>
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/testimonials" element={<ManageTestimonials />} />
-              <Route path="/admin/gallery" element={<ManageGallery />} />
+              <Route path="/admin/gallery" element={<AdminGallery />} />
               <Route path="/admin/messages" element={<ManageMessages />} />
               <Route path="/admin/events" element={<ManageEvents />} />
               <Route path="/admin/updates" element={<ManageUpdates />} />
