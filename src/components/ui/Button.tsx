@@ -17,14 +17,13 @@ export default function Button({
   ...props 
 }: ButtonProps) {
   const baseStyles = `
-    px-6 py-3
+    px-6 py-3 overflow-hidden
     rounded-full
     font-body font-semibold
     transition-all duration-300
     disabled:opacity-50
     disabled:cursor-not-allowed
     relative
-    overflow-hidden
     ${className}
   `;
 
@@ -90,18 +89,19 @@ export default function Button({
   // If href is provided, render as Link
   if (href) {
     return (
-      <motion.div
+      <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
-        <Link
-          to={href}
-          className={buttonStyles}
-          {...props}
-        >
-          {children}
-        </Link>
-      </motion.div>
+        <div style={{ display: 'contents' }}>
+          <Link
+            to={href}
+            className={buttonStyles}
+          >
+            {children}
+          </Link>
+        </div>
+      </motion.button>
     );
   }
 
