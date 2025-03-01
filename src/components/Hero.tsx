@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import Button from './ui/Button';
@@ -6,7 +5,11 @@ import Button from './ui/Button';
 export default function Hero() {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, -100]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  
+  // Add these transforms for text animations
+  const textY = useTransform(scrollY, [0, 300], [0, 100]);
+  const textOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0.3]);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-green-50 to-green-100">
@@ -53,9 +56,7 @@ export default function Hero() {
             className="space-y-8 pt-20 md:pt-0"
           >
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              style={{ y: textY, opacity: textOpacity }}
               className="flex items-center gap-2 px-3 py-2 bg-white/40 backdrop-blur-sm rounded-full w-fit"
             >
               <Sparkles className="text-primary h-5 w-5" />
@@ -65,9 +66,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              style={{ y: textY, opacity: textOpacity }}
               className="font-display text-6xl lg:text-7xl leading-tight"
             >
               <span className="text-primary">Where Learning</span>
@@ -75,9 +74,7 @@ export default function Hero() {
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              style={{ y: textY, opacity: textOpacity }}
               className="font-body text-xl text-primary/80 leading-relaxed"
             >
               Join our vibrant community where creativity meets excellence.
@@ -86,9 +83,7 @@ export default function Hero() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
+              style={{ y: textY, opacity: textOpacity }}
               className="flex items-center gap-8"
             >
               <Button
@@ -115,9 +110,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
+              style={{ y: textY, opacity: textOpacity }}
               className="grid grid-cols-3 gap-8 pt-8 border-t border-primary/20"
             >
               {[

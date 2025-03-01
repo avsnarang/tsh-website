@@ -11,6 +11,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
+          analytics: ['@vercel/analytics', '@vercel/speed-insights'],
         },
       },
     },

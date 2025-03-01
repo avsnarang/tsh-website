@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Container from '../components/ui/Container';
 import InviteCard from '../components/invites/InviteCard';
 import InviteModal from '../components/invites/InviteModal';
-import { Invite } from '../types/invite';
+import type { Invite as InviteType } from '../types/invite';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import Title from '../components/utils/Title';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
-import { useSEO } from '../lib/seo'; 
+import { useSEO } from '../lib/seo';
 
 export default function Invites() {
   const { user } = useAuth();
-  const [events, setEvents] = useState<Invite[]>([]);
+  const [invites, setInvites] = useState<InviteType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedInvite, setSelectedInvite] = useState<Invite | null>(null);
+  const [selectedInvite, setSelectedInvite] = useState<InviteType | null>(null);
   const [success, setSuccess] = useState('');
 
   useSEO({
@@ -25,16 +25,16 @@ export default function Invites() {
   });
 
   useEffect(() => {
-    fetchEvents();
+    fetchInvites();
   }, []);
 
-  const fetchEvents = async () => {
+  const fetchInvites = async () => {
     try {
       setLoading(true);
       setError('');
 
-      const { data: eventsData, error: eventsError } = await supabase
-        .from('events')
+      const { data: invitesData, error: invitesError } = await supabase
+        .from('invites')
         .select(`
           id,
           title,
@@ -49,62 +49,65 @@ export default function Invites() {
           accepting_rsvps
         `)
         .order('date', { ascending: true })
-        .gte('date', new Date().toISOString().split('T')[0]); // Only get upcoming events
+        .gte('date', new Date().toISOString().split('T')[0]);
 
-      if (eventsError) throw eventsError;
+      if (invitesError) throw invitesError;
 
-      // Get RSVP counts and user's RSVP status for each event
-      const eventsWithDetails = await Promise.all(
-        (eventsData || []).map(async (event) => {
-          // Get total guests count using the function with correct parameter name
+      const invitesWithDetails = await Promise.all(
+        (invitesData || []).map(async (invite) => {
           const { data: totalGuests, error: countError } = await supabase
-            .rpc('get_event_total_guests', { p_event_id: event.id });
+            .rpc('get_event_total_guests', { p_event_id: invite.id });
 
           if (countError) throw countError;
 
-          // Get user's RSVP if logged in
-          let userRsvp = null;
+          let userRsvp: InviteType['userRsvp'] | undefined = undefined;
           if (user) {
             const { data: rsvpData } = await supabase
               .from('event_rsvps')
               .select('status, guests, admission_number')
-              .eq('event_id', event.id)
+              .eq('event_id', invite.id)
               .eq('user_id', user.id)
               .maybeSingle();
 
-            userRsvp = rsvpData;
+            if (rsvpData) {
+              userRsvp = {
+                status: rsvpData.status,
+                guests: rsvpData.guests,
+                admission_number: rsvpData.admission_number
+              } as InviteType['userRsvp'];
+            }
           }
 
           return {
-            id: event.id,
-            title: event.title,
-            date: event.date,
-            time: event.time,
-            location: event.location,
-            description: event.description,
-            coverImage: event.cover_image,
-            maxCapacity: event.max_capacity,
-            maxGuestsPerRsvp: event.max_guests_per_rsvp,
-            requiresAdmissionNumber: true, // Always require admission number
-            status: 'upcoming',
+            id: invite.id,
+            title: invite.title,
+            date: invite.date,
+            time: invite.time,
+            location: invite.location,
+            description: invite.description,
+            coverImage: invite.cover_image,
+            maxCapacity: invite.max_capacity,
+            maxGuestsPerRsvp: invite.max_guests_per_rsvp,
+            requiresAdmissionNumber: true,
+            status: 'upcoming' as const,
             rsvpCount: totalGuests || 0,
             userRsvp,
-            acceptingRsvps: event.accepting_rsvps
-          };
+            acceptingRsvps: invite.accepting_rsvps
+          } satisfies InviteType;
         })
       );
 
-      setEvents(eventsWithDetails);
+      setInvites(invitesWithDetails);
     } catch (error) {
-      console.error('Error fetching events:', error);
-      setError('Failed to load events');
+      console.error('Error fetching invites:', error);
+      setError('Failed to load invites');
     } finally {
       setLoading(false);
     }
   };
 
   const handleRSVP = (inviteId: string) => {
-    const invite = events.find(inv => inv.id === inviteId);
+    const invite = invites.find(inv => inv.id === inviteId);
     if (invite) {
       if (!invite.acceptingRsvps) {
         setError('RSVPs are no longer being accepted for this event');
@@ -175,7 +178,7 @@ export default function Invites() {
       setSuccess('Your RSVP has been submitted successfully!');
       setTimeout(() => setSuccess(''), 3000);
       setSelectedInvite(null);
-      await fetchEvents(); // Refresh events to update counts
+      await fetchInvites(); // Refresh invites to update counts
     } catch (error) {
       console.error('Error submitting RSVP:', error);
       setError('Failed to submit RSVP. Please try again.');
@@ -225,13 +228,13 @@ export default function Invites() {
           </div>
         )}
 
-        {events.length === 0 ? (
+        {invites.length === 0 ? (
           <div className="text-center text-neutral-dark/60">
             No upcoming events at this time.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events.map((invite) => (
+            {invites.map((invite) => (
               <InviteCard
                 key={invite.id}
                 invite={invite}
