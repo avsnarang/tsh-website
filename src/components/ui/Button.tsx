@@ -1,12 +1,21 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion, HTMLMotionProps } from 'framer-motion';
 
 interface ButtonProps extends Omit<HTMLMotionProps<"button">, "variant"> {
   variant?: 'primary' | 'outline' | 'outline2' | 'cta' | 'cta-green' | 'download' | 'edit' | 'delete';
   children: React.ReactNode;
+  href?: string;
+  className?: string;
 }
 
-export default function Button({ variant = 'primary', children, className = '', ...props }: ButtonProps) {
+export default function Button({ 
+  variant = 'primary', 
+  children, 
+  className = '', 
+  href,
+  ...props 
+}: ButtonProps) {
   const baseStyles = `
     px-6 py-3
     rounded-full
@@ -16,6 +25,7 @@ export default function Button({ variant = 'primary', children, className = '', 
     disabled:cursor-not-allowed
     relative
     overflow-hidden
+    ${className}
   `;
 
   const variants = {
@@ -29,7 +39,6 @@ export default function Button({ variant = 'primary', children, className = '', 
       border-2 border-white
       text-white
       hover:bg-white/20
-      hover:shadow-lg hover:shadow-white/20
     `,
     outline2: `
       bg-white/10 backdrop-blur-sm
@@ -76,63 +85,32 @@ export default function Button({ variant = 'primary', children, className = '', 
     `
   };
 
-  if (variant === 'cta' || variant === 'cta-green') {
-    const isGreen = variant === 'cta-green';
-    
+  const buttonStyles = `${baseStyles} ${variants[variant]}`;
+
+  // If href is provided, render as Link
+  if (href) {
     return (
-      <motion.button 
-        className={`${baseStyles} ${variants[variant]} ${className}`}
-        {...props}
+      <motion.div
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        initial={false}
       >
-        {/* Static glowing gradient background */}
-        <div className={`absolute inset-0 ${
-          isGreen 
-            ? 'bg-gradient-to-r from-primary via-primary-dark to-primary'
-            : 'bg-gradient-to-r from-orange via-orange-dark to-orange'
-        } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}>
-          <div className="absolute inset-0 animate-gradient-x" />
-        </div>
-        
-        {/* Continuous pulsing ring effect */}
-        <div className={`absolute -inset-1 ${
-          isGreen
-            ? 'bg-gradient-to-r from-green-light to-primary'
-            : 'bg-gradient-to-r from-orange-light to-orange'
-        } rounded-full blur opacity-20 group-hover:opacity-60 transition-all duration-500 group-hover:blur-xl animate-pulse`} />
-        
-        {/* Continuous moving shine effect */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 transform animate-shine bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-        </div>
-        
-        {/* Glowing border with continuous animation */}
-        <div className={`absolute inset-0 rounded-full border-2 ${
-          isGreen ? 'border-green-light' : 'border-orange-light'
-        } opacity-20 group-hover:opacity-50 transition-opacity duration-500`}>
-          <div className="absolute inset-0 animate-border-glow" />
-        </div>
-
-        {/* Button content */}
-        <span className="relative z-10 flex items-center justify-center gap-2">
+        <Link
+          to={href}
+          className={buttonStyles}
+          {...props}
+        >
           {children}
-        </span>
-
-        {/* Additional hover glow effect */}
-        <div className={`absolute inset-0 ${
-          isGreen
-            ? 'bg-gradient-to-r from-green-light/0 via-green-light/30 to-green-light/0'
-            : 'bg-gradient-to-r from-orange-light/0 via-orange-light/30 to-orange-light/0'
-        } opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500`} />
-      </motion.button>
+        </Link>
+      </motion.div>
     );
   }
 
+  // Otherwise render as button
   return (
     <motion.button 
-      className={`${baseStyles} ${variants[variant]} ${className}`}
+      className={buttonStyles}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       {...props}
     >
       {children}
