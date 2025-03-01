@@ -10,7 +10,7 @@ const features = [
     icon: <BookOpen className="h-8 w-8" />,
     title: "Academic Excellence",
     description: "Fostering critical thinking and creativity through our comprehensive CBSE curriculum",
-    highlight: "100% Board Results"
+    highlight: "100% Board Pass Results"
   },
   {
     icon: <Heart className="h-8 w-8" />,

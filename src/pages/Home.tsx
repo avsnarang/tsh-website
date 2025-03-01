@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, User, X } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useSEO } from '../lib/seo';
 import Hero from '../components/Hero';
 import Features from '../components/Features';
@@ -13,6 +13,7 @@ import Button from '../components/ui/Button';
 import { supabase } from '../lib/supabase';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
+import { LeadershipMessage } from '../types/leadership';
 
 export default function Home() {
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
@@ -135,46 +136,69 @@ export default function Home() {
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <ScrollReveal direction="left">
-              <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 h-full">
-                <TextReveal>
-                  <h3 className="text-2xl text-neutral-dark mb-6">Mission</h3>
-                </TextReveal>
-                <TextReveal delay={0.2}>
-                  <p className="text-neutral-dark/80 mb-6">
-                    "We aim to help our Scholars grow into compassionate independent thinkers and innovators who will become the custodians of the environment, world culture and the rich legacy of traditions. We shall provide a conducive environment for their holistic development which will enable them to become the proclaimers of change in society."
-                  </p>
-                </TextReveal>
-                <Link
-                  to="/about/vision"
-                  className="inline-flex items-center text-primary hover:text-primary-dark transition-colors group"
-                >
-                  Learn More
-                  <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-2" />
-                </Link>
-              </div>
-            </ScrollReveal>
+          <div className="relative">
+            {/* Decorative background elements */}
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzYgMzRjMC0yLjIgMS44LTQgNC00czQgMS44IDQgNC0xLjggNC00IDQtNC0xLjgtNC00eiIgZmlsbD0icmdiYSgwLCA4MCwgMjcsIDAuMDUpIi8+PC9nPjwvc3ZnPg==')] opacity-50" />
 
-            <ScrollReveal direction="right">
-              <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 h-full">
-                <TextReveal>
-                  <h3 className="text-2xl text-neutral-dark mb-6">Vision</h3>
-                </TextReveal>
-                <TextReveal delay={0.2}>
-                  <p className="text-neutral-dark/80 mb-6">
-                    "We want to help our students reach their full potential, teaching them to think for themselves, care for the environment, and respect all cultures and traditions. Our school is more than a place to learn; it's where students prepare for the future. We hope that with our well-rounded education, they'll confidently face today's challenges. As they grow, nurtured by our school, they'll become leaders in making the world a better, more united place."
-                  </p>
-                </TextReveal>
-                <Link
-                  to="/about/vision"
-                  className="inline-flex items-center text-primary hover:text-primary-dark transition-colors group"
-                >
-                  Learn More
-                  <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-2" />
-                </Link>
-              </div>
-            </ScrollReveal>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Mission Card */}
+              <ScrollReveal direction="left">
+                <div className="group relative bg-gradient-to-br from-white to-green-50 p-1 rounded-2xl h-full">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary-light/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500 opacity-70" />
+                  <div className="relative bg-white p-8 rounded-2xl h-full flex flex-col">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="h-12 w-1 bg-primary rounded-full" />
+                      <TextReveal>
+                        <h3 className="text-3xl font-display text-primary">Mission</h3>
+                      </TextReveal>
+                    </div>
+                    <TextReveal delay={0.2}>
+                      <div className="flex-grow">
+                        <p className="text-neutral-dark/80 leading-relaxed">
+                          "We aim to help our Scholars grow into compassionate independent thinkers and innovators who will become the custodians of the environment, world culture and the rich legacy of traditions. We shall provide a conducive environment for their holistic development which will enable them to become the proclaimers of change in society."
+                        </p>
+                      </div>
+                    </TextReveal>
+                    <Link
+                      to="/about/vision"
+                      className="mt-8 inline-flex items-center px-6 py-3 rounded-full bg-primary/5 text-primary hover:bg-primary/10 transition-colors group/link w-fit"
+                    >
+                      Learn More
+                      <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover/link:translate-x-2" />
+                    </Link>
+                  </div>
+                </div>
+              </ScrollReveal>
+
+              {/* Vision Card */}
+              <ScrollReveal direction="right">
+                <div className="group relative bg-gradient-to-br from-white to-orange-50 p-1 rounded-2xl h-full">
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange/20 to-orange-light/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500 opacity-70" />
+                  <div className="relative bg-white p-8 rounded-2xl h-full flex flex-col">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="h-12 w-1 bg-orange rounded-full" />
+                      <TextReveal>
+                        <h3 className="text-3xl font-display text-orange">Vision</h3>
+                      </TextReveal>
+                    </div>
+                    <TextReveal delay={0.2}>
+                      <div className="flex-grow">
+                        <p className="text-neutral-dark/80 leading-relaxed">
+                          "We want to help our students reach their full potential, teaching them to think for themselves, care for the environment, and respect all cultures and traditions. Our school is more than a place to learn; it's where students prepare for the future. We hope that with our well-rounded education, they'll confidently face today's challenges. As they grow, nurtured by our school, they'll become leaders in making the world a better, more united place."
+                        </p>
+                      </div>
+                    </TextReveal>
+                    <Link
+                      to="/about/vision"
+                      className="mt-8 inline-flex items-center px-6 py-3 rounded-full bg-orange/5 text-orange hover:bg-orange/10 transition-colors group/link w-fit"
+                    >
+                      Learn More
+                      <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover/link:translate-x-2" />
+                    </Link>
+                  </div>
+                </div>
+              </ScrollReveal>
+            </div>
           </div>
         </Container>
       </div>
@@ -209,7 +233,7 @@ export default function Home() {
               </button>
             </div>
             <div className="prose prose-lg">
-              {selectedMessage.fullMessage.split('\n\n').map((paragraph, index) => (
+              {(selectedMessage.fullMessage ?? '').split('\n\n').map((paragraph, index) => (
                 <TextReveal key={index} delay={0.2 + index * 0.1}>
                   <p className="text-neutral-dark/80 mb-4">
                     {paragraph}
