@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Container from '../../components/ui/Container';
 import { supabase } from '../../lib/supabase';
 import { ArrowLeft, Plus, Pencil, AlertTriangle, Calendar, MapPin, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -395,7 +394,7 @@ export default function ManageGallery() {
                 </div>
                 <p className="text-neutral-dark/80 mb-4">{event.description}</p>
                 <div className="flex gap-4">
-                  {event.gallery_images.slice(0, 3).map((image, idx) => (
+                  {event.gallery_images.slice(0, 3).map(image => (
                     <div key={image.id} className="relative aspect-square rounded-lg overflow-hidden">
                       <img
                         src={image.image_url}
