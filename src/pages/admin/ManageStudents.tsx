@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { parseCSV } from '@/lib/utils';
 import type { Student } from '@/types';
 
 export default function ManageStudents(): JSX.Element {
