@@ -43,23 +43,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ 
-        email, 
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
         password,
-        options: {
-          redirectTo: window.location.origin
-        }
       });
-      
-      if (error) {
-        console.error('Sign in error:', error);
-        throw error;
-      }
-
-      // Ensure we have a valid session
-      if (!data.session) {
-        throw new Error('No session returned from sign in');
-      }
+      if (error) throw error;
     } catch (error) {
       console.error('Error signing in:', error);
       throw error;
@@ -86,8 +74,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const value = {
+    user,
+    loading,
+    signIn,
+    signUp,
+    signOut
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

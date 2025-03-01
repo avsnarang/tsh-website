@@ -11,7 +11,7 @@ import RequireAdmin from './components/auth/RequireAdmin';
 import { usePageTracking } from './lib/analytics';
 
 // Pages
-import Home from './pages/Home';
+import HomeWrapper from './pages/HomeWrapper';
 import Home2 from './pages/Home-2';
 import About from './pages/About';
 import Vision from './pages/about/Vision';
@@ -77,7 +77,7 @@ function AnimatedRoutes() {
             </Route>
 
             {/* Main Routes */}
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<HomeWrapper />} />
             <Route path="/home-2" element={<Home2 />} />
             <Route path="/about" element={<About />} />
             <Route path="/about/vision" element={<Vision />} />

@@ -15,9 +15,14 @@ import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
 import { LeadershipMessage } from '../types/leadership';
 
-export default function Home() {
+interface HomeProps {
+  messages: LeadershipMessage[];
+  latestUpdate: string;
+}
+
+export default function Home({ messages: initialMessages, latestUpdate }: HomeProps) {
+  const [messages, setMessages] = useState<LeadershipMessage[]>(initialMessages);
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
-  const [messages, setMessages] = useState<LeadershipMessage[]>([]);
   const [loading, setLoading] = useState(true);
 
   useSEO({

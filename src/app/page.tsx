@@ -1,6 +1,14 @@
-import { Metadata } from 'next';
-import { supabase } from '@/lib/supabase';
-import Home from '@/components/pages/Home';
+import type { Metadata } from 'next';
+import { supabase } from '../lib/supabase';
+import Home from '../pages/Home';
+import { LeadershipMessage } from '../types/leadership';
+
+interface HomeProps {
+  initialData: {
+    messages: LeadershipMessage[];
+    latestUpdate: string;
+  }
+}
 
 export const metadata: Metadata = {
   title: "The Scholars' Home | Excellence in Education Since 2003",
@@ -28,6 +36,5 @@ async function getInitialData() {
 
 export default async function HomePage() {
   const initialData = await getInitialData();
-  
-  return <Home initialData={initialData} />;
+  return <Home {...initialData} />;
 }
