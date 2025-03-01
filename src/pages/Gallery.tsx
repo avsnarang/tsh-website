@@ -11,14 +11,16 @@ import { useSEO } from '../lib/seo';
 interface GalleryImage {
   id: string;
   url: string;
-  // add other properties as needed
+  caption?: string;
 }
 
 interface GalleryEvent {
   id: string;
   title: string;
   date: string;
-  // add other properties as needed
+  description?: string;
+  campus: string;
+  images?: GalleryImage[];
 }
 
 interface EventsByYear {

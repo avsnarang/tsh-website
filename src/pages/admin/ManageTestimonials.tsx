@@ -12,6 +12,7 @@ interface Testimonial {
   batch: string;
   content: string;
   image_url?: string;
+  source_type?: string;
 }
 
 export default function ManageTestimonials() {
