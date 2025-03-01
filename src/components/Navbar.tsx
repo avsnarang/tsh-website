@@ -336,10 +336,12 @@ export default function Navbar() {
               <Link to="/admissions" className="ml-2">
                 <Button 
                   variant="cta-green"
-                  className="min-w-[140px] flex items-center justify-center gap-2"
+                  className="min-w-[140px] flex items-center justify-center gap-2 relative overflow-hidden"
                 >
-                  <GraduationCap className="h-5 w-5" />
-                  Join Now
+                  <span className="relative z-10 flex items-center gap-2">
+                    <GraduationCap className="h-5 w-5" />
+                    Join Now
+                  </span>
                 </Button>
               </Link>
             </div>

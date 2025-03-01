@@ -1,15 +1,42 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import Button from './ui/Button';
 
 export default function Hero() {
-  const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, -100]);
-  
-  // Add these transforms for text animations
-  const textY = useTransform(scrollY, [0, 300], [0, 100]);
-  const textOpacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0.3]);
+  const containerAnimation = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemAnimation = {
+    hidden: { opacity: 0, y: 20 },
+    show: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const imageAnimation = {
+    hidden: { opacity: 0, scale: 0.95 },
+    show: { 
+      opacity: 1, 
+      scale: 1,
+      transition: {
+        duration: 0.7,
+        ease: "easeOut"
+      }
+    }
+  };
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-green-50 to-green-100">
@@ -50,13 +77,13 @@ export default function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            variants={containerAnimation}
+            initial="hidden"
+            animate="show"
             className="space-y-8 pt-20 md:pt-0"
           >
             <motion.div
-              style={{ y: textY, opacity: textOpacity }}
+              variants={itemAnimation}
               className="flex items-center gap-2 px-3 py-2 bg-white/40 backdrop-blur-sm rounded-full w-fit"
             >
               <Sparkles className="text-primary h-5 w-5" />
@@ -66,7 +93,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.h1
-              style={{ y: textY, opacity: textOpacity }}
+              variants={itemAnimation}
               className="font-display text-6xl lg:text-7xl leading-tight"
             >
               <span className="text-primary">Where Learning</span>
@@ -74,7 +101,7 @@ export default function Hero() {
             </motion.h1>
 
             <motion.p
-              style={{ y: textY, opacity: textOpacity }}
+              variants={itemAnimation}
               className="font-body text-xl text-primary/80 leading-relaxed"
             >
               Join our vibrant community where creativity meets excellence.
@@ -83,12 +110,12 @@ export default function Hero() {
             </motion.p>
 
             <motion.div
-              style={{ y: textY, opacity: textOpacity }}
+              variants={itemAnimation}
               className="flex items-center gap-8"
             >
               <Button
                 variant="cta-green"
-                className="group relative overflow-hidden px-10 py-5 text-lg"
+                className="group relative px-10 py-5 text-lg overflow-hidden"
               >
                 <span className="relative z-10 flex items-center gap-3">
                   Begin Your Journey
@@ -110,7 +137,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.div
-              style={{ y: textY, opacity: textOpacity }}
+              variants={itemAnimation}
               className="grid grid-cols-3 gap-8 pt-8 border-t border-primary/20"
             >
               {[
@@ -132,15 +159,14 @@ export default function Hero() {
 
           {/* Right Image Grid */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            style={{ opacity }}
+            variants={containerAnimation}
+            initial="hidden"
+            animate="show"
             className="hidden lg:grid grid-cols-12 gap-4 h-[600px]"
           >
             {/* Main Large Image */}
             <motion.div
-              style={{ y: y1 }}
+              variants={imageAnimation}
               className="col-span-8 row-span-2 rounded-2xl overflow-hidden shadow-2xl"
             >
               <img
@@ -153,7 +179,7 @@ export default function Hero() {
             {/* Side Images */}
             <div className="col-span-4 space-y-4">
               <motion.div
-                style={{ y: y1 }}
+                variants={imageAnimation}
                 className="rounded-2xl overflow-hidden shadow-2xl h-[280px]"
               >
                 <img
@@ -163,7 +189,7 @@ export default function Hero() {
                 />
               </motion.div>
               <motion.div
-                style={{ y: y1 }}
+                variants={imageAnimation}
                 className="rounded-2xl overflow-hidden shadow-2xl h-[280px]"
               >
                 <img

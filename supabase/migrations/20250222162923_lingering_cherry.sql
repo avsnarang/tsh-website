@@ -30,6 +30,10 @@ CREATE TABLE IF NOT EXISTS students (
 -- Enable RLS
 ALTER TABLE students ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Management users can manage students" ON students;
+DROP POLICY IF EXISTS "Anyone can verify admission numbers" ON students;
+
 -- Create policies
 CREATE POLICY "Management users can manage students"
   ON students
@@ -58,3 +62,25 @@ BEGIN
   );
 END;
 $$;
+
+-- Create index for faster admission number lookups
+CREATE INDEX IF NOT EXISTS idx_students_admission_number 
+ON students(admission_number);
+
+-- Create trigger function for updating updated_at
+CREATE OR REPLACE FUNCTION update_students_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Drop existing trigger if it exists
+DROP TRIGGER IF EXISTS update_students_updated_at ON students;
+
+-- Create trigger for updated_at
+CREATE TRIGGER update_students_updated_at
+  BEFORE UPDATE ON students
+  FOR EACH ROW
+  EXECUTE FUNCTION update_students_updated_at();

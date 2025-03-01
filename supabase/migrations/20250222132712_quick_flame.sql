@@ -11,6 +11,12 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('alumni', 'alumni', true)
 ON CONFLICT (id) DO NOTHING;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Allow authenticated users to upload files" ON storage.objects;
+DROP POLICY IF EXISTS "Allow authenticated users to update their own files" ON storage.objects;
+DROP POLICY IF EXISTS "Allow authenticated users to delete their own files" ON storage.objects;
+DROP POLICY IF EXISTS "Allow public access to read files" ON storage.objects;
+
 -- Create a policy to allow authenticated users to upload files
 CREATE POLICY "Allow authenticated users to upload files"
 ON storage.objects

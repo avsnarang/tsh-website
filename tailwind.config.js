@@ -37,11 +37,12 @@ export default {
       },
       animation: {
         'gradient-x': 'gradient-x 3s ease infinite',
-        'shine': 'shine 4s linear infinite',
+        'shine': 'shine 1s forwards',
         'border-glow': 'border-glow 2s ease-in-out infinite',
         'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'ticker': 'ticker 30s linear infinite',
-        shimmer: 'shimmer 3s linear infinite'
+        shimmer: 'shimmer 3s linear infinite',
+        'continuous-shine': 'continuous-shine 3s linear infinite',
       },
       keyframes: {
         'gradient-x': {
@@ -69,7 +70,11 @@ export default {
         shimmer: {
           '0%': { backgroundPosition: '200% 200%' },
           '100%': { backgroundPosition: '-200% -200%' }
-        }
+        },
+        'continuous-shine': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
     },
   },

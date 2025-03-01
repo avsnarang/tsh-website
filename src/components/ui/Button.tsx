@@ -59,6 +59,7 @@ export default function Button({
       ring-2 ring-orange/30
       hover:ring-4 hover:ring-orange/50
       hover:shadow-[0_0_30px_rgba(166,90,32,0.6)]
+      relative overflow-hidden
     `,
     'cta-green': `
       bg-primary text-neutral-light
@@ -66,6 +67,7 @@ export default function Button({
       ring-2 ring-green/30
       hover:ring-4 hover:ring-green/50
       hover:shadow-[0_0_30px_rgba(0,80,27,0.6)]
+      relative overflow-hidden
     `,
     edit: `
       bg-green text-neutral-light
@@ -86,6 +88,19 @@ export default function Button({
 
   const buttonStyles = `${baseStyles} ${variants[variant]}`;
 
+  const ButtonContent = ({ children }: { children: React.ReactNode }) => (
+    <>
+      {/* Reflection effect for CTA buttons */}
+      {(variant === 'cta' || variant === 'cta-green') && (
+        <div className="absolute inset-0 w-full h-full">
+          <div className="absolute inset-0 translate-x-[-100%] animate-continuous-shine bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        </div>
+      )}
+      {/* Button content */}
+      <span className="relative z-10">{children}</span>
+    </>
+  );
+
   // If href is provided, render as Link
   if (href) {
     return (
@@ -98,7 +113,7 @@ export default function Button({
             to={href}
             className={buttonStyles}
           >
-            {children}
+            <ButtonContent>{children}</ButtonContent>
           </Link>
         </div>
       </motion.button>
@@ -113,7 +128,7 @@ export default function Button({
       whileTap={{ scale: 0.98 }}
       {...props}
     >
-      {children}
+      <ButtonContent>{children}</ButtonContent>
     </motion.button>
   );
 }
