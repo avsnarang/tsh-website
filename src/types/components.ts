@@ -29,6 +29,13 @@ export interface Achievement {
   description: string;
 }
 
+export interface CampusActivity {
+  title: string;
+  image: string;
+  description: string;
+  link: string;
+}
+
 export interface CampusHighlight {
   title: string;
   description: string;

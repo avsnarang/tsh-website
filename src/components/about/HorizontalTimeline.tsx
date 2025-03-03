@@ -86,7 +86,9 @@ export default function HorizontalTimeline({ events }: TimelineProps) {
       </div>
 
       {/* Mobile Timeline (Vertical) */}
-      <div className="md:hidden space-y-8">
+      <div className="md:hidden space-y-8 relative px-4">
+        {/* Vertical line that runs through all events */}
+        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-primary/20" />
 
         {events.map((event, index) => (
           <motion.div
@@ -95,20 +97,15 @@ export default function HorizontalTimeline({ events }: TimelineProps) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="relative pl-8"
+            className="relative pl-12"
           >
-            {/* Vertical Line */}
-            {index !== events.length - 1 && (
-              <div className="absolute left-[15px] top-[28px] w-1 h-full bg-primary/20" />
-            )}
-            
             {/* Year Marker */}
-            <div className="absolute left-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-              <div className="w-3 h-3 rounded-full bg-white" />
+            <div className="absolute left-2 top-4 -translate-x-1/2 w-6 h-6 rounded-full bg-primary flex items-center justify-center z-10">
+              <div className="w-2 h-2 rounded-full bg-white" />
             </div>
 
             {/* Content Card */}
-            <div className="bg-white rounded-xl p-6 shadow-lg">
+            <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
               {event.image && (
                 <div className="mb-4 rounded-lg overflow-hidden">
                   <img 

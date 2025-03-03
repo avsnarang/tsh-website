@@ -4,13 +4,14 @@ import { supabase } from '../lib/supabase';
 import Hero2 from '../components/home/Hero-2';
 import type { LeaderMessage, Testimonial } from '../types/components';
 import { Suspense, lazy } from 'react';
+import { LeadershipMessage } from '../types/leadership';
 
 // Import components after creating them
 const Features = lazy(() => import('../components/home/Features'));
 const MissionVision = lazy(() => import('../components/home/MissionVision'));
 const LeaderMessages = lazy(() => import('../components/home/LeaderMessages'));
 const Achievements = lazy(() => import('../components/home/Achievements'));
-const CampusLife = lazy(() => import('../components/campus/CampusLife'));
+const CampusLife = lazy(() => import('../components/home/CampusLife'));
 const Testimonials = lazy(() => import('../components/testimonials/Testimonials'));
 
 interface AlumniProfile {
@@ -27,7 +28,7 @@ interface TestimonialResponse {
 }
 
 export default function Home() {
-  const [messages, setMessages] = useState<LeaderMessage[]>([]);
+  const [messages, setMessages] = useState<LeadershipMessage[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -49,7 +50,18 @@ export default function Home() {
         if (messagesResponse.error) throw messagesResponse.error;
         if (testimonialsResponse.error) throw testimonialsResponse.error;
 
-        setMessages(messagesResponse.data || []);
+        // Transform the messages data to match the expected format
+        const transformedMessages: LeadershipMessage[] = (messagesResponse.data || []).map(message => ({
+          id: message.id,
+          name: message.name,
+          role: message.role,
+          photo_url: message.photo_url,
+          preview: message.preview,
+          fullMessage: message.full_message,
+          display_locations: message.display_locations
+        }));
+
+        setMessages(transformedMessages);
         
         const responseData = testimonialsResponse.data as unknown as TestimonialResponse[];
         const transformedTestimonials = responseData
@@ -74,11 +86,13 @@ export default function Home() {
   }, []);
 
   return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+        </div>
+      }
+    >
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -86,10 +100,13 @@ export default function Home() {
       >
         <Hero2 />
         <Features />
+        <LeaderMessages 
+          messages={messages as unknown as LeadershipMessage[]} 
+          isLoading={isLoading} 
+        />
         <MissionVision />
-        <LeaderMessages />
         <Achievements />
-        <CampusLife messages={messages} loading={isLoading} />
+        <CampusLife />
         <Testimonials />
       </motion.div>
     </Suspense>

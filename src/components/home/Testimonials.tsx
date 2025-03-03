@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Quote, User } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface Testimonial {
@@ -18,7 +18,6 @@ export default function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchTestimonials();
@@ -36,37 +35,49 @@ export default function Testimonials() {
       setTestimonials(data || []);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
-      setError('Failed to load testimonials');
     } finally {
       setLoading(false);
     }
   };
 
   const next = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    setCurrentIndex((prevIndex) => 
+      prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
   const prev = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
+    );
   };
 
-  if (loading) return null;
-  if (error || testimonials.length === 0) return null;
+  if (loading || testimonials.length === 0) {
+    return null;
+  }
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="py-24 relative bg-primary-dark">
+      {/* Background pattern */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)',
+          backgroundSize: '32px 32px'
+        }} />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 relative">
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl text-white font-display mb-4">
             What Our Community Says
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-primary-light max-w-2xl mx-auto">
             Hear from our students, alumni, and parents about their experiences
           </p>
         </motion.div>
@@ -75,14 +86,14 @@ export default function Testimonials() {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
-              className="bg-white rounded-lg shadow-lg p-8 md:p-12"
+              className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/10"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <Quote className="w-12 h-12 text-primary/20 mb-6" />
-              <blockquote className="text-xl md:text-2xl text-gray-700 mb-8">
+              <Quote className="w-12 h-12 text-primary-light/20 mb-6" />
+              <blockquote className="text-xl md:text-2xl text-white mb-8">
                 "{testimonials[currentIndex].content}"
               </blockquote>
               <div className="flex items-center">
@@ -90,18 +101,20 @@ export default function Testimonials() {
                   <img
                     src={testimonials[currentIndex].profile_picture_url}
                     alt={testimonials[currentIndex].author_name}
-                    className="w-16 h-16 rounded-full object-cover mr-4"
+                    className="w-16 h-16 rounded-xl object-cover mr-4"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mr-4">
-                    <User className="w-8 h-8 text-gray-400" />
+                  <div className="w-16 h-16 rounded-xl bg-white/10 flex items-center justify-center mr-4">
+                    <span className="text-2xl text-primary-light">
+                      {testimonials[currentIndex].author_name.charAt(0)}
+                    </span>
                   </div>
                 )}
                 <div>
-                  <p className="font-semibold text-gray-900">
+                  <p className="font-display text-white">
                     {testimonials[currentIndex].author_name}
                   </p>
-                  <p className="text-gray-600">
+                  <p className="text-primary-light">
                     {testimonials[currentIndex].source_type === 'student' && testimonials[currentIndex].class
                       ? `Student, Class ${testimonials[currentIndex].class}`
                       : testimonials[currentIndex].source_type.charAt(0).toUpperCase() + testimonials[currentIndex].source_type.slice(1)}
@@ -112,40 +125,22 @@ export default function Testimonials() {
           </AnimatePresence>
 
           {testimonials.length > 1 && (
-            <>
+            <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none">
               <button
                 onClick={prev}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 p-2 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-colors"
-                aria-label="Previous testimonial"
+                className="transform -translate-x-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center pointer-events-auto"
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-6 h-6 text-white" />
               </button>
-
               <button
                 onClick={next}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 p-2 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-colors"
-                aria-label="Next testimonial"
+                className="transform translate-x-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center pointer-events-auto"
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-6 h-6 text-white" />
               </button>
-            </>
+            </div>
           )}
         </div>
-
-        {testimonials.length > 1 && (
-          <div className="flex justify-center mt-8 space-x-2">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentIndex ? 'bg-primary' : 'bg-gray-300'
-                }`}
-                aria-label={`Go to testimonial ${index + 1}`}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );

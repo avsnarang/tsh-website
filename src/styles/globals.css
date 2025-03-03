@@ -1,8 +1,8 @@
-@keyframes scroll {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(100%); }
-}
-
-.animate-scroll {
-  animation: scroll 1.5s ease-in-out infinite;
+@keyframes wave {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 1000px 0;
+  }
 }

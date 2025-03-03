@@ -23,8 +23,8 @@ export default function Hero2() {
       <div className="absolute inset-0 overflow-hidden">
         {/* Top right decorative circle */}
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
-        {/* Bottom left decorative circle */}
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
+        {/* Remove the bottom left decorative circle since it's now in Features */}
+        
         {/* Center decorative pattern */}
         <div className="absolute inset-0 opacity-5">
           <div
