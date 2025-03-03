@@ -19,7 +19,7 @@ export default function HorizontalTimeline({ events }: TimelineProps) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.1 }} // Reduced threshold
           transition={{ duration: 0.5 }}
         >
           <p className="text-lg text-neutral-dark/80 leading-relaxed">
@@ -86,47 +86,46 @@ export default function HorizontalTimeline({ events }: TimelineProps) {
       </div>
 
       {/* Mobile Timeline (Vertical) */}
-      <div className="md:hidden space-y-8 relative px-4">
-        {/* Vertical line that runs through all events */}
-        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-primary/20" />
-
-        {events.map((event, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="relative pl-12"
-          >
-            {/* Year Marker */}
-            <div className="absolute left-2 top-4 -translate-x-1/2 w-6 h-6 rounded-full bg-primary flex items-center justify-center z-10">
-              <div className="w-2 h-2 rounded-full bg-white" />
-            </div>
-
-            {/* Content Card */}
-            <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-              {event.image && (
-                <div className="mb-4 rounded-lg overflow-hidden">
-                  <img 
-                    src={event.image} 
-                    alt={event.title}
-                    className="w-full h-48 object-cover"
-                  />
-                </div>
-              )}
-              <div className="text-primary font-display text-2xl mb-2">
-                {event.year}
+      <div className="md:hidden relative px-4 py-12">
+        <div className="space-y-8">
+          {events.map((event, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.1 }} // Reduced threshold
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="relative pl-12"
+            >
+              {/* Year Marker */}
+              <div className="absolute left-2 top-4 -translate-x-1/2 w-6 h-6 rounded-full bg-primary flex items-center justify-center z-10">
+                <div className="w-2 h-2 rounded-full bg-white" />
               </div>
-              <h3 className="text-xl font-semibold text-neutral-dark mb-2">
-                {event.title}
-              </h3>
-              <p className="text-neutral-dark/70">
-                {event.description}
-              </p>
-            </div>
-          </motion.div>
-        ))}
+
+              {/* Content Card */}
+              <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                {event.image && (
+                  <div className="mb-4 rounded-lg overflow-hidden">
+                    <img 
+                      src={event.image} 
+                      alt={event.title}
+                      className="w-full h-48 object-cover"
+                    />
+                  </div>
+                )}
+                <div className="text-primary font-display text-2xl mb-2">
+                  {event.year}
+                </div>
+                <h3 className="text-xl font-semibold text-neutral-dark mb-2">
+                  {event.title}
+                </h3>
+                <p className="text-neutral-dark/70">
+                  {event.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );
