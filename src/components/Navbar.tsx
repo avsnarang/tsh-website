@@ -179,9 +179,9 @@ export default function Navbar() {
         {
           label: 'Our Institution',
           items: [
-            { icon: Info, label: 'Overview', href: '/about', description: 'Learn about our legacy and achievements' },
-            { icon: Star, label: 'Vision & Mission', href: '/about/vision', description: 'Our guiding principles and goals' },
-            { icon: Award, label: 'Leadership', href: '/about/messages', description: 'Messages from our school leaders' },
+            { icon: Info, label: 'Our Story', href: '/about', description: 'Learn about our legacy and achievements' },
+            { icon: Star, label: 'Mission & Vision', href: '/about/vision', description: 'Our guiding principles and goals' },
+            { icon: Award, label: 'What our Leaders Say', href: '/about/messages', description: 'Messages from our school leaders' },
             { icon: Heart, label: 'Scholarships', href: '/scholarship', description: 'Financial aid and merit scholarships' }
           ]
         }
