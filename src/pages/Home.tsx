@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import Hero2 from '../components/home/Hero-2';
-import type { LeaderMessage, Testimonial } from '../types/components';
+import type { Testimonial } from '../types/components';
 import { Suspense, lazy } from 'react';
 import { LeadershipMessage } from '../types/leadership';
 
