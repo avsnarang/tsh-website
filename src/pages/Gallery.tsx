@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Container from '../components/ui/Container';
-import { Calendar, ArrowRight, MapPin } from 'lucide-react';
+import { Calendar, ArrowRight, MapPin, Camera, Image, Search, ChevronDown, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import Title from '../components/utils/Title';
 import ScrollReveal from '../components/animations/ScrollReveal';
-import TextReveal from '../components/animations/TextReveal';
 import { useSEO } from '../lib/seo';
+import { motion } from 'framer-motion';
 
 interface GalleryImage {
   id: string;
@@ -34,8 +33,14 @@ export default function Gallery() {
   const [error, setError] = useState('');
   const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
   const [selectedCampus, setSelectedCampus] = useState<string>('All Campuses');
+  const [searchQuery, setSearchQuery] = useState('');
   const [events, setEvents] = useState<GalleryEvent[]>([]);
   const [campuses, setCampuses] = useState<string[]>(['All Campuses']);
+  const navigate = useNavigate();
+
+  const handleEventClick = (eventId: string) => {
+    navigate(`/gallery/event/${eventId}`);
+  };
 
   useEffect(() => {
     fetchGalleryEvents();
@@ -52,30 +57,31 @@ export default function Gallery() {
       setLoading(true);
       setError('');
 
-      const { data, error } = await supabase
+      // First fetch events
+      const { data: eventsData, error: eventsError } = await supabase
         .from('gallery_events')
-        .select(`
-          id,
-          title,
-          description,
-          date,
-          campus,
-          primary_image_id,
-          gallery_images!gallery_images_event_id_fkey (
-            id,
-            image_url,
-            caption
-          )
-        `)
+        .select('*')
         .order('date', { ascending: false });
 
-      if (error) throw error;
+      if (eventsError) throw eventsError;
 
-      // Extract unique campuses
-      const uniqueCampuses = ['All Campuses', ...new Set(data?.map(event => event.campus) || [])];
+      // Then fetch images for all events using the correct column name 'eventID'
+      const { data: imagesData, error: imagesError } = await supabase
+        .from('gallery_images')
+        .select('*')
+        .in('eventID', eventsData.map(event => event.id));
+
+      if (imagesError) throw imagesError;
+
+      // Combine the data
+      const combinedData = eventsData.map(event => ({
+        ...event,
+        gallery_images: imagesData.filter(img => img.eventID === event.id)
+      }));
+
+      const uniqueCampuses = ['All Campuses', ...new Set(combinedData.map(event => event.campus))];
       setCampuses(uniqueCampuses);
-
-      setEvents(data || []);
+      setEvents(combinedData);
     } catch (err) {
       console.error('Error fetching gallery events:', err);
       setError('Failed to load gallery events');
@@ -84,30 +90,15 @@ export default function Gallery() {
     }
   };
 
-  // Group events by year
-  const eventsByYear = events.reduce<EventsByYear>((acc, event) => {
-    const year = new Date(event.date).getFullYear();
-    if (!acc[year]) {
-      acc[year] = [];
-    }
-    acc[year].push(event);
-    return acc;
-  }, {});
-
-  // Get unique years for filter
-  const years = Object.keys(eventsByYear)
-    .map(Number)
-    .sort((a, b) => b - a);
-
-  // Filter events based on selected year and campus
   const filteredEvents = events.filter(event => {
     const eventYear = new Date(event.date).getFullYear();
     const yearMatch = selectedYear === 'all' || eventYear === selectedYear;
     const campusMatch = selectedCampus === 'All Campuses' || event.campus === selectedCampus;
-    return yearMatch && campusMatch;
+    const searchMatch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                       event.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return yearMatch && campusMatch && searchMatch;
   });
 
-  // Group filtered events by year
   const groupedEvents = filteredEvents.reduce<EventsByYear>((acc, event) => {
     const year = new Date(event.date).getFullYear();
     if (!acc[year]) {
@@ -117,13 +108,32 @@ export default function Gallery() {
     return acc;
   }, {});
 
+  const years = Object.keys(groupedEvents)
+    .map(Number)
+    .sort((a, b) => b - a);
+
+  const getEventImage = (event: GalleryEvent) => {
+    if (event.primary_image_url) {
+      return event.primary_image_url;
+    }
+    
+    if (event.primary_image_id && event.gallery_images) {
+      const primaryImage = event.gallery_images.find(img => img.id === event.primary_image_id);
+      if (primaryImage) return primaryImage.image_url;
+    }
+    
+    if (event.gallery_images && event.gallery_images.length > 0) {
+      return event.gallery_images[0].image_url;
+    }
+    
+    return 'https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=2066&q=80';
+  };
+
   if (error) {
     return (
       <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
         <Container>
-          <div className="text-center text-red-600">
-            {error}
-          </div>
+          <div className="text-center text-red-600">{error}</div>
         </Container>
       </div>
     );
@@ -131,144 +141,292 @@ export default function Gallery() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
-        <Container>
-          <div className="text-center">
-            Loading gallery...
+      <div className="min-h-screen flex flex-col bg-neutral-light">
+        {/* Decorative Background Elements */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30 animate-pulse" />
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30 animate-pulse" />
+          <div className="absolute inset-0 opacity-5">
+            <div
+              className="h-full w-full"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            />
           </div>
-        </Container>
+        </div>
+
+        <div className="relative flex-1 flex flex-col pt-24 pb-24">
+          <Container>
+            {/* Header Loading Skeleton */}
+            <div className="text-center mb-16 animate-pulse">
+              <div className="inline-block px-4 py-3 rounded-full bg-neutral-200 mb-8">
+                <div className="h-4 w-32"></div>
+              </div>
+              <div className="h-12 w-3/4 bg-neutral-200 rounded-lg mx-auto mb-4"></div>
+              <div className="h-4 w-1/2 bg-neutral-200 rounded mx-auto"></div>
+            </div>
+
+            {/* Filters Loading Skeleton */}
+            <div className="flex flex-wrap gap-4 mb-12 animate-pulse">
+              <div className="h-10 w-32 bg-neutral-200 rounded-lg"></div>
+              <div className="h-10 w-40 bg-neutral-200 rounded-lg"></div>
+              <div className="h-10 w-48 bg-neutral-200 rounded-lg"></div>
+            </div>
+
+            {/* Gallery Cards Loading Skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {[1, 2, 3, 4, 5, 6, 8].map((index) => (
+                <div 
+                  key={index}
+                  className="relative rounded-2xl overflow-hidden bg-white shadow-xl animate-pulse"
+                >
+                  {/* Decorative borders */}
+                  <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
+                  <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
+                  
+                  <div className="relative">
+                    {/* Image placeholder */}
+                    <div className="aspect-[4/3] bg-neutral-200"></div>
+                    
+                    {/* Content placeholders */}
+                    <div className="p-6">
+                      <div className="flex gap-2 mb-4">
+                        <div className="h-6 w-24 bg-neutral-200 rounded-full"></div>
+                        <div className="h-6 w-24 bg-neutral-200 rounded-full"></div>
+                      </div>
+                      <div className="h-6 w-3/4 bg-neutral-200 rounded mb-2"></div>
+                      <div className="h-4 w-1/2 bg-neutral-200 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Container>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
-      <Title title="Photo Gallery" description="Capturing Moments and Memories" />
-      <Container>
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <TextReveal>
-              <h1 className="text-5xl text-neutral-dark mb-6">Photo Gallery</h1>
-            </TextReveal>
-            <TextReveal delay={0.2}>
-              <p className="text-xl text-primary font-body max-w-2xl mx-auto mb-12">
-                Relive the memorable moments from our school events and activities
-              </p>
-            </TextReveal>
-
-            {/* Filters */}
-            <div className="space-y-8">
-              {/* Year Filter */}
-              <div className="flex justify-center gap-4 flex-wrap">
-                <button
-                  onClick={() => setSelectedYear('all')}
-                  className={`px-6 py-2 rounded-full transition-all duration-300 ${
-                    selectedYear === 'all'
-                      ? 'bg-primary text-neutral-light'
-                      : 'bg-white text-primary hover:bg-primary/10'
-                  }`}
-                >
-                  All Years
-                </button>
-                {years.map(year => (
-                  <button
-                    key={year}
-                    onClick={() => setSelectedYear(year)}
-                    className={`px-6 py-2 rounded-full transition-all duration-300 ${
-                      selectedYear === year
-                        ? 'bg-primary text-neutral-light'
-                        : 'bg-white text-primary hover:bg-primary/10'
-                    }`}
-                  >
-                    {year}
-                  </button>
-                ))}
-              </div>
-
-              {/* Campus Filter */}
-              <div className="flex justify-center gap-4 flex-wrap">
-                {campuses.map(campus => (
-                  <button
-                    key={campus}
-                    onClick={() => setSelectedCampus(campus)}
-                    className={`px-6 py-2 rounded-full transition-all duration-300 ${
-                      selectedCampus === campus
-                        ? 'bg-primary text-neutral-light'
-                        : 'bg-white text-primary hover:bg-primary/10'
-                    }`}
-                  >
-                    {campus}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </ScrollReveal>
-
-        <div className="space-y-16">
-          {Object.entries(groupedEvents)
-            .sort(([yearA], [yearB]) => Number(yearB) - Number(yearA))
-            .map(([year, yearEvents]) => (
-              <div key={year}>
-                <h2 className="text-3xl text-neutral-dark mb-8 border-b border-primary/20 pb-4">
-                  {year}
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {yearEvents.map((event: GalleryEvent) => (
-                    <Link
-                      key={event.id}
-                      to={`/gallery/${event.id}`}
-                      className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
-                    >
-                      <div className="relative overflow-hidden">
-                        <img
-                          src={
-                            event.primary_image_url || // First try primary_image_url
-                            (event.primary_image_id ? // Then try to find image by primary_image_id
-                              event.gallery_images.find((img: GalleryImage) => img.id === event.primary_image_id)?.image_url
-                            : event.gallery_images[0]?.image_url) || // Fall back to first image
-                            'https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=2066&q=80' // Default fallback
-                          }
-                          alt={event.title}
-                          className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-neutral-dark/80 to-transparent" />
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <h3 className="text-2xl text-neutral-light mb-2">{event.title}</h3>
-                          <div className="flex items-center gap-4 text-primary-light">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4" />
-                              <span className="text-sm">
-                                {new Date(event.date).toLocaleDateString()}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <MapPin className="h-4 w-4" />
-                              <span className="text-sm">{event.campus}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="p-6">
-                        <p className="text-neutral-dark/80 mb-4">{event.description}</p>
-                        <div className="flex items-center text-primary font-semibold group-hover:text-primary-dark transition-colors">
-                          View Gallery
-                          <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-2" />
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
-
-          {Object.keys(groupedEvents).length === 0 && (
-            <div className="text-center text-neutral-dark/60">
-              No gallery events found for the selected filters.
-            </div>
-          )}
+    <div className="min-h-screen flex flex-col bg-neutral-light w-full">
+      {/* Decorative Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30 animate-pulse" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30 animate-pulse" />
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
         </div>
-      </Container>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative flex-1 flex flex-col w-full pt-24 pb-24">
+        <Container className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <div className="flex-1 text-center mb-16">
+              <motion.div
+                className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-8 mt-16"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Camera className="h-4 w-4 mr-2" />
+                <span className="text-sm font-semibold">CAPTURED MOMENTS</span>
+              </motion.div>
+
+              <h1 className="font-display text-5xl lg:text-7xl text-neutral-dark mb-6">
+                <span className="text-green">Memories</span> in{" "}
+                <span className="text-orange">Motion</span>
+              </h1>
+
+              <p className="text-lg text-neutral-dark/70 mb-8 max-w-2xl mx-auto">
+                Journey through our visual storytelling, where every photograph captures the essence of life at The Scholars' Home.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          {/* Filters */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-16"
+          >
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
+                {/* Decorative Elements */}
+                <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
+                <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
+                
+                <div className="relative flex flex-col md:flex-row gap-4">
+                  {/* Year Filter */}
+                  <div className="relative flex-1">
+                    <select
+                      value={selectedYear}
+                      onChange={(e) => setSelectedYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}
+                      className="w-full appearance-none px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
+                        bg-white cursor-pointer
+                        focus:ring-2 focus:ring-green/20 focus:border-green
+                        text-neutral-dark placeholder:text-neutral-dark/50
+                        transition-all duration-300 hover:border-green"
+                    >
+                      <option value="all">All Years</option>
+                      {years.map((year) => (
+                        <option key={year} value={year}>Year {year}</option>
+                      ))}
+                    </select>
+                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green pointer-events-none" />
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/50 pointer-events-none" />
+                  </div>
+
+                  {/* Campus Filter */}
+                  <div className="relative flex-1">
+                    <select
+                      value={selectedCampus}
+                      onChange={(e) => setSelectedCampus(e.target.value)}
+                      className="w-full appearance-none px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
+                        bg-white cursor-pointer
+                        focus:ring-2 focus:ring-green/20 focus:border-green
+                        text-neutral-dark placeholder:text-neutral-dark/50
+                        transition-all duration-300 hover:border-green"
+                    >
+                      {campuses.map((campus) => (
+                        <option key={campus} value={campus}>{campus}</option>
+                      ))}
+                    </select>
+                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green pointer-events-none" />
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/50 pointer-events-none" />
+                  </div>
+
+                  {/* Search Input */}
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      placeholder="Search events..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
+                        focus:ring-2 focus:ring-green/20 focus:border-green
+                        text-neutral-dark placeholder:text-neutral-dark/50
+                        transition-all duration-300 hover:border-green"
+                    />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green" />
+                  </div>
+                </div>
+
+                {/* Active Filters Display */}
+                {(selectedYear !== 'all' || selectedCampus !== 'All Campuses' || searchQuery) && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {selectedYear !== 'all' && (
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-light/20 text-green text-sm">
+                        Year: {selectedYear}
+                        <button
+                          onClick={() => setSelectedYear('all')}
+                          className="hover:text-green-dark"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </span>
+                    )}
+                    {selectedCampus !== 'All Campuses' && (
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-light/20 text-orange text-sm">
+                        Campus: {selectedCampus}
+                        <button
+                          onClick={() => setSelectedCampus('All Campuses')}
+                          className="hover:text-orange-dark"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </span>
+                    )}
+                    {searchQuery && (
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-dark/10 text-neutral-dark text-sm">
+                        Search: {searchQuery}
+                        <button
+                          onClick={() => setSearchQuery('')}
+                          className="hover:text-neutral-dark/70"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Gallery Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredEvents.map((event) => (
+              <ScrollReveal key={event.id}>
+                <div className="relative rounded-2xl overflow-hidden bg-white shadow-xl transform transition-all duration-300 hover:scale-[1.02] group">
+                  {/* Decorative elements */}
+                  <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
+                  <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
+                  
+                  {/* Content */}
+                  <div className="relative">
+                    <div className="h-64 overflow-hidden">
+                      <img
+                        src={getEventImage(event)}
+                        alt={event.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    </div>
+
+                    <div className="p-8">
+                      <div className="flex items-center gap-4 text-sm text-primary mb-3">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          <span>{new Date(event.date).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4" />
+                          <span>{event.campus}</span>
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-2xl font-display text-neutral-dark mb-3 group-hover:text-green transition-colors">
+                        {event.title}
+                      </h3>
+                      
+                      <p className="text-neutral-dark/70 mb-6 line-clamp-2">
+                        {event.description}
+                      </p>
+
+                      <button
+                        onClick={() => handleEventClick(event.id)}
+                        className="group flex items-center gap-2 w-full justify-center px-6 py-3 rounded-xl border-2 border-green text-green hover:bg-green-light/10 transition-all duration-300"
+                      >
+                        View Gallery
+                        <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          {/* Empty State */}
+          {filteredEvents.length === 0 && !loading && (
+            <ScrollReveal>
+              <div className="relative bg-white p-8 rounded-2xl shadow-lg text-center overflow-hidden">
+                <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
+                <Image className="h-16 w-16 text-neutral-dark/20 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-neutral-dark mb-2">No Events Found</h3>
+                <p className="text-neutral-dark/70">Try adjusting your filters or search terms</p>
+              </div>
+            </ScrollReveal>
+          )}
+        </Container>
+      </div>
     </div>
   );
 }

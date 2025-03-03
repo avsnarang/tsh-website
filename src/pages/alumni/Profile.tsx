@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAlumniProfile } from '../../lib/queries';
+import { queryClient } from '../../lib/queryClient';
 import Container from '../../components/ui/Container';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
@@ -50,20 +51,33 @@ export default function Profile() {
   const [success, setSuccess] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Use React Query for profile data with proper typing
+  // Use React Query for profile data with proper typing and configuration
   const { 
     data: profile, 
     isLoading: loading,
     error: queryError,
     refetch: refreshProfile 
-  } = useAlumniProfile(user?.id) as {
-    data: AlumniProfile | undefined;
-    isLoading: boolean;
-    error: Error | null;
-    refetch: () => void;
-  };
+  } = useAlumniProfile(user?.id, {
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true
+  });
 
-  // Memoized change handler
+  // Add effect to handle tab visibility changes
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        refreshProfile();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [refreshProfile]);
+
+  // Memoized change handler with immediate optimistic updates
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
@@ -75,10 +89,9 @@ export default function Profile() {
       [name]: type === 'checkbox' ? checked : value
     };
 
-    // Update local state through your state management solution
-    // This depends on how useAlumniProfile is implemented
-    refreshProfile();
-  }, [profile, refreshProfile]);
+    // Optimistically update the cache
+    queryClient.setQueryData(['alumniProfile', user?.id], updatedProfile);
+  }, [profile, user?.id]);
 
   // Memoized submit handler
   const handleSubmit = useCallback(async (e: React.FormEvent) => {

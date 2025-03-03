@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { AuthError, User, Session, UserResponse } from '@supabase/supabase-js';
 import debounce from 'lodash.debounce';
@@ -167,6 +167,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return localStorage.getItem(PROFILE_DELETED_KEY) === 'true';
   });
 
+  // Add a ref to track if we've fetched the role for the current user
+  const roleFetchedForUser = useRef<string | null>(null);
+
   // Function to mark a profile as deleted
   const markProfileDeleted = () => {
     console.log('Marking profile as deleted');
@@ -228,79 +231,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         setUserRole(null);
         setSessionState('invalid');
-        setLoading(false);
+        roleFetchedForUser.current = null;
         return;
       }
 
-      console.log('Processing user session for:', session.user.id);
-      
-      // Use Promise.all to run checks concurrently
-      const [userData, role] = await Promise.all([
-        supabase.auth.getUser(),
-        fetchUserRole(session.user.id)
-      ]);
-
-      // Access user through data property
-      const currentUser = userData.data.user;
-      const hasCompletedProfile = currentUser?.user_metadata?.has_completed_profile === true;
-      
-      // Check for deleted account status
-      if (currentUser?.user_metadata?.account_status === 'deleted') {
-        console.log('User account marked as deleted in metadata');
-        await supabase.auth.signOut();
-        setUser(null);
-        setUserRole(null);
-        setSessionState('invalid');
-        markProfileDeleted();
-        setLoading(false);
-        return;
+      // Only fetch role if we haven't fetched it for this user yet
+      if (roleFetchedForUser.current !== session.user.id) {
+        console.log('Fetching role for user:', session.user.id);
+        const role = await fetchUserRole(session.user.id);
+        setUserRole(role);
+        roleFetchedForUser.current = session.user.id;
       }
 
-      // For alumni accounts, check profile with a shorter timeout
-      if (role === 'alumni' && !hasCompletedProfile) {
-        try {
-          const profilePromise = supabase
-            .from('alumni_profiles')
-            .select('id')
-            .eq('id', session.user.id)
-            .single();
-          
-          const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => {
-              reject(new Error('Profile check timed out'));
-            }, 5000); // Reduced from 3000ms to 5000ms
-          });
-          
-          const { data: profileData } = await Promise.race([
-            profilePromise,
-            timeoutPromise as Promise<any>
-          ]);
-
-          if (profileData) {
-            // Update metadata in background, don't await
-            supabase.auth.updateUser({
-              data: { 
-                has_completed_profile: true,
-                profile_created_at: new Date().toISOString()
-              }
-            }).catch(console.error);
-          }
-        } catch (err) {
-          console.log('Profile check error or timeout:', err);
-          // Continue anyway - don't let profile check block the login
-        }
-      }
-      
-      // Update state
       setUser(session.user);
-      setUserRole(role);
       setSessionState('valid');
-      
+
     } catch (error) {
       console.error('Error handling user session:', error);
       setUser(null);
       setUserRole(null);
       setSessionState('invalid');
+      roleFetchedForUser.current = null;
     } finally {
       setLoading(false);
     }
@@ -308,18 +259,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Add visibilitychange handler with improved throttling
   useEffect(() => {
-    // Debounced session refresh function
     const debouncedRefresh = debounce(async () => {
       const now = Date.now();
-      // Only refresh if more than 5 minutes have passed
-      if (now - lastSessionCheck > 300000) { // 5 minutes in milliseconds
-        console.log('Session refresh needed');
+      // Only refresh if:
+      // 1. More than 10 minutes have passed since last check
+      // 2. We have a valid user session
+      // 3. We're not already loading
+      if (now - lastSessionCheck > 600000 && user && !loading) { 
+        console.log('Checking session validity');
         setLastSessionCheck(now);
         
         const { data: { session } } = await supabase.auth.getSession();
-        handleUserSession(session);
+        // Only trigger full session handling if the user ID changed
+        if (!session || session.user?.id !== user.id) {
+          handleUserSession(session);
+        }
       }
-    }, 1000); // 1 second debounce
+    }, 2000); // 2 second debounce
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
@@ -332,7 +288,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       debouncedRefresh.cancel();
     };
-  }, [lastSessionCheck]);
+  }, [lastSessionCheck, user, loading]);
 
   useEffect(() => {
     // Get initial session
