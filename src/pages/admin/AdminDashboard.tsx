@@ -59,7 +59,7 @@ export default function AdminDashboard() {
       console.log('Successfully signed out');
       
       // Force a hard redirect instead of using navigate
-      window.location.href = '/admin/login';
+      window.location.href = '/';
     } catch (error: any) {
       console.error('Sign out error:', error);
       alert('Failed to sign out. Please try again or refresh the page.');
