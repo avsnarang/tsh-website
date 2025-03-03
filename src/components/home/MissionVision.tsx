@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Compass, Eye, Star } from 'lucide-react';
@@ -11,7 +10,7 @@ export default function MissionVision() {
 
   return (
     <section className="py-16 relative bg-white" ref={ref}>
-      {/* Gradient transition from white to colored background */}
+      {/* Gradient transition from white to colored background - continuing from Hero-2 */}
       <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-neutral-light/50" />
 
       {/* Background decorative elements */}
