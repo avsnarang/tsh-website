@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Container from '../../components/ui/Container';
-import { User, X, Quote, ArrowRight, ChevronRight } from 'lucide-react';
+import { User, X, ArrowRight } from 'lucide-react';
 import { LeadershipMessage } from '../../types/leadership';
 import Button from '../../components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,9 +13,8 @@ const fadeIn = {
 };
 
 export default function Messages() {
-  const { messages, loading } = useMessages();
+  const { messages } = useMessages();
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useSEO({
     title: "Leadership Messages | The Scholars' Home",
@@ -76,7 +74,7 @@ export default function Messages() {
         <div className="max-w-7xl mx-auto">
           {/* First Row - Single Card Centered */}
           <div className="flex justify-center mb-8">
-            {leadershipMessages.slice(0, 1).map((message, index) => (
+            {leadershipMessages.slice(0, 1).map((message) => (
               <motion.div
                 key={message.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -220,9 +218,6 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, setSelectedMessage }
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Button>
         </div>
-
-        {/* Decorative Quote Icon */}
-        <Quote className="absolute top-4 right-4 h-8 w-8 text-green/10" />
       </div>
     </div>
   );
