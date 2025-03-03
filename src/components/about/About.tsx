@@ -6,8 +6,7 @@ import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 import HorizontalTimeline from './HorizontalTimeline';
 import { useSEO } from '../../lib/seo';
-import { motion, easeOut } from 'framer-motion';
-import React from 'react';
+import { motion } from 'framer-motion';
 
 const timelineEvents = [
   {
@@ -97,11 +96,8 @@ export default function About() {
 
           {/* Timeline Section */}
           <ScrollReveal>
-            <div className="relative">
-              {/* Decorative elements for timeline */}
-              <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
-              <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
-              <div className="relative bg-white rounded-2xl shadow-xl p-8">
+            <div className="relative mt-16 scroll-mt-16"> {/* Added scroll-mt-16 */}
+              <div className="relative bg-white rounded-2xl shadow-xl">
                 <HorizontalTimeline events={timelineEvents} />
               </div>
             </div>

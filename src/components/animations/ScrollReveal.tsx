@@ -16,7 +16,11 @@ export default function ScrollReveal({
 }: ScrollRevealProps) {
   const controls = useAnimation();
   const ref = React.useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const isInView = useInView(ref, { 
+    once: true, 
+    amount: 0.1, // Reduced from 0.3 to 0.1
+    margin: "100px 0px 0px 0px" // Added margin to trigger earlier
+  });
 
   const getInitialPosition = () => {
     switch (direction) {
