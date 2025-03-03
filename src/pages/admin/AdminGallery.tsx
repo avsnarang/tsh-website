@@ -1,11 +1,8 @@
-"use client";
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { supabase, checkSupabaseConnection } from '../../lib/supabase';
-import { ArrowLeft, Plus, Pencil, AlertTriangle, Calendar, MapPin, X } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import Button from '../../components/ui/Button';
+import { Link } from 'react-router-dom';
 import Container from '../../components/ui/Container';
+import { supabase } from '../../lib/supabase';
+import { ArrowLeft, Plus, Pencil, AlertTriangle, Calendar, MapPin, X } from 'lucide-react';
 
 interface GalleryImage {
   id: string;
@@ -19,7 +16,7 @@ interface GalleryEvent {
   description: string;
   date: string;
   campus: string;
-  primary_image_id?: string;
+  primary_image_url?: string;
   gallery_images: GalleryImage[];
 }
 
@@ -28,111 +25,46 @@ interface FormData {
   description: string;
   date: string;
   campus: string;
-  primary_image_id: string;
-  primary_image_url: string;
+  primaryImageUrl: string;
   images: { url: string; caption: string; }[];
 }
 
-export default function ManageGallery() {
-  const navigate = useNavigate();
-  const { user } = useAuth();
+export default function AdminGallery() {
   const [events, setEvents] = useState<GalleryEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showEventForm, setShowEventForm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [editingEvent, setEditingEvent] = useState<GalleryEvent | null>(null);
-  const [bulkUrls, setBulkUrls] = useState('');
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
     date: '',
     campus: '',
-    primary_image_id: '',
-    primary_image_url: '',
-    images: [{ url: '', caption: '' }]
+    primaryImageUrl: '',
+    images: []
   });
-
-  const addImageField = () => {
-    setFormData(prev => ({
-      ...prev,
-      images: [...prev.images, { url: '', caption: '' }]
-    }));
-  };
-
-  const removeImageField = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index)
-    }));
-  };
-
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      description: '',
-      date: '',
-      campus: '',
-      primary_image_id: '',
-      primary_image_url: '',
-      images: [{ url: '', caption: '' }]
-    });
-    setEditingEvent(null);
-    setShowEventForm(false);
-    setBulkUrls('');
-    setError('');
-  };
+  const [bulkImageUrls, setBulkImageUrls] = useState('');
 
   useEffect(() => {
-    if (!user) {
-      navigate('/admin/login');
-      return;
-    }
-
-    const checkManagementAccess = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('management_users')
-          .select('id')
-          .eq('id', user.id)
-          .single();
-
-        if (error || !data) {
-          navigate('/admin/login');
-          return;
-        }
-
-        fetchEvents();
-      } catch (error) {
-        console.error('Error checking management access:', error);
-        navigate('/admin/login');
-      }
-    };
-
-    checkManagementAccess();
-  }, [user, navigate]);
+    fetchEvents();
+  }, []);
 
   const fetchEvents = async () => {
     try {
       setLoading(true);
       setError('');
 
-      // First check the connection
-      const isConnected = await checkSupabaseConnection();
-      if (!isConnected) {
-        throw new Error('Unable to connect to the database. Please check your internet connection and Supabase configuration.');
-      }
-
       const { data, error } = await supabase
         .from('gallery_events')
         .select(`
           id,
           title,
-          description,
           date,
+          description,
           campus,
-          primary_image_id,
-          gallery_images!gallery_images_event_id_fkey (
+          primary_image_url,
+          gallery_images!eventID(
             id,
             image_url,
             caption
@@ -140,18 +72,11 @@ export default function ManageGallery() {
         `)
         .order('date', { ascending: false });
 
-      if (error) {
-        throw error;
-      }
-
-      if (!data) {
-        throw new Error('No data received from the database');
-      }
-
-      setEvents(data);
+      if (error) throw error;
+      setEvents(data || []);
     } catch (error) {
       console.error('Error fetching events:', error);
-      setError(error instanceof Error ? error.message : 'Failed to load events');
+      setError('Failed to load events');
     } finally {
       setLoading(false);
     }
@@ -162,6 +87,11 @@ export default function ManageGallery() {
     try {
       setError('');
 
+      if (!formData.primaryImageUrl.trim()) {
+        setError('Primary image URL is required');
+        return;
+      }
+
       if (editingEvent) {
         const { error: eventError } = await supabase
           .from('gallery_events')
@@ -170,8 +100,7 @@ export default function ManageGallery() {
             description: formData.description,
             date: formData.date,
             campus: formData.campus,
-            primary_image_id: formData.primary_image_id || null,
-            primary_image_url: formData.primary_image_url || null
+            primary_image_url: formData.primaryImageUrl
           })
           .eq('id', editingEvent.id);
 
@@ -180,21 +109,23 @@ export default function ManageGallery() {
         const { error: deleteError } = await supabase
           .from('gallery_images')
           .delete()
-          .eq('event_id', editingEvent.id);
+          .eq('eventID', editingEvent.id);
 
         if (deleteError) throw deleteError;
 
-        const { error: imagesError } = await supabase
-          .from('gallery_images')
-          .insert(
-            formData.images.map(img => ({
-              event_id: editingEvent.id,
-              image_url: img.url,
-              caption: img.caption
-            }))
-          );
+        if (formData.images.length > 0) {
+          const { error: imagesError } = await supabase
+            .from('gallery_images')
+            .insert(
+              formData.images.map(img => ({
+                eventID: editingEvent.id,
+                image_url: img.url,
+                caption: img.caption
+              }))
+            );
 
-        if (imagesError) throw imagesError;
+          if (imagesError) throw imagesError;
+        }
       } else {
         const { data: eventData, error: eventError } = await supabase
           .from('gallery_events')
@@ -203,435 +134,463 @@ export default function ManageGallery() {
             description: formData.description,
             date: formData.date,
             campus: formData.campus,
-            primary_image_id: null,
-            primary_image_url: formData.primary_image_url || null
+            primary_image_url: formData.primaryImageUrl
           })
           .select()
           .single();
 
         if (eventError) throw eventError;
 
-        const { error: imagesError } = await supabase
-          .from('gallery_images')
-          .insert(
-            formData.images.map(img => ({
-              event_id: eventData.id,
-              image_url: img.url,
-              caption: img.caption
-            }))
-          );
-
-        if (imagesError) throw imagesError;
-
-        if (formData.primary_image_id) {
-          const { data: images } = await supabase
+        if (formData.images.length > 0) {
+          const { error: imagesError } = await supabase
             .from('gallery_images')
-            .select('id')
-            .eq('event_id', eventData.id)
-            .order('created_at', { ascending: true });
+            .insert(
+              formData.images.map(img => ({
+                eventID: eventData.id,
+                image_url: img.url,
+                caption: img.caption
+              }))
+            );
 
-          if (images && images.length > 0) {
-            const primaryIndex = parseInt(formData.primary_image_id);
-            const primaryImage = images[primaryIndex];
-            
-            if (primaryImage) {
-              const { error: updateError } = await supabase
-                .from('gallery_events')
-                .update({ primary_image_id: primaryImage.id })
-                .eq('id', eventData.id);
-
-              if (updateError) throw updateError;
-            }
-          }
+          if (imagesError) throw imagesError;
         }
       }
 
+      await fetchEvents();
       resetForm();
-      fetchEvents();
     } catch (error) {
       console.error('Error saving event:', error);
       setError('Failed to save event');
     }
   };
 
-  const handlePrimaryImageChange = (imageId: string) => {
-    setFormData(prev => ({
-      ...prev,
-      primary_image_id: prev.primary_image_id === imageId ? '' : imageId
-    }));
-  };
-
   const handleDelete = async (eventId: string) => {
     try {
       setError('');
-
-      const { error } = await supabase
+      
+      // First, delete all gallery images associated with this event
+      const { error: imagesError } = await supabase
+        .from('gallery_images')
+        .delete()
+        .eq('eventID', eventId);
+      
+      if (imagesError) {
+        console.error('Error deleting images:', imagesError);
+        throw imagesError;
+      }
+      
+      // Then delete the event itself
+      const { error: eventError } = await supabase
         .from('gallery_events')
         .delete()
         .eq('id', eventId);
 
-      if (error) throw error;
+      if (eventError) throw eventError;
 
       setShowDeleteConfirm(null);
       await fetchEvents();
     } catch (error) {
       console.error('Error deleting event:', error);
-      setError('Failed to delete event');
+      setError('Failed to delete event: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      description: '',
+      date: '',
+      campus: '',
+      primaryImageUrl: '',
+      images: []
+    });
+    setShowEventForm(false);
+    setEditingEvent(null);
   };
 
   const updateImageField = (index: number, field: 'url' | 'caption', value: string) => {
     setFormData(prev => ({
       ...prev,
-      images: prev.images.map((img, i) =>
+      images: prev.images.map((img, i) => 
         i === index ? { ...img, [field]: value } : img
       )
     }));
   };
 
-  const handleEdit = (event: GalleryEvent) => {
-    setEditingEvent(event);
-    setFormData({
-      title: event.title,
-      description: event.description,
-      date: event.date,
-      campus: event.campus,
-      primary_image_id: event.primary_image_id || '',
-      primary_image_url: '',
-      images: event.gallery_images.map(img => ({
-        url: img.image_url,
-        caption: img.caption
-      }))
-    });
-    setShowEventForm(true);
-  };
-
-  const handleBulkUrlsPaste = () => {
-    if (!bulkUrls.trim()) return;
-
-    const urls = bulkUrls
-      .split(',')
-      .map(url => url.trim())
-      .filter(url => {
-        try {
-          new URL(url);
-          return true;
-        } catch {
-          return false;
-        }
-      });
-
-    if (urls.length === 0) {
-      setError('No valid URLs found in the input');
-      return;
-    }
-
+  const handleBulkImageImport = () => {
+    if (!bulkImageUrls.trim()) return;
+    
+    const urls = bulkImageUrls.split(',').map(url => url.trim()).filter(url => url);
+    
+    const newImages = urls.map(url => ({ url, caption: '' }));
     setFormData(prev => ({
       ...prev,
-      images: urls.map(url => ({ url, caption: '' }))
+      images: [...prev.images, ...newImages]
     }));
+    
+    setBulkImageUrls('');
+  };
 
-    setBulkUrls('');
-    setError('');
+  const safeRemoveImage = (index: number) => {
+    console.log('Attempting to remove image at index:', index);
+    
+    const currentImages = [...formData.images];
+    
+    const newImages = currentImages.filter((_, i) => i !== index);
+    
+    console.log('New images array length:', newImages.length);
+    
+    setFormData(prev => ({
+      ...prev,
+      images: newImages
+    }));
   };
 
   return (
-    <Container>
-      <div className="pt-32 pb-24">
-        <Link
-          to="/admin/dashboard"
-          className="inline-flex items-center gap-2 text-primary hover:text-primary-dark transition-colors mb-6"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Link>
-
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl text-neutral-dark">Manage Gallery</h1>
-          <Button
-            onClick={() => setShowEventForm(true)}
-            variant="primary"
-            className="flex items-center gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            Add Event
-          </Button>
-        </div>
-
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
+    <div className="pt-32 pb-24">
+      <Container>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between gap-4 mb-8">
+            <Link
+              to="/admin/dashboard"
+              className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              Back to Dashboard
+            </Link>
+            <button
+              onClick={() => setShowEventForm(true)}
+              className="flex items-center gap-2 px-6 py-2 bg-primary text-neutral-light rounded-lg hover:bg-primary-dark transition-colors"
+            >
+              <Plus className="h-5 w-5" />
+              Add New Event
+            </button>
           </div>
-        )}
 
-        {loading ? (
-          <div className="text-center">Loading...</div>
-        ) : (
-          <div className="space-y-6">
-            {events.map(event => (
-              <div
-                key={event.id}
-                className="bg-white p-6 rounded-2xl shadow-lg"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl text-neutral-dark font-semibold">
-                      {event.title}
-                    </h3>
-                    <div className="flex items-center gap-4 text-primary mt-2">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4" />
-                        {event.date}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4" />
-                        {event.campus}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => handleEdit(event)}
-                      variant="edit"
-                      className="flex items-center gap-2"
-                    >
-                      <Pencil className="h-4 w-4" />
-                      Edit
-                    </Button>
-                    <Button
-                      onClick={() => setShowDeleteConfirm(event.id)}
-                      variant="delete"
-                      className="flex items-center gap-2"
-                    >
-                      <AlertTriangle className="h-4 w-4" />
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-                <p className="text-neutral-dark/80 mb-4">{event.description}</p>
-                <div className="flex gap-4">
-                  {event.gallery_images.slice(0, 3).map(image => (
-                    <div key={image.id} className="relative aspect-square rounded-lg overflow-hidden">
-                      <img
-                        src={image.image_url}
-                        alt={image.caption || event.title}
-                        className="w-14 h-14 object-cover"
-                      />
-                      {event.primary_image_id === image.id && (
-                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
-                          <span className="text-xs text-white font-medium">Primary</span>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+          <h1 className="text-4xl text-neutral-dark mb-8">Manage Gallery</h1>
 
-        {showEventForm && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-neutral-dark">
-                  {editingEvent ? 'Edit Event' : 'Add New Event'}
-                </h2>
-                <button
-                  onClick={resetForm}
-                  className="text-neutral-dark/60 hover:text-neutral-dark transition-colors"
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
+
+          {loading ? (
+            <div className="text-center">Loading...</div>
+          ) : (
+            <div className="space-y-6">
+              {events.map(event => (
+                <div
+                  key={event.id}
+                  className="bg-white p-6 rounded-2xl shadow-lg"
                 >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-neutral-dark mb-2">Title</label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-neutral-dark mb-2">Description</label>
-                  <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-neutral-dark mb-2">Date</label>
-                  <input
-                    type="date"
-                    value={formData.date}
-                    onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-neutral-dark mb-2">Campus</label>
-                  <select
-                    value={formData.campus}
-                    onChange={(e) => setFormData(prev => ({ ...prev, campus: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    required
-                  >
-                    <option value="">Select Campus</option>
-                    <option value="Paonta Sahib">Paonta Sahib</option>
-                    <option value="Juniors">Juniors</option>
-                    <option value="Majra">Majra</option>
-                  </select>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="space-y-4 p-4 bg-neutral-light/50 rounded-xl">
-                    <h4 className="text-lg font-semibold text-neutral-dark">Bulk Add Images</h4>
-                    <p className="text-sm text-neutral-dark/80">
-                      Paste image URLs separated by commas. Each URL should be a direct link to an image.
-                    </p>
-                    <div className="space-y-2">
-                      <textarea
-                        value={bulkUrls}
-                        onChange={(e) => setBulkUrls(e.target.value)}
-                        placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg, ..."
-                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32 font-mono text-sm"
-                      />
-                      <Button
-                        type="button"
-                        onClick={handleBulkUrlsPaste}
-                        variant="edit"
-                        className="w-full"
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl text-neutral-dark font-semibold">
+                        {event.title}
+                      </h3>
+                      <div className="flex items-center gap-4 text-primary mt-2">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          <span>{new Date(event.date).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4" />
+                          <span>{event.campus}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          setEditingEvent(event);
+                          setFormData({
+                            title: event.title,
+                            description: event.description,
+                            date: event.date,
+                            campus: event.campus,
+                            primaryImageUrl: event.primary_image_url || '',
+                            images: event.gallery_images.map(img => ({
+                              url: img.image_url,
+                              caption: img.caption
+                            }))
+                          });
+                          setShowEventForm(true);
+                        }}
+                        className="p-2 bg-primary-light/20 text-primary rounded-lg hover:bg-primary-light/40 transition-colors"
                       >
-                        Add Images from URLs
-                      </Button>
+                        <Pencil className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={() => setShowDeleteConfirm(event.id)}
+                        className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                      >
+                        <AlertTriangle className="h-5 w-5" />
+                      </button>
                     </div>
                   </div>
-
-                  <div className="flex justify-between items-center">
-                    <label className="text-neutral-dark">Images</label>
-                    <Button
-                      type="button"
-                      onClick={addImageField}
-                      variant="edit"
-                      className="flex items-center gap-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      Add Image
-                    </Button>
-                  </div>
-
-                  {formData.images.map((image, index) => (
-                    <div key={index} className="space-y-4 p-4 bg-neutral-light rounded-lg">
-                      <div>
-                        <label className="block text-neutral-dark mb-2">Image URL</label>
-                        <div className="flex gap-4">
-                          <input
-                            type="url"
-                            value={image.url}
-                            onChange={(e) => updateImageField(index, 'url', e.target.value)}
-                            placeholder="https://example.com/image.jpg"
-                            className="flex-grow px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                            required
-                            onBlur={(e) => {
-                              const url = e.target.value.trim();
-                              if (url && !url.match(/^https?:\/\/.+/)) {
-                                setError('Please enter a valid URL starting with http:// or https://');
-                              }
-                            }}
-                          />
-                          <Button
-                            type="button"
-                            onClick={() => handlePrimaryImageChange(index.toString())}
-                            variant={formData.primary_image_id === index.toString() ? 'cta' : 'outline'}
-                            className="shrink-0"
-                          >
-                            {formData.primary_image_id === index.toString() ? 'Primary Image' : 'Set as Primary'}
-                          </Button>
-                        </div>
-                        {image.url && (
-                          <img src={image.url} alt="" className="mt-2 w-14 h-14 object-cover rounded" />
+                  <p className="text-neutral-dark/80 mb-4">{event.description}</p>
+                  <div className="relative grid grid-cols-5 gap-2">
+                    {event.gallery_images.slice(0, 5).map((image: GalleryImage, index: number) => (
+                      <div 
+                        key={image.id} 
+                        className={`relative aspect-square rounded-lg overflow-hidden ${index === 4 && event.gallery_images.length > 5 ? 'relative' : ''}`}
+                      >
+                        <img
+                          src={image.image_url}
+                          alt={image.caption}
+                          className="w-full h-full object-cover"
+                        />
+                        {index === 4 && event.gallery_images.length > 5 && (
+                          <div className="absolute inset-0 bg-neutral-dark/70 flex items-center justify-center">
+                            <span className="text-white text-xl font-bold">+{event.gallery_images.length - 5}</span>
+                          </div>
+                        )}
+                        {image.caption && index < 4 && (
+                          <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 text-neutral-light p-1 text-xs">
+                            {image.caption}
+                          </div>
                         )}
                       </div>
-                      <div>
-                        <label className="block text-neutral-dark mb-2">Caption</label>
-                        <input
-                          type="text"
-                          value={image.caption}
-                          onChange={(e) => updateImageField(index, 'caption', e.target.value)}
-                          placeholder="Enter a description for this image"
-                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
+                    ))}
+                    {event.gallery_images.length === 0 && (
+                      <div className="col-span-5 text-center py-4 text-neutral-dark/50 italic">
+                        No images available
                       </div>
-                      {index > 0 && (
-                        <Button
-                          type="button"
-                          onClick={() => removeImageField(index)}
-                          variant="delete"
-                        >
-                          Remove Image
-                        </Button>
-                      )}
-                    </div>
-                  ))}
+                    )}
+                  </div>
                 </div>
-
-                <div className="flex justify-end gap-4 pt-4">
-                  <Button
-                    type="button"
-                    onClick={resetForm}
-                    variant="outline2"
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit">
-                    {editingEvent ? 'Update Event' : 'Create Event'}
-                  </Button>
-                </div>
-              </form>
+              ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
+      </Container>
 
-        {/* Delete Confirmation Modal */}
-        {showDeleteConfirm && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
-              <div className="flex items-center gap-4 text-red-500 mb-6">
-                <AlertTriangle className="h-8 w-8" />
-                <h2 className="text-2xl font-semibold">Delete Event</h2>
+      {/* Event Form Modal */}
+      {showEventForm && (
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-semibold text-neutral-dark">
+                {editingEvent ? 'Edit Event' : 'Add New Event'}
+              </h2>
+              <button
+                onClick={resetForm}
+                className="p-2 hover:bg-neutral-dark/10 rounded-full transition-colors"
+              >
+                <X className="h-6 w-6 text-neutral-dark" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-neutral-dark mb-2">Title</label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                />
               </div>
-              <p className="text-neutral-dark/80 mb-8">
-                Are you sure you want to delete this event? This action cannot be undone.
-                All associated images will also be removed.
-              </p>
-              <div className="flex justify-end gap-4">
-                <Button
-                  variant="outline2"
-                  onClick={() => setShowDeleteConfirm(null)}
+
+              <div>
+                <label className="block text-neutral-dark mb-2">Description</label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-neutral-dark mb-2">Date</label>
+                <input
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-neutral-dark mb-2">Campus</label>
+                <select
+                  value={formData.campus}
+                  onChange={(e) => setFormData(prev => ({ ...prev, campus: e.target.value }))}
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                >
+                  <option value="">Select Campus</option>
+                  <option value="Paonta Sahib">Paonta Sahib</option>
+                  <option value="Juniors">Juniors</option>
+                  <option value="Majra">Majra</option>
+                </select>
+              </div>
+
+              {/* Primary Image Section */}
+              <div className="border border-primary rounded-lg p-4 bg-primary-light/10">
+                <h3 className="text-lg font-semibold text-primary mb-4">Primary Image</h3>
+                <div>
+                  <label className="block text-neutral-dark mb-2">Primary Image URL <span className="text-red-500">*</span></label>
+                  <input
+                    type="url"
+                    value={formData.primaryImageUrl}
+                    onChange={(e) => setFormData(prev => ({ ...prev, primaryImageUrl: e.target.value }))}
+                    placeholder="https://drive.google.com/uc?export=view&id=YOUR_FILE_ID"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
+                  />
+                </div>
+                
+                {formData.primaryImageUrl && (
+                  <div className="mt-4">
+                    <p className="text-sm text-neutral-dark/70 mb-2">Image Preview:</p>
+                    <div className="aspect-video relative rounded-lg overflow-hidden border border-neutral-dark/20">
+                      <img 
+                        src={formData.primaryImageUrl} 
+                        alt="Primary image preview" 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Invalid+Image+URL';
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Additional Images Section */}
+              <div className="border border-neutral-dark/20 rounded-lg p-4">
+                <h3 className="text-lg font-semibold mb-4">Additional Images</h3>
+                
+                <div className="p-4 bg-yellow-50 rounded-lg mb-4">
+                  <label className="block text-neutral-dark mb-2">
+                    Bulk Add Images (comma-separated URLs)
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={bulkImageUrls}
+                      onChange={(e) => setBulkImageUrls(e.target.value)}
+                      placeholder="url1, url2, url3, ..."
+                      className="flex-1 px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleBulkImageImport}
+                      className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors whitespace-nowrap"
+                    >
+                      Add All
+                    </button>
+                  </div>
+                </div>
+                
+                {formData.images.length > 0 ? (
+                  <div>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mt-4">
+                      {formData.images.map((image, index) => (
+                        <div key={index} className="relative aspect-square group">
+                          <img 
+                            src={image.url} 
+                            alt={`Gallery image ${index + 1}`}
+                            className="w-full h-full object-cover rounded-lg border border-neutral-dark/20"
+                            onError={(e) => {
+                              e.currentTarget.src = 'https://via.placeholder.com/300x300?text=Invalid+Image';
+                            }}
+                          />
+                          
+                          <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 text-neutral-light p-1 text-xs truncate">
+                            {image.caption || 'No caption'}
+                          </div>
+                          
+                          <div className="absolute inset-0 bg-neutral-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newCaption = window.prompt('Enter caption for this image:', image.caption);
+                                if (newCaption !== null) {
+                                  updateImageField(index, 'caption', newCaption);
+                                }
+                              }}
+                              className="p-1.5 bg-primary text-white rounded-full hover:bg-primary-dark transition-colors"
+                              title="Edit Caption"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                safeRemoveImage(index);
+                              }}
+                              className="p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                              title="Remove Image"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-neutral-dark/50 italic text-center py-4">No additional images added yet.</p>
+                )}
+              </div>
+
+              <div className="flex justify-end gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="px-6 py-2 bg-neutral-light text-neutral-dark rounded-lg hover:bg-neutral-dark/10 transition-colors"
                 >
                   Cancel
-                </Button>
-                <Button
-                  onClick={() => showDeleteConfirm && handleDelete(showDeleteConfirm)}
-                  variant="delete"
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-primary text-neutral-light rounded-lg hover:bg-primary-dark transition-colors"
                 >
-                  Delete Event
-                </Button>
+                  {editingEvent ? 'Update Event' : 'Create Event'}
+                </button>
               </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+            <div className="flex items-center gap-4 text-red-500 mb-6">
+              <AlertTriangle className="h-8 w-8" />
+              <h2 className="text-2xl font-semibold">Delete Event</h2>
+            </div>
+            <p className="text-neutral-dark/80 mb-8">
+              Are you sure you want to delete this event? This action cannot be undone.
+              All associated images will also be removed.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowDeleteConfirm(null)}
+                className="px-6 py-2 bg-neutral-light text-neutral-dark rounded-lg hover:bg-neutral-dark/10 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => showDeleteConfirm && handleDelete(showDeleteConfirm)}
+                className="px-6 py-2 bg-red-500 text-neutral-light rounded-lg hover:bg-red-600 transition-colors"
+              >
+                Delete Event
+              </button>
             </div>
           </div>
-        )}
-      </div>
-    </Container>
+        </div>
+      )}
+    </div>
   );
 }

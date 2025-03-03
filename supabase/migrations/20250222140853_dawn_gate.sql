@@ -11,31 +11,15 @@
 DROP TABLE IF EXISTS admin_users CASCADE;
 
 -- Create new management_users table
-CREATE TABLE IF NOT EXISTS management_users (
+CREATE TABLE management_users (
   id uuid PRIMARY KEY REFERENCES auth.users(id),
   role text NOT NULL DEFAULT 'manager',
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
 
--- Add updated_at column if it doesn't exist
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns 
-    WHERE table_name = 'management_users' 
-    AND column_name = 'updated_at'
-  ) THEN
-    ALTER TABLE management_users ADD COLUMN updated_at timestamptz DEFAULT now();
-  END IF;
-END $$;
-
 -- Enable RLS
 ALTER TABLE management_users ENABLE ROW LEVEL SECURITY;
-
--- Drop existing policies if they exist
-DROP POLICY IF EXISTS "Management users can access their own data" ON management_users;
-DROP POLICY IF EXISTS "Public can check if user is management" ON management_users;
 
 -- Create policy for management users
 CREATE POLICY "Management users can access their own data"
@@ -96,4 +80,5 @@ BEGIN
   -- Add user to management_users table
   INSERT INTO management_users (id, role)
   VALUES (v_user_id, 'administrator');
+
 END $$;

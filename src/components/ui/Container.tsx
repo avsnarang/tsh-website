@@ -5,10 +5,19 @@ interface ContainerProps {
   className?: string;
 }
 
-export default function Container({ children, className = '' }: ContainerProps) {
-  return (
-    <div className={`max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-8 ${className}`}>
-      {children}
-    </div>
-  );
-}
+const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
+  ({ children, className = '' }, ref) => {
+    return (
+      <div 
+        ref={ref}
+        className={`max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-8 ${className}`}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+
+Container.displayName = 'Container';
+
+export default Container;

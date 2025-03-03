@@ -1,324 +1,284 @@
-import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useState, useMemo } from 'react';
 import Container from '../../components/ui/Container';
-import { supabase } from '../../lib/supabase';
-import { Linkedin, Briefcase, MapPin, GraduationCap, User, X, Phone, Mail, Instagram, Facebook } from 'lucide-react';
-
-interface AlumniProfile {
-  id: string;
-  full_name: string;
-  batch_year: number;
-  current_location: string;
-  occupation: string;
-  company: string;
-  bio: string;
-  linkedin_url: string;
-  profile_picture_url?: string;
-  phone?: string;
-  email?: string;
-  instagram_url?: string;
-  facebook_url?: string;
-  show_contact_info: boolean;
-}
+import { useSEO } from '../../lib/seo';
+import ScrollReveal from '../../components/ui/ScrollReveal';
+import TextReveal from '../../components/ui/TextReveal';
+import { useAlumniProfiles } from '../../lib/queries';
+import { 
+  User, Search, MapPin, Building2, Users, 
+  Briefcase, GraduationCap, Star, Globe, 
+  LinkedinIcon, Instagram, Facebook, Filter 
+} from 'lucide-react';
+import AlumniDetailModal from '../../components/alumni/AlumniDetailModal';
 
 export default function Directory() {
-  const [profiles, setProfiles] = useState<AlumniProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
-  const [selectedProfile, setSelectedProfile] = useState<AlumniProfile | null>(null);
+  const { data: alumniProfiles, isLoading } = useAlumniProfiles();
+  const [selectedAlumni, setSelectedAlumni] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedBatch, setSelectedBatch] = useState<number | 'all'>('all');
 
-  useEffect(() => {
-    const fetchProfiles = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('alumni_profiles')
-          .select('*')
-          .eq('is_public', true)
-          .order('batch_year', { ascending: false });
-
-        if (error) throw error;
-        setProfiles(data || []);
-      } catch (error) {
-        console.error('Error fetching profiles:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfiles();
-  }, []);
-
-  const years = [...new Set(profiles.map(p => p.batch_year))].sort((a, b) => b - a);
-
-  const filteredProfiles = profiles.filter(profile => {
-    const matchesSearch = profile.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         profile.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         profile.occupation?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesYear = selectedYear === 'all' || profile.batch_year === selectedYear;
-    return matchesSearch && matchesYear;
+  useSEO({
+    title: 'Alumni Directory | The Scholars Home',
+    description: 'Browse through our distinguished alumni network and connect with fellow graduates.'
   });
 
+  // Get unique batch years
+  const batchYears = useMemo(() => {
+    if (!alumniProfiles) return [];
+    const years = [...new Set(alumniProfiles.map(alumni => alumni.batch_year))];
+    return years.sort((a, b) => b - a); // Sort in descending order
+  }, [alumniProfiles]);
+
+  // Filter alumni based on search query and selected batch
+  const filteredAlumni = useMemo(() => {
+    if (!alumniProfiles) return [];
+    
+    return alumniProfiles.filter(alumni => {
+      const matchesSearch = 
+        alumni.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        alumni.occupation?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        alumni.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        alumni.current_location?.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesBatch = selectedBatch === 'all' || alumni.batch_year === selectedBatch;
+      
+      return matchesSearch && matchesBatch;
+    });
+  }, [alumniProfiles, searchQuery, selectedBatch]);
+
   return (
-    <div className="pt-32 pb-24">
-      <Container>
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <h1 className="text-5xl text-neutral-dark mb-6">Alumni Directory</h1>
-          <p className="text-xl text-primary">Connect with fellow alumni</p>
-        </div>
-
-        <div className="mb-8 space-y-4">
-          <input
-            type="text"
-            placeholder="Search by name, company, or occupation..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+    <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
+      {/* Decorative Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
           />
-
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedYear('all')}
-              className={`px-4 py-2 rounded-full transition-colors ${
-                selectedYear === 'all'
-                  ? 'bg-primary text-neutral-light'
-                  : 'bg-neutral-light text-primary hover:bg-primary/10'
-              }`}
-            >
-              All Years
-            </button>
-            {years.map(year => (
-              <button
-                key={year}
-                onClick={() => setSelectedYear(year)}
-                className={`px-4 py-2 rounded-full transition-colors ${
-                  selectedYear === year
-                    ? 'bg-primary text-neutral-light'
-                    : 'bg-neutral-light text-primary hover:bg-primary/10'
-                }`}
-              >
-                {year}
-              </button>
-            ))}
-          </div>
         </div>
+      </div>
 
-        {loading ? (
-          <div className="text-center">Loading...</div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProfiles.map(profile => (
-              <div 
-                key={profile.id} 
-                className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-                onClick={() => setSelectedProfile(profile)}
-              >
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
-                    {profile.profile_picture_url ? (
-                      <img
-                        src={profile.profile_picture_url}
-                        alt={profile.full_name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-                        <User className="h-8 w-8 text-primary" />
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="text-xl text-neutral-dark font-semibold">{profile.full_name}</h3>
-                    <div className="flex items-center gap-2 text-primary">
-                      <GraduationCap className="h-4 w-4" />
-                      <span>Batch of {profile.batch_year}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {profile.occupation && (
-                  <div className="flex items-center gap-2 text-neutral-dark/80 mb-1">
-                    <Briefcase className="h-4 w-4 text-primary" />
-                    <span>{profile.occupation}</span>
-                  </div>
-                )}
-                
-                {profile.company && (
-                  <div className="flex items-center gap-2 text-neutral-dark/80 mb-1">
-                    <Briefcase className="h-4 w-4 text-primary" />
-                    <span>{profile.company}</span>
-                  </div>
-                )}
-                
-                {profile.current_location && (
-                  <div className="flex items-center gap-2 text-neutral-dark/80 mb-4">
-                    <MapPin className="h-4 w-4 text-primary" />
-                    <span>{profile.current_location}</span>
-                  </div>
-                )}
-                
-                {profile.bio && (
-                  <p className="text-neutral-dark/80 mb-4 line-clamp-3">{profile.bio}</p>
-                )}
-
-                {profile.linkedin_url && (
-                  <a
-                    href={profile.linkedin_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-primary hover:text-primary-dark transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Linkedin className="h-5 w-5 mr-2" />
-                    LinkedIn Profile
-                  </a>
-                )}
-              </div>
-            ))}
+      <Container className="relative">
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full mb-8">
+            <Star className="h-4 w-4" />
+            <span className="font-semibold">Alumni Directory</span>
           </div>
-        )}
+          <h1 className="font-display text-4xl md:text-5xl text-neutral-dark mb-4">
+            Our <span className="text-green">Global Alumni</span> Network
+          </h1>
+          <p className="text-neutral-dark/70 text-lg max-w-2xl mx-auto">
+            Connect with accomplished graduates who are making their mark across the globe
+          </p>
+        </motion.div>
 
-        {/* Profile Modal */}
-        {selectedProfile && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-              <div className="p-8">
-                <div className="flex justify-between items-start mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0">
-                      {selectedProfile.profile_picture_url ? (
-                        <img
-                          src={selectedProfile.profile_picture_url}
-                          alt={selectedProfile.full_name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-                          <User className="h-12 w-12 text-primary" />
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <h2 className="text-2xl text-neutral-dark font-semibold mb-2">
-                        {selectedProfile.full_name}
-                      </h2>
-                      <div className="flex items-center gap-2 text-primary">
-                        <GraduationCap className="h-5 w-5" />
-                        <span>Batch of {selectedProfile.batch_year}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setSelectedProfile(null)}
-                    className="p-2 hover:bg-neutral-dark/10 rounded-full transition-colors"
+        {/* Search and Filter Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="max-w-3xl mx-auto mb-16"
+        >
+          <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
+            {/* Decorative Elements */}
+            <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
+            <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
+            
+            <div className="relative flex gap-4">
+              {/* Search Bar */}
+              <div className="flex-1 relative">
+                <input
+                  type="text"
+                  placeholder="Search by name, occupation, company, or location..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-6 py-4 pl-14 rounded-xl border-2 border-neutral-dark/10 
+                    focus:ring-2 focus:ring-green/20 focus:border-green
+                    text-neutral-dark placeholder:text-neutral-dark/50"
+                />
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-green" />
+              </div>
+
+              {/* Batch Filter Dropdown */}
+              <div className="relative min-w-[200px]">
+                <select
+                  value={selectedBatch}
+                  onChange={(e) => setSelectedBatch(e.target.value === 'all' ? 'all' : Number(e.target.value))}
+                  className="w-full px-6 py-4 pl-12 appearance-none rounded-xl border-2 border-neutral-dark/10 
+                    focus:ring-2 focus:ring-green/20 focus:border-green
+                    text-neutral-dark bg-white cursor-pointer"
+                >
+                  <option value="all">All Batches</option>
+                  {batchYears.map(year => (
+                    <option key={year} value={year}>
+                      Batch {year}
+                    </option>
+                  ))}
+                </select>
+                <Filter className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green" />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg
+                    className="h-5 w-5 text-neutral-dark/50"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <X className="h-6 w-6 text-neutral-dark" />
-                  </button>
-                </div>
-
-                <div className="space-y-6">
-                  {(selectedProfile.occupation || selectedProfile.company) && (
-                    <div className="space-y-2">
-                      <h3 className="text-lg font-semibold text-neutral-dark">Professional Info</h3>
-                      {selectedProfile.occupation && (
-                        <div className="flex items-center gap-2 text-neutral-dark/80">
-                          <Briefcase className="h-5 w-5 text-primary" />
-                          <span>{selectedProfile.occupation}</span>
-                        </div>
-                      )}
-                      {selectedProfile.company && (
-                        <div className="flex items-center gap-2 text-neutral-dark/80">
-                          <Briefcase className="h-5 w-5 text-primary" />
-                          <span>{selectedProfile.company}</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {selectedProfile.current_location && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-neutral-dark mb-2">Location</h3>
-                      <div className="flex items-center gap-2 text-neutral-dark/80">
-                        <MapPin className="h-5 w-5 text-primary" />
-                        <span>{selectedProfile.current_location}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedProfile.bio && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-neutral-dark mb-2">Bio</h3>
-                      <p className="text-neutral-dark/80 whitespace-pre-line">{selectedProfile.bio}</p>
-                    </div>
-                  )}
-
-                  {selectedProfile.show_contact_info && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-neutral-dark mb-4">Contact Information</h3>
-                      <div className="space-y-3">
-                        {selectedProfile.phone && (
-                          <a
-                            href={`tel:${selectedProfile.phone}`}
-                            className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
-                          >
-                            <Phone className="h-5 w-5" />
-                            <span>{selectedProfile.phone}</span>
-                          </a>
-                        )}
-                        {selectedProfile.email && (
-                          <a
-                            href={`mailto:${selectedProfile.email}`}
-                            className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
-                          >
-                            <Mail className="h-5 w-5" />
-                            <span>{selectedProfile.email}</span>
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  <div>
-                    <h3 className="text-lg font-semibold text-neutral-dark mb-4">Connect</h3>
-                    <div className="flex flex-wrap gap-4">
-                      {selectedProfile.linkedin_url && (
-                        <a
-                          href={selectedProfile.linkedin_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
-                        >
-                          <Linkedin className="h-5 w-5" />
-                          <span>LinkedIn</span>
-                        </a>
-                      )}
-                      {selectedProfile.show_contact_info && selectedProfile.instagram_url && (
-                        <a
-                          href={selectedProfile.instagram_url}
-                          target="_blank"
-                          rel=" noopener noreferrer"
-                          className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
-                        >
-                          <Instagram className="h-5 w-5" />
-                          <span>Instagram</span>
-                        </a>
-                      )}
-                      {selectedProfile.show_contact_info && selectedProfile.facebook_url && (
-                        <a
-                          href={selectedProfile.facebook_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
-                        >
-                          <Facebook className="h-5 w-5" />
-                          <span>Facebook</span>
-                        </a>
-                      )}
-                    </div>
-                  </div>
+                    <path d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
               </div>
             </div>
           </div>
+        </motion.div>
+
+        {/* Results Summary */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="text-center mb-8"
+        >
+          <p className="text-neutral-dark/70">
+            Showing {filteredAlumni.length} {filteredAlumni.length === 1 ? 'alumnus' : 'alumni'}
+            {selectedBatch !== 'all' && ` from batch ${selectedBatch}`}
+            {searchQuery && ` matching "${searchQuery}"`}
+          </p>
+        </motion.div>
+
+        {/* Alumni Grid */}
+        <ScrollReveal>
+          {isLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green mx-auto" />
+            </div>
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              {filteredAlumni.map((alumni, index) => (
+                <motion.div
+                  key={alumni.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-white rounded-2xl shadow-xl overflow-hidden relative group cursor-pointer"
+                  onClick={() => setSelectedAlumni(alumni)}
+                >
+                  {/* Decorative Border */}
+                  <div className="absolute -top-2 -right-2 w-full h-full border-2 border-orange rounded-2xl transition-all duration-300 group-hover:top-0 group-hover:right-0" />
+                  <div className="absolute -bottom-2 -left-2 w-full h-full border-2 border-green rounded-2xl transition-all duration-300 group-hover:bottom-0 group-hover:left-0" />
+                  
+                  <div className="p-8 relative">
+                    {/* Profile Header */}
+                    <div className="flex items-center gap-6 mb-6">
+                      <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                        {alumni.profile_picture_url ? (
+                          <img
+                            src={alumni.profile_picture_url}
+                            alt={alumni.full_name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-neutral-light/50 flex items-center justify-center">
+                            <User className="h-10 w-10 text-neutral-dark/30" />
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div>
+                        <h3 className="font-display text-2xl text-neutral-dark mb-1">
+                          {alumni.full_name}
+                        </h3>
+                        <div className="flex items-center gap-2 text-green">
+                          <GraduationCap className="h-4 w-4" />
+                          <span className="font-medium">Class of {alumni.batch_year}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Details */}
+                    <div className="space-y-3">
+                      {alumni.occupation && (
+                        <div className="flex items-center gap-3 text-neutral-dark/70">
+                          <Briefcase className="h-5 w-5" />
+                          <span>{alumni.occupation}</span>
+                        </div>
+                      )}
+                      {alumni.company && (
+                        <div className="flex items-center gap-3 text-neutral-dark/70">
+                          <Building2 className="h-5 w-5" />
+                          <span>{alumni.company}</span>
+                        </div>
+                      )}
+                      {alumni.current_location && (
+                        <div className="flex items-center gap-3 text-neutral-dark/70">
+                          <MapPin className="h-5 w-5" />
+                          <span>{alumni.current_location}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Social Links */}
+                    {(alumni.linkedin_url || alumni.facebook_url || alumni.instagram_url) && (
+                      <div className="mt-6 pt-6 border-t border-neutral-light">
+                        <div className="flex items-center gap-4">
+                          {alumni.linkedin_url && (
+                            <a href={alumni.linkedin_url} 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               className="p-2 rounded-full bg-neutral-light hover:bg-blue-50 text-neutral-dark hover:text-blue-600 transition-colors">
+                              <LinkedinIcon className="h-5 w-5" />
+                            </a>
+                          )}
+                          {alumni.facebook_url && (
+                            <a href={alumni.facebook_url}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="p-2 rounded-full bg-neutral-light hover:bg-blue-50 text-neutral-dark hover:text-blue-600 transition-colors">
+                              <Facebook className="h-5 w-5" />
+                            </a>
+                          )}
+                          {alumni.instagram_url && (
+                            <a href={alumni.instagram_url}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="p-2 rounded-full bg-neutral-light hover:bg-rose-50 text-neutral-dark hover:text-rose-600 transition-colors">
+                              <Instagram className="h-5 w-5" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+        </ScrollReveal>
+
+        {/* Alumni Detail Modal */}
+        {selectedAlumni && (
+          <AlumniDetailModal
+            alumni={selectedAlumni}
+            onClose={() => setSelectedAlumni(null)}
+          />
         )}
       </Container>
     </div>

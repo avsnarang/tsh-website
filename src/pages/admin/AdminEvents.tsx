@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useId } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Container from '../../components/ui/Container';
-import { supabase, checkSupabaseConnection } from '../../lib/supabase';
-import { ArrowLeft, Plus, Pencil, AlertTriangle, CalendarIcon, MapPin, X, Upload, Download } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
+import { 
+  ArrowLeft, Plus, Pencil, AlertTriangle, Calendar, MapPin, X, 
+  Upload, Download, Ban, CheckCircle 
+} from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../contexts/AuthContext';
-"use client";
-import { Calendar } from "../../components/ui/calendar";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { ClockIcon } from "lucide-react";
 
 interface Event {
   id: string;
@@ -22,7 +20,20 @@ interface Event {
   max_capacity?: number;
   max_guests_per_rsvp: number;
   requires_admission_number: boolean;
+  accepting_rsvps: boolean;
   rsvp_count?: number;
+}
+
+interface RSVP {
+  id: string;
+  event_id: string;
+  user_id: string | null;
+  status: 'attending' | 'not_attending' | 'maybe';
+  guests: number;
+  admission_number?: string;
+  created_at: string;
+  student_name?: string;
+  student_class?: string;
 }
 
 interface FormData {
@@ -37,18 +48,22 @@ interface FormData {
   requiresAdmissionNumber: boolean;
 }
 
-export default function ManageEvents() {
-  const id = useId();
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const navigate = useNavigate();
+interface StudentUploadData {
+  admission_number: string;
+  full_name: string;
+  class_name: string;
+}
+
+export default function AdminEvents() {
   const { user } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [showEventForm, setShowEventForm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
-  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [showStudentUpload, setShowStudentUpload] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [uploadError, setUploadError] = useState('');
   const [uploadSuccess, setUploadSuccess] = useState('');
   const [formData, setFormData] = useState<FormData>({
@@ -60,65 +75,173 @@ export default function ManageEvents() {
     coverImage: '',
     maxCapacity: undefined,
     maxGuestsPerRsvp: 4,
-    requiresAdmissionNumber: false
+    requiresAdmissionNumber: true
   });
 
   useEffect(() => {
-    // Check authentication
     if (!user) {
-      navigate('/management/login');
       return;
     }
-
-    // Check if user is management
-    const checkManagementAccess = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('management_users')
-          .select('id')
-          .eq('id', user.id)
-          .single();
-
-        if (error || !data) {
-          navigate('/management/login');
-          return;
-        }
-
-        // If access is verified, fetch events
-        fetchEvents();
-      } catch (error) {
-        console.error('Error checking management access:', error);
-        navigate('/management/login');
-      }
-    };
-
-    checkManagementAccess();
-  }, [user, navigate]);
+    fetchEvents();
+  }, [user]);
 
   const fetchEvents = async () => {
     try {
-      setLoading(true);
+      setError('');
+      const { data, error } = await supabase
+        .from('events')
+        .select(`
+          *,
+          rsvps: rsvps(count)
+        `)
+        .order('date', { ascending: false });
+
+      if (error) throw error;
+
+      const eventsWithCount = data?.map(event => ({
+        ...event,
+        rsvp_count: event.rsvps?.[0]?.count || 0
+      }));
+
+      setEvents(eventsWithCount || []);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setError('Failed to load events');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStudentUpload = async (file: File) => {
+    try {
+      setUploadError('');
+      setUploadSuccess('');
+
+      const text = await file.text();
+      const rows = text.split('\n');
+      
+      // Validate CSV structure
+      const headers = rows[0].toLowerCase().split(',');
+      const requiredHeaders = ['admission_number', 'full_name', 'class'];
+      const hasRequiredHeaders = requiredHeaders.every(h => 
+        headers.some(header => header.trim() === h)
+      );
+
+      if (!hasRequiredHeaders) {
+        throw new Error('CSV must contain admission_number, full_name, and class columns');
+      }
+
+      const students: StudentUploadData[] = rows.slice(1)
+        .map(row => {
+          const values = row.split(',').map(cell => cell.trim());
+          return {
+            admission_number: values[headers.indexOf('admission_number')],
+            full_name: values[headers.indexOf('full_name')],
+            class_name: values[headers.indexOf('class')]
+          };
+        })
+        .filter(student => 
+          student.admission_number && 
+          student.full_name && 
+          student.class_name
+        );
+
+      if (students.length === 0) {
+        throw new Error('No valid student records found in CSV');
+      }
+
+      const { error } = await supabase
+        .from('students')
+        .upsert(
+          students.map(student => ({
+            admission_number: student.admission_number,
+            full_name: student.full_name,
+            class: student.class_name
+          })),
+          { 
+            onConflict: 'admission_number',
+            ignoreDuplicates: false 
+          }
+        );
+
+      if (error) throw error;
+
+      setUploadSuccess(`Successfully uploaded ${students.length} student records`);
+      setTimeout(() => {
+        setShowStudentUpload(false);
+        setUploadSuccess('');
+      }, 2000);
+    } catch (error: any) {
+      console.error('Error uploading students:', error);
+      setUploadError(error.message || 'Failed to upload student data');
+    }
+  };
+
+  const handleRSVPDownload = async (eventId: string, eventTitle: string) => {
+    try {
       setError('');
 
-      // Check Supabase connection first
-      const isConnected = await checkSupabaseConnection();
-      if (!isConnected) {
-        setError('Database connection error. Please try again later.');
+      const { data: rsvps, error: rsvpError } = await supabase
+        .rpc('get_event_rsvps', { event_id: eventId });
+
+      if (rsvpError) throw rsvpError;
+
+      if (!rsvps?.length) {
+        setError('No RSVPs found for this event');
         return;
       }
 
-      const { data, error } = await supabase
+      const headers = ['Admission Number', 'Student Name', 'Class', 'Guests', 'Status', 'RSVP Date'];
+      const csvRows = [headers.join(',')];
+
+      rsvps.forEach((rsvp: RSVP) => {
+        const row = [
+          rsvp.admission_number || 'N/A',
+          rsvp.student_name || 'N/A',
+          rsvp.student_class || 'N/A',
+          rsvp.guests,
+          rsvp.status,
+          new Date(rsvp.created_at).toLocaleDateString()
+        ];
+        csvRows.push(row.join(','));
+      });
+
+      const csvContent = csvRows.join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${eventTitle.toLowerCase().replace(/\s+/g, '-')}-rsvps.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      setSuccess('RSVPs downloaded successfully');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (error) {
+      console.error('Error downloading RSVPs:', error);
+      setError('Failed to download RSVPs');
+    }
+  };
+
+  const toggleRSVPStatus = async (eventId: string, currentStatus: boolean) => {
+    try {
+      setError('');
+      
+      const { error } = await supabase
         .from('events')
-        .select('*')
-        .order('date', { ascending: true });
+        .update({ accepting_rsvps: !currentStatus })
+        .eq('id', eventId);
 
       if (error) throw error;
-      setEvents(data || []);
+
+      setSuccess(`RSVPs ${!currentStatus ? 'enabled' : 'disabled'} successfully`);
+      setTimeout(() => setSuccess(''), 3000);
+      await fetchEvents();
     } catch (error) {
-      console.error('Error fetching events:', error);
-      setError('Failed to load events. Please try refreshing the page.');
-    } finally {
-      setLoading(false);
+      console.error('Error toggling RSVP status:', error);
+      setError('Failed to update RSVP status');
     }
   };
 
@@ -197,44 +320,6 @@ export default function ManageEvents() {
     });
   };
 
-  const handleCSVUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    try {
-      setUploadError('');
-      setUploadSuccess('');
-
-      // Read the CSV file
-      const text = await file.text();
-      const rows = text.split('\n');
-      
-      // Skip header row and filter out empty rows
-      const students = rows.slice(1)
-        .map(row => {
-          const [admission_number, full_name, class_name] = row.split(',').map(cell => cell.trim());
-          return { admission_number, full_name, class: class_name };
-        })
-        .filter(student => student.admission_number && student.full_name);
-
-      // Insert students into database
-      const { error } = await supabase
-        .from('students')
-        .upsert(students, { 
-          onConflict: 'admission_number',
-          ignoreDuplicates: false 
-        });
-
-      if (error) throw error;
-
-      setUploadSuccess(`Successfully uploaded ${students.length} student records`);
-      setTimeout(() => setShowStudentUpload(false), 2000);
-    } catch (error) {
-      console.error('Error uploading students:', error);
-      setUploadError('Failed to upload student data. Please check the CSV format.');
-    }
-  };
-
   const downloadSampleCSV = () => {
     const csvContent = "admission_number,full_name,class\nA12345,John Doe,10A\nB67890,Jane Smith,11B";
     const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -252,6 +337,7 @@ export default function ManageEvents() {
     <div className="pt-32 pb-24">
       <Container>
         <div className="max-w-4xl mx-auto">
+          {/* Header */}
           <div className="flex items-center justify-between gap-4 mb-8">
             <Link
               to="/admin/dashboard"
@@ -279,57 +365,38 @@ export default function ManageEvents() {
             </div>
           </div>
 
-          <div className="bg-primary-light/10 p-6 rounded-2xl mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-2xl text-neutral-dark font-semibold">Student Data Management</h2>
-                <p className="text-neutral-dark/80">Upload and manage student admission numbers</p>
-              </div>
-              <div className="flex gap-4">
-                <Button
-                  variant="outline"
-                  onClick={downloadSampleCSV}
-                  className="flex items-center gap-2"
-                >
-                  <Download className="h-5 w-5" />
-                  Download Sample CSV
-                </Button>
-                <Button
-                  onClick={() => setShowStudentUpload(true)}
-                  className="flex items-center gap-2"
-                >
-                  <Upload className="h-5 w-5" />
-                  Upload Student Data
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          <h1 className="text-4xl text-neutral-dark mb-8">Manage Events</h1>
-
+          {/* Success/Error Messages */}
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
               {error}
             </div>
           )}
+          {success && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+              {success}
+            </div>
+          )}
 
+          {/* Events List */}
           {loading ? (
-            <div className="text-center">Loading...</div>
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            </div>
           ) : (
             <div className="space-y-6">
-              {events.map(event => (
+              {events.map((event) => (
                 <div
                   key={event.id}
-                  className="bg-white p-6 rounded-2xl shadow-lg"
+                  className="bg-white rounded-2xl shadow-md p-6"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl text-neutral-dark font-semibold">
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-neutral-dark mb-2">
                         {event.title}
                       </h3>
-                      <div className="flex items-center gap-4 text-primary mt-2">
+                      <div className="space-y-2 text-neutral-dark/80">
                         <div className="flex items-center gap-2">
-                          <CalendarIcon className="h-4 w-4" />
+                          <Calendar className="h-4 w-4" />
                           <span>{event.date} at {event.time}</span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -338,50 +405,52 @@ export default function ManageEvents() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
+                    <div className="flex flex-col gap-2">
+                      <Button
+                        onClick={() => handleRSVPDownload(event.id, event.title)}
+                        variant="outline"
+                        className="flex items-center gap-2"
+                      >
+                        <Download className="h-4 w-4" />
+                        Download RSVPs ({event.rsvp_count})
+                      </Button>
+                      <Button
+                        onClick={() => toggleRSVPStatus(event.id, event.accepting_rsvps)}
+                        variant={event.accepting_rsvps ? "warning" : "success"}
+                        className="flex items-center gap-2"
+                      >
+                        {event.accepting_rsvps ? (
+                          <>
+                            <Ban className="h-4 w-4" />
+                            Disable RSVPs
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle className="h-4 w-4" />
+                            Enable RSVPs
+                          </>
+                        )}
+                      </Button>
+                      <Button
                         onClick={() => {
                           setEditingEvent(event);
-                          setFormData({
-                            title: event.title,
-                            description: event.description,
-                            date: event.date,
-                            time: event.time,
-                            location: event.location,
-                            coverImage: event.cover_image,
-                            maxCapacity: event.max_capacity,
-                            maxGuestsPerRsvp: event.max_guests_per_rsvp,
-                            requiresAdmissionNumber: event.requires_admission_number
-                          });
                           setShowEventForm(true);
                         }}
-                        className="p-2 bg-primary-light/20 text-primary rounded-lg hover:bg-primary-light/40 transition-colors"
+                        variant="outline"
+                        className="flex items-center gap-2"
                       >
-                        <Pencil className="h-5 w-5" />
-                      </button>
-                      <button
+                        <Pencil className="h-4 w-4" />
+                        Edit
+                      </Button>
+                      <Button
                         onClick={() => setShowDeleteConfirm(event.id)}
-                        className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                        variant="danger"
+                        className="flex items-center gap-2"
                       >
-                        <AlertTriangle className="h-5 w-5" />
-                      </button>
+                        <AlertTriangle className="h-4 w-4" />
+                        Delete
+                      </Button>
                     </div>
-                  </div>
-                  <p className="text-neutral-dark/80 mb-4">{event.description}</p>
-                  <div className="flex flex-wrap gap-4 text-sm">
-                    <div className="bg-primary-light/10 px-3 py-1 rounded-full text-primary">
-                      Max Guests per RSVP: {event.max_guests_per_rsvp}
-                    </div>
-                    {event.max_capacity && (
-                      <div className="bg-primary-light/10 px-3 py-1 rounded-full text-primary">
-                        Capacity: {event.max_capacity}
-                      </div>
-                    )}
-                    {event.requires_admission_number && (
-                      <div className="bg-primary-light/10 px-3 py-1 rounded-full text-primary">
-                        Requires Admission Number
-                      </div>
-                    )}
                   </div>
                 </div>
               ))}
@@ -389,212 +458,6 @@ export default function ManageEvents() {
           )}
         </div>
       </Container>
-
-      {/* Event Form Modal */}
-      {showEventForm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-neutral-dark">
-                {editingEvent ? 'Edit Event' : 'Add New Event'}
-              </h2>
-              <button
-                onClick={() => {
-                  setShowEventForm(false);
-                  setEditingEvent(null);
-                  resetForm();
-                }}
-                className="p-2 hover:bg-neutral-dark/10 rounded-full transition-colors"
-              >
-                <X className="h-6 w-6 text-neutral-dark" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-neutral-dark mb-2">Title</label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-neutral-dark mb-2">Description</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <label className="block text-neutral-dark mb-2">Date and Time</label>
-                  <div className="rounded-md border">
-                    <Calendar 
-                      mode="single" 
-                      className="p-2" 
-                      selected={date} 
-                      onSelect={(newDate) => {
-                        setDate(newDate);
-                        if (newDate) {
-                          setFormData(prev => ({ 
-                            ...prev, 
-                            date: newDate.toISOString().split('T')[0]
-                          }));
-                        }
-                      }} 
-                    />
-                    <div className="border-t p-3">
-                      <div className="flex items-center gap-3">
-                        <Label htmlFor={id} className="text-xs">
-                          Enter time
-                        </Label>
-                        <div className="relative grow">
-                          <Input
-                            id={id}
-                            type="time"
-                            step="1"
-                            value={formData.time}
-                            onChange={(e) => setFormData(prev => ({ 
-                              ...prev, 
-                              time: e.target.value 
-                            }))}
-                            className="peer appearance-none ps-9 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                          />
-                          <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                            <ClockIcon size={16} aria-hidden="true" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-neutral-dark mb-2">Location</label>
-                <input
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-neutral-dark mb-2">Cover Image URL</label>
-                <input
-                  type="url"
-                  value={formData.coverImage}
-                  onChange={(e) => setFormData(prev => ({ ...prev, coverImage: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-neutral-dark mb-2">Maximum Capacity (Optional)</label>
-                  <input
-                    type="number"
-                    value={formData.maxCapacity || ''}
-                    onChange={(e) => setFormData(prev => ({ 
-                      ...prev, 
-                      maxCapacity: e.target.value ? parseInt(e.target.value) : undefined
-                    }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    min="1"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-neutral-dark mb-2">Maximum Guests per RSVP</label>
-                  <input
-                    type="number"
-                    value={formData.maxGuestsPerRsvp}
-                    onChange={(e) => setFormData(prev => ({ 
-                      ...prev, 
-                      maxGuestsPerRsvp: Math.max(1, parseInt(e.target.value) || 1)
-                    }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    min="1"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="requiresAdmissionNumber"
-                  checked={formData.requiresAdmissionNumber}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    requiresAdmissionNumber: e.target.checked
-                  }))}
-                  className="rounded border-neutral-dark/20 text-primary focus:ring-primary"
-                />
-                <label htmlFor="requiresAdmissionNumber" className="text-neutral-dark">
-                  Require student admission number for RSVP
-                </label>
-              </div>
-
-              <div className="flex justify-end gap-4 pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setShowEventForm(false);
-                    setEditingEvent(null);
-                    resetForm();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  {editingEvent ? 'Update Event' : 'Create Event'}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
-            <div className="flex items-center gap-4 text-red-500 mb-6">
-              <AlertTriangle className="h-8 w-8" />
-              <h2 className="text-2xl font-semibold">Delete Event</h2>
-            </div>
-            <p className="text-neutral-dark/80 mb-8">
-              Are you sure you want to delete this event? This action cannot be undone.
-              All RSVPs will also be removed.
-            </p>
-            <div className="flex justify-end gap-4">
-              <Button
-                variant="outline"
-                onClick={() => setShowDeleteConfirm(null)}
-              >
-                Cancel
-              </Button>
-              <button
-                onClick={() => showDeleteConfirm && handleDelete(showDeleteConfirm)}
-                className="px-6 py-2 bg-red-500 text-neutral-light rounded-lg hover:bg-red-600 transition-colors"
-              >
-                Delete Event
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Student Upload Modal */}
       {showStudentUpload && (
@@ -631,29 +494,57 @@ export default function ManageEvents() {
               <ul className="list-disc list-inside text-neutral-dark/80">
                 <li>Admission Number</li>
                 <li>Full Name</li>
-                <li>Class (optional)</li>
+                <li>Class</li>
               </ul>
-              <p className="text-neutral-dark/80">
-                The first row should contain column headers.
-              </p>
 
               <div className="mt-6">
                 <input
                   type="file"
                   accept=".csv"
-                  onChange={handleCSVUpload}
+                  onChange={(e) => e.target.files?.[0] && handleStudentUpload(e.target.files[0])}
                   className="block w-full text-sm text-neutral-dark
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
                     file:text-sm file:font-semibold
-                    file:bg-primary file:text-neutral-light
+                    file:bg-primary file:text-white
                     hover:file:bg-primary-dark
-                    file:cursor-pointer cursor-pointer"
+                    transition-colors"
                 />
               </div>
+
+              <Button
+                variant="outline"
+                onClick={downloadSampleCSV}
+                className="w-full mt-4"
+              >
+                Download Sample CSV
+              </Button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Event Form Modal */}
+      {showEventForm && (
+        <EventFormModal
+          editingEvent={editingEvent}
+          onClose={() => {
+            setShowEventForm(false);
+            setEditingEvent(null);
+            resetForm();
+          }}
+          onSubmit={handleSubmit}
+          formData={formData}
+          setFormData={setFormData}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <DeleteConfirmModal
+          onClose={() => setShowDeleteConfirm(null)}
+          onConfirm={() => showDeleteConfirm && handleDelete(showDeleteConfirm)}
+        />
       )}
     </div>
   );

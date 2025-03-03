@@ -30,7 +30,6 @@ interface RSVP {
   admission_number?: string;
   created_at: string;
   student_name?: string; // Joined from students table
-  student_class?: string;
 }
 
 interface FormData {
@@ -128,7 +127,7 @@ export default function ManageEvents() {
       const headers = ['Admission Number', 'Student Name', 'Class', 'Number of Guests', 'RSVP Date'];
       const csvRows = [headers.join(',')];
 
-      rsvps.forEach((rsvp: RSVP) => {
+      rsvps.forEach((rsvp) => {
         const row = [
           rsvp.admission_number || 'N/A',
           rsvp.student_name || 'N/A',

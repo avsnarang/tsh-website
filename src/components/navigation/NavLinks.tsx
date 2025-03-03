@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { motion, MotionValue } from 'framer-motion';
+import { ALUMNI_ROUTES } from '../../constants/routes';
 
 interface NavLinksProps {
   textColor: MotionValue<string>;
@@ -106,7 +107,7 @@ export default function NavLinks({ textColor, isMenuOpen }: NavLinksProps) {
         { to: "/academics", text: "Academics" },
         { to: "/scholarship", text: "Scholarship" },
         { to: "/co-curricular", text: "Co-curricular" },
-        { to: "/alumni", text: "Alumni" },
+        { to: ALUMNI_ROUTES.HOME, text: "Alumni" },
         { to: "/invites", text: "Events" },
         { to: "/gallery", text: "Gallery" },
         { to: "/contact", text: "Contact" }

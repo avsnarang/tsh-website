@@ -58,13 +58,6 @@ CREATE TABLE IF NOT EXISTS event_rsvps (
 ALTER TABLE events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE event_rsvps ENABLE ROW LEVEL SECURITY;
 
--- Drop existing policies if they exist
-DROP POLICY IF EXISTS "Anyone can read events" ON events;
-DROP POLICY IF EXISTS "Anyone can view events" ON events;
-DROP POLICY IF EXISTS "Management users can manage events" ON events;
-DROP POLICY IF EXISTS "Anyone can view RSVP counts" ON event_rsvps;
-DROP POLICY IF EXISTS "Users can manage their own RSVPs" ON event_rsvps;
-
 -- Policies for events table
 CREATE POLICY "Anyone can read events"
   ON events
@@ -118,10 +111,6 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Drop existing trigger if it exists
-DROP TRIGGER IF EXISTS update_events_updated_at ON events;
-
--- Create trigger for updated_at
 CREATE TRIGGER update_events_updated_at
   BEFORE UPDATE ON events
   FOR EACH ROW

@@ -1,6 +1,11 @@
 import React from 'react';
 import Container from '../ui/Container';
 
+interface CampusLifeProps {
+  messages: LeadershipMessage[];
+  loading: boolean;
+}
+
 const images = [
   {
     url: "https://images.unsplash.com/photo-1564981797816-1043664bf78d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -20,7 +25,7 @@ const images = [
   }
 ];
 
-export default function CampusLife() {
+export default function CampusLife({ messages, loading }: CampusLifeProps) {
   return (
     <div className="py-24 bg-primary-dark">
       <Container>

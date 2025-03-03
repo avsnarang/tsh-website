@@ -1,8 +1,12 @@
-export default function robots(): string {
-  return `
-User-agent: *
-Allow: /
+import { MetadataRoute } from 'next';
 
-Sitemap: https://yourdomain.com/sitemap.xml
-`;
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: ['/admin-portal/', '/alumni/profile/'],
+    },
+    sitemap: 'https://tsh.edu.in/sitemap.xml',
+  };
 }

@@ -1,39 +1,114 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Container from '../../components/ui/Container';
-import { Image, MessageSquare, LogOut, FileText, Calendar, Users, Settings, Bell } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import Title from '../../components/utils/Title';
+import { supabase } from '../../lib/supabase';
+import {
+  MessageSquare,
+  Calendar,
+  Image,
+  Bell,
+  Settings,
+  LogOut
+} from 'lucide-react';
+import Container from '../../components/ui/Container';
 import Button from '../../components/ui/Button';
 
 export default function AdminDashboard() {
-  const { signOut } = useAuth();
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/admin/login', { replace: true });
+      return;
+    }
+
+    const checkAccess = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('auth_user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .single();
+
+        if (error || data?.role !== 'admin' || !data) { // Check if data is null or undefined
+          navigate('/admin/login', { replace: true });
+        }
+      } catch (err) {
+        console.error('Error checking access:', err);
+        navigate('/admin/login', { replace: true });
+      }
+    };
+
+    checkAccess();
+  }, [user, navigate]);
 
   const handleSignOut = async () => {
+    console.log('Sign out button clicked');
     try {
-      await signOut();
-      navigate('/admin/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
+      // Force clear localStorage first for good measure
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('supabase.auth.')) {
+          localStorage.removeItem(key);
+        }
+      });
+      
+      // Then attempt the normal sign out
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      console.log('Successfully signed out');
+      
+      // Force a hard redirect instead of using navigate
+      window.location.href = '/admin/login';
+    } catch (error: any) {
+      console.error('Sign out error:', error);
+      alert('Failed to sign out. Please try again or refresh the page.');
     }
   };
 
+  const menuItems = [
+    {
+      title: 'Manage Messages',
+      description: 'Update leadership messages',
+      icon: MessageSquare,
+      path: '/admin/messages'
+    },
+    {
+      title: 'Manage Events',
+      description: 'Create and manage events',
+      icon: Calendar,
+      path: '/admin/events'
+    },
+    {
+      title: 'Gallery',
+      description: 'Manage photo gallery',
+      icon: Image,
+      path: '/admin/gallery'
+    },
+    {
+      title: 'Updates',
+      description: 'Manage latest updates',
+      icon: Bell,
+      path: '/admin/updates'
+    }
+  ];
+
   return (
     <div className="pt-32 pb-24">
-      <Title title="Admin Portal" description="School Management Portal" />
       <Container>
-        <div className="max-w-4xl mx-auto">
-          {/* Header with Logout */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg mb-12">
-            <div className="flex justify-between items-center">
-              <div>
-                <h1 className="text-4xl text-neutral-dark">Admin Portal</h1>
-                <p className="text-neutral-dark/60 mt-2">Manage school content and events</p>
-              </div>
-              <Button
-                onClick={handleSignOut}
-                variant="delete"
+        <div className="max-w-6xl mx-auto">
+          <div className="flex justify-between items-center mb-12">
+            <h1 className="text-4xl text-neutral-dark">Admin Dashboard</h1>
+            <div className="flex items-center gap-4">
+              <Link to="/admin/settings">
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  Settings
+                </Button>
+              </Link>
+              <Button 
+                onClick={handleSignOut} 
+                variant="redOutline" 
                 className="flex items-center gap-2"
               >
                 <LogOut className="h-5 w-5" />
@@ -42,90 +117,24 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Content Management */}
-            <div className="col-span-full">
-              <h2 className="text-2xl text-neutral-dark mb-6 flex items-center gap-2">
-                <Settings className="h-6 w-6 text-primary" />
-                Content Management
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Link
-                  to="/admin/testimonials"
-                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-                >
-                  <MessageSquare className="h-12 w-12 text-primary mb-4" />
-                  <h3 className="text-xl text-neutral-dark mb-2">Testimonials</h3>
-                  <p className="text-neutral-dark/80">
-                    Manage alumni testimonials and success stories
-                  </p>
-                </Link>
-
-                <Link
-                  to="/admin/gallery"
-                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-                >
-                  <Image className="h-12 w-12 text-primary mb-4" />
-                  <h3 className="text-xl text-neutral-dark mb-2">Gallery</h3>
-                  <p className="text-neutral-dark/80">
-                    Manage photo gallery and event albums
-                  </p>
-                </Link>
-
-                <Link
-                  to="/admin/messages"
-                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-                >
-                  <FileText className="h-12 w-12 text-primary mb-4" />
-                  <h3 className="text-xl text-neutral-dark mb-2">Messages</h3>
-                  <p className="text-neutral-dark/80">
-                    Update leadership messages and announcements
-                  </p>
-                </Link>
-              </div>
-            </div>
-
-            {/* Event Management */}
-            <div className="col-span-full mt-8">
-              <h2 className="text-2xl text-neutral-dark mb-6 flex items-center gap-2">
-                <Calendar className="h-6 w-6 text-primary" />
-                Event Management
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Link
-                  to="/admin/events"
-                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-                >
-                  <Calendar className="h-12 w-12 text-primary mb-4" />
-                  <h3 className="text-xl text-neutral-dark mb-2">Events</h3>
-                  <p className="text-neutral-dark/80">
-                    Create and manage school events and invitations
-                  </p>
-                </Link>
-
-                <Link
-                  to="/admin/updates"
-                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-                >
-                  <Bell className="h-12 w-12 text-primary mb-4" />
-                  <h3 className="text-xl text-neutral-dark mb-2">Latest Updates</h3>
-                  <p className="text-neutral-dark/80">
-                    Manage the latest updates ticker on homepage
-                  </p>
-                </Link>
-
-                <Link
-                  to="/admin/students"
-                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-                >
-                  <Users className="h-12 w-12 text-primary mb-4" />
-                  <h3 className="text-xl text-neutral-dark mb-2">Student Data</h3>
-                  <p className="text-neutral-dark/80">
-                    Upload and manage student admission records
-                  </p>
-                </Link>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {menuItems.map((item, index) => (
+              <Link 
+                key={index}
+                to={item.path}
+                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <item.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl text-neutral-dark font-semibold">{item.title}</h2>
+                    <p className="text-neutral-dark/60">{item.description}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </Container>

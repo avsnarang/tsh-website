@@ -15,7 +15,7 @@ export default function TextReveal({
   className = ''
 }: TextRevealProps) {
   return (
-    <div className={`overflow-hidden ${className}`}>
+    <div className={`overflow-hidden ${className}`} style={{ pointerEvents: 'auto' }}>
       <motion.div
         initial={{ y: "100%" }}
         animate={{ y: 0 }}
@@ -24,6 +24,7 @@ export default function TextReveal({
           delay,
           ease: [0.25, 0.1, 0.25, 1]
         }}
+        style={{ pointerEvents: 'auto' }}
       >
         {children}
       </motion.div>

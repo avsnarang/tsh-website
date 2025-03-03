@@ -4,6 +4,8 @@ import Container from '../../components/ui/Container';
 import { supabase } from '../../lib/supabase';
 import { Lock } from 'lucide-react';
 import Button from '../../components/ui/Button';
+import Title from '../../components/utils/Title';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function AdminSetup() {
   const [email, setEmail] = useState('');
@@ -12,25 +14,26 @@ export default function AdminSetup() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { signUp } = useAuth();
 
   useEffect(() => {
     checkExistingSetup();
-  }, []);
+  }, [navigate]);
 
   const checkExistingSetup = async () => {
     try {
       const { count, error } = await supabase
-        .from('management_users')
-        .select('*', { count: 'exact', head: true });
+        .from('users')
+        .select('*', { count: 'exact', head: true })
+        .eq('role', 'admin');
 
       if (error) throw error;
       
-      // If management users already exist, redirect to login
-      if (count !== null && count > 0) {
+      if (count > 0) {
         navigate('/admin/login');
       }
     } catch (err) {
-      console.error('Error checking management setup:', err);
+      console.error('Error checking admin setup:', err);
       setError('Failed to check existing setup');
     }
   };
@@ -47,33 +50,8 @@ export default function AdminSetup() {
       setError('');
       setLoading(true);
 
-      // Create the user account
-      const { data: authData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (signUpError) throw signUpError;
-      if (!authData.user) throw new Error('No user data returned');
-
-      // Add user to management_users table
-      const { error: managementError } = await supabase
-        .from('management_users')
-        .insert({
-          id: authData.user.id,
-          role: 'administrator'
-        });
-
-      if (managementError) throw managementError;
-
-      // Sign in the user
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (signInError) throw signInError;
-
+      // Create admin account using AuthContext
+      await signUp(email, password, 'admin');
       navigate('/admin/dashboard');
     } catch (err: any) {
       console.error('Setup error:', err);
@@ -85,6 +63,7 @@ export default function AdminSetup() {
 
   return (
     <div className="pt-32 pb-24">
+      <Title title="Admin Setup" description="Create Administrator Account" />
       <Container>
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">

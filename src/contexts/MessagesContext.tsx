@@ -23,7 +23,11 @@ export function MessagesProvider({ children }: { children: React.ReactNode }) {
           .select('*')
           .order('order');
 
-        if (error) throw error;
+        if (error) {
+          console.error('Supabase error:', error);
+          setError(error.message);
+          return;
+        }
 
         const formattedMessages = (data || []).map(msg => ({
           ...msg,
@@ -33,8 +37,9 @@ export function MessagesProvider({ children }: { children: React.ReactNode }) {
 
         setMessages(formattedMessages);
       } catch (error) {
-        console.error('Error fetching messages:', error);
-        setError('Failed to load messages');
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        console.error('Error fetching messages:', errorMessage);
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }

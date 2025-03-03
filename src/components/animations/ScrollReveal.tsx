@@ -63,6 +63,10 @@ export default function ScrollReveal({
         ease: [0.25, 0.1, 0.25, 1]
       }}
       className={className}
+      style={{ 
+        pointerEvents: 'auto',
+        zIndex: 'auto'
+      }}
     >
       {children}
     </motion.div>

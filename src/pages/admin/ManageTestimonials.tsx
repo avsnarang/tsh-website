@@ -1,46 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Plus, User } from 'lucide-react';
-import Container from '@/components/ui/Container';
+import { Link, useNavigate } from 'react-router-dom';
+import Container from '../../components/ui/Container';
+import { supabase } from '../../lib/supabase';
+import { ArrowLeft, User, Eye, EyeOff, AlertTriangle, Plus, X } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import Button from '../../components/ui/Button';
 
 interface Testimonial {
   id: string;
-  name: string;
+  source_type: 'parent' | 'student' | 'alumni';
+  author_name: string;
+  student_name?: string;
   class?: string;
-  source_type: 'parent' | 'student';
   content: string;
+  profile_picture_url?: string;
   is_visible: boolean;
 }
 
-interface FormData {
-  name: string;
-  class: string;
-  content: string;
-  source_type: 'parent' | 'student';
-}
-
-const initialFormData: FormData = {
-  name: '',
-  class: '',
-  content: '',
-  source_type: 'student'
-};
-
-export default function ManageTestimonials(): JSX.Element {
+export default function ManageTestimonials() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [currentId, setCurrentId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [formData, setFormData] = useState<Omit<Testimonial, 'id' | 'is_visible'>>({
+    source_type: 'parent',
+    author_name: '',
+    student_name: '',
+    class: '',
+    content: '',
+    profile_picture_url: ''
+  });
 
   useEffect(() => {
+    if (!user) {
+      navigate('/admin/login');
+      return;
+    }
     fetchTestimonials();
-  }, []);
+  }, [user, navigate]);
 
   const fetchTestimonials = async () => {
     try {
+      setLoading(true);
+      setError('');
+
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
@@ -48,61 +55,75 @@ export default function ManageTestimonials(): JSX.Element {
 
       if (error) throw error;
       setTestimonials(data || []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch testimonials');
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+      setError('Failed to load testimonials');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleVisibility = async (id: string) => {
+    try {
+      setError('');
+      const testimonial = testimonials.find(t => t.id === id);
+      if (!testimonial) return;
+
+      const { error } = await supabase
+        .from('testimonials')
+        .update({ is_visible: !testimonial.is_visible })
+        .eq('id', id);
+
+      if (error) throw error;
+      await fetchTestimonials();
+    } catch (error) {
+      console.error('Error toggling visibility:', error);
+      setError('Failed to update testimonial visibility');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      setError('');
+      const { error } = await supabase
+        .from('testimonials')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      setShowDeleteConfirm(null);
+      await fetchTestimonials();
+    } catch (error) {
+      console.error('Error deleting testimonial:', error);
+      setError('Failed to delete testimonial');
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (isEditing && currentId) {
-        const { error } = await supabase
-          .from('testimonials')
-          .update({
-            name: formData.name,
-            class: formData.class,
-            content: formData.content,
-            source_type: formData.source_type
-          })
-          .eq('id', currentId);
-
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from('testimonials')
-          .insert([{
-            name: formData.name,
-            class: formData.class,
-            content: formData.content,
-            source_type: formData.source_type,
-            is_visible: true
-          }]);
-
-        if (error) throw error;
-      }
-
-      setShowModal(false);
-      setFormData(initialFormData);
-      setIsEditing(false);
-      setCurrentId(null);
-      fetchTestimonials();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save testimonial');
-    }
-  };
-
-  const toggleVisibility = async (id: string, currentVisibility: boolean) => {
-    try {
+      setError('');
+      
       const { error } = await supabase
         .from('testimonials')
-        .update({ is_visible: !currentVisibility })
-        .eq('id', id);
+        .insert([{ ...formData, is_visible: true }]);
 
       if (error) throw error;
-      fetchTestimonials();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update visibility');
+
+      setSuccess('Testimonial created successfully!');
+      setShowCreateForm(false);
+      setFormData({
+        source_type: 'parent',
+        author_name: '',
+        student_name: '',
+        class: '',
+        content: '',
+        profile_picture_url: ''
+      });
+      await fetchTestimonials();
+    } catch (error) {
+      console.error('Error creating testimonial:', error);
+      setError('Failed to create testimonial');
     }
   };
 
@@ -110,7 +131,7 @@ export default function ManageTestimonials(): JSX.Element {
     <div className="pt-32 pb-24">
       <Container>
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between gap-4 mb-8">
             <Link
               to="/admin/dashboard"
               className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
@@ -118,131 +139,202 @@ export default function ManageTestimonials(): JSX.Element {
               <ArrowLeft className="h-5 w-5" />
               Back to Dashboard
             </Link>
-            <button
-              onClick={() => setShowModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+            <Button
+              onClick={() => setShowCreateForm(true)}
+              className="flex items-center gap-2"
             >
               <Plus className="h-5 w-5" />
-              Add New Testimonial
-            </button>
+              Create Testimonial
+            </Button>
           </div>
 
           <h1 className="text-4xl text-neutral-dark mb-8">Manage Testimonials</h1>
 
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
               {error}
             </div>
           )}
 
-          <div className="space-y-6">
-            {testimonials.map(testimonial => (
-              <div
-                key={testimonial.id}
-                className="bg-white p-6 rounded-2xl shadow-lg"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="text-xl text-neutral-dark font-semibold">
-                        {testimonial.name}
-                      </h3>
-                      <span className="px-2 py-1 bg-primary/10 text-primary text-sm rounded-full">
-                        {testimonial.source_type}
-                      </span>
+          {success && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+              {success}
+            </div>
+          )}
+
+          {loading ? (
+            <div className="text-center">Loading...</div>
+          ) : (
+            <div className="space-y-6">
+              {testimonials.map((testimonial) => (
+                <div
+                  key={testimonial.id}
+                  className="bg-white p-6 rounded-2xl shadow-lg"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
+                      {testimonial.profile_picture_url ? (
+                        <img
+                          src={testimonial.profile_picture_url}
+                          alt={testimonial.author_name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-primary/10 flex items-center justify-center">
+                          <User className="h-8 w-8 text-primary" />
+                        </div>
+                      )}
                     </div>
-                    {testimonial.class && (
-                      <p className="text-primary mb-2">Class: {testimonial.class}</p>
-                    )}
-                    <p className="text-neutral-dark/60">{testimonial.content}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => toggleVisibility(testimonial.id, testimonial.is_visible)}
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        testimonial.is_visible
-                          ? 'bg-green-100 text-green-600 hover:bg-green-200'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
-                    >
-                      {testimonial.is_visible ? 'Visible' : 'Hidden'}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setFormData({
-                          name: testimonial.name,
-                          class: testimonial.class || '',
-                          content: testimonial.content,
-                          source_type: testimonial.source_type
-                        });
-                        setCurrentId(testimonial.id);
-                        setIsEditing(true);
-                        setShowModal(true);
-                      }}
-                      className="px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors"
-                    >
-                      Edit
-                    </button>
+                    <div className="flex-grow">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-xl text-neutral-dark font-semibold">
+                            {testimonial.author_name}
+                          </h3>
+                          <div className="space-y-1">
+                            <p className="text-primary">
+                              {testimonial.source_type.charAt(0).toUpperCase() + testimonial.source_type.slice(1)}
+                            </p>
+                            {testimonial.source_type === 'parent' && testimonial.student_name && (
+                              <p className="text-neutral-dark/80">
+                                Parent of {testimonial.student_name}
+                                {testimonial.class && ` (${testimonial.class})`}
+                              </p>
+                            )}
+                            {testimonial.source_type === 'student' && testimonial.class && (
+                              <p className="text-neutral-dark/80">
+                                Class: {testimonial.class}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => toggleVisibility(testimonial.id)}
+                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                              testimonial.is_visible
+                                ? 'bg-primary text-white hover:bg-primary-dark'
+                                : 'bg-neutral-light text-neutral-dark hover:bg-neutral-dark/10'
+                            }`}
+                          >
+                            {testimonial.is_visible ? (
+                              <>
+                                <Eye className="h-5 w-5" />
+                                Visible
+                              </>
+                            ) : (
+                              <>
+                                <EyeOff className="h-5 w-5" />
+                                Hidden
+                              </>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => setShowDeleteConfirm(testimonial.id)}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                          >
+                            <AlertTriangle className="h-5 w-5" />
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                      <blockquote className="mt-4 text-neutral-dark/80 italic">
+                        "{testimonial.content}"
+                      </blockquote>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </Container>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full">
-            <h2 className="text-2xl text-neutral-dark font-semibold mb-6">
-              {isEditing ? 'Edit Testimonial' : 'Add New Testimonial'}
-            </h2>
+      {/* Create Testimonial Modal */}
+      {showCreateForm && (
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-semibold text-neutral-dark">Create Testimonial</h2>
+              <button
+                onClick={() => setShowCreateForm(false)}
+                className="p-2 hover:bg-neutral-dark/10 rounded-full transition-colors"
+              >
+                <X className="h-6 w-6 text-neutral-dark" />
+              </button>
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-neutral-dark font-medium mb-2">
-                  Source Type
-                </label>
+                <label className="block text-neutral-dark mb-2">Testimonial Source</label>
                 <select
                   value={formData.source_type}
-                  onChange={(e) => setFormData(prev => ({ ...prev, source_type: e.target.value as 'parent' | 'student' }))}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    source_type: e.target.value as 'parent' | 'student' | 'alumni',
+                    // Reset related fields
+                    student_name: e.target.value === 'parent' ? '' : undefined,
+                    class: ['parent', 'student'].includes(e.target.value) ? '' : undefined
+                  }))}
                   className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
                 >
-                  <option value="student">Student</option>
                   <option value="parent">Parent</option>
+                  <option value="student">Student</option>
+                  <option value="alumni">Alumni</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-neutral-dark font-medium mb-2">
-                  {formData.source_type === 'parent' ? "Parent's Name" : "Student's Name"}
-                </label>
+                <label className="block text-neutral-dark mb-2">Author Name</label>
                 <input
                   type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  value={formData.author_name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, author_name: e.target.value }))}
                   className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
                   required
                 />
               </div>
 
+              {formData.source_type === 'parent' && (
+                <div>
+                  <label className="block text-neutral-dark mb-2">Student Name</label>
+                  <input
+                    type="text"
+                    value={formData.student_name || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, student_name: e.target.value }))}
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
+                  />
+                </div>
+              )}
+
+              {(formData.source_type === 'parent' || formData.source_type === 'student') && (
+                <div>
+                  <label className="block text-neutral-dark mb-2">Class</label>
+                  <input
+                    type="text"
+                    value={formData.class || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, class: e.target.value }))}
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
+                  />
+                </div>
+              )}
+
               <div>
-                <label className="block text-neutral-dark font-medium mb-2">
-                  {formData.source_type === 'parent' ? "Student's Class" : 'Class'}
-                </label>
+                <label className="block text-neutral-dark mb-2">Profile Picture URL (Optional)</label>
                 <input
-                  type="text"
-                  value={formData.class}
-                  onChange={(e) => setFormData(prev => ({ ...prev, class: e.target.value }))}
+                  type="url"
+                  value={formData.profile_picture_url || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, profile_picture_url: e.target.value }))}
                   className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                  required
+                  placeholder="https://example.com/photo.jpg"
                 />
               </div>
 
               <div>
-                <label className="block text-neutral-dark font-medium mb-2">
-                  Testimonial Content
-                </label>
+                <label className="block text-neutral-dark mb-2">Testimonial</label>
                 <textarea
                   value={formData.content}
                   onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
@@ -251,27 +343,47 @@ export default function ManageTestimonials(): JSX.Element {
                 />
               </div>
 
-              <div className="flex justify-end gap-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowModal(false);
-                    setFormData(initialFormData);
-                    setIsEditing(false);
-                    setCurrentId(null);
-                  }}
-                  className="px-6 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
+              <div className="flex justify-end gap-4 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCreateForm(false)}
                 >
                   Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-                >
-                  {isEditing ? 'Update' : 'Add'} Testimonial
-                </button>
+                </Button>
+                <Button type="submit">
+                  Create Testimonial
+                </Button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+            <div className="flex items-center gap-4 text-red-500 mb-6">
+              <AlertTriangle className="h-8 w-8" />
+              <h2 className="text-2xl font-semibold">Delete Testimonial</h2>
+            </div>
+            <p className="text-neutral-dark/80 mb-8">
+              Are you sure you want to delete this testimonial? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowDeleteConfirm(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => showDeleteConfirm && handleDelete(showDeleteConfirm)}
+                className="bg-red-500 hover:bg-red-600"
+              >
+                Delete Testimonial
+              </Button>
+            </div>
           </div>
         </div>
       )}

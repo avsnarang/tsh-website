@@ -101,8 +101,7 @@ export const campusInfo: { [key: string]: CampusInfo } = {
         description: "Interactive zones for different subjects",
         image: "https://images.unsplash.com/photo-1448932223592-d1fc686e76ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80"
       }
-    ],
-    achievements: []
+    ]
   },
   majra: {
     name: "The Scholars' Home, Majra",
@@ -145,7 +144,6 @@ export const campusInfo: { [key: string]: CampusInfo } = {
         description: "Professional training facilities for various sports",
         image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
       }
-    ],
-    achievements: []
+    ]
   }
 };

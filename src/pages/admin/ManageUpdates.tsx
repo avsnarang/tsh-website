@@ -49,21 +49,31 @@ export default function ManageUpdates() {
     e.preventDefault();
     try {
       setError('');
+      const { data: existingData, error: fetchError } = await supabase
+        .from('latest_updates')
+        .select('id, is_active')
+        .single();
+
+      if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
+
+      const updates = {
+        content: formContent,
+        is_active: true,
+        updated_at: new Date().toISOString()
+      };
 
       if (editingUpdate) {
-        // Update existing update
         const { error } = await supabase
           .from('latest_updates')
-          .update({ content: formContent })
+          .update(updates)
           .eq('id', editingUpdate.id);
 
         if (error) throw error;
         setSuccess('Update modified successfully!');
       } else {
-        // Create new update
         const { error } = await supabase
           .from('latest_updates')
-          .insert([{ content: formContent, is_active: true }]);
+          .insert([updates]);
 
         if (error) throw error;
         setSuccess('Update created successfully!');

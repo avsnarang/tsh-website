@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Button from '../ui/Button';
+import { ALUMNI_ROUTES } from '../../constants/routes';
 
 interface MobileMenuProps {
   onClose: () => void;
@@ -193,7 +194,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
 
             <motion.div variants={itemVariants}>
               <Link 
-                to="/alumni" 
+                to={ALUMNI_ROUTES.HOME}
                 className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
                 onClick={handleLinkClick}
               >
