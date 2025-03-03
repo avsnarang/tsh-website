@@ -90,10 +90,7 @@ export default function EventGallery() {
         throw new Error('Event not found');
       }
 
-      // Debug: Log the query we're about to make
-      console.log('Fetching images for event ID:', id);
-
-      // Then, fetch the associated images - try both possible column names
+      // Then, fetch the associated images
       const { data: imagesData, error: imagesError } = await supabase
         .from('gallery_images')
         .select('*')
@@ -104,23 +101,12 @@ export default function EventGallery() {
         throw imagesError;
       }
 
-      // Debug: Log the images data
-      console.log('Images data:', imagesData);
-
-      // Combine the data
+      // Combine the data without duplicating the primary image
       const completeEventData = {
         ...eventData,
-        gallery_images: [
-          ...(imagesData || []),
-          ...(eventData.primary_image_url && !imagesData?.some(img => img.id === 'primary') ? [{
-            id: 'primary',
-            image_url: eventData.primary_image_url,
-            caption: eventData.title
-          }] : [])
-        ]
+        gallery_images: imagesData || []
       };
 
-      console.log('Complete event data:', completeEventData);
       setEvent(completeEventData);
     } catch (err) {
       console.error('Error fetching event:', err);
@@ -200,34 +186,36 @@ export default function EventGallery() {
             {/* Header Section */}
             <div className="pt-24 pb-12">
               <Container>
-                <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
-                  {/* Decorative Elements */}
-                  <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
-                  <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
-                  
-                  <div className="relative">
-                    <Link
-                      to="/gallery"
-                      className="inline-flex items-center text-primary hover:text-primary-dark transition-colors mb-8 
-                        px-4 py-2 rounded-lg hover:bg-primary/5"
-                    >
-                      <ArrowLeft className="h-5 w-5 mr-2" />
-                      Back to Gallery
-                    </Link>
+                <div className="max-w-3xl mx-auto">
+                  <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
+                    {/* Decorative Elements */}
+                    <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
+                    <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
+                    
+                    <div className="relative">
+                      <Link
+                        to="/gallery"
+                        className="inline-flex items-center text-primary hover:text-primary-dark transition-colors mb-8 
+                          px-4 py-2 rounded-lg hover:bg-primary/5"
+                      >
+                        <ArrowLeft className="h-5 w-5 mr-2" />
+                        Back to Gallery
+                      </Link>
 
-                    <div className="max-w-4xl">
-                      <h1 className="font-display text-4xl md:text-5xl text-neutral-dark mb-4">{event?.title}</h1>
-                      <div className="flex flex-wrap items-center gap-4 text-primary mb-4">
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-light/20 text-green">
-                          <Calendar className="h-5 w-5" />
-                          <span>{event && new Date(event.date).toLocaleDateString()}</span>
+                      <div className="text-center">
+                        <h1 className="font-display text-4xl md:text-5xl text-neutral-dark mb-4">{event?.title}</h1>
+                        <div className="flex flex-wrap items-center justify-center gap-4 text-primary mb-4">
+                          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-light/20 text-green">
+                            <Calendar className="h-5 w-5" />
+                            <span>{event && new Date(event.date).toLocaleDateString()}</span>
+                          </div>
+                          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-orange-light/20 text-orange">
+                            <MapPin className="h-5 w-5" />
+                            <span>{event?.campus}</span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-orange-light/20 text-orange">
-                          <MapPin className="h-5 w-5" />
-                          <span>{event?.campus}</span>
-                        </div>
+                        <p className="text-xl text-neutral-dark/80">{event?.description}</p>
                       </div>
-                      <p className="text-xl text-neutral-dark/80">{event?.description}</p>
                     </div>
                   </div>
                 </div>
@@ -237,55 +225,44 @@ export default function EventGallery() {
             {/* Gallery Section */}
             <div className="flex-1 pb-12">
               <Container>
-                <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden mb-8">
-                  {/* Decorative Elements */}
-                  <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
-                  <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
-                  
-                  <div className="relative">
-                    <div className="flex items-center gap-2 text-neutral-dark mb-4">
-                      <Camera className="h-6 w-6 text-green" />
-                      <h2 className="text-2xl font-display">Photo Gallery</h2>
-                    </div>
-                    <p className="text-neutral-dark/70">
-                      Browse through the photos from this event
-                    </p>
-                  </div>
-                </div>
 
-                <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className="my-masonry-grid"
-                  columnClassName="my-masonry-grid_column"
-                >
-                  {event?.gallery_images.map((image) => (
-                    <div 
-                      key={image.id}
-                      className="relative rounded-2xl overflow-hidden bg-white shadow-xl 
-                        transform transition-all duration-300 hover:scale-[1.02] mb-8 last:mb-0"
-                    >
-                      {/* Decorative elements */}
-                      <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
-                      <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
-                      
-                      <div className="relative">
-                        <img
-                          src={image.image_url}
-                          alt={image.caption || event.title}
-                          className="w-full h-auto"
-                          loading="lazy"
-                        />
-                        {image.caption && (
-                          <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 backdrop-blur-sm 
-                            text-white p-4 text-sm"
-                          >
-                            {image.caption}
+                {event && (
+                  <Masonry
+                    breakpointCols={breakpointColumnsObj}
+                    className="my-masonry-grid"
+                    columnClassName="my-masonry-grid_column"
+                  >
+                    {[...event.gallery_images]
+                      .sort(() => Math.random() - 0.5)
+                      .map((image: GalleryImage) => (
+                        <div 
+                          key={image.id}
+                          className="relative rounded-2xl overflow-hidden bg-white shadow-xl 
+                            transform transition-all duration-300 hover:scale-[1.02] mb-8 last:mb-0"
+                        >
+                          {/* Decorative elements */}
+                          <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
+                          <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
+                          
+                          <div className="relative">
+                            <img
+                              src={image.image_url}
+                              alt={image.caption || event.title}
+                              className="w-full h-auto"
+                              loading="lazy"
+                            />
+                            {image.caption && (
+                              <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 backdrop-blur-sm 
+                                text-white p-4 text-sm"
+                              >
+                                {image.caption}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </Masonry>
+                        </div>
+                      ))}
+                  </Masonry>
+                )}
               </Container>
             </div>
           </>
