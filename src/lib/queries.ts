@@ -45,13 +45,14 @@ export function useAlumniProfile(userId: string | undefined) {
         throw error;
       }
 
-      return data;
+      return data as ProfileType;
     },
     enabled: !!user && !!userId,
-    staleTime: 1000 * 60 * 30, // 30 minutes
-    cacheTime: 1000 * 60 * 60, // 1 hour
-    refetchOnWindowFocus: false, // Disable automatic refetch on window focus
-    refetchOnMount: false, // Only fetch once when component mounts
+    staleTime: Infinity, // Only refetch when explicitly invalidated
+    cacheTime: 1000 * 60 * 60, // Cache for 1 hour
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false
   });
 }
 
