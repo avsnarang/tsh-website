@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAlumniProfile } from '../../lib/queries'; // Import the query hook
 import Container from '../../components/ui/Container';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
@@ -17,52 +18,36 @@ import { motion } from 'framer-motion';
 export default function Profile() {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-  const [profile, setProfile] = useState<ProfileType | null>(null);
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Use React Query for profile data
+  const { 
+    data: profile, 
+    isLoading: loading,
+    error: queryError,
+    mutate: refreshProfile 
+  } = useAlumniProfile(user?.id);
 
-  useEffect(() => {
-    fetchProfile();
-  }, [user]);
-
-  const fetchProfile = async () => {
-    if (!user) return;
-    
-    try {
-      const { data, error } = await supabase
-        .from('alumni_profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      if (error) throw error;
-      setProfile(data);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      setError('Failed to load profile');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  // Memoized change handler
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
 
-    setProfile(prev => {
+    refreshProfile((prev: ProfileType | undefined) => {
       if (!prev) return prev;
       return {
         ...prev,
         [name]: type === 'checkbox' ? checked : value
       };
-    });
-  };
+    }, { revalidate: false }); // Prevent immediate revalidation
+  }, [refreshProfile]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Memoized submit handler
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !profile) return;
 
@@ -81,13 +66,35 @@ export default function Profile() {
 
       if (error) throw error;
       setSuccess('Profile updated successfully!');
+      
+      // Only refresh the profile data after successful update
+      refreshProfile();
     } catch (error: any) {
       console.error('Update error:', error);
       setError(error.message || 'Failed to update profile');
     } finally {
       setSaving(false);
     }
-  };
+  }, [user, profile, refreshProfile]);
+
+  // Show error message if query fails
+  useEffect(() => {
+    if (queryError) {
+      setError((queryError as Error).message || 'Failed to load profile');
+    }
+  }, [queryError]);
+
+  // Clear success/error messages after 5 seconds
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (success || error) {
+      timeoutId = setTimeout(() => {
+        setSuccess('');
+        setError('');
+      }, 5000);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [success, error]);
 
   const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!user || !profile) return;
@@ -102,12 +109,6 @@ export default function Profile() {
         throw new Error('No file selected');
       }
 
-      console.log('Processing file:', {
-        name: file.name,
-        size: file.size,
-        type: file.type
-      });
-
       if (!file.type.startsWith('image/')) {
         throw new Error('Please upload an image file');
       }
@@ -116,47 +117,51 @@ export default function Profile() {
         throw new Error('File size must be less than 5MB');
       }
 
-      // Read file as ArrayBuffer
-      const buffer = await file.arrayBuffer();
-      
-      const formData = {
-        files: {
-          profile_picture: {
-            name: file.name,
-            data: buffer,
-            mimetype: file.type
-          }
+      // Generate a unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+
+      // Delete old profile picture if it exists
+      if (profile.profile_picture_url) {
+        const oldFileName = profile.profile_picture_url.split('/').pop();
+        if (oldFileName) {
+          await supabase.storage
+            .from('alumni')
+            .remove([`profile-pictures/${oldFileName}`]);
         }
-      };
-
-      console.log('Initiating upload...');
-      const uploadResult = await handleProfilePictureUpload(formData);
-      
-      if (uploadResult.error) {
-        throw new Error(uploadResult.error);
       }
 
-      if (!uploadResult.url) {
-        throw new Error('No URL returned from upload');
+      // Upload new profile picture
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('alumni')
+        .upload(`profile-pictures/${fileName}`, file);
+
+      if (uploadError) {
+        if (uploadError.message.includes('NOT_FOUND')) {
+          throw new Error('Storage bucket not found. Please contact support.');
+        }
+        throw uploadError;
       }
 
-      console.log('Upload successful, updating profile...');
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('alumni')
+        .getPublicUrl(`profile-pictures/${fileName}`);
 
+      // Update profile with new URL
       const { error: updateError } = await supabase
         .from('alumni_profiles')
         .update({ 
-          profile_picture_url: uploadResult.url,
+          profile_picture_url: publicUrl,
           updated_at: new Date().toISOString()
         })
         .eq('id', user.id);
 
-      if (updateError) {
-        throw new Error(`Failed to update profile: ${updateError.message}`);
-      }
+      if (updateError) throw updateError;
 
       setProfile(prev => prev ? {
         ...prev,
-        profile_picture_url: uploadResult.url
+        profile_picture_url: publicUrl
       } : prev);
       
       setSuccess('Profile picture updated successfully!');
