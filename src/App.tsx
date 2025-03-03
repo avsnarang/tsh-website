@@ -319,17 +319,19 @@ function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <Suspense fallback={
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-          </div>
-        }>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+              <SpeedInsights />
+              <Analytics />
+            </div>
+          }
+        >
           <AuthProvider>
             <AlumniAuthProvider>
               <MessagesProvider>
                 <RouterProvider router={router} />
-                <SpeedInsights />
-                <Analytics />
               </MessagesProvider>
             </AlumniAuthProvider>
           </AuthProvider>
