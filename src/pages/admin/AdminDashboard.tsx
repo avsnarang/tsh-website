@@ -19,7 +19,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (!user) {
-      navigate('/admin/login', { replace: true });
+      navigate('/', { replace: true });
       return;
     }
 
