@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, To } from 'react-router-dom';
 import { 
   Menu, X, GraduationCap, ChevronDown,
   Info, BookOpen, Building, Trophy, 
   Music, Palette, Users, Calendar,
   Heart, Star, Brain, Award,
-  MapPin, Phone, Image
+  Phone, Image,
+  LucideIcon
 } from 'lucide-react';
 import Container from './ui/Container';
 import Button from './ui/Button';
 import Logo from './ui/Logo';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { SpeedInsights } from "@vercel/speed-insights/react";
 
 interface NavItem {
-  icon: React.ElementType;
+  icon: LucideIcon;
   label: string;
   href: string;
   description: string;
@@ -30,6 +30,14 @@ interface NavDropdownProps {
   groups: NavGroup[];
   textColor: any;
   isMenuOpen: boolean;
+}
+
+interface NavItemType {
+  type: 'dropdown' | 'link';
+  label: string;
+  href?: string;
+  icon?: LucideIcon;
+  groups?: NavGroup[];
 }
 
 function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps) {
@@ -93,7 +101,7 @@ function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps)
                       return (
                         <Link 
                           key={item.href}
-                          to={item.href || '/'}
+                          to={item.href} 
                           className={`group px-4 py-2 flex items-center gap-3 transition-colors ${
                             isMenuOpen 
                               ? 'hover:bg-orange-dark text-neutral-light' 
@@ -102,7 +110,7 @@ function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps)
                           onMouseEnter={() => setHoveredItem(item)}
                           onMouseLeave={() => setHoveredItem(null)}
                         >
-                          {Icon && <Icon className={`h-4 w-4 ${isMenuOpen ? 'text-neutral-light' : 'text-primary'}`} />}
+                          <Icon className={`h-4 w-4 ${isMenuOpen ? 'text-neutral-light' : 'text-primary'}`} />
                           <span className="font-medium">{item.label}</span>
                         </Link>
                       );
@@ -163,7 +171,7 @@ export default function Navbar() {
     ['none', '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)']
   );
 
-  const navItems = [
+  const navItems: NavItemType[] = [
     {
       type: 'dropdown',
       label: 'About',
@@ -322,37 +330,37 @@ export default function Navbar() {
                     isMenuOpen={isMenuOpen}
                   />
                 ) : (
-                  <motion.div key={item.label} style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}>
-                    <Link 
-                      to={item.href || '/'}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
-                    >
-                      {item.icon && <item.icon className="h-4 w-4" />}
-                      {item.label}
-                    </Link>
-                  </motion.div>
+                  item.icon && (
+                    <motion.div key={item.label} style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}>
+                      <Link 
+                        to={item.href as To} 
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {item.label}
+                      </Link>
+                    </motion.div>
+                  )
                 )
               ))}
               <Link to="/admissions" className="ml-2">
                 <Button 
                   variant="cta-green"
-                  className="min-w-[140px] flex items-center justify-center gap-2 relative overflow-hidden"
+                  className="min-w-[140px] flex items-center justify-center gap-2"
                 >
-                  <span className="relative z-10 flex items-center gap-2">
-                    <GraduationCap className="h-5 w-5" />
-                    Join Now
-                  </span>
+                  <GraduationCap className="h-5 w-5" />
+                  Join Now
                 </Button>
               </Link>
             </div>
 
-            <motion.button
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden p-2 z-50"
-              style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}
+              style={{ color: isMenuOpen ? '#FFFFFF' : textColor.toString() }}
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </motion.button>
+            </button>
           </motion.div>
         </Container>
       </nav>
@@ -373,17 +381,17 @@ export default function Navbar() {
               <div className="space-y-8">
                 {navItems.map((item) => (
                   <div key={item.label}>
-                    {item.type === 'dropdown' ? (
+                    {item.type === 'dropdown' && item.groups ? (
                       <div className="space-y-6">
                         <h3 className="text-xl text-neutral-light font-semibold">{item.label}</h3>
-                        {item.groups?.map((group) => (
+                        {item.groups.map((group) => (
                           <div key={group.label} className="space-y-4">
                             <h4 className="text-primary-light font-medium">{group.label}</h4>
                             <div className="space-y-3 pl-4">
                               {group.items.map((subItem) => (
                                 <Link
                                   key={subItem.href}
-                                  to={subItem.href || '/'}
+                                  to={subItem.href}
                                   onClick={() => setIsMenuOpen(false)}
                                   className="flex items-center gap-3 text-neutral-light/80 hover:text-neutral-light transition-colors"
                                 >
@@ -395,16 +403,16 @@ export default function Navbar() {
                           </div>
                         ))}
                       </div>
-                    ) : (
+                    ) : item.icon && item.href ? (
                       <Link
-                        to={item.href || '/'}
+                        to={item.href}
                         onClick={() => setIsMenuOpen(false)}
                         className="flex items-center gap-3 text-xl text-neutral-light hover:text-neutral-light/80 transition-colors"
                       >
-                        {item.icon && <item.icon className="h-5 w-5" />}
+                        <item.icon className="h-5 w-5" />
                         {item.label}
                       </Link>
-                    )}
+                    ) : null}
                   </div>
                 ))}
                 <Link 

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Container from '../../components/ui/Container';
 import { supabase } from '../../lib/supabase';
 import { ArrowLeft, User, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+import { useToast } from '../../hooks/useToast';
 
 interface AlumniProfile {
   id: string;
@@ -26,101 +27,93 @@ export default function AdminTestimonials() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const { showToast } = useToast();
 
-  useEffect(() => {
-    fetchTestimonials();
-  }, []);
-
-  const fetchTestimonials = async () => {
+  const fetchTestimonials = useCallback(async () => {
     try {
-      setLoading(true);
-      setError('');
-
-      // Fetch all testimonials
-      const { data: profilesData, error: profilesError } = await supabase
+      const { data: alumniData, error: alumniError } = await supabase
         .from('alumni_profiles')
-        .select('*')
+        .select('*, featured_testimonials(*)')
         .not('testimonial', 'is', null)
         .order('batch_year', { ascending: false });
 
-      if (profilesError) throw profilesError;
-
-      // Fetch featured testimonials
+      if (alumniError) throw alumniError;
+      
       const { data: featuredData, error: featuredError } = await supabase
         .from('featured_testimonials')
-        .select('*');
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (featuredError) throw featuredError;
 
-      setTestimonials(profilesData || []);
+      setTestimonials(alumniData || []);
       setFeaturedTestimonials(featuredData || []);
-    } catch (error) {
-      console.error('Error fetching testimonials:', error);
-      setError('Failed to load testimonials');
+    } catch (err) {
+      setError('Failed to fetch testimonials');
+      showToast('Error loading testimonials', 'error');
     } finally {
       setLoading(false);
     }
-  };
+  }, [showToast]);
 
-  const toggleVisibility = async (profileId: string) => {
+  const toggleVisibility = useCallback(async (testimonialId: string, currentVisibility: boolean) => {
     try {
-      setError('');
-      const featured = featuredTestimonials.find(f => f.alumni_profile_id === profileId);
+      const { error } = await supabase
+        .from('featured_testimonials')
+        .update({ is_visible: !currentVisibility })
+        .eq('id', testimonialId);
 
-      if (featured) {
-        // Update existing featured testimonial
-        const { error } = await supabase
-          .from('featured_testimonials')
-          .update({ is_visible: !featured.is_visible })
-          .eq('id', featured.id);
+      if (error) throw error;
 
-        if (error) throw error;
-      } else {
-        // Create new featured testimonial
-        const { error } = await supabase
-          .from('featured_testimonials')
-          .insert({ alumni_profile_id: profileId, is_visible: true });
+      setFeaturedTestimonials(prev => 
+        prev.map(t => 
+          t.id === testimonialId 
+            ? { ...t, is_visible: !currentVisibility }
+            : t
+        )
+      );
 
-        if (error) throw error;
-      }
-
-      await fetchTestimonials();
-    } catch (error) {
-      console.error('Error toggling visibility:', error);
-      setError('Failed to update testimonial visibility');
+      showToast(
+        `Testimonial ${currentVisibility ? 'hidden' : 'visible'} successfully`,
+        'success'
+      );
+    } catch (err) {
+      showToast('Failed to update visibility', 'error');
     }
-  };
+  }, [showToast]);
 
-  const removeTestimonial = async (profileId: string) => {
+  const deleteTestimonial = useCallback(async (testimonialId: string) => {
     try {
-      setError('');
+      const { error } = await supabase
+        .from('featured_testimonials')
+        .delete()
+        .eq('id', testimonialId);
 
-      // Delete from featured testimonials if exists
-      const featured = featuredTestimonials.find(f => f.alumni_profile_id === profileId);
-      if (featured) {
-        const { error: deleteError } = await supabase
-          .from('featured_testimonials')
-          .delete()
-          .eq('id', featured.id);
+      if (error) throw error;
 
-        if (deleteError) throw deleteError;
-      }
-
-      // Update alumni profile to remove testimonial
-      const { error: updateError } = await supabase
-        .from('alumni_profiles')
-        .update({ testimonial: null, show_testimonial: false })
-        .eq('id', profileId);
-
-      if (updateError) throw updateError;
-
+      setFeaturedTestimonials(prev => 
+        prev.filter(t => t.id !== testimonialId)
+      );
       setShowDeleteConfirm(null);
-      await fetchTestimonials();
-    } catch (error) {
-      console.error('Error removing testimonial:', error);
-      setError('Failed to remove testimonial');
+      showToast('Testimonial deleted successfully', 'success');
+    } catch (err) {
+      showToast('Failed to delete testimonial', 'error');
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, [fetchTestimonials]);
+
+  if (loading) {
+    return (
+      <Container>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <div className="pt-32 pb-24">

@@ -1,66 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
+import { ALUMNI_ROUTES } from '../../constants/routes';
 
-export default function RequireAdmin() {
-  const { user } = useAuth();
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [error, setError] = useState<string | null>(null);
+interface RequireAdminProps {
+  children: React.ReactNode;
+}
 
-  useEffect(() => {
-    const checkAdmin = async () => {
-      try {
-        if (!user) {
-          setIsAdmin(false);
-          return;
-        }
+export default function RequireAdmin({ children }: RequireAdminProps) {
+  const { user, userRole, loading } = useAuth();
+  const location = useLocation();
 
-        const { data, error } = await supabase
-          .from('management_users')
-          .select('id')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        if (error) {
-          console.error('Error checking admin status:', error);
-          setError('Failed to verify admin access');
-          setIsAdmin(false);
-          return;
-        }
-
-        setIsAdmin(!!data);
-      } catch (error) {
-        console.error('Error checking admin status:', error);
-        setError('Failed to verify admin access');
-        setIsAdmin(false);
-      }
-    };
-
-    checkAdmin();
-  }, [user]);
-
-  if (error) {
+  if (loading) {
     return (
-      <div className="pt-32 pb-24">
-        <div className="max-w-md mx-auto text-center">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            {error}
-          </div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
   }
 
-  if (isAdmin === null) {
-    return (
-      <div className="pt-32 pb-24">
-        <div className="max-w-md mx-auto text-center">
-          <div className="text-neutral-dark">Verifying access...</div>
-        </div>
-      </div>
-    );
+  // If user is not logged in
+  if (!user) {
+    return <Navigate to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
-  return isAdmin ? <Outlet /> : <Navigate to="/admin-portal/login" />;
+  // If user is not an admin
+  if (userRole !== 'admin') {
+    // If user is an alumni, redirect to alumni profile
+    if (userRole === 'alumni') {
+      return <Navigate to={ALUMNI_ROUTES.PROFILE} replace />;
+    }
+    
+    // Otherwise, redirect to login
+    return <Navigate to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
+  }
+
+  return <>{children}</>;
 }

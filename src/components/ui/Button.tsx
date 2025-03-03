@@ -1,30 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { motion, HTMLMotionProps } from 'framer-motion';
+import { motion } from 'framer-motion';
 
-interface ButtonProps extends Omit<HTMLMotionProps<"button">, "variant"> {
-  variant?: 'primary' | 'outline' | 'outline2' | 'cta' | 'cta-green' | 'download' | 'edit' | 'delete';
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'outline' | 'cta' | 'cta-green' | 'edit' | 'outline2' | 'redOutline';
   children: React.ReactNode;
-  href?: string;
-  className?: string;
 }
 
-export default function Button({ 
-  variant = 'primary', 
-  children, 
-  className = '', 
-  href,
-  ...props 
-}: ButtonProps) {
+export default function Button({ variant = 'primary', children, className = '', ...props }: ButtonProps) {
   const baseStyles = `
-    px-6 py-3 overflow-hidden
+    px-6 py-3
     rounded-full
     font-body font-semibold
     transition-all duration-300
     disabled:opacity-50
     disabled:cursor-not-allowed
     relative
-    ${className}
+    overflow-hidden
   `;
 
   const variants = {
@@ -38,6 +29,7 @@ export default function Button({
       border-2 border-white
       text-white
       hover:bg-white/20
+      hover:shadow-lg hover:shadow-white/20
     `,
     outline2: `
       bg-white/10 backdrop-blur-sm
@@ -59,7 +51,6 @@ export default function Button({
       ring-2 ring-orange/30
       hover:ring-4 hover:ring-orange/50
       hover:shadow-[0_0_30px_rgba(166,90,32,0.6)]
-      relative overflow-hidden
     `,
     'cta-green': `
       bg-primary text-neutral-light
@@ -67,7 +58,6 @@ export default function Button({
       ring-2 ring-green/30
       hover:ring-4 hover:ring-green/50
       hover:shadow-[0_0_30px_rgba(0,80,27,0.6)]
-      relative overflow-hidden
     `,
     edit: `
       bg-green text-neutral-light
@@ -86,60 +76,66 @@ export default function Button({
     `
   };
 
-  const buttonStyles = `${baseStyles} ${variants[variant]}`;
-
-  const ButtonContent = ({ children }: { children: React.ReactNode }) => (
-    <>
-      {/* Reflection effect for CTA buttons */}
-      {(variant === 'cta' || variant === 'cta-green') && (
-        <div className="absolute inset-0 w-full h-full">
-          <div className="absolute inset-0 translate-x-[-100%] animate-continuous-shine bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-        </div>
-      )}
-      {/* Button content */}
-      <span className="relative z-10">{children}</span>
-    </>
-  );
-
-  // If href is provided, render as Link
-  if (href) {
+  if (variant === 'cta' || variant === 'cta-green') {
+    const isGreen = variant === 'cta-green';
+    
     return (
-      <motion.button
+      <motion.button 
+        className={`${baseStyles} ${variants[variant]} ${className}`}
+        {...props}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        initial={false}
       >
-        <div style={{ display: 'contents' }}>
-          <Link
-            to={href}
-            className={buttonStyles}
-          >
-            <ButtonContent>{children}</ButtonContent>
-          </Link>
+        {/* Static glowing gradient background */}
+        <div className={`absolute inset-0 ${
+          isGreen 
+            ? 'bg-gradient-to-r from-primary via-primary-dark to-primary'
+            : 'bg-gradient-to-r from-orange via-orange-dark to-orange'
+        } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}>
+          <div className="absolute inset-0 animate-gradient-x" />
         </div>
+        
+        {/* Continuous pulsing ring effect */}
+        <div className={`absolute -inset-1 ${
+          isGreen
+            ? 'bg-gradient-to-r from-green-light to-primary'
+            : 'bg-gradient-to-r from-orange-light to-orange'
+        } rounded-full blur opacity-20 group-hover:opacity-60 transition-all duration-500 group-hover:blur-xl animate-pulse`} />
+        
+        {/* Continuous moving shine effect */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 transform animate-shine bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        </div>
+        
+        {/* Glowing border with continuous animation */}
+        <div className={`absolute inset-0 rounded-full border-2 ${
+          isGreen ? 'border-green-light' : 'border-orange-light'
+        } opacity-20 group-hover:opacity-50 transition-opacity duration-500`}>
+          <div className="absolute inset-0 animate-border-glow" />
+        </div>
+
+        {/* Button content */}
+        <span className="relative z-10 flex items-center justify-center gap-2">
+          {children}
+        </span>
+
+        {/* Additional hover glow effect */}
+        <div className={`absolute inset-0 ${
+          isGreen
+            ? 'bg-gradient-to-r from-green-light/0 via-green-light/30 to-green-light/0'
+            : 'bg-gradient-to-r from-orange-light/0 via-orange-light/30 to-orange-light/0'
+        } opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500`} />
       </motion.button>
     );
   }
 
-  // Otherwise render as button
   return (
-    <motion.button 
-      className={buttonStyles}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+    <button 
+      className={`${baseStyles} ${variants[variant]} ${className}`}
       {...props}
     >
-      <ButtonContent>{children}</ButtonContent>
-    </motion.button>
+      {children}
+    </button>
   );
 }
-
-
-
-
-
-
-
-
-
-
-

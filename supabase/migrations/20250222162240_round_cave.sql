@@ -78,13 +78,11 @@ DROP POLICY IF EXISTS "Users can manage their own RSVPs" ON event_rsvps;
 -- Create policies for events
 CREATE POLICY "Anyone can view events"
   ON events
-  FOR SELECT
   TO public
   USING (true);
 
 CREATE POLICY "Management users can manage events"
   ON events
-  FOR ALL
   TO authenticated
   USING (EXISTS (
     SELECT 1 FROM management_users 
@@ -94,12 +92,10 @@ CREATE POLICY "Management users can manage events"
 -- Create policies for RSVPs
 CREATE POLICY "Anyone can view RSVP counts"
   ON event_rsvps
-  FOR SELECT
   TO public
   USING (true);
 
 CREATE POLICY "Users can manage their own RSVPs"
   ON event_rsvps
-  FOR ALL
   TO authenticated
   USING (user_id = auth.uid());

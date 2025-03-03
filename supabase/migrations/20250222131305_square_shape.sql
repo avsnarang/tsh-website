@@ -39,24 +39,20 @@ CREATE TABLE IF NOT EXISTS alumni_profiles (
 
 ALTER TABLE alumni_profiles ENABLE ROW LEVEL SECURITY;
 
--- Drop existing policies first
-DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON alumni_profiles;
-DROP POLICY IF EXISTS "Authenticated users can view all profiles" ON alumni_profiles;
-DROP POLICY IF EXISTS "Users can update own profile" ON alumni_profiles;
-DROP POLICY IF EXISTS "Users can insert own profile" ON alumni_profiles;
-
--- Create policies
+-- Policy for public access to public profiles
 CREATE POLICY "Public profiles are viewable by everyone"
   ON alumni_profiles
   FOR SELECT
   USING (is_public = true);
 
+-- Policy for authenticated users to view all profiles
 CREATE POLICY "Authenticated users can view all profiles"
   ON alumni_profiles
   FOR SELECT
   TO authenticated
   USING (true);
 
+-- Policy for users to update their own profile
 CREATE POLICY "Users can update own profile"
   ON alumni_profiles
   FOR UPDATE
@@ -64,6 +60,7 @@ CREATE POLICY "Users can update own profile"
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
+-- Policy for users to insert their own profile
 CREATE POLICY "Users can insert own profile"
   ON alumni_profiles
   FOR INSERT

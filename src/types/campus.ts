@@ -1,20 +1,21 @@
 export interface Profile {
+  id: string;
   full_name: string;
   batch_year: number;
-  current_location: string;
   occupation: string;
-  company: string;
-  bio: string;
-  linkedin_url: string;
-  is_public: boolean;
-  profile_picture_url?: string;
+  company?: string;
+  current_location: string;
+  bio?: string;
+  email: string;
   phone?: string;
-  email?: string;
-  instagram_url?: string;
+  profile_picture_url?: string;
+  linkedin_url?: string;
   facebook_url?: string;
+  instagram_url?: string;
   show_contact_info: boolean;
-  testimonial?: string;
-  show_testimonial: boolean;
+  is_public: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CampusInfo {

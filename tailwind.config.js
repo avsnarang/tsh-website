@@ -1,16 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}"
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        ring: "hsl(var(--ring))",
         green: {
           light: '#A6D4B4',  // Light green
           DEFAULT: '#00501B', // Dark green
@@ -37,12 +30,10 @@ export default {
       },
       animation: {
         'gradient-x': 'gradient-x 3s ease infinite',
-        'shine': 'shine 1s forwards',
+        'shine': 'shine 4s linear infinite',
         'border-glow': 'border-glow 2s ease-in-out infinite',
         'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'ticker': 'ticker 30s linear infinite',
-        shimmer: 'shimmer 3s linear infinite',
-        'continuous-shine': 'continuous-shine 3s linear infinite',
       },
       keyframes: {
         'gradient-x': {
@@ -66,17 +57,9 @@ export default {
         'ticker': {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-100%)' }
-        },
-        shimmer: {
-          '0%': { backgroundPosition: '200% 200%' },
-          '100%': { backgroundPosition: '-200% -200%' }
-        },
-        'continuous-shine': {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(100%)' },
-        },
+        }
       },
     },
   },
   plugins: [],
-}
+};

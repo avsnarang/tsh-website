@@ -4,15 +4,6 @@ import { supabase } from '../../lib/supabase';
 import { User } from 'lucide-react';
 import ScrollReveal from '../animations/ScrollReveal';
 
-interface Testimonial {
-  id: string;
-  name: string;
-  class?: string;
-  source_type: 'parent' | 'student';
-  content: string;
-  is_visible: boolean;
-}
-
 interface AlumniTestimonial {
   id: string;
   full_name: string;
@@ -21,38 +12,54 @@ interface AlumniTestimonial {
   company: string;
   profile_picture_url?: string;
   testimonial: string;
-  show_testimonial: boolean;
 }
 
 export default function Testimonials() {
-  const [testimonials, setTestimonials] = useState<(Testimonial | AlumniTestimonial)[]>([]);
+  const [testimonials, setTestimonials] = useState<AlumniTestimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        // Fetch regular testimonials
-        const { data: regularData, error: regularError } = await supabase
-          .from('testimonials')
-          .select('*')
+        const { data: featuredData, error: featuredError } = await supabase
+          .from('featured_testimonials')
+          .select(`
+            alumni_profiles (
+              id,
+              full_name,
+              batch_year,
+              occupation,
+              company,
+              profile_picture_url,
+              testimonial
+            )
+          `)
           .eq('is_visible', true)
-          .limit(2);
+          .limit(3);
 
-        if (regularError) throw regularError;
+        if (featuredError) throw featuredError;
 
-        // Fetch alumni testimonials
-        const { data: alumniData, error: alumniError } = await supabase
-          .from('alumni_profiles')
-          .select('*')
-          .eq('show_testimonial', true)
-          .not('testimonial', 'is', null)
-          .limit(1);
+        const testimonials = featuredData
+          ?.map(item => item.alumni_profiles)
+          .filter(Boolean) as AlumniTestimonial[];
 
-        if (alumniError) throw alumniError;
+        if (testimonials.length === 0) {
+          // If no featured testimonials, fetch from alumni_profiles directly
+          const { data: profilesData, error: profilesError } = await supabase
+            .from('alumni_profiles')
+            .select('id, full_name, batch_year, occupation, company, profile_picture_url, testimonial')
+            .eq('is_public', true)
+            .eq('show_testimonial', true)
+            .not('testimonial', 'is', null)
+            .order('batch_year', { ascending: false })
+            .limit(3);
 
-        const allTestimonials = [...(regularData || []), ...(alumniData || [])];
-        setTestimonials(allTestimonials);
+          if (profilesError) throw profilesError;
+          setTestimonials(profilesData || []);
+        } else {
+          setTestimonials(testimonials);
+        }
       } catch (err) {
         console.error('Error fetching testimonials:', err);
         setError('Failed to load testimonials');
@@ -73,9 +80,9 @@ export default function Testimonials() {
       <Container>
         <ScrollReveal>
           <div className="text-center mb-16">
-            <h2 className="text-4xl text-neutral-dark mb-4">What Our Community Says</h2>
+            <h2 className="text-4xl text-neutral-dark mb-4">Voices of Our Community</h2>
             <p className="text-xl text-primary font-body max-w-2xl mx-auto">
-              Hear from our students, parents, and alumni about their experience with The Scholars' Home
+              Hear from our alumni about their journey with The Scholars' Home
             </p>
           </div>
         </ScrollReveal>
@@ -90,7 +97,7 @@ export default function Testimonials() {
               <div className="bg-white p-8 rounded-2xl shadow-lg">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
-                    {'profile_picture_url' in testimonial ? (
+                    {testimonial.profile_picture_url ? (
                       <img
                         src={testimonial.profile_picture_url}
                         alt={testimonial.full_name}
@@ -104,28 +111,19 @@ export default function Testimonials() {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-neutral-dark">
-                      {'full_name' in testimonial ? testimonial.full_name : testimonial.name}
+                      {testimonial.full_name}
                     </h3>
-                    {'occupation' in testimonial ? (
-                      <>
-                        <p className="text-primary text-sm">
-                          {testimonial.occupation}
-                          {testimonial.company && ` at ${testimonial.company}`}
-                        </p>
-                        <p className="text-primary/80 text-sm">
-                          Batch of {testimonial.batch_year}
-                        </p>
-                      </>
-                    ) : (
-                      <p className="text-primary text-sm">
-                        {testimonial.source_type === 'parent' ? 'Parent' : 'Student'} 
-                        {testimonial.class && ` - Class ${testimonial.class}`}
-                      </p>
-                    )}
+                    <p className="text-primary text-sm">
+                      {testimonial.occupation}
+                      {testimonial.company && ` at ${testimonial.company}`}
+                    </p>
+                    <p className="text-primary/80 text-sm">
+                      Batch of {testimonial.batch_year}
+                    </p>
                   </div>
                 </div>
                 <blockquote className="text-neutral-dark/80 italic">
-                  "{'testimonial' in testimonial ? testimonial.testimonial : testimonial.content}"
+                  "{testimonial.testimonial}"
                 </blockquote>
               </div>
             </ScrollReveal>
