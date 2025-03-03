@@ -1,7 +1,12 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Award, Users, BookOpen, Trophy } from 'lucide-react';
-import type { Achievement } from '../../types/components';
+import { Award, Users, BookOpen, Trophy, LucideIcon } from 'lucide-react';
+
+interface Achievement {
+  title: string;
+  value: string;
+  description: string;
+  icon: LucideIcon;
+}
 
 const achievements: Achievement[] = [
   {
