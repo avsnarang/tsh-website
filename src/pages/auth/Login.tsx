@@ -358,30 +358,6 @@ export default function Login() {
                     </Link>
                   </p>
                 </div>
-
-                {user && (
-                  <div className="mt-4 pt-4 border-t border-neutral-dark/10">
-                    <p className="text-sm text-neutral-dark/70 mb-2 text-center">
-                      Already logged in as {user.email}
-                    </p>
-                    <div className="flex gap-2 justify-center">
-                      <Button
-                        onClick={() => signOut()}
-                        variant="outline"
-                        className="px-4 py-2 text-sm"
-                      >
-                        Sign Out
-                      </Button>
-                      <Button
-                        onClick={clearAllStorage}
-                        variant="outline"
-                        className="px-4 py-2 text-sm"
-                      >
-                        Clear Storage
-                      </Button>
-                    </div>
-                  </div>
-                )}
               </form>
             </div>
           </div>
