@@ -74,36 +74,38 @@ export default function AlumniNetwork() {
         </ScrollReveal>
 
         <ScrollReveal>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Success Stories Card - Always visible */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="bg-white rounded-2xl p-8 shadow-lg relative group overflow-hidden"
-            >
-              <div className="absolute -top-4 -right-4 w-full h-full border-2 border-primary/20 rounded-2xl transition-transform group-hover:scale-105" />
-              
-              <div className="relative mb-6 inline-block">
-                <div className="absolute inset-0 bg-primary/10 rounded-full blur-lg transform group-hover:scale-110 transition-transform" />
-                <BookOpen className="h-12 w-12 text-primary relative z-10" />
-              </div>
-
-              <h3 className="text-2xl font-display text-neutral-dark mb-4">Success Stories</h3>
-              <p className="text-neutral-dark/70 mb-6 min-h-[3rem]">
-                {isLoadingStories 
-                  ? 'Loading...' 
-                  : `Read ${successStories?.length || 0} inspiring stories from fellow alumni`
-                }
-              </p>
-
-              <Button 
-                variant="cta-green"
-                className="w-full flex items-center justify-center gap-2 group"
-                onClick={() => navigate(ALUMNI_ROUTES.SUCCESS)}
+          <div className={`grid md:grid-cols-2 gap-8 ${!user ? 'lg:grid-cols-3' : ''}`}>
+            {/* Success Stories Card - Only visible when not logged in */}
+            {!user && (
+              <motion.div
+                whileHover={{ y: -5 }}
+                className="bg-white rounded-2xl p-8 shadow-lg relative group overflow-hidden"
               >
-                Explore Stories
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </motion.div>
+                <div className="absolute -top-4 -right-4 w-full h-full border-2 border-primary/20 rounded-2xl transition-transform group-hover:scale-105" />
+                
+                <div className="relative mb-6 inline-block">
+                  <div className="absolute inset-0 bg-primary/10 rounded-full blur-lg transform group-hover:scale-110 transition-transform" />
+                  <BookOpen className="h-12 w-12 text-primary relative z-10" />
+                </div>
+
+                <h3 className="text-2xl font-display text-neutral-dark mb-4">Success Stories</h3>
+                <p className="text-neutral-dark/70 mb-6 min-h-[3rem]">
+                  {isLoadingStories 
+                    ? 'Loading...' 
+                    : `Read ${successStories?.length || 0} inspiring stories from fellow alumni`
+                  }
+                </p>
+
+                <Button 
+                  variant="cta-green"
+                  className="w-full flex items-center justify-center gap-2 group"
+                  onClick={() => navigate(ALUMNI_ROUTES.SUCCESS)}
+                >
+                  Explore Stories
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </motion.div>
+            )}
 
             {!user ? (
               <>

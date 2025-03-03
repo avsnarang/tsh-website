@@ -6,6 +6,7 @@ import { supabase } from '../../lib/supabase';
 import { UserPlus, ArrowRight, AlertTriangle, Users, GraduationCap, MapPin, Briefcase } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ALUMNI_ROUTES } from '../../constants/routes';
+import { queryClient } from '../../lib/queryClient';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -98,7 +99,7 @@ export default function Register() {
         .from('alumni_profiles')
         .select('id')
         .eq('email', email)
-        .single();
+        .maybeSingle();
 
       if (existingUsers) {
         throw new Error('This email is already registered. Please log in instead.');
@@ -159,20 +160,25 @@ export default function Register() {
         throw new Error(`Failed to create profile: ${profileError.message}`);
       }
 
+      // 4. Wait a short moment to ensure the profile is created
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       logDebug('Registration successful');
       setSuccessMessage('Registration successful! Redirecting to your profile...');
 
-      // 4. Redirect to profile page
+      // 5. Invalidate the profile query to force a fresh fetch
+      queryClient.invalidateQueries(['alumniProfile', userId]);
+
+      // 6. Redirect to profile page
       setTimeout(() => {
-        window.location.href = `${ALUMNI_ROUTES.PROFILE}?registered=true`;
+        navigate(ALUMNI_ROUTES.PROFILE);
       }, 1500);
 
-    } catch (err: any) {
-      logDebug(`Registration error: ${err.message}`);
-      setError(err.message || 'Registration failed. Please try again.');
-    } finally {
-      setLoading(false);
+    } catch (error: any) {
+      logDebug(`Registration failed: ${error.message}`);
+      setError(error.message);
       setSubmitting(false);
+      setLoading(false);
     }
   };
 

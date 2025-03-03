@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from './supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Profile as AlumniProfile } from '../types/campus';
@@ -26,8 +26,8 @@ export function useAlumniProfiles() {
   });
 }
 
-export function useAlumniProfile(userId: string | undefined) {
-  const { user } = useAuth();
+export function useAlumniProfile(userId: string | undefined, options = {}) {
+  const queryClient = useQueryClient();
 
   return useQuery({
     queryKey: ['alumniProfile', userId],
@@ -38,21 +38,27 @@ export function useAlumniProfile(userId: string | undefined) {
         .from('alumni_profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle(); // Use maybeSingle instead of single to handle no results gracefully
 
       if (error) {
         console.error('Alumni profile fetch error:', error);
         throw error;
       }
 
+      if (!data) {
+        throw new Error('Profile not found');
+      }
+
       return data as ProfileType;
     },
-    enabled: !!user && !!userId,
-    staleTime: Infinity, // Only refetch when explicitly invalidated
-    cacheTime: 1000 * 60 * 60, // Cache for 1 hour
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false
+    enabled: !!userId,
+    staleTime: 0,
+    retry: 3, // Add retry attempts
+    retryDelay: (attemptIndex) => Math.min(1000 * (2 ** attemptIndex), 30000), // Exponential backoff
+    ...options,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['alumniProfile', userId], data);
+    }
   });
 }
 
