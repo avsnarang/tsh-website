@@ -14,6 +14,7 @@ import Login from './pages/auth/Login';
 import AuthInitializer from './components/auth/AuthInitializer';
 import { AlumniAuthProvider } from './contexts/AlumniAuthContext';
 import AlumniRegister from './pages/alumni/AlumniRegister';
+import ScrollToTop from './components/utils/ScrollToTop';
 
 // Create a client
 const queryClient = new QueryClient({
