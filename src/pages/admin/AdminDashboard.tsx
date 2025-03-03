@@ -32,11 +32,11 @@ export default function AdminDashboard() {
           .single();
 
         if (error || data?.role !== 'admin' || !data) { // Check if data is null or undefined
-          navigate('/admin/login', { replace: true });
+          navigate('/login', { replace: true });
         }
       } catch (err) {
         console.error('Error checking access:', err);
-        navigate('/admin/login', { replace: true });
+        navigate('/login', { replace: true });
       }
     };
 
