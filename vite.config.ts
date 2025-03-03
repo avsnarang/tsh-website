@@ -16,7 +16,7 @@ export default defineConfig({
       }
     },
     target: 'esnext',
-    minify: 'terser',
+    minify: 'esbuild', // Changed from 'terser' to 'esbuild'
     chunkSizeWarningLimit: 1000
   },
   optimizeDeps: {
