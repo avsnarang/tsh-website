@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import { Analytics } from "@vercel/analytics/react";
 import Navbar from './components/Navbar';
 import Footer from './components/footer/Footer';
 import { AuthProvider } from './contexts/AuthContext';
@@ -326,6 +328,8 @@ function App() {
             <AlumniAuthProvider>
               <MessagesProvider>
                 <RouterProvider router={router} />
+                <SpeedInsights />
+                <Analytics />
               </MessagesProvider>
             </AlumniAuthProvider>
           </AuthProvider>
