@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Container from '../../components/ui/Container';
+import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Plus, Pencil, AlertTriangle, X } from 'lucide-react';
-import Button from '../../components/ui/Button';
+import { ArrowLeft, Plus, Pencil, X } from 'lucide-react';
+import Button from '../ui/Button';
 
 interface Update {
   id: string;
@@ -49,7 +49,7 @@ export default function ManageUpdates() {
     e.preventDefault();
     try {
       setError('');
-      const { data: existingData, error: fetchError } = await supabase
+      const { error: fetchError } = await supabase
         .from('latest_updates')
         .select('id, is_active')
         .single();

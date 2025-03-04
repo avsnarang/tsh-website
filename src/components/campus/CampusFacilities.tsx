@@ -1,4 +1,3 @@
-import React from 'react';
 import Container from '../ui/Container';
 import { CampusInfo } from '../../types/campus';
 

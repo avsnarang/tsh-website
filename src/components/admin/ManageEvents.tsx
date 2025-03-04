@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Container from '../../components/ui/Container';
+import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
-import { 
-  ArrowLeft, Plus, Pencil, AlertTriangle, Calendar, MapPin, X, 
-  Download, Ban, CheckCircle 
+import {
+  ArrowLeft, Plus, Pencil, AlertTriangle, Calendar, MapPin, X,
+  Download, Ban, CheckCircle
 } from 'lucide-react';
-import Button from '../../components/ui/Button';
+import Button from '../ui/Button';
 
 interface Event {
   id: string;
@@ -22,6 +22,8 @@ interface Event {
   accepting_rsvps: boolean;
 }
 
+// Even if not directly used, keeping RSVP interface as it documents the data structure
+/* eslint-disable @typescript-eslint/no-unused-vars */
 interface RSVP {
   id: string;
   user_id: string | null;
@@ -29,7 +31,16 @@ interface RSVP {
   guests: number;
   admission_number?: string;
   created_at: string;
-  student_name?: string; // Joined from students table
+  student_name?: string;
+}
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
+interface RsvpData {
+  admission_number: string;
+  student_name: string;
+  student_class: string;
+  guests: number;
+  created_at: string;
 }
 
 interface FormData {
@@ -91,7 +102,7 @@ export default function ManageEvents() {
   const toggleRSVPStatus = async (eventId: string, currentStatus: boolean) => {
     try {
       setError('');
-      
+
       const { error } = await supabase
         .from('events')
         .update({ accepting_rsvps: !currentStatus })
@@ -112,7 +123,6 @@ export default function ManageEvents() {
     try {
       setError('');
 
-      // Fetch RSVPs with student data using the new function
       const { data: rsvps, error: rsvpError } = await supabase
         .rpc('get_event_rsvps', { event_id: eventId });
 
@@ -123,11 +133,10 @@ export default function ManageEvents() {
         return;
       }
 
-      // Create CSV content
       const headers = ['Admission Number', 'Student Name', 'Class', 'Number of Guests', 'RSVP Date'];
       const csvRows = [headers.join(',')];
 
-      rsvps.forEach((rsvp) => {
+      rsvps.forEach((rsvp: RsvpData) => {
         const row = [
           rsvp.admission_number || 'N/A',
           rsvp.student_name || 'N/A',
@@ -301,7 +310,7 @@ export default function ManageEvents() {
                     <div className="flex flex-wrap items-center gap-4">
                       <Button
                         onClick={() => downloadRSVPs(event.id, event.title)}
-                        variant="download"
+                        variant="outline"
                         className="flex items-center gap-2 h-12"
                       >
                         <Download className="h-4 w-4" />
@@ -309,7 +318,7 @@ export default function ManageEvents() {
                       </Button>
                       <Button
                         onClick={() => toggleRSVPStatus(event.id, event.accepting_rsvps)}
-                        variant={event.accepting_rsvps ? "delete" : "edit"}
+                        variant={event.accepting_rsvps ? "redOutline" : "edit"}
                         className="flex items-center justify-center gap-2 h-12 w-48"
                       >
                         {event.accepting_rsvps ? (
@@ -348,7 +357,7 @@ export default function ManageEvents() {
                       </Button>
                       <Button
                         onClick={() => setShowDeleteConfirm(event.id)}
-                        variant="delete"
+                        variant="redOutline"
                         className="flex items-center gap-2 h-12"
                       >
                         <AlertTriangle className="h-4 w-4" />
@@ -540,7 +549,7 @@ export default function ManageEvents() {
                 Cancel
               </Button>
               <Button
-                variant="delete"
+                variant="redOutline"  
                 onClick={() => showDeleteConfirm && handleDelete(showDeleteConfirm)}
               >
                 Delete Event

@@ -1,7 +1,6 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import Container from '../../components/ui/Container';
-import Button from '../../components/ui/Button';
+import Container from '../ui/Container';
+import Button from '../ui/Button';
 import { Settings, LogOut, Calendar, Image, Bell, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';

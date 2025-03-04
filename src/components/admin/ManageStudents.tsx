@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import Container from '../../components/ui/Container';
+import Container from '../ui/Container';
 import { 
   ArrowLeft, Upload, Download, CheckCircle, AlertTriangle, 
   Search, Plus, Pencil, Trash2, X, Check 
 } from 'lucide-react';
-import Button from '../../components/ui/Button';
+import Button from '../ui/Button';
 import { supabase } from '../../lib/supabase';
 
 interface Student {

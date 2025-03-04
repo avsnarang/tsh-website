@@ -1,4 +1,3 @@
-import React from 'react';
 import { Calendar, MapPin, Users, Ban } from 'lucide-react';
 import { Invite } from '../../types/invite';
 import Button from '../ui/Button';

@@ -1,9 +1,9 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import { initializeSupabase } from './lib/supabase'
-import { initPostHog } from './lib/analytics'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './styles/index.css';
+import { initializeSupabase } from './lib/supabase';
+import { initPostHog } from './lib/analytics';
 
 // Initialize PostHog
 initPostHog();

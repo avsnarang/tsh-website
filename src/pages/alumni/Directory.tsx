@@ -2,14 +2,20 @@ import { motion } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import Container from '../../components/ui/Container';
 import { useSEO } from '../../lib/seo';
-import ScrollReveal from '../../components/ui/ScrollReveal';
-import TextReveal from '../../components/ui/TextReveal';
+import ScrollReveal from '../../components/animations/ScrollReveal';
 import { useAlumniProfiles } from '../../lib/queries';
 import { 
-  User, Search, MapPin, Building2, Users, 
-  Briefcase, GraduationCap, Star, Globe, 
-  LinkedinIcon, Instagram, Facebook, Filter 
+  User, 
+  Star, 
+  Search, 
+  GraduationCap, 
+  Briefcase, 
+  Building2, 
+  MapPin, 
+  LinkedinIcon,
+  Filter
 } from 'lucide-react';
+import { FaInstagram, FaFacebook } from 'react-icons/fa';
 import AlumniDetailModal from '../../components/alumni/AlumniDetailModal';
 
 export default function Directory() {
@@ -252,7 +258,7 @@ export default function Directory() {
                                target="_blank"
                                rel="noopener noreferrer"
                                className="p-2 rounded-full bg-neutral-light hover:bg-blue-50 text-neutral-dark hover:text-blue-600 transition-colors">
-                              <Facebook className="h-5 w-5" />
+                              <FaFacebook className="h-5 w-5" />
                             </a>
                           )}
                           {alumni.instagram_url && (
@@ -260,7 +266,7 @@ export default function Directory() {
                                target="_blank"
                                rel="noopener noreferrer"
                                className="p-2 rounded-full bg-neutral-light hover:bg-rose-50 text-neutral-dark hover:text-rose-600 transition-colors">
-                              <Instagram className="h-5 w-5" />
+                              <FaInstagram className="h-5 w-5" />
                             </a>
                           )}
                         </div>

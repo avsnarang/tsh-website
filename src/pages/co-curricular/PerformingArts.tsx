@@ -1,4 +1,3 @@
-import React from 'react';
 import Container from '../../components/ui/Container';
 import { Music, Mic, Users, Star } from 'lucide-react';
 import { useSEO } from '../../lib/seo';

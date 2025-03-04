@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { ALUMNI_ROUTES } from '../../constants/routes';
+import { ALUMNI_ROUTES } from '../../config/routes';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

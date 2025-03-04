@@ -4,13 +4,22 @@ import { ArrowRight, Star, Search, Filter, User, Quote, Briefcase, Building2 } f
 import { Link } from 'react-router-dom';
 import Container from '../../components/ui/Container';
 import { useSEO } from '../../lib/seo';
-import ScrollReveal from '../../components/ui/ScrollReveal';
-import TextReveal from '../../components/ui/TextReveal';
-import { ALUMNI_ROUTES } from '../../constants/routes';
+import ScrollReveal from '../../components/animations/ScrollReveal';
+import { ALUMNI_ROUTES } from '../../config/routes';
 import { useSuccessStories } from '../../lib/queries';
 
+interface SuccessStory {
+  id: string;
+  full_name: string;
+  batch_year: number;
+  occupation?: string;
+  company?: string;
+  bio?: string;
+  profile_picture_url?: string;
+}
+
 export default function AlumniSuccess() {
-  const { data: successStories, isLoading } = useSuccessStories();
+  const { data: successStories = [], isLoading } = useSuccessStories();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBatch, setSelectedBatch] = useState<number | 'all'>('all');
 
@@ -21,16 +30,13 @@ export default function AlumniSuccess() {
 
   // Get unique batch years
   const batchYears = useMemo(() => {
-    if (!successStories) return [];
-    const years = [...new Set(successStories.map(story => story.batch_year))];
-    return years.sort((a, b) => b - a); // Sort in descending order
+    const years = [...new Set(successStories.map((story: SuccessStory) => story.batch_year))];
+    return years.sort((a: number, b: number) => b - a); // Sort in descending order
   }, [successStories]);
 
   // Filter stories based on search query and selected batch
   const filteredStories = useMemo(() => {
-    if (!successStories) return [];
-    
-    return successStories.filter(story => {
+    return (successStories as SuccessStory[]).filter((story: SuccessStory) => {
       const matchesSearch = 
         story.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         story.occupation?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -146,7 +152,7 @@ export default function AlumniSuccess() {
               transition={{ duration: 0.5 }}
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              {filteredStories.map((story, index) => (
+              {filteredStories.map((story: SuccessStory, index: number) => (
                 <motion.div
                   key={story.id}
                   initial={{ opacity: 0, y: 20 }}

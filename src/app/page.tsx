@@ -1,11 +1,20 @@
-import { Metadata } from 'next';
-import { supabase } from '@/lib/supabase';
-import Home from '@/components/pages/Home';
+import { supabase } from '../lib/supabase';
+import Home from '../pages/Home';
+import { Helmet } from 'react-helmet-async';
+import { useState, useEffect } from 'react';
 
-export const metadata: Metadata = {
-  title: "The Scholars' Home | Excellence in Education Since 2003",
-  description: "Join The Scholars' Home for world-class education and holistic development. CBSE-affiliated school offering comprehensive education from pre-primary to senior secondary levels.",
-};
+// Replace Next.js metadata with React Helmet
+function PageMetadata() {
+  return (
+    <Helmet>
+      <title>The Scholars' Home | Excellence in Education Since 2003</title>
+      <meta 
+        name="description" 
+        content="Join The Scholars' Home for world-class education and holistic development. CBSE-affiliated school offering comprehensive education from pre-primary to senior secondary levels."
+      />
+    </Helmet>
+  );
+}
 
 async function getInitialData() {
   const { data: messages } = await supabase
@@ -26,8 +35,20 @@ async function getInitialData() {
   };
 }
 
-export default async function HomePage() {
-  const initialData = await getInitialData();
-  
-  return <Home initialData={initialData} />;
+export default function HomePage() {
+  const [initialData, setInitialData] = useState<{
+    messages: any[];
+    latestUpdate: string;
+  }>({ messages: [], latestUpdate: '' });
+
+  useEffect(() => {
+    getInitialData().then(setInitialData);
+  }, []);
+
+  return (
+    <>
+      <PageMetadata />
+      <Home messages={initialData.messages} latestUpdate={initialData.latestUpdate} />
+    </>
+  );
 }

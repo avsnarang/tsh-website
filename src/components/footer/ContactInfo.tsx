@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MapPin, Phone, Mail, X } from 'lucide-react';
-import Button from '../ui/Button';
 
 interface BranchInfo {
   name: string;
@@ -31,7 +30,6 @@ const branches: BranchInfo[] = [
 ];
 
 export default function ContactInfo() {
-  const [showModal, setShowModal] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState<BranchInfo | null>(null);
 
   const handleBranchSelect = (branch: BranchInfo) => {

@@ -5,7 +5,6 @@ import InviteModal from '../components/invites/InviteModal';
 import { Invite } from '../types/invite';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import Title from '../components/utils/Title';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
 import { useSEO } from '../lib/seo'; 
@@ -204,7 +203,6 @@ export default function Invites() {
 
   return (
     <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
-      <Title title="School Events" description="Join Our Special Occasions" />
       <Container>
         <ScrollReveal>
           <div className="text-center mb-16">

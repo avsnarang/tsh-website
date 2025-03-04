@@ -1,6 +1,13 @@
-import { MetadataRoute } from 'next';
+interface SitemapEntry {
+  url: string;
+  lastModified: Date;
+  changeFrequency: 'weekly' | 'monthly' | 'yearly';
+  priority: number;
+}
 
-export default function sitemap(): MetadataRoute.Sitemap {
+type Sitemap = SitemapEntry[];
+
+export default function sitemap(): Sitemap {
   const baseUrl = 'https://tsh.edu.in';
 
   const routes = [
@@ -31,7 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/scholarship'
   ];
 
-  const sitemap: MetadataRoute.Sitemap = routes.map((route) => ({
+  const sitemap: Sitemap = routes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === '' ? 'weekly' : 'monthly',

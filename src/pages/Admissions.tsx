@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Users, BookOpen, GraduationCap, ArrowRight, Phone, Mail } from 'lucide-react';
 import { schoolInfo } from '../data/schoolData';

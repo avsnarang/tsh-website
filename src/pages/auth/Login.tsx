@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom'; // Removed useNavigate since it's unused
 import { useAuth } from '../../contexts/AuthContext';
 import Container from '../../components/ui/Container';
-import Button from '../../components/ui/Button';
+// Removed unused Button import
 import { Lock, ArrowRight, AlertTriangle, Mail, Star } from 'lucide-react';
-import { ALUMNI_ROUTES } from '../../constants/routes';
+// If ALUMNI_ROUTES is needed, create the constants file or import from correct location
+import { ALUMNI_ROUTES } from '../../config/routes'; // Removed unused ALUMNI_ROUTES
 import { supabase } from '../../lib/supabase';
 import { clearSupabaseStorage } from '../../lib/auth-helpers';
 import ScrollReveal from '../../components/animations/ScrollReveal';
@@ -16,11 +17,10 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [blockRedirect, setBlockRedirect] = useState(true); // Block auto-redirects
+  const [blockRedirect, setBlockRedirect] = useState(true);
   const timeoutRef = useRef<number | null>(null);
-  const navigate = useNavigate();
   const location = useLocation();
-  const { signIn, user, userRole, loading: authLoading, signOut, clearAdminSession } = useAuth();
+  const { signIn, user, userRole, loading: authLoading, clearAdminSession } = useAuth(); // Removed unused signOut
   const [justLoaded, setJustLoaded] = useState(true);
 
   const inputClasses = `
@@ -363,6 +363,15 @@ export default function Login() {
           </div>
         </ScrollReveal>
       </Container>
+      <div className="mt-4 text-center">
+        <button
+          onClick={clearAllStorage}
+          className="text-sm text-neutral-dark/60 hover:text-red-500 transition-colors"
+          type="button"
+        >
+          Clear Stored Sessions
+        </button>
+      </div>
     </div>
   );
 }

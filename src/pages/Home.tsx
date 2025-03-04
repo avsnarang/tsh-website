@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
-import Hero2 from '../components/home/Hero-2';
-import type { Testimonial } from '../types/components';
+import Hero2 from '../components/home/Hero';
 import { Suspense, lazy } from 'react';
 import { LeadershipMessage } from '../types/leadership';
 
@@ -29,7 +28,6 @@ interface TestimonialResponse {
 
 export default function Home() {
   const [messages, setMessages] = useState<LeadershipMessage[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Prefetch data when component mounts
@@ -63,18 +61,9 @@ export default function Home() {
 
         setMessages(transformedMessages);
         
+        // Remove testimonial transformation since it's not being used
         const responseData = testimonialsResponse.data as unknown as TestimonialResponse[];
-        const transformedTestimonials = responseData
-          .map(item => ({
-            id: item.alumni_profiles.id,
-            name: item.alumni_profiles.full_name,
-            role: `${item.alumni_profiles.occupation}${item.alumni_profiles.company ? ` at ${item.alumni_profiles.company}` : ''}`,
-            content: item.alumni_profiles.testimonial,
-            photo_url: item.alumni_profiles.profile_picture_url || undefined
-          }))
-          .filter(item => item.id && item.name && item.content);
-
-        setTestimonials(transformedTestimonials);
+        console.log('Testimonials data loaded:', responseData.length);
       } catch (error) {
         console.error('Error fetching home page data:', error);
       } finally {

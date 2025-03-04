@@ -26,7 +26,7 @@ export function AlumniAuthProvider({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     // Check active sessions and subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });

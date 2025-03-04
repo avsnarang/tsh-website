@@ -1,7 +1,5 @@
-import React from 'react';
 import Container from '../components/ui/Container';
 import { MapPin, Phone, Mail, Clock, Send, Users, Star, Award, ArrowRight } from 'lucide-react';
-import Title from '../components/utils/Title';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
 import Button from '../components/ui/Button';

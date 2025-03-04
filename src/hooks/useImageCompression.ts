@@ -22,6 +22,11 @@ export function useImageCompression() {
     setIsCompressing(true);
 
     try {
+      // If file is already smaller than maxSizeMB, return original
+      if (file.size <= maxSizeMB * 1024 * 1024) {
+        return file;
+      }
+
       // Create a canvas to resize the image
       const img = new Image();
       const canvas = document.createElement('canvas');
