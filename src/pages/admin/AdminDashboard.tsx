@@ -1,105 +1,86 @@
-import React, { useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
-import {
-  MessageSquare,
-  Calendar,
-  Image,
-  Bell,
-  Settings,
-  LogOut
-} from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import Container from '../../components/ui/Container';
 import Button from '../../components/ui/Button';
+import { Settings, LogOut, Calendar, Image, Bell, Users } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function AdminDashboard() {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-
-  useEffect(() => {
-    if (!user) {
-      navigate('/', { replace: true });
-      return;
-    }
-
-    const checkAccess = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('auth_user_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .single();
-
-        if (error || data?.role !== 'admin' || !data) { // Check if data is null or undefined
-          navigate('/login', { replace: true });
-        }
-      } catch (err) {
-        console.error('Error checking access:', err);
-        navigate('/login', { replace: true });
-      }
-    };
-
-    checkAccess();
-  }, [user, navigate]);
-
-  const handleSignOut = async () => {
-    console.log('Sign out button clicked');
-    try {
-      // Force clear localStorage first for good measure
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('supabase.auth.')) {
-          localStorage.removeItem(key);
-        }
-      });
-      
-      // Then attempt the normal sign out
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      console.log('Successfully signed out');
-      
-      // Force a hard redirect instead of using navigate
-      window.location.href = '/';
-    } catch (error: any) {
-      console.error('Sign out error:', error);
-      alert('Failed to sign out. Please try again or refresh the page.');
-    }
-  };
+  const { signOut } = useAuth();
 
   const menuItems = [
     {
-      title: 'Manage Messages',
-      description: 'Update leadership messages',
-      icon: MessageSquare,
-      path: '/admin/messages'
-    },
-    {
-      title: 'Manage Events',
-      description: 'Create and manage events',
+      title: 'Events',
+      description: 'Manage upcoming events and RSVPs',
       icon: Calendar,
-      path: '/admin/events'
+      path: '/admin/events',
+      color: 'from-green-light to-green'
     },
     {
       title: 'Gallery',
-      description: 'Manage photo gallery',
+      description: 'Manage photo galleries',
       icon: Image,
-      path: '/admin/gallery'
+      path: '/admin/gallery',
+      color: 'from-orange-light to-orange'
     },
     {
       title: 'Updates',
       description: 'Manage latest updates',
       icon: Bell,
-      path: '/admin/updates'
+      path: '/admin/updates',
+      color: 'from-blue-400 to-blue-600'
+    },
+    {
+      title: 'Student Records',
+      description: 'Manage student database',
+      icon: Users,
+      path: '/admin/students',
+      color: 'from-purple-400 to-purple-600'
     }
   ];
 
   return (
-    <div className="pt-32 pb-24">
-      <Container>
-        <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-12">
-            <h1 className="text-4xl text-neutral-dark">Admin Dashboard</h1>
-            <div className="flex items-center gap-4">
+    <div className="relative min-h-screen bg-neutral-light">
+      {/* Decorative Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="relative pt-32 pb-24">
+        <Container>
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              className="flex-1 text-center mb-16"
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              {/* Section Tag */}
+              <motion.div
+                className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <span className="text-sm font-semibold">ADMIN PANEL</span>
+              </motion.div>
+
+              <h1 className="font-display text-5xl lg:text-7xl text-neutral-dark mb-6">
+                Welcome to the <span className="text-green">Dashboard</span>
+              </h1>
+            </motion.div>
+
+            <div className="flex justify-end items-center gap-4 mb-12">
               <Link to="/admin/settings">
                 <Button variant="outline" className="flex items-center gap-2">
                   <Settings className="h-5 w-5" />
@@ -107,7 +88,7 @@ export default function AdminDashboard() {
                 </Button>
               </Link>
               <Button 
-                onClick={handleSignOut} 
+                onClick={signOut} 
                 variant="redOutline" 
                 className="flex items-center gap-2"
               >
@@ -115,29 +96,44 @@ export default function AdminDashboard() {
                 Sign Out
               </Button>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {menuItems.map((item, index) => (
-              <Link 
-                key={index}
-                to={item.path}
-                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-primary/10 rounded-lg">
-                    <item.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl text-neutral-dark font-semibold">{item.title}</h2>
-                    <p className="text-neutral-dark/60">{item.description}</p>
-                  </div>
-                </div>
-              </Link>
-            ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {menuItems.map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Link 
+                    to={item.path}
+                    className="group block relative"
+                  >
+                    <div className="absolute -inset-0.5 bg-gradient-to-br opacity-0 group-hover:opacity-100 blur transition duration-500 rounded-2xl"
+                         style={{ background: `linear-gradient(to bottom right, ${item.color})` }}
+                    />
+                    <div className="relative bg-white p-8 rounded-2xl shadow-lg">
+                      <div className="flex items-start gap-6">
+                        <div className={`p-4 rounded-xl bg-gradient-to-br ${item.color}`}>
+                          <item.icon className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <h2 className="text-2xl font-display text-neutral-dark mb-2">
+                            {item.title}
+                          </h2>
+                          <p className="text-neutral-dark/60">
+                            {item.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </Container>
+        </Container>
+      </div>
     </div>
   );
 }
