@@ -1,4 +1,3 @@
-import React from 'react';
 import Container from './ui/Container';
 import { schoolInfo } from '../data/schoolData';
 import ScrollReveal from './animations/ScrollReveal';

@@ -1,7 +1,7 @@
 import { 
   X, Mail, Phone, LinkedinIcon, Instagram, Facebook, 
-  Globe, MapPin, Building2, Briefcase, User, Quote,
-  GraduationCap, Star, UserPlus
+  Globe, MapPin, Briefcase, User, Quote,
+  GraduationCap,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 

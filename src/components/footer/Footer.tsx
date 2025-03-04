@@ -1,8 +1,7 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Container from '../ui/Container';
-import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react';
+import { Phone, Mail, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },

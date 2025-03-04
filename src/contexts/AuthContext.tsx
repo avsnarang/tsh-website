@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { AuthError, User, Session, UserResponse } from '@supabase/supabase-js';
+import { AuthError, User, Session } from '@supabase/supabase-js';
 import debounce from 'lodash.debounce';
 
 type UserRole = 'admin' | 'alumni';
@@ -158,7 +158,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
-  const [visibilityChanged, setVisibilityChanged] = useState(false);
+  const visibilityChangedRef = useRef(false);
   const [lastSessionCheck, setLastSessionCheck] = useState(0);
   const [sessionState, setSessionState] = useState<'valid' | 'invalid' | 'unknown'>('unknown');
   // New state to track if a profile has been deleted
@@ -300,7 +300,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         // If not triggered by visibility change, process the session directly
-        if (!visibilityChanged) {
+        if (!visibilityChangedRef.current) {
           await handleUserSession(session);
         }
       }
@@ -309,7 +309,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [visibilityChanged]);
+  }, []); // Remove visibilityChanged from dependencies
 
   const signIn = async (email: string, password: string): Promise<User> => {
     // Don't reset profileDeleted state immediately - we'll do this after checking

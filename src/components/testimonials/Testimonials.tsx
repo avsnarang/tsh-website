@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
 import { User } from 'lucide-react';
@@ -12,6 +12,10 @@ interface AlumniTestimonial {
   company: string;
   profile_picture_url?: string;
   testimonial: string;
+}
+
+interface FeaturedTestimonialResponse {
+  alumni_profiles: AlumniTestimonial[];  // Change this to an array
 }
 
 export default function Testimonials() {
@@ -40,9 +44,17 @@ export default function Testimonials() {
 
         if (featuredError) throw featuredError;
 
-        const testimonials = featuredData
-          ?.map(item => item.alumni_profiles)
-          .filter(Boolean) as AlumniTestimonial[];
+        const testimonials = ((featuredData as unknown as FeaturedTestimonialResponse[]) || [])
+          .flatMap(item => item.alumni_profiles)
+          .filter((profile): profile is AlumniTestimonial => {
+            return profile !== null && 
+              'id' in profile &&
+              'full_name' in profile &&
+              'batch_year' in profile &&
+              'occupation' in profile &&
+              'company' in profile &&
+              'testimonial' in profile;
+          });
 
         if (testimonials.length === 0) {
           // If no featured testimonials, fetch from alumni_profiles directly
@@ -56,7 +68,7 @@ export default function Testimonials() {
             .limit(3);
 
           if (profilesError) throw profilesError;
-          setTestimonials(profilesData || []);
+          setTestimonials(profilesData as AlumniTestimonial[]);
         } else {
           setTestimonials(testimonials);
         }

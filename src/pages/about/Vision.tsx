@@ -1,4 +1,3 @@
-import React from 'react';
 import Container from '../../components/ui/Container';
 import { Target, Compass, Star, Award } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';

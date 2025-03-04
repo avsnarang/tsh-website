@@ -81,8 +81,10 @@ export default function Button({ variant = 'primary', children, className = '', 
     
     return (
       <motion.button 
+        type="button"
         className={`${baseStyles} ${variants[variant]} ${className}`}
-        {...props}
+        onClick={props.onClick}
+        disabled={props.disabled}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         initial={false}

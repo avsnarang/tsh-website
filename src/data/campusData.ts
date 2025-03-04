@@ -62,6 +62,7 @@ export const campusInfo: { [key: string]: CampusInfo } = {
     ]
   },
   juniors: {
+    achievements: [],
     name: "The Scholars' Home, Juniors",
     tagline: "Nurturing Young Minds",
     description: "A specialized campus dedicated to early childhood education and primary schooling in a nurturing environment.",
@@ -104,6 +105,7 @@ export const campusInfo: { [key: string]: CampusInfo } = {
     ]
   },
   majra: {
+    achievements: [],
     name: "The Scholars' Home, Majra",
     tagline: "Tradition Meets Innovation",
     description: "A perfect blend of traditional values and modern education methodologies for comprehensive student development.",

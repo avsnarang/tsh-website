@@ -16,8 +16,7 @@ import {
 import { FaInstagram, FaFacebook } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
-// Define the profile type explicitly
-interface AlumniProfile extends Omit<ProfileType, 
+export interface AlumniProfile extends Omit<ProfileType,
   'full_name' | 
   'batch_year' | 
   'occupation' | 
@@ -27,8 +26,8 @@ interface AlumniProfile extends Omit<ProfileType,
   'is_public'
 > {
   profile_picture_url?: string;
-  full_name: string;  // Remove optional modifier since it's required in base type
-  batch_year: number; // Remove optional modifier since it's required in base type
+  full_name: string;
+  batch_year: number;
   occupation?: string;
   company?: string;
   current_location?: string;
@@ -61,7 +60,12 @@ export default function Profile() {
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true
-  });
+  }) as { 
+    data: AlumniProfile | undefined;
+    isLoading: boolean;
+    error: Error | null;
+    refetch: () => void;
+  };
 
   // Add effect to handle tab visibility changes
   useEffect(() => {

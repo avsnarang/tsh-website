@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ChevronRight, 
@@ -15,7 +14,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Button from '../ui/Button';
-import { ALUMNI_ROUTES } from '../../constants/routes';
+import { ALUMNI_ROUTES } from '../../config/routes';
 
 interface MobileMenuProps {
   onClose: () => void;

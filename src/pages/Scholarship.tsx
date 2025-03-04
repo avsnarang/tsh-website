@@ -1,9 +1,7 @@
-import React from 'react';
 import Container from '../components/ui/Container';
-import { GraduationCap, Award, Calculator, BookOpen, ArrowRight, Heart, Star, Users, Trophy } from 'lucide-react';
+import { GraduationCap, Award, BookOpen, ArrowRight, Heart, Star, Users, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
-import Title from '../components/utils/Title';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
 import { useSEO } from '../lib/seo';

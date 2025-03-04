@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Container from '../../components/ui/Container';
+import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
 import { ArrowLeft, User, Eye, EyeOff, AlertTriangle, Plus, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import Button from '../../components/ui/Button';
+import Button from '../ui/Button';
 
 interface Testimonial {
   id: string;

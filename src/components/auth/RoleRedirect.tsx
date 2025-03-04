@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { ALUMNI_ROUTES, ADMIN_ROUTES } from '../../constants/routes';
+import { ALUMNI_ROUTES, ADMIN_ROUTES } from '../../config/routes';
 
 export default function RoleRedirect() {
   const { user, userRole, loading } = useAuth();

@@ -1,6 +1,5 @@
-import React from 'react';
 import Container from '../components/ui/Container';
-import { MapPin, Users, BookOpen, Trophy, ArrowRight } from 'lucide-react';
+import { MapPin, Users, ArrowRight } from 'lucide-react';
 import { schoolInfo } from '../data/schoolData';
 import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';

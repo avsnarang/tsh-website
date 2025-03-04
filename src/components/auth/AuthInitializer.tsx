@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { clearSupabaseStorage, hasSupabaseSessions } from '../../lib/auth-helpers';
 
 export default function AuthInitializer() {
   const location = useLocation();
-  const { userRole, clearAdminSession } = useAuth();
+  const { clearAdminSession } = useAuth();
   
   useEffect(() => {
     const isLoginPage = location.pathname.includes('/login');

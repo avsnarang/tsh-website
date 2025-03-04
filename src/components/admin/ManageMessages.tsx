@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import Container from '../../components/ui/Container';
-import { ArrowLeft, User, Pencil, X, AlertCircle, Plus, AlertTriangle, Trash2, MessageSquareQuote } from 'lucide-react';
+import Container from '../ui/Container';
+import { ArrowLeft, User, Pencil, X, AlertCircle, Plus, AlertTriangle, Trash2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import Button from '../../components/ui/Button';
+import Button from '../ui/Button';
 import { useToast } from '../../hooks/useToast';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -35,12 +35,13 @@ interface LeadershipMessage {
   is_active?: boolean;
 }
 
-interface FormData {
+// Update the form state type to include order
+interface FormState {
   name: string;
   role: string;
   preview: string;
   full_message: string;
-  photo_url?: string | null;
+  photo_url: string;
   display_locations: string[];
   order?: number;
 }
@@ -53,13 +54,14 @@ export default function ManageMessages() {
   const [showForm, setShowForm] = useState(false);
   const [editingMessage, setEditingMessage] = useState<LeadershipMessage | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormState>({
     name: '',
     role: '',
     preview: '',
     full_message: '',
     photo_url: '',
-    display_locations: ['all'] as string[]
+    display_locations: ['all'],
+    order: undefined
   });
 
   const fetchMessages = useCallback(async () => {
@@ -327,7 +329,7 @@ export default function ManageMessages() {
                               </Button>
                               <Button
                                 onClick={() => setShowDeleteConfirm(message.id)}
-                                variant="danger"
+                                variant="redOutline"
                                 className="flex items-center gap-2"
                               >
                                 <Trash2 className="h-4 w-4" />

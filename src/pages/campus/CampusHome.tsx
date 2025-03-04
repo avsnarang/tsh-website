@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { campusInfo } from '../../data/campusData';
 import { contactInfo, CampusKey } from '../../data/contactInfo';

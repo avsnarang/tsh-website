@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAlumniAuth } from '../../contexts/AlumniAuthContext';
 import Container from '../../components/ui/Container';
-import { ALUMNI_ROUTES } from '../../constants/routes';
+import { ALUMNI_ROUTES } from '../../config/routes';
 import { UserPlus, GraduationCap, MapPin, Briefcase, Mail, Lock, Star } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';

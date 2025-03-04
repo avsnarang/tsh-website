@@ -1,4 +1,3 @@
-import React from 'react';
 import { Award, Star, Trophy, Medal } from 'lucide-react';
 import Container from '../ui/Container';
 import AchievementCard from './AchievementCard';

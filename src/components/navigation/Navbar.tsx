@@ -8,9 +8,9 @@ import {
   Phone, Image,
   LucideIcon
 } from 'lucide-react';
-import Container from './ui/Container';
-import Button from './ui/Button';
-import Logo from './ui/Logo';
+import Container from '../ui/Container';
+import Button from '../ui/Button';
+import Logo from '../ui/Logo';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface NavItem {

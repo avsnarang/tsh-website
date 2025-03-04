@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Container from '../../components/ui/Container';
+import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
 import { Lock } from 'lucide-react';
-import Button from '../../components/ui/Button';
-import Title from '../../components/utils/Title';
+import Button from '../ui/Button';
+import { useSEO } from '../../lib/seo';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function AdminSetup() {
@@ -15,6 +15,11 @@ export default function AdminSetup() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { signUp } = useAuth();
+
+  useSEO({
+    title: "Admin Setup | The Scholars' Home",
+    description: "Create administrator account for The Scholars' Home website management."
+  });
 
   useEffect(() => {
     checkExistingSetup();
@@ -29,7 +34,8 @@ export default function AdminSetup() {
 
       if (error) throw error;
       
-      if (count > 0) {
+      // Add null check for count
+      if (count && count > 0) {
         navigate('/admin/login');
       }
     } catch (err) {
@@ -50,8 +56,8 @@ export default function AdminSetup() {
       setError('');
       setLoading(true);
 
-      // Create admin account using AuthContext
-      await signUp(email, password, 'admin');
+      // Remove the 'admin' argument as signUp expects only email and password
+      await signUp(email, password);
       navigate('/admin/dashboard');
     } catch (err: any) {
       console.error('Setup error:', err);
@@ -63,7 +69,6 @@ export default function AdminSetup() {
 
   return (
     <div className="pt-32 pb-24">
-      <Title title="Admin Setup" description="Create Administrator Account" />
       <Container>
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">

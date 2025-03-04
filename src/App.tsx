@@ -11,7 +11,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Analytics } from "@vercel/analytics/react";
-import Navbar from './components/Navbar';
+import Navbar from './components/navigation/Navbar';
 import Footer from './components/footer/Footer';
 import { AuthProvider } from './contexts/AuthContext';
 import { MessagesProvider } from './contexts/MessagesContext';
@@ -22,6 +22,7 @@ import AuthInitializer from './components/auth/AuthInitializer';
 import { AlumniAuthProvider } from './contexts/AlumniAuthContext';
 import ScrollToTop from './components/utils/ScrollToTop';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import { HelmetProvider } from 'react-helmet-async';
 
 // Pages
 const Admissions = lazy(() => import('./pages/Admissions'));
@@ -47,18 +48,18 @@ const AlumniNetwork = lazy(() => import('./pages/alumni/AlumniNetwork'));
 const AlumniSuccess = lazy(() => import('./pages/alumni/AlumniSuccess'));
 const Directory = lazy(() => import('./pages/alumni/Directory'));
 const Profile = lazy(() => import('./pages/alumni/Profile'));
-const AlumniRegister = lazy(() => import('./pages/alumni/Register'));
+const AlumniRegister = lazy(() => import('./pages/alumni/AlumniRegister'));
 const Gallery = lazy(() => import('./pages/Gallery'));
 const EventGallery = lazy(() => import('./pages/EventGallery'));
 
 // Admin pages
-const AdminSetup = lazy(() => import('./pages/admin/AdminSetup'));
-const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
-const ManageEvents = lazy(() => import('./pages/admin/ManageEvents'));
-const ManageMessages = lazy(() => import('./pages/admin/ManageMessages'));
-const ManageUpdates = lazy(() => import('./pages/admin/ManageUpdates'));
-const AdminGallery = lazy(() => import('./pages/admin/AdminGallery'));
-const ManageStudents = lazy(() => import('./pages/admin/ManageStudents'));
+const AdminSetup = lazy(() => import('./components/admin/AdminSetup'));
+const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard'));
+const ManageEvents = lazy(() => import('./components/admin/ManageEvents'));
+const ManageMessages = lazy(() => import('./components/admin/ManageMessages'));
+const ManageUpdates = lazy(() => import('./components/admin/ManageUpdates'));
+const AdminGallery = lazy(() => import('./components/admin/AdminGallery'));
+const ManageStudents = lazy(() => import('./components/admin/ManageStudents'));
 
 // Co-curricular
 const CoCurricular = lazy(() => import('./pages/CoCurricular'));
@@ -239,25 +240,27 @@ const router = createBrowserRouter(
 function App() {
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center min-h-screen">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-              <SpeedInsights />
-              <Analytics />
-            </div>
-          }
-        >
-          <AuthProvider>
-            <AlumniAuthProvider>
-              <MessagesProvider>
-                <RouterProvider router={router} />
-              </MessagesProvider>
-            </AlumniAuthProvider>
-          </AuthProvider>
-        </Suspense>
-      </QueryClientProvider>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+                <SpeedInsights />
+                <Analytics />
+              </div>
+            }
+          >
+            <AuthProvider>
+              <AlumniAuthProvider>
+                <MessagesProvider>
+                  <RouterProvider router={router} />
+                </MessagesProvider>
+              </AlumniAuthProvider>
+            </AuthProvider>
+          </Suspense>
+        </QueryClientProvider>
+      </HelmetProvider>
     </ErrorBoundary>
   );
 }
