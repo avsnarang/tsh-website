@@ -1,17 +1,31 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { seoConfig } from '../config/seoConfig';
 
 interface SEOProps {
-  title: string;
-  description: string;
+  pageKey?: keyof typeof seoConfig;
+  title?: string;
+  description?: string;
   url?: string;
   image?: string;
   schema?: object;
 }
 
-export function useSEO({ title, description, url, image = '/og-image.jpg', schema }: SEOProps) {
+export function useSEO({ pageKey, ...customProps }: SEOProps) {
   const location = useLocation();
-  const fullUrl = url || `https://tsh.edu.in${location.pathname}`;
+  
+  // Get default config from seoConfig if pageKey is provided
+  const defaultConfig = pageKey ? seoConfig[pageKey] : null;
+  
+  // Merge default config with custom props
+  const {
+    title = defaultConfig?.title ?? '',
+    description = defaultConfig?.description ?? '',
+    url = defaultConfig?.url ?? `https://tsh.edu.in${location.pathname}`,
+    image = defaultConfig?.image ?? '/og-image.jpg',
+    schema = defaultConfig?.schema
+  } = customProps;
+
   const fullTitle = title.includes("The Scholars' Home") ? title : `${title} | The Scholars' Home`;
 
   useEffect(() => {
@@ -22,7 +36,7 @@ export function useSEO({ title, description, url, image = '/og-image.jpg', schem
       'description': description,
       'og:title': fullTitle,
       'og:description': description,
-      'og:url': fullUrl,
+      'og:url': url,
       'og:image': image,
       'twitter:title': fullTitle,
       'twitter:description': description,
@@ -47,7 +61,7 @@ export function useSEO({ title, description, url, image = '/og-image.jpg', schem
       canonical.setAttribute('rel', 'canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', fullUrl);
+    canonical.setAttribute('href', url);
 
     // Update JSON-LD Schema
     if (schema) {
@@ -65,5 +79,5 @@ export function useSEO({ title, description, url, image = '/og-image.jpg', schem
       // Optional: Remove dynamic meta tags on unmount
       // In practice, we usually don't need this as they'll be updated by the next page
     };
-  }, [fullTitle, description, fullUrl, image, schema]);
+  }, [fullTitle, description, url, image, schema]);
 }

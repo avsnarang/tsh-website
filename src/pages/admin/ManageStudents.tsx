@@ -453,7 +453,7 @@ export default function ManageStudents() {
                                   Edit
                                 </Button>
                                 <Button
-                                  variant="delete"
+                                  variant="redOutline"
                                   onClick={() => setShowDeleteConfirm(student.admission_number)}
                                   className="inline-flex items-center gap-1"
                                 >
@@ -567,7 +567,7 @@ export default function ManageStudents() {
                 Cancel
               </Button>
               <Button
-                variant="delete"
+                variant="redOutline"
                 onClick={() => showDeleteConfirm && handleDeleteStudent(showDeleteConfirm)}
               >
                 Delete Student

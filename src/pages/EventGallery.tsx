@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Container from '../components/ui/Container';
-import { ArrowLeft, Calendar, MapPin, Camera } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useSEO } from '../lib/seo';
 import Masonry from 'react-masonry-css';

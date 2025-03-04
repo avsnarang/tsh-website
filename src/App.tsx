@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
-import { 
-  createBrowserRouter, 
+import {
+  createBrowserRouter,
   RouterProvider,
   createRoutesFromElements,
   Route,
@@ -58,6 +58,7 @@ const ManageEvents = lazy(() => import('./pages/admin/ManageEvents'));
 const ManageMessages = lazy(() => import('./pages/admin/ManageMessages'));
 const ManageUpdates = lazy(() => import('./pages/admin/ManageUpdates'));
 const AdminGallery = lazy(() => import('./pages/admin/AdminGallery'));
+const ManageStudents = lazy(() => import('./pages/admin/ManageStudents'));
 
 // Co-curricular
 const CoCurricular = lazy(() => import('./pages/CoCurricular'));
@@ -66,7 +67,7 @@ const SportsAthletics = lazy(() => import('./pages/co-curricular/SportsAthletics
 const VisualArts = lazy(() => import('./pages/co-curricular/VisualArts'));
 const ClubsSocieties = lazy(() => import('./pages/co-curricular/ClubsSocieties'));
 const Contact = lazy(() => import('./pages/Contact'));
-const Events = lazy(() => import('./pages/EventGallery'));
+const Invites = lazy(() => import('./pages/Invites'));
 const Scholarship = lazy(() => import('./pages/Scholarship'));
 
 const RootLayout = () => {
@@ -168,7 +169,15 @@ const router = createBrowserRouter(
       {/* Other main routes */}
       <Route path="admissions" element={<Admissions />} />
       <Route path="contact" element={<Contact />} />
-      <Route path="invites" element={<Events />} />
+      <Route path="invites" element={
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          </div>
+        }>
+          <Invites />
+        </Suspense>
+      } />
       {/* Admin routes */}
       <Route path="admin">
         <Route path="setup" element={<AdminSetup />} />
@@ -195,6 +204,11 @@ const router = createBrowserRouter(
         <Route path="gallery" element={
           <RequireAdmin>
             <AdminGallery />
+          </RequireAdmin>
+        } />
+        <Route path="students" element={
+          <RequireAdmin>
+            <ManageStudents />
           </RequireAdmin>
         } />
       </Route>

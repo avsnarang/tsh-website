@@ -13,4 +13,5 @@ export const ADMIN_ROUTES = {
   MESSAGES: '/admin/messages',
   UPDATES: '/admin/updates',
   GALLERY: '/admin/gallery',
+  STUDENTS: '/admin/students',
 } as const;

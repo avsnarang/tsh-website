@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Container from '../components/ui/Container';
 import InviteCard from '../components/invites/InviteCard';
 import InviteModal from '../components/invites/InviteModal';
@@ -17,6 +17,7 @@ export default function Invites() {
   const [error, setError] = useState('');
   const [selectedInvite, setSelectedInvite] = useState<Invite | null>(null);
   const [success, setSuccess] = useState('');
+  const [showUpcomingOnly, setShowUpcomingOnly] = useState(true); // New state for filter
 
   useSEO({
     title: "School Events | The Scholars' Home",
@@ -26,14 +27,14 @@ export default function Invites() {
 
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [showUpcomingOnly]); // Refetch when filter changes
 
   const fetchEvents = async () => {
     try {
       setLoading(true);
       setError('');
 
-      const { data: eventsData, error: eventsError } = await supabase
+      const query = supabase
         .from('events')
         .select(`
           id,
@@ -48,21 +49,25 @@ export default function Invites() {
           requires_admission_number,
           accepting_rsvps
         `)
-        .order('date', { ascending: true })
-        .gte('date', new Date().toISOString().split('T')[0]); // Only get upcoming events
+        .order('date', { ascending: true });
+
+      // Apply upcoming filter if enabled
+      if (showUpcomingOnly) {
+        query.gte('date', new Date().toISOString().split('T')[0]);
+      }
+
+      const { data: eventsData, error: eventsError } = await query;
 
       if (eventsError) throw eventsError;
 
       // Get RSVP counts and user's RSVP status for each event
       const eventsWithDetails = await Promise.all(
         (eventsData || []).map(async (event) => {
-          // Get total guests count using the function with correct parameter name
           const { data: totalGuests, error: countError } = await supabase
             .rpc('get_event_total_guests', { p_event_id: event.id });
 
           if (countError) throw countError;
 
-          // Get user's RSVP if logged in
           let userRsvp = null;
           if (user) {
             const { data: rsvpData } = await supabase
@@ -75,6 +80,11 @@ export default function Invites() {
             userRsvp = rsvpData;
           }
 
+          // Determine if the event is upcoming or past
+          const eventDate = new Date(event.date);
+          const today = new Date();
+          const status: 'upcoming' | 'past' = eventDate >= today ? 'upcoming' : 'past';
+
           return {
             id: event.id,
             title: event.title,
@@ -85,8 +95,8 @@ export default function Invites() {
             coverImage: event.cover_image,
             maxCapacity: event.max_capacity,
             maxGuestsPerRsvp: event.max_guests_per_rsvp,
-            requiresAdmissionNumber: true, // Always require admission number
-            status: 'upcoming',
+            requiresAdmissionNumber: true,
+            status,
             rsvpCount: totalGuests || 0,
             userRsvp,
             acceptingRsvps: event.accepting_rsvps
@@ -94,7 +104,7 @@ export default function Invites() {
         })
       );
 
-      setEvents(eventsWithDetails);
+      setEvents(eventsWithDetails as Invite[]);
     } catch (error) {
       console.error('Error fetching events:', error);
       setError('Failed to load events');
@@ -199,29 +209,39 @@ export default function Invites() {
         <ScrollReveal>
           <div className="text-center mb-16">
             <TextReveal>
-              <h1 className="text-5xl text-neutral-dark mb-4">School Events</h1>
-            </TextReveal>
-            <TextReveal delay={0.2}>
-              <p className="text-xl text-primary font-body max-w-2xl mx-auto">
-                Join us in celebrating special moments and milestones
+              <h1 className="text-4xl font-bold text-neutral-dark mb-4">
+                School Events
+              </h1>
+              <p className="text-neutral-dark/60">
+                Join us for our upcoming events and celebrations
               </p>
             </TextReveal>
           </div>
         </ScrollReveal>
 
+        {/* Add filter toggle */}
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={() => setShowUpcomingOnly(!showUpcomingOnly)}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              showUpcomingOnly
+                ? 'bg-primary text-white'
+                : 'bg-neutral-200 text-neutral-700'
+            }`}
+          >
+            {showUpcomingOnly ? 'Showing Upcoming Events' : 'Showing All Events'}
+          </button>
+        </div>
+
         {error && (
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-              {error}
-            </div>
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
           </div>
         )}
 
         {success && (
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-              {success}
-            </div>
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {success}
           </div>
         )}
 
