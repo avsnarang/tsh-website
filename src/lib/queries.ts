@@ -19,14 +19,12 @@ interface SuccessStory {
 }
 
 export function useAlumniProfiles() {
-  const { user } = useAuth();
-
-  return useQuery<AlumniProfile[], Error>({
+  return useQuery({
     queryKey: ['alumniProfiles'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('alumni_profiles')
-        .select('*')
+        .select('id, full_name, batch_year, occupation, is_public, show_in_success')
         .order('batch_year', { ascending: false });
 
       if (error) {
@@ -34,10 +32,15 @@ export function useAlumniProfiles() {
         throw error;
       }
 
-      return data as AlumniProfile[];
+      // Log the data to verify the visibility states
+      console.log('Fetched profiles with visibility states:', data);
+
+      return data;
     },
-    enabled: !!user,
-    gcTime: 1000 * 60 * 5,
+    // Remove infinite stale/cache times to ensure fresh data on mount
+    staleTime: 0, // Data is considered stale immediately
+    refetchOnMount: true, // Refetch when component mounts
+    refetchOnWindowFocus: true, // Refetch when window regains focus
   });
 }
 
@@ -83,48 +86,30 @@ export function useAlumniProfile(userId: string | undefined, options = {}) {
 }
 
 export function useSuccessStories() {
-  const { user } = useAuth();
-
-  return useQuery<SuccessStory[], Error>({
+  return useQuery({
     queryKey: ['successStories'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('success_stories')
+        .from('alumni_profiles')  // Changed from 'success_stories' to 'alumni_profiles'
         .select(`
           id,
-          title,
-          content,
-          created_at,
-          alumni_profiles!inner (
-            id,
-            full_name,
-            occupation,
-            company,
-            profile_picture_url
-          )
+          full_name,
+          batch_year,
+          occupation,
+          company,
+          bio,
+          profile_picture_url,
+          show_in_success
         `)
-        .order('created_at', { ascending: false });
+        .eq('show_in_success', true)  // Only fetch profiles marked for success stories
+        .order('batch_year', { ascending: false });
 
       if (error) {
         console.error('Success stories fetch error:', error);
         throw error;
       }
 
-      // Transform the data to match the SuccessStory interface
-      return data.map((story: any) => ({
-        id: story.id,
-        title: story.title,
-        content: story.content,
-        created_at: story.created_at,
-        alumni_profiles: story.alumni_profiles[0] // Take the first (and should be only) alumni profile
-      })) as SuccessStory[];
-    },
-    enabled: !!user,
-    gcTime: 1000 * 60 * 5,
+      return data;
+    }
   });
 }
-
-
-
-
-

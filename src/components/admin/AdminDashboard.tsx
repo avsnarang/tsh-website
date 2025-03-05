@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
-import { Settings, LogOut, Calendar, Image, Bell, Users } from 'lucide-react';
+import { Settings, LogOut, Calendar, Image, Bell, Users, GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -28,14 +28,21 @@ export default function AdminDashboard() {
       description: 'Manage latest updates',
       icon: Bell,
       path: '/admin/updates',
-      color: 'from-blue-400 to-blue-600'
+      color: 'from-blue-light to-blue'
     },
     {
-      title: 'Student Records',
-      description: 'Manage student database',
+      title: 'Alumni',
+      description: 'Manage alumni profiles',
       icon: Users,
+      path: '/admin/alumni',
+      color: 'from-purple-light to-purple'
+    },
+    {
+      title: 'Students',
+      description: 'Manage student records',
+      icon: GraduationCap,
       path: '/admin/students',
-      color: 'from-purple-400 to-purple-600'
+      color: 'from-yellow-light to-yellow'
     }
   ];
 
@@ -108,8 +115,9 @@ export default function AdminDashboard() {
                     to={item.path}
                     className="group block relative"
                   >
-                    <div className="absolute -inset-0.5 bg-gradient-to-br opacity-0 group-hover:opacity-100 blur transition duration-500 rounded-2xl"
-                         style={{ background: `linear-gradient(to bottom right, ${item.color})` }}
+                    <div 
+                      className="absolute -inset-0.5 bg-gradient-to-br opacity-0 group-hover:opacity-100 blur transition duration-500 rounded-2xl"
+                      style={{ background: `linear-gradient(to bottom right, ${item.color})` }}
                     />
                     <div className="relative bg-white p-8 rounded-2xl shadow-lg">
                       <div className="flex items-start gap-6">

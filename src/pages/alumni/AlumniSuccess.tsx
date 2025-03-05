@@ -16,6 +16,7 @@ interface SuccessStory {
   company?: string;
   bio?: string;
   profile_picture_url?: string;
+  show_in_success: boolean;
 }
 
 export default function AlumniSuccess() {
@@ -34,18 +35,20 @@ export default function AlumniSuccess() {
     return years.sort((a: number, b: number) => b - a); // Sort in descending order
   }, [successStories]);
 
-  // Filter stories based on search query and selected batch
+  // Filter stories based on search query, selected batch, and visibility
   const filteredStories = useMemo(() => {
-    return (successStories as SuccessStory[]).filter((story: SuccessStory) => {
-      const matchesSearch = 
-        story.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    return (successStories as SuccessStory[])?.filter((story: SuccessStory) => {
+      const matchesSearch = searchQuery === '' || (
+        story.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         story.occupation?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         story.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        story.bio?.toLowerCase().includes(searchQuery.toLowerCase());
+        story.bio?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
       
       const matchesBatch = selectedBatch === 'all' || story.batch_year === selectedBatch;
       
-      return matchesSearch && matchesBatch;
+      // Only show profiles marked for success stories
+      return matchesSearch && matchesBatch && story.show_in_success;
     });
   }, [successStories, searchQuery, selectedBatch]);
 
@@ -123,20 +126,6 @@ export default function AlumniSuccess() {
               </div>
             </div>
           </div>
-        </motion.div>
-
-        {/* Results Summary */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="text-center mb-8"
-        >
-          <p className="text-neutral-dark/70">
-            Showing {filteredStories.length} success {filteredStories.length === 1 ? 'story' : 'stories'}
-            {selectedBatch !== 'all' && ` from batch ${selectedBatch}`}
-            {searchQuery && ` matching "${searchQuery}"`}
-          </p>
         </motion.div>
 
         {/* Success Stories Grid */}
@@ -226,17 +215,6 @@ export default function AlumniSuccess() {
             </motion.div>
           )}
         </ScrollReveal>
-
-        {/* Directory Link */}
-        <div className="text-center mt-16">
-          <Link
-            to={ALUMNI_ROUTES.DIRECTORY}
-            className="inline-flex items-center text-primary hover:text-primary-dark transition-colors group"
-          >
-            View Alumni Directory
-            <ArrowRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </div>
       </Container>
     </div>
   );

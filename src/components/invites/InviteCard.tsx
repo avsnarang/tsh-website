@@ -15,6 +15,10 @@ export default function InviteCard({ invite, onRSVP }: InviteCardProps) {
           src={invite.coverImage}
           alt={invite.title}
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
+          width="400"
+          height="500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
       </div>

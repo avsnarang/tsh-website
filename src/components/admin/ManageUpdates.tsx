@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Plus, Pencil, X } from 'lucide-react';
+import { ArrowLeft, Plus, Pencil, AlertTriangle, X, Star, Ban, CheckCircle } from 'lucide-react';
 import Button from '../ui/Button';
+import ScrollReveal from '../animations/ScrollReveal';
+import TextReveal from '../animations/TextReveal';
+import { motion } from 'framer-motion';
 
 interface Update {
   id: string;
@@ -121,153 +124,216 @@ export default function ManageUpdates() {
   };
 
   return (
-    <div className="pt-32 pb-24">
+    <div className="relative min-h-screen bg-neutral-light pt-32 pb-24">
+      {/* Decorative Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div
+          className="h-full w-full"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+      </div>
+
       <Container>
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between gap-4 mb-8">
-            <Link
-              to="/admin/dashboard"
-              className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              Back to Dashboard
-            </Link>
-            <Button
+        <div className="relative">
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <div className="flex items-center justify-between gap-4 mb-8">
+                <Link
+                  to="/admin/dashboard"
+                  className="flex items-center gap-2 text-green hover:text-green-dark transition-colors"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                  Back to Dashboard
+                </Link>
+              </div>
+
+              <div className="flex flex-col items-center gap-4 mb-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full"
+                >
+                  <Star className="h-4 w-4" />
+                  <span className="font-semibold">Updates Management</span>
+                </motion.div>
+              </div>
+              
+              <TextReveal>
+                <h1 className="font-display text-4xl md:text-5xl text-neutral-dark mb-4">
+                  Manage <span className="text-green">Latest Updates</span>
+                </h1>
+              </TextReveal>
+              <TextReveal delay={0.2}>
+                <p className="text-neutral-dark/70 text-lg max-w-2xl mx-auto">
+                  Create and manage latest updates displayed across the website
+                </p>
+              </TextReveal>
+            </div>
+          </ScrollReveal>
+
+          {/* Add Update Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mb-8 flex justify-end"
+          >
+            <button
               onClick={() => {
                 setEditingUpdate(null);
                 setFormContent('');
                 setShowForm(true);
               }}
-              className="flex items-center gap-2"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-green text-white rounded-xl hover:bg-green-dark transition-colors"
             >
               <Plus className="h-5 w-5" />
-              Create Update
-            </Button>
-          </div>
+              <span>Create Update</span>
+            </button>
+          </motion.div>
 
-          <h1 className="text-4xl text-neutral-dark mb-8">Manage Latest Updates</h1>
-
+          {/* Error Message */}
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
+            <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-xl mb-8 flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5" />
+              <span>{error}</span>
             </div>
           )}
 
+          {/* Success Message */}
           {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-              {success}
+            <div className="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-xl mb-8 flex items-center gap-2">
+              <Star className="h-5 w-5" />
+              <span>{success}</span>
             </div>
           )}
 
-          {loading ? (
-            <div className="text-center">Loading...</div>
-          ) : (
-            <div className="space-y-6">
-              {updates.map((update) => (
-                <div
-                  key={update.id}
-                  className="bg-white p-6 rounded-2xl shadow-lg"
-                >
-                  <div className="flex justify-between items-start gap-4">
-                    <div className="flex-grow">
-                      <p className="text-neutral-dark/80 whitespace-pre-wrap break-words">
-                        {update.content}
-                      </p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          update.is_active
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-neutral-100 text-neutral-800'
-                        }`}>
-                          {update.is_active ? 'Active' : 'Inactive'}
-                        </span>
-                        <span className="text-xs text-neutral-dark/60">
-                          Created: {new Date(update.created_at).toLocaleDateString()}
-                        </span>
+          {/* Updates List */}
+          <ScrollReveal>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green mx-auto" />
+              </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-6"
+              >
+                {updates.map((update) => (
+                  <motion.div
+                    key={update.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white rounded-2xl shadow-xl overflow-hidden border border-neutral-dark/10"
+                  >
+                    <div className="p-8">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex-grow">
+                          <p className="text-neutral-dark/80 whitespace-pre-wrap break-words">
+                            {update.content}
+                          </p>
+                          <div className="mt-4 flex items-center gap-4">
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                              update.is_active
+                                ? 'bg-green-light/20 text-green'
+                                : 'bg-neutral-light text-neutral-dark/60'
+                            }`}>
+                              {update.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                            <span className="text-sm text-neutral-dark/60">
+                              Created: {new Date(update.created_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleEdit(update)}
+                            className="p-2 text-neutral-dark/70 hover:text-green rounded-lg transition-colors"
+                          >
+                            <Pencil className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={() => toggleActive(update)}
+                            className="p-2 text-neutral-dark/70 hover:text-green rounded-lg transition-colors"
+                          >
+                            {update.is_active ? <Ban className="h-5 w-5" /> : <CheckCircle className="h-5 w-5" />}
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleEdit(update)}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-                      >
-                        <Pencil className="h-5 w-5" />
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => toggleActive(update)}
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                          update.is_active
-                            ? 'bg-red-500 text-white hover:bg-red-600'
-                            : 'bg-green-500 text-white hover:bg-green-600'
-                        }`}
-                      >
-                        {update.is_active ? 'Deactivate' : 'Activate'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </ScrollReveal>
         </div>
       </Container>
 
       {/* Create/Edit Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-2xl">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-neutral-dark">
-                {editingUpdate ? 'Edit Update' : 'Create Update'}
-              </h2>
-              <button
-                onClick={() => {
-                  setShowForm(false);
-                  setEditingUpdate(null);
-                  setFormContent('');
-                }}
-                className="p-2 hover:bg-neutral-dark/10 rounded-full transition-colors"
-              >
-                <X className="h-6 w-6 text-neutral-dark" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-neutral-dark mb-2">
-                  Content
-                  <span className="text-neutral-dark/60 text-sm ml-2">
-                    (Use • to separate different updates)
-                  </span>
-                </label>
-                <textarea
-                  value={formContent}
-                  onChange={(e) => setFormContent(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32"
-                  placeholder="Example: Admissions Open for 2025-26 • Annual Sports Day on March 15th"
-                  required
-                />
-              </div>
-
-              <div className="flex justify-end gap-4">
-                <Button
-                  type="button"
-                  variant="outline2"
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl shadow-xl w-full max-w-2xl"
+          >
+            <div className="p-8">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-display text-neutral-dark">
+                  {editingUpdate ? 'Edit Update' : 'Create Update'}
+                </h2>
+                <button
                   onClick={() => {
                     setShowForm(false);
                     setEditingUpdate(null);
                     setFormContent('');
                   }}
+                  className="p-2 text-neutral-dark/70 hover:text-neutral-dark rounded-lg transition-colors"
                 >
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  {editingUpdate ? 'Save Changes' : 'Create Update'}
-                </Button>
+                  <X className="h-5 w-5" />
+                </button>
               </div>
-            </form>
-          </div>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-neutral-dark mb-2">
+                    Content
+                    <span className="text-neutral-dark/60 text-sm ml-2">
+                      (Use • to separate different updates)
+                    </span>
+                  </label>
+                  <textarea
+                    value={formContent}
+                    onChange={(e) => setFormContent(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green h-32"
+                    placeholder="Example: Admissions Open for 2025-26 • Annual Sports Day on March 15th"
+                    required
+                  />
+                </div>
+
+                <div className="flex justify-end gap-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setShowForm(false);
+                      setEditingUpdate(null);
+                      setFormContent('');
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" variant="success">
+                    {editingUpdate ? 'Save Changes' : 'Create Update'}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </motion.div>
         </div>
       )}
     </div>

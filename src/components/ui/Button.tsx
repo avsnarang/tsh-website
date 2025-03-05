@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'outline' | 'cta' | 'cta-green' | 'edit' | 'outline2' | 'redOutline';
+  variant?: 'primary' | 'outline' | 'cta' | 'cta-green' | 'edit' | 'outline2' | 'redOutline' | 'download' | 'delete';
   children: React.ReactNode;
 }
 
@@ -42,8 +42,8 @@ export default function Button({ variant = 'primary', children, className = '', 
       bg-white/10 backdrop-blur-sm
       border-2 border-[#FF0000]
       text-[#FF0000]
-      hover:bg-[B53737]
-      hover:shadow-lg hover:shadow-[B53737]/20
+      hover:bg-[#B53737]
+      hover:shadow-lg hover:shadow-[#B53737]/20
     `,
     cta: `
       bg-orange text-neutral-light
@@ -65,14 +65,20 @@ export default function Button({ variant = 'primary', children, className = '', 
       hover:shadow-lg hover:shadow-green/20
     `,
     delete: `
-      bg-[#FF0000] text-neutral-light
-      hover:bg-[#B53737]
-      hover:shadow-lg hover:shadow-red/20
+      bg-[#DC2626] text-white
+      hover:bg-[#B91C1C]
+      hover:shadow-lg hover:shadow-red-600/20
+      ring-1 ring-red-600/50
+      hover:ring-2 hover:ring-red-600/70
+      transition-all duration-300
     `,
     download: `
-      bg-[#A65A20] text-neutral-light
-      hover:bg-orange-dark
-      hover:shadow-lg hover:shadow-orange/20
+      bg-[#2563EB] text-white
+      hover:bg-[#1D4ED8]
+      hover:shadow-lg hover:shadow-blue-600/20
+      ring-1 ring-blue-600/50
+      hover:ring-2 hover:ring-blue-600/70
+      transition-all duration-300
     `
   };
 

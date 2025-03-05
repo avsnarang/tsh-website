@@ -36,7 +36,7 @@ export default function Directory() {
     return years.sort((a, b) => b - a); // Sort in descending order
   }, [alumniProfiles]);
 
-  // Filter alumni based on search query and selected batch
+  // Filter alumni based on search query, selected batch, and visibility
   const filteredAlumni = useMemo(() => {
     if (!alumniProfiles) return [];
     
@@ -49,7 +49,10 @@ export default function Directory() {
       
       const matchesBatch = selectedBatch === 'all' || alumni.batch_year === selectedBatch;
       
-      return matchesSearch && matchesBatch;
+      // Only show public profiles
+      const isVisible = alumni.is_public === true;
+      
+      return matchesSearch && matchesBatch && isVisible;
     });
   }, [alumniProfiles, searchQuery, selectedBatch]);
 
@@ -184,17 +187,37 @@ export default function Directory() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white rounded-2xl shadow-xl overflow-hidden relative group cursor-pointer"
+                  whileHover={{ 
+                    y: -8,
+                    transition: { duration: 0.2 }
+                  }}
+                  className="relative bg-white rounded-2xl shadow-xl overflow-hidden group cursor-pointer transform-gpu will-change-transform"
                   onClick={() => setSelectedAlumni(alumni)}
                 >
-                  {/* Decorative Border */}
-                  <div className="absolute -top-2 -right-2 w-full h-full border-2 border-orange rounded-2xl transition-all duration-300 group-hover:top-0 group-hover:right-0" />
-                  <div className="absolute -bottom-2 -left-2 w-full h-full border-2 border-green rounded-2xl transition-all duration-300 group-hover:bottom-0 group-hover:left-0" />
+                  {/* Geometric Background with hover effect */}
+                  <div className="absolute inset-0 bg-[#f8fafc] transition-opacity duration-300 group-hover:opacity-90">
+                    <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-105" style={{
+                      backgroundImage: `
+                        radial-gradient(circle at 0% 0%, rgba(166, 212, 180, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 100% 100%, rgba(255, 162, 86, 0.4) 0%, transparent 50%)
+                      `,
+                    }} />
+                    
+                    {/* Subtle grid pattern */}
+                    <div 
+                      className="absolute inset-0 opacity-[0.03]" 
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z' fill='%23374151' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                        backgroundSize: '40px 40px',
+                      }}
+                    />
+                  </div>
                   
-                  <div className="p-8 relative">
+                  {/* Content */}
+                  <div className="relative z-20 p-8">
                     {/* Profile Header */}
                     <div className="flex items-center gap-6 mb-6">
-                      <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                      <div className="relative w-24 h-24 rounded-full ring-4 ring-white shadow-xl overflow-hidden">
                         {alumni.profile_picture_url ? (
                           <img
                             src={alumni.profile_picture_url}
@@ -202,8 +225,8 @@ export default function Directory() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full bg-neutral-light/50 flex items-center justify-center">
-                            <User className="h-10 w-10 text-neutral-dark/30" />
+                          <div className="w-full h-full bg-gradient-to-br from-green-light to-primary flex items-center justify-center">
+                            <User className="h-10 w-10 text-white" />
                           </div>
                         )}
                       </div>
@@ -243,29 +266,38 @@ export default function Directory() {
 
                     {/* Social Links */}
                     {(alumni.linkedin_url || alumni.facebook_url || alumni.instagram_url) && (
-                      <div className="mt-6 pt-6 border-t border-neutral-light">
+                      <div className="mt-6 pt-6 border-t border-neutral-light/30">
                         <div className="flex items-center gap-4">
                           {alumni.linkedin_url && (
-                            <a href={alumni.linkedin_url} 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               className="p-2 rounded-full bg-neutral-light hover:bg-blue-50 text-neutral-dark hover:text-blue-600 transition-colors">
+                            <a
+                              href={alumni.linkedin_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-neutral-dark/70 hover:text-primary transition-colors"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <LinkedinIcon className="h-5 w-5" />
                             </a>
                           )}
                           {alumni.facebook_url && (
-                            <a href={alumni.facebook_url}
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="p-2 rounded-full bg-neutral-light hover:bg-blue-50 text-neutral-dark hover:text-blue-600 transition-colors">
+                            <a
+                              href={alumni.facebook_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-neutral-dark/70 hover:text-primary transition-colors"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <FaFacebook className="h-5 w-5" />
                             </a>
                           )}
                           {alumni.instagram_url && (
-                            <a href={alumni.instagram_url}
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="p-2 rounded-full bg-neutral-light hover:bg-rose-50 text-neutral-dark hover:text-rose-600 transition-colors">
+                            <a
+                              href={alumni.instagram_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-neutral-dark/70 hover:text-primary transition-colors"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <FaInstagram className="h-5 w-5" />
                             </a>
                           )}

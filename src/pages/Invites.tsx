@@ -7,12 +7,15 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
-import { useSEO } from '../lib/seo'; 
+import { useSEO } from '../lib/seo';
+import { Filter, Calendar, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
+import InviteCardSkeleton from '../components/invites/InviteCardSkeleton';
 
 export default function Invites() {
   const { user } = useAuth();
   const [events, setEvents] = useState<Invite[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Changed initial state to false
   const [error, setError] = useState('');
   const [selectedInvite, setSelectedInvite] = useState<Invite | null>(null);
   const [success, setSuccess] = useState('');
@@ -20,8 +23,7 @@ export default function Invites() {
 
   useSEO({
     title: "School Events | The Scholars' Home",
-    description: "Stay updated with upcoming events at The Scholars' Home. RSVP for school functions, celebrations, and special occasions.",
-    url: "https://tsh.edu.in/invites"
+    description: "Join us for our upcoming events and celebrations at The Scholars' Home. RSVP for school functions and special occasions.",
   });
 
   useEffect(() => {
@@ -191,74 +193,148 @@ export default function Invites() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="pt-32 pb-24 bg-neutral-light">
-        <Container>
-          <div className="text-center">Loading events...</div>
-        </Container>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
-      <Container>
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <TextReveal>
-              <h1 className="text-4xl font-bold text-neutral-dark mb-4">
-                School Events
-              </h1>
-              <p className="text-neutral-dark/60">
-                Join us for our upcoming events and celebrations
-              </p>
-            </TextReveal>
+    <div className="min-h-screen bg-neutral-light">
+      {/* Hero Section */}
+      <div className="relative pt-40 pb-20 overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Top right decorative circle */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
+          {/* Bottom left decorative circle */}
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
+          {/* Center decorative pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div
+              className="h-full w-full"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            />
           </div>
-        </ScrollReveal>
-
-        {/* Add filter toggle */}
-        <div className="flex justify-end mb-6">
-          <button
-            onClick={() => setShowUpcomingOnly(!showUpcomingOnly)}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              showUpcomingOnly
-                ? 'bg-primary text-white'
-                : 'bg-neutral-200 text-neutral-700'
-            }`}
-          >
-            {showUpcomingOnly ? 'Showing Upcoming Events' : 'Showing All Events'}
-          </button>
         </div>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
+        <Container className="relative">
+          <ScrollReveal>
+            <div className="text-center mb-16">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full mb-8"
+              >
+                <Calendar className="h-4 w-4" />
+                <span className="font-semibold">School Events</span>
+              </motion.div>
+              <TextReveal>
+                <h1 className="font-display text-5xl md:text-7xl text-neutral-dark mb-6">
+                  Join Our <span className="text-green">School</span>{" "}
+                  <span className="text-orange">Events</span>
+                </h1>
+              </TextReveal>
+              <TextReveal delay={0.2}>
+                <p className="text-xl text-neutral-dark/70 font-body max-w-2xl mx-auto">
+                  Be part of our vibrant school community and celebrations
+                </p>
+              </TextReveal>
+            </div>
+          </ScrollReveal>
 
-        {success && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {success}
-          </div>
-        )}
+          {/* Filter Toggle */}
+          <ScrollReveal>
+            <div className="flex justify-center mb-12">
+              <div className="bg-white rounded-2xl shadow-lg p-1.5">
+                <motion.button
+                  onClick={() => setShowUpcomingOnly(!showUpcomingOnly)}
+                  className="relative flex items-center"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {/* Background pill that slides */}
+                  <motion.div
+                    className="absolute h-full w-[50%] bg-green rounded-xl"
+                    initial={false}
+                    animate={{
+                      x: showUpcomingOnly ? '0%' : '100%',
+                      opacity: 0.1
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
 
-        {events.length === 0 ? (
-          <div className="text-center text-neutral-dark/60">
-            No upcoming events at this time.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events.map((invite) => (
-              <InviteCard
-                key={invite.id}
-                invite={invite}
-                onRSVP={handleRSVP}
-              />
-            ))}
-          </div>
-        )}
-      </Container>
+                  {/* Filter Options */}
+                  <div 
+                    className={`flex items-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
+                      showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
+                    }`}
+                  >
+                    <Filter className="w-4 h-4" />
+                    <span>Upcoming</span>
+                  </div>
+                  <div 
+                    className={`flex items-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
+                      !showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
+                    }`}
+                  >
+                    <Calendar className="w-4 h-4" />
+                    <span>All Events</span>
+                  </div>
+                </motion.button>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* Messages */}
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-8">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-8">
+              {success}
+            </div>
+          )}
+
+          {/* Events Grid with Skeleton Loading */}
+          <ScrollReveal>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {loading ? (
+                // Show 6 skeleton cards while loading
+                [...Array(6)].map((_, index) => (
+                  <motion.div
+                    key={`skeleton-${index}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
+                    <InviteCardSkeleton />
+                  </motion.div>
+                ))
+              ) : events.length === 0 ? (
+                <div className="col-span-full text-center text-neutral-dark/60 py-12">
+                  <Star className="h-12 w-12 mx-auto mb-4 text-orange-light" />
+                  <p className="text-lg">No upcoming events at this time.</p>
+                </div>
+              ) : (
+                events.map((invite) => (
+                  <motion.div
+                    key={invite.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <InviteCard
+                      invite={invite}
+                      onRSVP={handleRSVP}
+                    />
+                  </motion.div>
+                ))
+              )}
+            </div>
+          </ScrollReveal>
+        </Container>
+      </div>
 
       {selectedInvite && (
         <InviteModal

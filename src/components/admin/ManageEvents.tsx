@@ -4,9 +4,12 @@ import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
 import {
   ArrowLeft, Plus, Pencil, AlertTriangle, Calendar, MapPin, X,
-  Download, Ban, CheckCircle
+  Download, Ban, CheckCircle, Star, Trash2
 } from 'lucide-react';
 import Button from '../ui/Button';
+import ScrollReveal from '../animations/ScrollReveal';
+import TextReveal from '../animations/TextReveal';
+import { motion } from 'framer-motion';
 
 interface Event {
   id: string;
@@ -21,19 +24,6 @@ interface Event {
   requires_admission_number: boolean;
   accepting_rsvps: boolean;
 }
-
-// Even if not directly used, keeping RSVP interface as it documents the data structure
-/* eslint-disable @typescript-eslint/no-unused-vars */
-interface RSVP {
-  id: string;
-  user_id: string | null;
-  status: 'attending' | 'not_attending' | 'maybe';
-  guests: number;
-  admission_number?: string;
-  created_at: string;
-  student_name?: string;
-}
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 interface RsvpData {
   admission_number: string;
@@ -247,317 +237,399 @@ export default function ManageEvents() {
     });
   };
 
+  useEffect(() => {
+    if (showEventForm) {
+      // Prevent background scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Re-enable scroll when modal is closed
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup function to ensure scroll is re-enabled when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showEventForm]);
+
+  useEffect(() => {
+    if (showDeleteConfirm) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showDeleteConfirm]);
+
   return (
-    <div className="pt-32 pb-24">
+    <div className="relative min-h-screen bg-neutral-light pt-32 pb-24">
+      {/* Decorative Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div
+          className="h-full w-full"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+      </div>
+
       <Container>
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between gap-4 mb-8">
-            <Link
-              to="/admin/dashboard"
-              className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              Back to Dashboard
-            </Link>
-            <Button
+        <div className="relative">
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <div className="flex items-center justify-between gap-4 mb-8">
+                <Link
+                  to="/admin/dashboard"
+                  className="flex items-center gap-2 text-green hover:text-green-dark transition-colors"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                  Back to Dashboard
+                </Link>
+              </div>
+
+              <div className="flex flex-col items-center gap-4 mb-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full"
+                >
+                  <Star className="h-4 w-4" />
+                  <span className="font-semibold">Event Management</span>
+                </motion.div>
+              </div>
+              
+              <TextReveal>
+                <h1 className="font-display text-4xl md:text-5xl text-neutral-dark mb-4">
+                  Manage <span className="text-green">School Events</span>
+                </h1>
+              </TextReveal>
+              <TextReveal delay={0.2}>
+                <p className="text-neutral-dark/70 text-lg max-w-2xl mx-auto">
+                  Create and manage school events, track RSVPs, and handle event registrations
+                </p>
+              </TextReveal>
+            </div>
+          </ScrollReveal>
+
+          {/* Add Event Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mb-8 flex justify-end"
+          >
+            <button
               onClick={() => setShowEventForm(true)}
-              className="flex items-center gap-2"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-green text-white rounded-xl hover:bg-green-dark transition-colors"
             >
               <Plus className="h-5 w-5" />
-              Add New Event
-            </Button>
-          </div>
+              <span>Add New Event</span>
+            </button>
+          </motion.div>
 
-          <h1 className="text-4xl text-neutral-dark mb-8">Manage Events</h1>
-
+          {/* Messages */}
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
+            <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-xl mb-8">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5" />
+                <span>{error}</span>
+              </div>
             </div>
           )}
 
           {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-              {success}
+            <div className="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-xl mb-8">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5" />
+                <span>{success}</span>
+              </div>
             </div>
           )}
 
-          {loading ? (
-            <div className="text-center">Loading...</div>
-          ) : (
-            <div className="space-y-6">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="bg-white p-8 rounded-2xl shadow-lg"
-                >
-                  <div className="flex flex-col lg:flex-row justify-between items-start gap-6 mb-6">
-                    <div>
-                      <h3 className="text-2xl text-neutral-dark font-semibold mb-3">
-                        {event.title}
-                      </h3>
-                      <div className="flex flex-wrap items-center gap-4 text-primary">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          <span>{event.date} at {event.time}</span>
+          {/* Events List */}
+          <ScrollReveal>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green mx-auto" />
+              </div>
+            ) : (
+              <div className="grid gap-6">
+                {events.map((event) => (
+                  <motion.div
+                    key={event.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white rounded-2xl shadow-xl overflow-hidden border border-neutral-dark/10"
+                  >
+                    <div className="p-8">
+                      <div className="flex flex-col lg:flex-row justify-between items-start gap-6 mb-6">
+                        <div>
+                          <h3 className="text-2xl font-display text-neutral-dark mb-3">
+                            {event.title}
+                          </h3>
+                          <div className="flex flex-wrap items-center gap-4 text-neutral-dark/70">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4" />
+                              <span>{event.date} at {event.time}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <MapPin className="h-4 w-4" />
+                              <span>{event.location}</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          <span>{event.location}</span>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <button
+                            onClick={() => downloadRSVPs(event.id, event.title)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Download className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setEditingEvent(event);
+                              setFormData({
+                                title: event.title,
+                                description: event.description,
+                                date: event.date,
+                                time: event.time,
+                                location: event.location,
+                                coverImage: event.cover_image,
+                                maxCapacity: event.max_capacity,
+                                maxGuestsPerRsvp: event.max_guests_per_rsvp,
+                                requiresAdmissionNumber: event.requires_admission_number
+                              });
+                              setShowEventForm(true);
+                            }}
+                            className="p-2 text-neutral-dark/70 hover:text-green rounded-lg transition-colors"
+                          >
+                            <Pencil className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={() => setShowDeleteConfirm(event.id)}
+                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="h-5 w-5" />
+                          </button>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-4">
-                      <Button
-                        onClick={() => downloadRSVPs(event.id, event.title)}
-                        variant="outline"
-                        className="flex items-center gap-2 h-12"
-                      >
-                        <Download className="h-4 w-4" />
-                        Download RSVPs
-                      </Button>
-                      <Button
-                        onClick={() => toggleRSVPStatus(event.id, event.accepting_rsvps)}
-                        variant={event.accepting_rsvps ? "redOutline" : "edit"}
-                        className="flex items-center justify-center gap-2 h-12 w-48"
-                      >
-                        {event.accepting_rsvps ? (
-                          <>
-                            <Ban className="h-4 w-4" />
-                            Stop RSVPs
-                          </>
-                        ) : (
-                          <>
-                            <CheckCircle className="h-4 w-4" />
-                            Enable RSVPs
-                          </>
+                      <p className="text-neutral-dark/70 mb-6">{event.description}</p>
+                      <div className="flex flex-wrap gap-4 text-sm">
+                        <div className="bg-green-light/10 px-4 py-2 rounded-full text-green">
+                          Max Guests per RSVP: {event.max_guests_per_rsvp}
+                        </div>
+                        {event.max_capacity && (
+                          <div className="bg-green-light/10 px-4 py-2 rounded-full text-green">
+                            Capacity: {event.max_capacity}
+                          </div>
                         )}
-                      </Button>
+                        <Button
+                          onClick={() => toggleRSVPStatus(event.id, event.accepting_rsvps)}
+                          variant={event.accepting_rsvps ? 'edit' : 'delete'}
+                          className="flex items-center gap-2"
+                        >
+                          {event.accepting_rsvps ? (
+                            <Ban className="h-4 w-4" />
+                          ) : (
+                            <CheckCircle className="h-4 w-4" />
+                          )}
+                          {event.accepting_rsvps ? 'Close RSVPs' : 'Open RSVPs'}
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </ScrollReveal>
+
+          {/* Event Form Modal */}
+          {showEventForm && (
+            <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-50 p-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-white rounded-2xl shadow-xl w-full max-w-4xl"
+              >
+                <div className="p-8 max-h-[80vh] overflow-y-auto">
+                  <div className="flex items-center justify-between mb-8 sticky top-0 bg-white z-10">
+                    <h2 className="text-2xl font-display text-neutral-dark">
+                      {editingEvent ? 'Edit Event' : 'Add New Event'}
+                    </h2>
+                    <button
+                      onClick={() => {
+                        setShowEventForm(false);
+                        setEditingEvent(null);
+                        resetForm();
+                      }}
+                      className="p-2 text-neutral-dark/70 hover:text-neutral-dark rounded-lg transition-colors"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                      <label className="block text-neutral-dark mb-2">Title</label>
+                      <input
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-neutral-dark mb-2">Description</label>
+                      <textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32"
+                        required
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-neutral-dark mb-2">Date</label>
+                        <input
+                          type="date"
+                          value={formData.date}
+                          onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-neutral-dark mb-2">Time</label>
+                        <input
+                          type="time"
+                          value={formData.time}
+                          onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-neutral-dark mb-2">Location</label>
+                      <input
+                        type="text"
+                        value={formData.location}
+                        onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-neutral-dark mb-2">Cover Image URL</label>
+                      <input
+                        type="url"
+                        value={formData.coverImage}
+                        onChange={(e) => setFormData(prev => ({ ...prev, coverImage: e.target.value }))}
+                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                        required
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-neutral-dark mb-2">Maximum Capacity (Optional)</label>
+                        <input
+                          type="number"
+                          value={formData.maxCapacity || ''}
+                          onChange={(e) => setFormData(prev => ({ 
+                            ...prev, 
+                            maxCapacity: e.target.value ? parseInt(e.target.value) : undefined
+                          }))}
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          min="1"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-neutral-dark mb-2">Maximum Guests per RSVP</label>
+                        <input
+                          type="number"
+                          value={formData.maxGuestsPerRsvp}
+                          onChange={(e) => setFormData(prev => ({ 
+                            ...prev, 
+                            maxGuestsPerRsvp: Math.max(1, parseInt(e.target.value) || 1)
+                          }))}
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          min="1"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end gap-4 pt-4">
                       <Button
                         onClick={() => {
-                          setEditingEvent(event);
-                          setFormData({
-                            title: event.title,
-                            description: event.description,
-                            date: event.date,
-                            time: event.time,
-                            location: event.location,
-                            coverImage: event.cover_image,
-                            maxCapacity: event.max_capacity,
-                            maxGuestsPerRsvp: event.max_guests_per_rsvp,
-                            requiresAdmissionNumber: event.requires_admission_number
-                          });
-                          setShowEventForm(true);
+                          setShowEventForm(false);
+                          setEditingEvent(null);
+                          resetForm();
                         }}
-                        variant="edit"
-                        className="flex items-center gap-2 h-12"
+                        variant="outline2"
+                        className="px-6 py-2"
                       >
-                        <Pencil className="h-4 w-4" />
-                        Edit
+                        Cancel
                       </Button>
                       <Button
-                        onClick={() => setShowDeleteConfirm(event.id)}
-                        variant="redOutline"
-                        className="flex items-center gap-2 h-12"
+                        onClick={handleSubmit}
+                        variant="edit"
+                        className="px-6 py-2"
                       >
-                        <AlertTriangle className="h-4 w-4" />
-                        Delete
+                        {editingEvent ? 'Update Event' : 'Create Event'}
                       </Button>
                     </div>
-                  </div>
-                  <p className="text-neutral-dark/80 mb-6">{event.description}</p>
-                  <div className="flex flex-wrap gap-4 text-sm">
-                    <div className="bg-primary-light/10 px-4 py-2 rounded-full text-primary">
-                      Max Guests per RSVP: {event.max_guests_per_rsvp}
-                    </div>
-                    {event.max_capacity && (
-                      <div className="bg-primary-light/10 px-4 py-2 rounded-full text-primary">
-                        Capacity: {event.max_capacity}
-                      </div>
-                    )}
-                    <div className={`px-4 py-2 rounded-full ${
-                      event.accepting_rsvps 
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-red-100 text-red-700'
-                    }`}>
-                      RSVPs: {event.accepting_rsvps ? 'Accepting' : 'Closed'}
-                    </div>
-                  </div>
+                  </form>
                 </div>
-              ))}
+              </motion.div>
+            </div>
+          )}
+
+          {/* Delete Confirmation Modal */}
+          {showDeleteConfirm && (
+            <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-50 p-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8"
+              >
+                <h3 className="text-xl font-display text-neutral-dark mb-4">
+                  Confirm Deletion
+                </h3>
+                <p className="text-neutral-dark/70 mb-8">
+                  Are you sure you want to delete this event? This action cannot be undone.
+                </p>
+                <div className="flex justify-end gap-4">
+                  <Button
+                    onClick={() => setShowDeleteConfirm(null)}
+                    variant="outline2"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => handleDelete(showDeleteConfirm)}
+                    variant="delete"
+                  >
+                    Delete Event
+                  </Button>
+                </div>
+              </motion.div>
             </div>
           )}
         </div>
       </Container>
-
-      {/* Event Form Modal */}
-      {showEventForm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-neutral-dark">
-                {editingEvent ? 'Edit Event' : 'Add New Event'}
-              </h2>
-              <button
-                onClick={() => {
-                  setShowEventForm(false);
-                  setEditingEvent(null);
-                  resetForm();
-                }}
-                className="p-2 hover:bg-neutral-dark/10 rounded-full transition-colors"
-              >
-                <X className="h-6 w-6 text-neutral-dark" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-neutral-dark mb-2">Title</label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-neutral-dark mb-2">Description</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-neutral-dark mb-2">Date</label>
-                  <input
-                    type="date"
-                    value={formData.date}
-                    onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-neutral-dark mb-2">Time</label>
-                  <input
-                    type="time"
-                    value={formData.time}
-                    onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-neutral-dark mb-2">Location</label>
-                <input
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-neutral-dark mb-2">Cover Image URL</label>
-                <input
-                  type="url"
-                  value={formData.coverImage}
-                  onChange={(e) => setFormData(prev => ({ ...prev, coverImage: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-neutral-dark mb-2">Maximum Capacity (Optional)</label>
-                  <input
-                    type="number"
-                    value={formData.maxCapacity || ''}
-                    onChange={(e) => setFormData(prev => ({ 
-                      ...prev, 
-                      maxCapacity: e.target.value ? parseInt(e.target.value) : undefined
-                    }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    min="1"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-neutral-dark mb-2">Maximum Guests per RSVP</label>
-                  <input
-                    type="number"
-                    value={formData.maxGuestsPerRsvp}
-                    onChange={(e) => setFormData(prev => ({ 
-                      ...prev, 
-                      maxGuestsPerRsvp: Math.max(1, parseInt(e.target.value) || 1)
-                    }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                    min="1"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-4 pt-4">
-                <Button
-                  variant="outline2"
-                  onClick={() => {
-                    setShowEventForm(false);
-                    setEditingEvent(null);
-                    resetForm();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  {editingEvent ? 'Update Event' : 'Create Event'}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
-            <div className="flex items-center gap-4 text-red-500 mb-6">
-              <AlertTriangle className="h-8 w-8" />
-              <h2 className="text-2xl font-semibold">Delete Event</h2>
-            </div>
-            <p className="text-neutral-dark/80 mb-8">
-              Are you sure you want to delete this event? This action cannot be undone.
-              All RSVPs will also be removed.
-            </p>
-            <div className="flex justify-end gap-4">
-              <Button
-                variant="outline2"
-                onClick={() => setShowDeleteConfirm(null)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="redOutline"  
-                onClick={() => showDeleteConfirm && handleDelete(showDeleteConfirm)}
-              >
-                Delete Event
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

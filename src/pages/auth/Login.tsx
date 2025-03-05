@@ -7,7 +7,6 @@ import { Lock, ArrowRight, AlertTriangle, Mail, Star } from 'lucide-react';
 // If ALUMNI_ROUTES is needed, create the constants file or import from correct location
 import { ALUMNI_ROUTES } from '../../config/routes'; // Removed unused ALUMNI_ROUTES
 import { supabase } from '../../lib/supabase';
-import { clearSupabaseStorage } from '../../lib/auth-helpers';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
@@ -39,22 +38,6 @@ export default function Login() {
     before:absolute before:-inset-2 before:rounded-xl before:border-2 before:border-transparent before:transition-all before:duration-300
     hover:before:border-green/10 hover:before:bg-green/5
   `;
-
-  // Function to clear all Supabase storage
-  const clearAllStorage = () => {
-    console.log('Manually clearing all Supabase storage items');
-    
-    const clearedKeys = clearSupabaseStorage();
-    
-    // Force page reload to make sure everything is reset
-    if (clearedKeys.length > 0) {
-      // Clear any login progress indicator
-      sessionStorage.removeItem('login_in_progress');
-      window.location.reload();
-    } else {
-      setError('No Supabase storage items found to clear');
-    }
-  };
 
   // Add a check for Supabase storage on mount
   useEffect(() => {
@@ -363,15 +346,6 @@ export default function Login() {
           </div>
         </ScrollReveal>
       </Container>
-      <div className="mt-4 text-center">
-        <button
-          onClick={clearAllStorage}
-          className="text-sm text-neutral-dark/60 hover:text-red-500 transition-colors"
-          type="button"
-        >
-          Clear Stored Sessions
-        </button>
-      </div>
     </div>
   );
 }

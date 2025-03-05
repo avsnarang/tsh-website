@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import { useSEO } from '../lib/seo';
 import { motion } from 'framer-motion';
+import GalleryCardSkeleton from '../components/gallery/GalleryCardSkeleton';
 
 interface GalleryImage {
   id: string;
@@ -139,75 +140,6 @@ export default function Gallery() {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col bg-neutral-light">
-        {/* Decorative Background Elements */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30 animate-pulse" />
-          <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30 animate-pulse" />
-          <div className="absolute inset-0 opacity-5">
-            <div
-              className="h-full w-full"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="relative flex-1 flex flex-col pt-24 pb-24">
-          <Container>
-            {/* Header Loading Skeleton */}
-            <div className="text-center mb-16 animate-pulse">
-              <div className="inline-block px-4 py-3 rounded-full bg-neutral-200 mb-8">
-                <div className="h-4 w-32"></div>
-              </div>
-              <div className="h-12 w-3/4 bg-neutral-200 rounded-lg mx-auto mb-4"></div>
-              <div className="h-4 w-1/2 bg-neutral-200 rounded mx-auto"></div>
-            </div>
-
-            {/* Filters Loading Skeleton */}
-            <div className="flex flex-wrap gap-4 mb-12 animate-pulse">
-              <div className="h-10 w-32 bg-neutral-200 rounded-lg"></div>
-              <div className="h-10 w-40 bg-neutral-200 rounded-lg"></div>
-              <div className="h-10 w-48 bg-neutral-200 rounded-lg"></div>
-            </div>
-
-            {/* Gallery Cards Loading Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {[1, 2, 3, 4, 5, 6, 8].map((index) => (
-                <div 
-                  key={index}
-                  className="relative rounded-2xl overflow-hidden bg-white shadow-xl animate-pulse"
-                >
-                  {/* Decorative borders */}
-                  <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
-                  <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
-                  
-                  <div className="relative">
-                    {/* Image placeholder */}
-                    <div className="aspect-[4/3] bg-neutral-200"></div>
-                    
-                    {/* Content placeholders */}
-                    <div className="p-6">
-                      <div className="flex gap-2 mb-4">
-                        <div className="h-6 w-24 bg-neutral-200 rounded-full"></div>
-                        <div className="h-6 w-24 bg-neutral-200 rounded-full"></div>
-                      </div>
-                      <div className="h-6 w-3/4 bg-neutral-200 rounded mb-2"></div>
-                      <div className="h-4 w-1/2 bg-neutral-200 rounded"></div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Container>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen flex flex-col bg-neutral-light w-full">
       {/* Decorative Background Elements */}
@@ -227,6 +159,7 @@ export default function Gallery() {
       {/* Main Content */}
       <div className="relative flex-1 flex flex-col w-full pt-24 pb-24">
         <Container className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header Section */}
           <ScrollReveal>
             <div className="flex-1 text-center mb-16">
               <motion.div
@@ -250,7 +183,7 @@ export default function Gallery() {
             </div>
           </ScrollReveal>
 
-          {/* Filters */}
+          {/* Filters Section */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -260,171 +193,201 @@ export default function Gallery() {
             <div className="max-w-4xl mx-auto">
               <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
                 {/* Decorative Elements */}
-                <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
-                <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
+                <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl z-0" />
+                <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl z-0" />
                 
-                <div className="relative flex flex-col md:flex-row gap-4">
-                  {/* Year Filter */}
-                  <div className="relative flex-1">
-                    <select
-                      value={selectedYear}
-                      onChange={(e) => setSelectedYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                      className="w-full appearance-none px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
-                        bg-white cursor-pointer
-                        focus:ring-2 focus:ring-green/20 focus:border-green
-                        text-neutral-dark placeholder:text-neutral-dark/50
-                        transition-all duration-300 hover:border-green"
-                    >
-                      <option value="all">All Years</option>
-                      {years.map((year) => (
-                        <option key={year} value={year}>Year {year}</option>
-                      ))}
-                    </select>
-                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green pointer-events-none" />
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/50 pointer-events-none" />
+                <div className="relative z-10">
+                  {/* Filters content */}
+                  <div className="relative flex flex-col md:flex-row gap-4">
+                    {/* Year Filter */}
+                    <div className="relative flex-1">
+                      <select
+                        value={selectedYear}
+                        onChange={(e) => setSelectedYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}
+                        className="w-full appearance-none px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
+                          bg-white cursor-pointer
+                          focus:ring-2 focus:ring-green/20 focus:border-green
+                          text-neutral-dark placeholder:text-neutral-dark/50
+                          transition-all duration-300 hover:border-green"
+                      >
+                        <option value="all">All Years</option>
+                        {years.map((year) => (
+                          <option key={year} value={year}>Year {year}</option>
+                        ))}
+                      </select>
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green pointer-events-none" />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/50 pointer-events-none" />
+                    </div>
+
+                    {/* Campus Filter */}
+                    <div className="relative flex-1">
+                      <select
+                        value={selectedCampus}
+                        onChange={(e) => setSelectedCampus(e.target.value)}
+                        className="w-full appearance-none px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
+                          bg-white cursor-pointer
+                          focus:ring-2 focus:ring-green/20 focus:border-green
+                          text-neutral-dark placeholder:text-neutral-dark/50
+                          transition-all duration-300 hover:border-green"
+                      >
+                        {campuses.map((campus) => (
+                          <option key={campus} value={campus}>{campus}</option>
+                        ))}
+                      </select>
+                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green pointer-events-none" />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/50 pointer-events-none" />
+                    </div>
+
+                    {/* Search Input */}
+                    <div className="relative flex-1">
+                      <input
+                        type="text"
+                        placeholder="Search events..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
+                          focus:ring-2 focus:ring-green/20 focus:border-green
+                          text-neutral-dark placeholder:text-neutral-dark/50
+                          transition-all duration-300 hover:border-green"
+                      />
+                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green" />
+                    </div>
                   </div>
 
-                  {/* Campus Filter */}
-                  <div className="relative flex-1">
-                    <select
-                      value={selectedCampus}
-                      onChange={(e) => setSelectedCampus(e.target.value)}
-                      className="w-full appearance-none px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
-                        bg-white cursor-pointer
-                        focus:ring-2 focus:ring-green/20 focus:border-green
-                        text-neutral-dark placeholder:text-neutral-dark/50
-                        transition-all duration-300 hover:border-green"
-                    >
-                      {campuses.map((campus) => (
-                        <option key={campus} value={campus}>{campus}</option>
-                      ))}
-                    </select>
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green pointer-events-none" />
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/50 pointer-events-none" />
-                  </div>
-
-                  {/* Search Input */}
-                  <div className="relative flex-1">
-                    <input
-                      type="text"
-                      placeholder="Search events..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
-                        focus:ring-2 focus:ring-green/20 focus:border-green
-                        text-neutral-dark placeholder:text-neutral-dark/50
-                        transition-all duration-300 hover:border-green"
-                    />
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green" />
-                  </div>
+                  {/* Active Filters Display */}
+                  {(selectedYear !== 'all' || selectedCampus !== 'All Campuses' || searchQuery) && (
+                    <div className="mt-4 flex flex-wrap gap-2 relative z-20">
+                      {selectedYear !== 'all' && (
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-light/20 text-green text-sm relative">
+                          Year: {selectedYear}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedYear('all');
+                            }}
+                            className="p-1 hover:text-green-dark transition-colors cursor-pointer z-30"
+                            aria-label="Clear year filter"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </span>
+                      )}
+                      {selectedCampus !== 'All Campuses' && (
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-light/20 text-orange text-sm relative">
+                          Campus: {selectedCampus}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedCampus('All Campuses');
+                            }}
+                            className="p-1 hover:text-orange-dark transition-colors cursor-pointer z-30"
+                            aria-label="Clear campus filter"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </span>
+                      )}
+                      {searchQuery && (
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-dark/10 text-neutral-dark text-sm relative">
+                          Search: {searchQuery}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSearchQuery('');
+                            }}
+                            className="p-1 hover:text-neutral-dark/70 transition-colors cursor-pointer z-30"
+                            aria-label="Clear search filter"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
-
-                {/* Active Filters Display */}
-                {(selectedYear !== 'all' || selectedCampus !== 'All Campuses' || searchQuery) && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {selectedYear !== 'all' && (
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-light/20 text-green text-sm">
-                        Year: {selectedYear}
-                        <button
-                          onClick={() => setSelectedYear('all')}
-                          className="hover:text-green-dark"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </span>
-                    )}
-                    {selectedCampus !== 'All Campuses' && (
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-light/20 text-orange text-sm">
-                        Campus: {selectedCampus}
-                        <button
-                          onClick={() => setSelectedCampus('All Campuses')}
-                          className="hover:text-orange-dark"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </span>
-                    )}
-                    {searchQuery && (
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-dark/10 text-neutral-dark text-sm">
-                        Search: {searchQuery}
-                        <button
-                          onClick={() => setSearchQuery('')}
-                          className="hover:text-neutral-dark/70"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </span>
-                    )}
-                  </div>
-                )}
               </div>
             </div>
           </motion.div>
 
           {/* Gallery Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredEvents.map((event) => (
-              <ScrollReveal key={event.id}>
-                <div className="relative rounded-2xl overflow-hidden bg-white shadow-xl transform transition-all duration-300 hover:scale-[1.02] group">
-                  {/* Decorative elements */}
+            {loading ? (
+              // Show skeleton cards while loading
+              [...Array(9)].map((_, index) => (
+                <ScrollReveal key={`skeleton-${index}`}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
+                    <GalleryCardSkeleton />
+                  </motion.div>
+                </ScrollReveal>
+              ))
+            ) : filteredEvents.length === 0 ? (
+              <ScrollReveal className="col-span-full">
+                <div className="relative bg-white p-8 rounded-2xl shadow-lg text-center overflow-hidden">
                   <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
-                  <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
-                  
-                  {/* Content */}
-                  <div className="relative">
-                    <div className="h-64 overflow-hidden">
-                      <img
-                        src={getEventImage(event)}
-                        alt={event.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    </div>
-
-                    <div className="p-8">
-                      <div className="flex items-center gap-4 text-sm text-primary mb-3">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          <span>{new Date(event.date).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          <span>{event.campus}</span>
-                        </div>
-                      </div>
-                      
-                      <h3 className="text-2xl font-display text-neutral-dark mb-3 group-hover:text-green transition-colors">
-                        {event.title}
-                      </h3>
-                      
-                      <p className="text-neutral-dark/70 mb-6 line-clamp-2">
-                        {event.description}
-                      </p>
-
-                      <button
-                        onClick={() => handleEventClick(event.id)}
-                        className="group flex items-center gap-2 w-full justify-center px-6 py-3 rounded-xl border-2 border-green text-green hover:bg-green-light/10 transition-all duration-300"
-                      >
-                        View Gallery
-                        <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                      </button>
-                    </div>
-                  </div>
+                  <Image className="h-16 w-16 text-neutral-dark/20 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-neutral-dark mb-2">No Events Found</h3>
+                  <p className="text-neutral-dark/70">Try adjusting your filters or search terms</p>
                 </div>
               </ScrollReveal>
-            ))}
-          </div>
+            ) : (
+              filteredEvents.map((event) => (
+                <ScrollReveal key={event.id}>
+                  <div className="relative rounded-2xl overflow-hidden bg-white shadow-xl transform transition-all duration-300 hover:scale-[1.02] group">
+                    {/* Decorative elements */}
+                    <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
+                    <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
+                    
+                    {/* Content */}
+                    <div className="relative">
+                      <div className="h-64 overflow-hidden">
+                        <img
+                          src={getEventImage(event)}
+                          alt={event.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      </div>
 
-          {/* Empty State */}
-          {filteredEvents.length === 0 && !loading && (
-            <ScrollReveal>
-              <div className="relative bg-white p-8 rounded-2xl shadow-lg text-center overflow-hidden">
-                <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
-                <Image className="h-16 w-16 text-neutral-dark/20 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-neutral-dark mb-2">No Events Found</h3>
-                <p className="text-neutral-dark/70">Try adjusting your filters or search terms</p>
-              </div>
-            </ScrollReveal>
-          )}
+                      <div className="p-8">
+                        <div className="flex items-center gap-4 text-sm text-primary mb-3">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            <span>{new Date(event.date).toLocaleDateString()}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4" />
+                            <span>{event.campus}</span>
+                          </div>
+                        </div>
+                      
+                        <h3 className="text-2xl font-display text-neutral-dark mb-3 group-hover:text-green transition-colors">
+                          {event.title}
+                        </h3>
+                      
+                        <p className="text-neutral-dark/70 mb-6 line-clamp-2">
+                          {event.description}
+                        </p>
+
+                        <button
+                          onClick={() => handleEventClick(event.id)}
+                          className="group flex items-center gap-2 w-full justify-center px-6 py-3 rounded-xl border-2 border-green text-green hover:bg-green-light/10 transition-all duration-300"
+                        >
+                          View Gallery
+                          <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </ScrollReveal>
+              ))
+            )}
+          </div>
         </Container>
       </div>
     </div>
