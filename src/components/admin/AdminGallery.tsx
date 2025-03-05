@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Plus, Pencil, AlertTriangle, Calendar, MapPin, X } from 'lucide-react';
+import { Plus, Pencil, AlertTriangle, Calendar, MapPin, X, Star, ArrowLeft } from 'lucide-react';
+import ScrollReveal from '../animations/ScrollReveal';
+import TextReveal from '../animations/TextReveal';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 interface GalleryImage {
   id: string;
@@ -49,6 +52,19 @@ export default function AdminGallery() {
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  useEffect(() => {
+    if (showEventForm) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup function to ensure we restore scrolling when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showEventForm]);
 
   const fetchEvents = async () => {
     try {
@@ -247,142 +263,213 @@ export default function AdminGallery() {
   };
 
   return (
-    <div className="pt-32 pb-24">
-      <Container>
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between gap-4 mb-8">
-            <Link
-              to="/admin/dashboard"
-              className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              Back to Dashboard
-            </Link>
-            <button
-              onClick={() => setShowEventForm(true)}
-              className="flex items-center gap-2 px-6 py-2 bg-primary text-neutral-light rounded-lg hover:bg-primary-dark transition-colors"
-            >
-              <Plus className="h-5 w-5" />
-              Add New Event
-            </button>
-          </div>
+    <Container className="min-h-screen pt-32 pb-24">
+      {/* Decorative Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
+        </div>
+      </div>
 
-          <h1 className="text-4xl text-neutral-dark mb-8">Manage Gallery</h1>
-
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
+      <div className="relative">
+        {/* Header Section */}
+        <ScrollReveal>
+          <div className="text-center mb-12">
+            {/* Add Back Button */}
+            <div className="flex items-center justify-between gap-4 mb-8">
+              <Link
+                to="/admin/dashboard"
+                className="flex items-center gap-2 text-green hover:text-green-dark transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5" />
+                Back to Dashboard
+              </Link>
             </div>
-          )}
 
+            <div className="flex flex-col items-center gap-4 mb-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full"
+              >
+                <Star className="h-4 w-4" />
+                <span className="font-semibold">Gallery Management</span>
+              </motion.div>
+            </div>
+            
+            <TextReveal>
+              <h1 className="font-display text-4xl md:text-5xl text-neutral-dark mb-4">
+                Manage <span className="text-green">School Events</span> Gallery
+              </h1>
+            </TextReveal>
+            <TextReveal delay={0.2}>
+              <p className="text-neutral-dark/70 text-lg max-w-2xl mx-auto">
+                Add and manage photo galleries for school events and activities
+              </p>
+            </TextReveal>
+          </div>
+        </ScrollReveal>
+
+        {/* Add Event Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mb-8 flex justify-end"
+        >
+          <button
+            onClick={() => setShowEventForm(true)}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-green text-white rounded-xl hover:bg-green-dark transition-colors"
+          >
+            <Plus className="h-5 w-5" />
+            <span>Add New Event</span>
+          </button>
+        </motion.div>
+      </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-xl mb-8">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5" />
+              <span>{error}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Events Grid */}
+        <ScrollReveal>
           {loading ? (
-            <div className="text-center">Loading...</div>
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green mx-auto" />
+            </div>
           ) : (
-            <div className="space-y-6">
-              {events.map(event => (
-                <div
-                  key={event.id}
-                  className="bg-white p-6 rounded-2xl shadow-lg"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl text-neutral-dark font-semibold">
-                        {event.title}
-                      </h3>
-                      <div className="flex items-center gap-4 text-primary mt-2">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          <span>{new Date(event.date).toLocaleDateString()}</span>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="grid gap-8 rounded-xl p-8 z-10"
+            >
+              {events.map((event) => (
+                <div key={event.id} className="relative bg-white rounded-2xl shadow-xl overflow-hidden">
+                  <div className="absolute inset-0 bg-white" />
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="relative z-10"
+                  >
+                    <div className="p-8">
+                      <div className="flex items-start justify-between mb-6">
+                        <div>
+                          <h3 className="text-2xl font-display text-neutral-dark mb-2">
+                            {event.title}
+                          </h3>
+                          <div className="flex items-center gap-4 text-neutral-dark/70">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4" />
+                              <span>{new Date(event.date).toLocaleDateString()}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <MapPin className="h-4 w-4" />
+                              <span>{event.campus}</span>
+                            </div>
+                          </div>
                         </div>
+                        
                         <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          <span>{event.campus}</span>
+                          <button
+                            onClick={() => {
+                              setEditingEvent(event);
+                              setFormData({
+                                title: event.title,
+                                description: event.description,
+                                date: event.date,
+                                campus: event.campus,
+                                primaryImageUrl: event.primary_image_url || '',
+                                images: event.gallery_images.map(img => ({
+                                  url: img.image_url,
+                                  caption: img.caption
+                                }))
+                              });
+                              setShowEventForm(true);
+                            }}
+                            className="p-2 text-neutral-dark/70 hover:text-green rounded-lg transition-colors"
+                          >
+                            <Pencil className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={() => setShowDeleteConfirm(event.id)}
+                            className="p-2 text-neutral-dark/70 hover:text-red-600 rounded-lg transition-colors"
+                          >
+                            <X className="h-5 w-5" />
+                          </button>
                         </div>
+                      </div>
+
+                      <p className="text-neutral-dark/70 mb-6">{event.description}</p>
+
+                      {/* Gallery Preview */}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                        {event.gallery_images.slice(0, 5).map((image, index) => (
+                          <div
+                            key={image.id}
+                            className={`relative aspect-square rounded-xl overflow-hidden ${
+                              index === 4 && event.gallery_images.length > 5 ? 'relative' : ''
+                            }`}
+                          >
+                            <img
+                              src={image.image_url}
+                              alt={image.caption}
+                              className="w-full h-full object-cover"
+                            />
+                            {index === 4 && event.gallery_images.length > 5 && (
+                              <div className="absolute inset-0 bg-neutral-dark/70 flex items-center justify-center">
+                                <span className="text-white text-xl font-bold">
+                                  +{event.gallery_images.length - 5}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => {
-                          setEditingEvent(event);
-                          setFormData({
-                            title: event.title,
-                            description: event.description,
-                            date: event.date,
-                            campus: event.campus,
-                            primaryImageUrl: event.primary_image_url || '',
-                            images: event.gallery_images.map(img => ({
-                              url: img.image_url,
-                              caption: img.caption
-                            }))
-                          });
-                          setShowEventForm(true);
-                        }}
-                        className="p-2 bg-primary-light/20 text-primary rounded-lg hover:bg-primary-light/40 transition-colors"
-                      >
-                        <Pencil className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() => setShowDeleteConfirm(event.id)}
-                        className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
-                      >
-                        <AlertTriangle className="h-5 w-5" />
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-neutral-dark/80 mb-4">{event.description}</p>
-                  <div className="relative grid grid-cols-5 gap-2">
-                    {event.gallery_images.slice(0, 5).map((image: GalleryImage, index: number) => (
-                      <div 
-                        key={image.id} 
-                        className={`relative aspect-square rounded-lg overflow-hidden ${index === 4 && event.gallery_images.length > 5 ? 'relative' : ''}`}
-                      >
-                        <img
-                          src={image.image_url}
-                          alt={image.caption}
-                          className="w-full h-full object-cover"
-                        />
-                        {index === 4 && event.gallery_images.length > 5 && (
-                          <div className="absolute inset-0 bg-neutral-dark/70 flex items-center justify-center">
-                            <span className="text-white text-xl font-bold">+{event.gallery_images.length - 5}</span>
-                          </div>
-                        )}
-                        {image.caption && index < 4 && (
-                          <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 text-neutral-light p-1 text-xs">
-                            {image.caption}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                    {event.gallery_images.length === 0 && (
-                      <div className="col-span-5 text-center py-4 text-neutral-dark/50 italic">
-                        No images available
-                      </div>
-                    )}
-                  </div>
+                  </motion.div>
                 </div>
               ))}
-            </div>
+            </motion.div>
           )}
-        </div>
-      </Container>
+        </ScrollReveal>
 
-      {/* Event Form Modal */}
-      {showEventForm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-neutral-dark">
-                {editingEvent ? 'Edit Event' : 'Add New Event'}
-              </h2>
-              <button
-                onClick={resetForm}
-                className="p-2 hover:bg-neutral-dark/10 rounded-full transition-colors"
-              >
-                <X className="h-6 w-6 text-neutral-dark" />
-              </button>
-            </div>
+        {/* Event Form Modal */}
+        {showEventForm && (
+          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-50 p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white rounded-2xl shadow-xl w-full max-w-4xl"
+            >
+              <div className="p-8 max-h-[80vh] overflow-y-auto">
+                <div className="flex items-center justify-between mb-8 sticky top-0 bg-white z-10">
+                  <h2 className="text-2xl font-display text-neutral-dark">
+                    {editingEvent ? 'Edit Event' : 'Add New Event'}
+                  </h2>
+                  <button
+                    onClick={resetForm}
+                    className="p-2 text-neutral-dark/70 hover:text-neutral-dark rounded-lg transition-colors"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-neutral-dark mb-2">Title</label>
                 <input
@@ -557,40 +644,43 @@ export default function AdminGallery() {
                   {editingEvent ? 'Update Event' : 'Create Event'}
                 </button>
               </div>
-            </form>
+            </form>  
           </div>
-        </div>
+        </motion.div>
+      </div>
       )}
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
-            <div className="flex items-center gap-4 text-red-500 mb-6">
-              <AlertTriangle className="h-8 w-8" />
-              <h2 className="text-2xl font-semibold">Delete Event</h2>
-            </div>
-            <p className="text-neutral-dark/80 mb-8">
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8"
+          >
+            <h3 className="text-xl font-display text-neutral-dark mb-4">
+              Confirm Deletion
+            </h3>
+            <p className="text-neutral-dark/70 mb-8">
               Are you sure you want to delete this event? This action cannot be undone.
-              All associated images will also be removed.
             </p>
             <div className="flex justify-end gap-4">
               <button
                 onClick={() => setShowDeleteConfirm(null)}
-                className="px-6 py-2 bg-neutral-light text-neutral-dark rounded-lg hover:bg-neutral-dark/10 transition-colors"
+                className="px-6 py-2 text-neutral-dark/70 hover:text-neutral-dark rounded-lg transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={() => showDeleteConfirm && handleDelete(showDeleteConfirm)}
-                className="px-6 py-2 bg-red-500 text-neutral-light rounded-lg hover:bg-red-600 transition-colors"
+                className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
-                Delete Event
+                Delete
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
-    </div>
+    </Container>
   );
-}
+};

@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAlumniAuth } from '../../contexts/AlumniAuthContext';
 import Container from '../../components/ui/Container';
 import { ALUMNI_ROUTES } from '../../config/routes';
-import { UserPlus, GraduationCap, MapPin, Briefcase, Mail, Lock, Star } from 'lucide-react';
+import { UserPlus, GraduationCap, MapPin, Briefcase, Mail, Lock, Star, ArrowRight } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export default function AlumniRegister() {
   const [fullName, setFullName] = useState('');
@@ -131,7 +132,7 @@ export default function AlumniRegister() {
         </ScrollReveal>
 
         <ScrollReveal>
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-6xl mx-auto"> {/* Increased max-width to accommodate columns */}
             <div className="relative bg-white p-8 md:p-12 rounded-2xl shadow-xl">
               {/* Enhanced Decorative Elements */}
               <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange/40 rounded-2xl" />
@@ -144,158 +145,175 @@ export default function AlumniRegister() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="relative space-y-12">
-                {/* Personal Information Section */}
-                <div className="space-y-6">
-                  <TextReveal>
-                    <div className="flex items-center gap-3 mb-8">
-                      <div className="w-12 h-12 bg-gradient-to-br from-green-light to-green rounded-full flex items-center justify-center">
-                        <UserPlus className="h-6 w-6 text-white" />
+              <form onSubmit={handleSubmit} className="relative">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                  {/* Left Column - Personal Information */}
+                  <div className="space-y-6">
+                    <TextReveal>
+                      <div className="flex items-center gap-3 mb-8">
+                        <div className="w-12 h-12 bg-gradient-to-br from-green-light to-green rounded-full flex items-center justify-center">
+                          <UserPlus className="h-6 w-6 text-white" />
+                        </div>
+                        <h2 className="text-2xl font-display text-neutral-dark">Personal Information</h2>
                       </div>
-                      <h2 className="text-2xl font-display text-neutral-dark">Personal Information</h2>
-                    </div>
-                  </TextReveal>
+                    </TextReveal>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className={inputGroupClasses}>
-                      <label className="block text-sm font-medium text-neutral-dark mb-2">
-                        Full Name
-                      </label>
-                      <div className="relative">
-                        <UserPlus className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
-                        <input
-                          type="text"
-                          value={fullName}
-                          onChange={(e) => setFullName(e.target.value)}
-                          className={inputClasses}
-                          placeholder="Enter your full name"
-                          required
-                        />
+                    <div className="space-y-6">
+                      <div className={inputGroupClasses}>
+                        <label className="block text-sm font-medium text-neutral-dark mb-2">
+                          Full Name
+                        </label>
+                        <div className="relative">
+                          <UserPlus className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
+                          <input
+                            type="text"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            className={inputClasses}
+                            placeholder="Enter your full name"
+                            required
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    <div className={inputGroupClasses}>
-                      <label className="block text-sm font-medium text-neutral-dark mb-2">
-                        Batch Year
-                      </label>
-                      <div className="relative">
-                        <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
-                        <input
-                          type="number"
-                          value={batchYear}
-                          onChange={(e) => setBatchYear(e.target.value)}
-                          min="2005"
-                          max={new Date().getFullYear()}
-                          className={inputClasses}
-                          placeholder="Enter your batch year"
-                          required
-                        />
+                      <div className={inputGroupClasses}>
+                        <label className="block text-sm font-medium text-neutral-dark mb-2">
+                          Batch Year
+                        </label>
+                        <div className="relative">
+                          <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
+                          <input
+                            type="number"
+                            value={batchYear}
+                            onChange={(e) => setBatchYear(e.target.value)}
+                            min="2005"
+                            max={new Date().getFullYear()}
+                            className={inputClasses}
+                            placeholder="Enter your batch year"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className={inputGroupClasses}>
+                        <label className="block text-sm font-medium text-neutral-dark mb-2">
+                          Current Location
+                        </label>
+                        <div className="relative">
+                          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
+                          <input
+                            type="text"
+                            value={currentLocation}
+                            onChange={(e) => setCurrentLocation(e.target.value)}
+                            className={inputClasses}
+                            placeholder="Enter your current location"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className={inputGroupClasses}>
+                        <label className="block text-sm font-medium text-neutral-dark mb-2">
+                          Occupation
+                        </label>
+                        <div className="relative">
+                          <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
+                          <input
+                            type="text"
+                            value={occupation}
+                            onChange={(e) => setOccupation(e.target.value)}
+                            className={inputClasses}
+                            placeholder="Enter your occupation"
+                            required
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className={inputGroupClasses}>
-                      <label className="block text-sm font-medium text-neutral-dark mb-2">
-                        Current Occupation
-                      </label>
-                      <div className="relative">
-                        <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
-                        <input
-                          type="text"
-                          value={occupation}
-                          onChange={(e) => setOccupation(e.target.value)}
-                          className={inputClasses}
-                          placeholder="Enter your occupation"
-                          required
-                        />
+                  {/* Right Column - Account Information */}
+                  <div className="space-y-6">
+                    <TextReveal>
+                      <div className="flex items-center gap-3 mb-8">
+                        <div className="w-12 h-12 bg-gradient-to-br from-orange-light to-orange rounded-full flex items-center justify-center">
+                          <Lock className="h-6 w-6 text-white" />
+                        </div>
+                        <h2 className="text-2xl font-display text-neutral-dark">Account Information</h2>
                       </div>
-                    </div>
+                    </TextReveal>
 
-                    <div className={inputGroupClasses}>
-                      <label className="block text-sm font-medium text-neutral-dark mb-2">
-                        Current Location
-                      </label>
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
-                        <input
-                          type="text"
-                          value={currentLocation}
-                          onChange={(e) => setCurrentLocation(e.target.value)}
-                          className={inputClasses}
-                          placeholder="Enter your location"
-                          required
-                        />
+                    <div className="space-y-6">
+                      <div className={inputGroupClasses}>
+                        <label className="block text-sm font-medium text-neutral-dark mb-2">
+                          Email Address
+                        </label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
+                          <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className={inputClasses}
+                            placeholder="Enter your email address"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className={inputGroupClasses}>
+                        <label className="block text-sm font-medium text-neutral-dark mb-2">
+                          Password
+                        </label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
+                          <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className={inputClasses}
+                            placeholder="Create a password (min. 8 characters)"
+                            minLength={8}
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-8">
+                        <motion.button
+                          type="submit"
+                          disabled={loading}
+                          className="w-full bg-gradient-to-r from-green to-green-dark text-white py-4 px-6 rounded-xl 
+                            hover:from-green-dark hover:to-green 
+                            transition-all duration-300 
+                            disabled:opacity-50 
+                            relative overflow-hidden group
+                            shadow-lg shadow-green/20
+                            hover:shadow-xl hover:shadow-green/30"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <div className="absolute inset-0 bg-white/20 transform translate-y-full group-hover:translate-y-0 transition-transform" />
+                          <span className="relative font-medium text-lg">
+                            {loading ? 'Creating Account...' : 'Complete Registration'}
+                          </span>
+                        </motion.button>
+
+                        <div className="text-center mt-6">
+                          <p className="text-neutral-dark/70">
+                            Already have an account?{' '}
+                            <Link
+                              to={ALUMNI_ROUTES.LOGIN}
+                              className="text-green hover:text-green-dark transition-colors inline-flex items-center gap-1"
+                            >
+                              Sign In
+                              <ArrowRight className="h-4 w-4" />
+                            </Link>
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-
-                {/* Account Information Section */}
-                <div className="space-y-6">
-                  <TextReveal>
-                    <div className="flex items-center gap-3 mb-8">
-                      <div className="w-12 h-12 bg-gradient-to-br from-orange-light to-orange rounded-full flex items-center justify-center">
-                        <Lock className="h-6 w-6 text-white" />
-                      </div>
-                      <h2 className="text-2xl font-display text-neutral-dark">Account Information</h2>
-                    </div>
-                  </TextReveal>
-
-                  <div className={inputGroupClasses}>
-                    <label className="block text-sm font-medium text-neutral-dark mb-2">
-                      Email Address
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className={inputClasses}
-                        placeholder="Enter your email address"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className={inputGroupClasses}>
-                    <label className="block text-sm font-medium text-neutral-dark mb-2">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/40 group-hover:text-green transition-colors" />
-                      <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className={inputClasses}
-                        placeholder="Create a password (min. 8 characters)"
-                        minLength={8}
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <motion.button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-green to-green-dark text-white py-4 px-6 rounded-xl 
-                    hover:from-green-dark hover:to-green 
-                    transition-all duration-300 
-                    disabled:opacity-50 
-                    relative overflow-hidden group
-                    shadow-lg shadow-green/20
-                    hover:shadow-xl hover:shadow-green/30"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="absolute inset-0 bg-white/20 transform translate-y-full group-hover:translate-y-0 transition-transform" />
-                  <span className="relative font-medium text-lg">
-                    {loading ? 'Creating Account...' : 'Complete Registration'}
-                  </span>
-                </motion.button>
               </form>
             </div>
           </div>

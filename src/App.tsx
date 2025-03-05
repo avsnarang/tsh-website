@@ -60,6 +60,7 @@ const ManageMessages = lazy(() => import('./components/admin/ManageMessages'));
 const ManageUpdates = lazy(() => import('./components/admin/ManageUpdates'));
 const AdminGallery = lazy(() => import('./components/admin/AdminGallery'));
 const ManageStudents = lazy(() => import('./components/admin/ManageStudents'));
+const ManageAlumni = lazy(() => import('./components/admin/ManageAlumni'));
 
 // Co-curricular
 const CoCurricular = lazy(() => import('./pages/CoCurricular'));
@@ -210,6 +211,11 @@ const router = createBrowserRouter(
         <Route path="students" element={
           <RequireAdmin>
             <ManageStudents />
+          </RequireAdmin>
+        } />
+        <Route path="alumni" element={
+          <RequireAdmin>
+            <ManageAlumni />
           </RequireAdmin>
         } />
       </Route>
