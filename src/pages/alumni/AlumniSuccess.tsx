@@ -1,11 +1,9 @@
 import { motion } from 'framer-motion';
 import { useState, useMemo } from 'react';
-import { ArrowRight, Star, Search, Filter, User, Quote, Briefcase, Building2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Star, Search, Filter, User, Quote, Briefcase, Building2 } from 'lucide-react';
 import Container from '../../components/ui/Container';
 import { useSEO } from '../../lib/seo';
 import ScrollReveal from '../../components/animations/ScrollReveal';
-import { ALUMNI_ROUTES } from '../../config/routes';
 import { useSuccessStories } from '../../lib/queries';
 
 interface SuccessStory {
