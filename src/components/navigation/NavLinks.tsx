@@ -82,19 +82,19 @@ export default function NavLinks({ textColor, isMenuOpen }: NavLinksProps) {
         {isCampusesHovered && (
           <div className={dropdownClass}>
             <Link 
-              to="/campus/paonta-sahib" 
+              to="./campus/paonta-sahib" 
               className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
             >
               Paonta Sahib
             </Link>
             <Link 
-              to="/campus/juniors" 
+              to="./campus/juniors" 
               className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
             >
               Juniors
             </Link>
             <Link 
-              to="/campus/majra" 
+              to="./campus/majra" 
               className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
             >
               Majra

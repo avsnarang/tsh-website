@@ -60,7 +60,7 @@ const ManageMessages = lazy(() => import('./components/admin/ManageMessages'));
 const ManageUpdates = lazy(() => import('./components/admin/ManageUpdates'));
 const AdminGallery = lazy(() => import('./components/admin/AdminGallery'));
 const ManageStudents = lazy(() => import('./components/admin/ManageStudents'));
-const ManageAlumni = lazy(() => import('./components/admin/ManageAlumni'));
+const ManageAlumni = lazy(() => import('./components/admin/ManageAlumni').then(module => ({ default: module.default })));
 
 // Co-curricular
 const CoCurricular = lazy(() => import('./pages/CoCurricular'));
@@ -124,7 +124,7 @@ const router = createBrowserRouter(
       <Route path="academics/senior-secondary" element={<SeniorSecondary />} />
       {/* Campus routes */}
       <Route path="campuses" element={<Campuses />} />
-      <Route path="campus/:id" element={<CampusHome />} />
+      <Route path="campus/:campus" element={<CampusHome />} />
       {/* Co-curricular routes */}
       <Route path="co-curricular" element={<CoCurricular />} />
       <Route path="co-curricular/performing-arts" element={<PerformingArts />} />

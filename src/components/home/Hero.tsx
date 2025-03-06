@@ -16,7 +16,7 @@ const quickStats = [
   { icon: Medal, value: "150+", label: "Awards" },
 ];
 
-export default function Hero2() {
+export default function Hero() {
   return (
     <div className="relative min-h-[90vh] bg-neutral-light">
       {/* Decorative Background Elements */}

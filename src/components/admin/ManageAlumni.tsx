@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAlumniProfiles } from '../../lib/queries';
@@ -8,7 +9,7 @@ import { motion } from 'framer-motion';
 import { supabase } from '../../lib/supabase';
 import type { Profile as AlumniProfile } from '../../types/alumni';
 
-export default function ManageAlumni() {
+const ManageAlumni: FC = () => {
   const queryClient = useQueryClient();
   const { data: profiles } = useAlumniProfiles();
   const [searchTerm, setSearchTerm] = useState('');
@@ -292,3 +293,5 @@ export default function ManageAlumni() {
     </div>
   );
 }
+
+export default ManageAlumni;
