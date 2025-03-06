@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
-import Hero2 from '../components/home/Hero';
+import Hero from '../components/home/Hero';
 import { Suspense, lazy } from 'react';
 import { LeadershipMessage } from '../types/leadership';
 
@@ -87,7 +87,7 @@ export default function Home() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <Hero2 />
+        <Hero />
         <Features />
         <LeaderMessages 
           messages={messages as unknown as LeadershipMessage[]} 
