@@ -7,6 +7,7 @@ import ScrollReveal from '../components/animations/ScrollReveal';
 import { useSEO } from '../lib/seo';
 import { motion } from 'framer-motion';
 import GalleryCardSkeleton from '../components/gallery/GalleryCardSkeleton';
+import NotionDropdown from '../components/ui/NotionDropdown';
 
 interface GalleryImage {
   id: string;
@@ -130,6 +131,25 @@ export default function Gallery() {
     return 'https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=2066&q=80';
   };
 
+  const yearOptions = [
+    { 
+      value: 'all', 
+      label: 'All Years',
+      icon: <Calendar className="h-5 w-5 text-green" />
+    },
+    ...years.map((year) => ({
+      value: year.toString(),
+      label: `Year ${year}`,
+      icon: <Calendar className="h-5 w-5 text-green" />
+    }))
+  ];
+
+  const campusOptions = campuses.map((campus) => ({
+    value: campus,
+    label: campus,
+    icon: <MapPin className="h-5 w-5 text-green" />
+  }));
+
   if (error) {
     return (
       <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
@@ -191,72 +211,57 @@ export default function Gallery() {
             className="mb-16"
           >
             <div className="max-w-4xl mx-auto">
-              <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-visible">
                 {/* Decorative Elements */}
-                <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl z-0" />
-                <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl z-0" />
+                <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl z-[1]" />
+                <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl z-[1]" />
                 
-                <div className="relative z-10">
+                <div className="relative z-[2]">
                   {/* Filters content */}
                   <div className="relative flex flex-col md:flex-row gap-4">
                     {/* Year Filter */}
-                    <div className="relative flex-1">
-                      <select
-                        value={selectedYear}
-                        onChange={(e) => setSelectedYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                        className="w-full appearance-none px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
-                          bg-white cursor-pointer
-                          focus:ring-2 focus:ring-green/20 focus:border-green
-                          text-neutral-dark placeholder:text-neutral-dark/50
-                          transition-all duration-300 hover:border-green"
-                      >
-                        <option value="all">All Years</option>
-                        {years.map((year) => (
-                          <option key={year} value={year}>Year {year}</option>
-                        ))}
-                      </select>
-                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green pointer-events-none" />
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/50 pointer-events-none" />
+                    <div className="relative flex-1 z-[30]">
+                      <NotionDropdown
+                        value={selectedYear.toString()}
+                        onChange={(value) => setSelectedYear(value === 'all' ? 'all' : Number(value))}
+                        options={yearOptions}
+                        placeholder="Select Year"
+                        searchable={false}
+                        className="w-full"
+                      />
                     </div>
 
                     {/* Campus Filter */}
-                    <div className="relative flex-1">
-                      <select
+                    <div className="relative flex-1 z-[20]">
+                      <NotionDropdown
                         value={selectedCampus}
-                        onChange={(e) => setSelectedCampus(e.target.value)}
-                        className="w-full appearance-none px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
-                          bg-white cursor-pointer
-                          focus:ring-2 focus:ring-green/20 focus:border-green
-                          text-neutral-dark placeholder:text-neutral-dark/50
-                          transition-all duration-300 hover:border-green"
-                      >
-                        {campuses.map((campus) => (
-                          <option key={campus} value={campus}>{campus}</option>
-                        ))}
-                      </select>
-                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green pointer-events-none" />
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-dark/50 pointer-events-none" />
+                        onChange={(value) => setSelectedCampus(value)}
+                        options={campusOptions}
+                        placeholder="Select Campus"
+                        searchable={false}
+                        className="w-full"
+                      />
                     </div>
 
                     {/* Search Input */}
-                    <div className="relative flex-1">
+                    <div className="relative flex-1 z-[10]">
                       <input
                         type="text"
                         placeholder="Search events..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full px-6 py-4 pl-12 rounded-xl border-2 border-neutral-dark/10 
+                        className="w-full px-4 py-4 pl-12 rounded-lg border-2 border-neutral-dark/10 
                           focus:ring-2 focus:ring-green/20 focus:border-green
                           text-neutral-dark placeholder:text-neutral-dark/50
-                          transition-all duration-300 hover:border-green"
+                          transition-all duration-200"
                       />
-                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green" />
+                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-green" />
                     </div>
                   </div>
 
                   {/* Active Filters Display */}
                   {(selectedYear !== 'all' || selectedCampus !== 'All Campuses' || searchQuery) && (
-                    <div className="mt-4 flex flex-wrap gap-2 relative z-20">
+                    <div className="mt-4 flex flex-wrap gap-2 relative z-[5]">
                       {selectedYear !== 'all' && (
                         <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-light/20 text-green text-sm relative">
                           Year: {selectedYear}

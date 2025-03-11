@@ -78,9 +78,19 @@ export const seoConfig: Record<string, SEOConfig> = {
     description: "Join our alumni network to connect with fellow graduates and share your success stories",
     url: "https://tsh.edu.in/alumni/network"
   },
+  faculty: {
+    title: "Our Faculty | The Scholars' Home",
+    description: "Meet our experienced and dedicated teachers who shape the future of our students at The Scholars' Home.",
+    url: "https://tsh.edu.in/faculty"
+  },
   alumniSuccess: {
     title: "Alumni Success Stories | The Scholars' Home",
     description: "Discover inspiring success stories from The Scholars' Home alumni community.",
     url: "https://tsh.edu.in/alumni/success"
+  },
+  admission: {
+    title: "Admission | The Scholars' Home",
+    description: "Explore admission opportunities at The Scholars' Home. Information on application process, eligibility, and admission requirements.",
+    url: "https://tsh.edu.in/admission"
   }
 };

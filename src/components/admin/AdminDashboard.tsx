@@ -1,7 +1,18 @@
 import { Link } from 'react-router-dom';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
-import { Settings, LogOut, Calendar, Image, Bell, Users, GraduationCap } from 'lucide-react';
+import { 
+  Settings, 
+  LogOut, 
+  Calendar, 
+  Image, 
+  Bell, 
+  Users, 
+  GraduationCap,
+  School,
+  UserPlus,
+  BookOpen
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -33,16 +44,30 @@ export default function AdminDashboard() {
     {
       title: 'Alumni',
       description: 'Manage alumni profiles',
-      icon: Users,
+      icon: UserPlus,
       path: '/admin/alumni',
       color: 'from-purple-light to-purple'
     },
     {
       title: 'Students',
       description: 'Manage student records',
-      icon: GraduationCap,
+      icon: BookOpen,
       path: '/admin/students',
       color: 'from-yellow-light to-yellow'
+    },
+    {
+      title: 'Teachers',
+      description: 'Manage teacher records',
+      icon: School,
+      path: '/admin/teachers',
+      color: 'from-indigo-light to-indigo'
+    },
+    {
+      title: 'Calendar',
+      description: 'Manage school calendar and events',
+      icon: Calendar,
+      path: '/admin/calendar',
+      color: 'from-red-light to-red'
     }
   ];
 
@@ -117,11 +142,24 @@ export default function AdminDashboard() {
                   >
                     <div 
                       className="absolute -inset-0.5 bg-gradient-to-br opacity-0 group-hover:opacity-100 blur transition duration-500 rounded-2xl"
-                      style={{ background: `linear-gradient(to bottom right, ${item.color})` }}
+                      style={{ background: `linear-gradient(to bottom right, ${item.color.replace('from-', '').replace('to-', '')})` }}
                     />
                     <div className="relative bg-white p-8 rounded-2xl shadow-lg">
                       <div className="flex items-start gap-6">
-                        <div className={`p-4 rounded-xl bg-gradient-to-br ${item.color}`}>
+                        {/* Fix the gradient background for the icon */}
+                        <div 
+                          className={`p-4 rounded-xl flex items-center justify-center`}
+                          style={{ 
+                            background: item.color === 'from-green-light to-green' ? 'linear-gradient(to bottom right, #A6D4B4, #00501B)' :
+                                          item.color === 'from-orange-light to-orange' ? 'linear-gradient(to bottom right, #E1CEB9, #A65A20)' :
+                                          item.color === 'from-blue-light to-blue' ? 'linear-gradient(to bottom right, #BFE6FF, #0284C7)' :
+                                          item.color === 'from-purple-light to-purple' ? 'linear-gradient(to bottom right, #E9D5FF, #7E22CE)' :
+                                          item.color === 'from-yellow-light to-yellow' ? 'linear-gradient(to bottom right, #FEF3C7, #D97706)' :
+                                          item.color === 'from-indigo-light to-indigo' ? 'linear-gradient(to bottom right, #C7D2FE, #4F46E5)' :
+                                          item.color === 'from-red-light to-red' ? 'linear-gradient(to bottom right, #FECACA, #DC2626)' :
+                                          'linear-gradient(to bottom right, #A6D4B4, #00501B)'
+                          }}
+                        >
                           <item.icon className="h-6 w-6 text-white" />
                         </div>
                         <div>

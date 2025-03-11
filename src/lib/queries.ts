@@ -24,23 +24,28 @@ export function useAlumniProfiles() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('alumni_profiles')
-        .select('id, full_name, batch_year, occupation, is_public, show_in_success')
+        .select(`
+          id, 
+          full_name, 
+          batch_year, 
+          occupation,
+          company,
+          current_location,
+          email,
+          phone,
+          show_contact_info,
+          profile_picture_url,
+          linkedin_url,
+          facebook_url,
+          instagram_url,
+          is_public,
+          show_in_success
+        `)
         .order('batch_year', { ascending: false });
 
-      if (error) {
-        console.error('Alumni profiles fetch error:', error);
-        throw error;
-      }
-
-      // Log the data to verify the visibility states
-      console.log('Fetched profiles with visibility states:', data);
-
+      if (error) throw error;
       return data;
-    },
-    // Remove infinite stale/cache times to ensure fresh data on mount
-    staleTime: 0, // Data is considered stale immediately
-    refetchOnMount: true, // Refetch when component mounts
-    refetchOnWindowFocus: true, // Refetch when window regains focus
+    }
   });
 }
 

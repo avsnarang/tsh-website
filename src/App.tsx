@@ -27,6 +27,7 @@ import { HelmetProvider } from 'react-helmet-async';
 // Pages
 const Admissions = lazy(() => import('./pages/Admissions'));
 const Home = lazy(() => import('./pages/Home'));
+const Faculty = lazy(() => import('./pages/Faculty'));
 const About = lazy(() => import('./components/about/About'));
 const Vision = lazy(() => import('./pages/about/Vision'));
 const Messages = lazy(() => import('./pages/about/Messages'));
@@ -61,6 +62,8 @@ const ManageUpdates = lazy(() => import('./components/admin/ManageUpdates'));
 const AdminGallery = lazy(() => import('./components/admin/AdminGallery'));
 const ManageStudents = lazy(() => import('./components/admin/ManageStudents'));
 const ManageAlumni = lazy(() => import('./components/admin/ManageAlumni').then(module => ({ default: module.default })));
+const AdminCalendar = lazy(() => import('./components/admin/AdminCalendar'));
+const ManageTeachers = lazy(() => import('./components/admin/ManageTeachers'));
 
 // Co-curricular
 const CoCurricular = lazy(() => import('./pages/CoCurricular'));
@@ -71,6 +74,8 @@ const ClubsSocieties = lazy(() => import('./pages/co-curricular/ClubsSocieties')
 const Contact = lazy(() => import('./pages/Contact'));
 const Invites = lazy(() => import('./pages/Invites'));
 const Scholarship = lazy(() => import('./pages/Scholarship'));
+
+const Calendar = lazy(() => import('./pages/Calendar'));
 
 const RootLayout = () => {
   return (
@@ -169,6 +174,15 @@ const router = createBrowserRouter(
         } />
       </Route>
       {/* Other main routes */}
+      <Route path="faculty" element={
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          </div>
+        }>
+          <Faculty />
+        </Suspense>
+      } />
       <Route path="admissions" element={<Admissions />} />
       <Route path="contact" element={<Contact />} />
       <Route path="invites" element={
@@ -218,7 +232,32 @@ const router = createBrowserRouter(
             <ManageAlumni />
           </RequireAdmin>
         } />
+        <Route path="calendar" element={
+          <RequireAdmin>
+            <Suspense fallback={
+              <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+              </div>
+            }>
+              <AdminCalendar />
+            </Suspense>
+          </RequireAdmin>
+        } />
+        <Route path="teachers" element={
+          <RequireAdmin>
+            <ManageTeachers />
+          </RequireAdmin>
+        } />
       </Route>
+      <Route path="calendar" element={
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          </div>
+        }>
+          <Calendar />
+        </Suspense>
+      } />
       <Route path="*" element={
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">

@@ -24,7 +24,6 @@ export function MessagesProvider({ children }: { children: React.ReactNode }) {
           .order('order');
 
         if (error) {
-          console.error('Supabase error:', error);
           setError(error.message);
           return;
         }
@@ -38,7 +37,6 @@ export function MessagesProvider({ children }: { children: React.ReactNode }) {
         setMessages(formattedMessages);
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-        console.error('Error fetching messages:', errorMessage);
         setError(errorMessage);
       } finally {
         setLoading(false);
