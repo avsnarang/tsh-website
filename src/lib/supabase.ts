@@ -24,15 +24,11 @@ export type ValidTable = typeof VALID_TABLES[keyof typeof VALID_TABLES];
 
 // Check environment variables during initialization
 if (!supabaseUrl) {
-  console.error('Missing VITE_SUPABASE_URL environment variable')
   throw new Error('Missing VITE_SUPABASE_URL environment variable')
 }
 if (!supabaseAnonKey) {
-  console.error('Missing VITE_SUPABASE_ANON_KEY environment variable')
   throw new Error('Missing VITE_SUPABASE_ANON_KEY environment variable')
 }
-
-console.log('Initializing Supabase client with URL:', supabaseUrl)
 
 // Create the client with custom storage handler
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -48,13 +44,11 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
         if (storedSession && isLoginPage && !isLoggingIn) {
           try {
             const sessionData = JSON.parse(storedSession);
-            console.log('Login page detected with stored session');
             return localStorage.getItem(key);
           } catch (e) {
             console.error('Error parsing session data:', e);
           }
         }
-        
         return localStorage.getItem(key);
       },
       setItem: (key, value) => {
@@ -69,23 +63,16 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 
 const initializeSupabase = async () => {
   let retries = 3;
-  const delay = 2000; // 2 seconds
+  const delay = 2000;
 
   while (retries > 0) {
     try {
-      console.log(`Connecting to Supabase, attempt ${4 - retries}...`)
-      
-      // Check auth service first
       const { data: authData, error: authError } = await supabase.auth.getSession()
       
       if (authError) {
-        console.error('Supabase auth error:', authError)
         throw authError
       }
       
-      console.log('Supabase auth connection successful:', authData ? 'session exists' : 'no session')
-      
-      // Check critical tables first (auth and user-related)
       const criticalTables = [
         VALID_TABLES.AUTH_USER_ROLES,
         VALID_TABLES.ADMIN_USERS,
@@ -147,15 +134,14 @@ const initializeSupabase = async () => {
       }
       return true;
     } catch (error) {
-      console.error('Supabase connection error:', error);
       retries--;
-      if (retries > 0) {
-        console.log(`Connection attempt ${3 - retries} failed, retrying in ${delay}ms...`);
-        await new Promise(resolve => setTimeout(resolve, delay));
+      if (retries === 0) {
+        console.error('Failed to initialize Supabase after multiple attempts:', error);
+        return false;
       }
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
-  console.error('Failed to connect to Supabase after 3 attempts');
   return false;
 }
 

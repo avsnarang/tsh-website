@@ -24,7 +24,7 @@ export default function Hero() {
         {/* Top right decorative circle */}
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
         {/* Remove the bottom left decorative circle since it's now in Features */}
-        
+
         {/* Center decorative pattern */}
         <div className="absolute inset-0 opacity-5">
           <div
@@ -121,12 +121,13 @@ export default function Hero() {
               {/* Main Image */}
               <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
                 <img
-                  src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+                  src="https://images.tsh.edu.in/homepage/hero.jpeg"
                   alt="Students at The Scholars' Home"
                   className="w-full h-full object-cover"
                 />
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-green/30 to-transparent" />
+                {/* Overlay gradient 
+                  <div className="absolute inset-0 bg-gradient-to-t from-green/30 to-transparent" />
+                */}
               </div>
 
               {/* Decorative elements */}

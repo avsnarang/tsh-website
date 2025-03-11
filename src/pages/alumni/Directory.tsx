@@ -9,18 +9,18 @@ import {
   Star, 
   Search, 
   GraduationCap, 
-  Briefcase, 
-  Building2, 
+  Briefcase,
   MapPin, 
-  LinkedinIcon,
+  ChevronRight,
   Filter
 } from 'lucide-react';
-import { FaInstagram, FaFacebook } from 'react-icons/fa';
 import AlumniDetailModal from '../../components/alumni/AlumniDetailModal';
+import NotionDropdown from '../../components/ui/NotionDropdown';
+import { Profile } from '../../types/alumni';
 
 export default function Directory() {
   const { data: alumniProfiles, isLoading } = useAlumniProfiles();
-  const [selectedAlumni, setSelectedAlumni] = useState<any>(null);
+  const [selectedAlumni, setSelectedAlumni] = useState<Profile | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBatch, setSelectedBatch] = useState<number | 'all'>('all');
 
@@ -36,6 +36,26 @@ export default function Directory() {
     return years.sort((a, b) => b - a); // Sort in descending order
   }, [alumniProfiles]);
 
+  const batchOptions = useMemo(() => {
+    if (!batchYears.length) return [{ 
+      value: 'all', 
+      label: 'All Batches',
+      icon: <Filter className="h-5 w-5 text-green" />
+    }];
+    
+    return [
+      { 
+        value: 'all', 
+        label: 'All Batches',
+        icon: <Filter className="h-5 w-5 text-green" />
+      },
+      ...batchYears.map(year => ({
+        value: year.toString(),
+        label: `Batch ${year}`
+      }))
+    ];
+  }, [batchYears]);
+
   // Filter alumni based on search query, selected batch, and visibility
   const filteredAlumni = useMemo(() => {
     if (!alumniProfiles) return [];
@@ -44,15 +64,12 @@ export default function Directory() {
       const matchesSearch = 
         alumni.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         alumni.occupation?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        alumni.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        alumni.current_location?.toLowerCase().includes(searchQuery.toLowerCase());
+        ((alumni as Profile).company?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        ((alumni as Profile).current_location?.toLowerCase() || '').includes(searchQuery.toLowerCase());
       
       const matchesBatch = selectedBatch === 'all' || alumni.batch_year === selectedBatch;
       
-      // Only show public profiles
-      const isVisible = alumni.is_public === true;
-      
-      return matchesSearch && matchesBatch && isVisible;
+      return matchesSearch && matchesBatch && alumni.is_public;
     });
   }, [alumniProfiles, searchQuery, selectedBatch]);
 
@@ -99,55 +116,40 @@ export default function Directory() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="max-w-3xl mx-auto mb-16"
         >
-          <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
-            {/* Decorative Elements */}
-            <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
-            <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
-            
-            <div className="relative flex gap-4">
-              {/* Search Bar */}
-              <div className="flex-1 relative">
-                <input
-                  type="text"
-                  placeholder="Search by name, occupation, company, or location..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-6 py-4 pl-14 rounded-xl border-2 border-neutral-dark/10 
-                    focus:ring-2 focus:ring-green/20 focus:border-green
-                    text-neutral-dark placeholder:text-neutral-dark/50"
-                />
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-green" />
-              </div>
+          <div className="flex flex-col gap-4">
+            {/* Search Card */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 relative">
+              {/* Decorative Elements */}
+              <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
+              <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
+              
+              <div className="relative">
+                {/* Search Bar and Filter Layout */}
+                <div className="flex items-center gap-4">
+                  {/* Search Bar */}
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      placeholder="Search by name, occupation, company, or location..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full px-6 py-4 pl-14 rounded-xl border-2 border-neutral-dark/10 
+                        focus:ring-2 focus:ring-green/20 focus:border-green
+                        text-neutral-dark placeholder:text-neutral-dark/50"
+                    />
+                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-green" />
+                  </div>
 
-              {/* Batch Filter Dropdown */}
-              <div className="relative min-w-[200px]">
-                <select
-                  value={selectedBatch}
-                  onChange={(e) => setSelectedBatch(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                  className="w-full px-6 py-4 pl-12 appearance-none rounded-xl border-2 border-neutral-dark/10 
-                    focus:ring-2 focus:ring-green/20 focus:border-green
-                    text-neutral-dark bg-white cursor-pointer"
-                >
-                  <option value="all">All Batches</option>
-                  {batchYears.map(year => (
-                    <option key={year} value={year}>
-                      Batch {year}
-                    </option>
-                  ))}
-                </select>
-                <Filter className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-green" />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg
-                    className="h-5 w-5 text-neutral-dark/50"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path d="M19 9l-7 7-7-7" />
-                  </svg>
+                  {/* Batch Filter Dropdown */}
+                  <div className="w-[200px]">
+                    <NotionDropdown
+                      value={selectedBatch.toString()}
+                      onChange={(value) => setSelectedBatch(value === 'all' ? 'all' : Number(value))}
+                      options={batchOptions}
+                      placeholder="Select Batch"
+                      searchable={false}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -168,148 +170,72 @@ export default function Directory() {
           </p>
         </motion.div>
 
-        {/* Alumni Grid */}
-        <ScrollReveal>
-          {isLoading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green mx-auto" />
-            </div>
-          ) : (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+        {/* Alumni Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredAlumni.map((alumni) => (
+            <motion.div
+              key={alumni.id}
+              whileHover={{ y: -5 }}
+              onClick={() => setSelectedAlumni(alumni)}
+              className="bg-white rounded-2xl p-8 shadow-lg cursor-pointer relative group"
             >
-              {filteredAlumni.map((alumni, index) => (
-                <motion.div
-                  key={alumni.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ 
-                    y: -8,
-                    transition: { duration: 0.2 }
-                  }}
-                  className="relative bg-white rounded-2xl shadow-xl overflow-hidden group cursor-pointer transform-gpu will-change-transform"
-                  onClick={() => setSelectedAlumni(alumni)}
-                >
-                  {/* Geometric Background with hover effect */}
-                  <div className="absolute inset-0 bg-[#f8fafc] transition-opacity duration-300 group-hover:opacity-90">
-                    <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-105" style={{
-                      backgroundImage: `
-                        radial-gradient(circle at 0% 0%, rgba(166, 212, 180, 0.4) 0%, transparent 50%),
-                        radial-gradient(circle at 100% 100%, rgba(255, 162, 86, 0.4) 0%, transparent 50%)
-                      `,
-                    }} />
-                    
-                    {/* Subtle grid pattern */}
-                    <div 
-                      className="absolute inset-0 opacity-[0.03]" 
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z' fill='%23374151' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-                        backgroundSize: '40px 40px',
-                      }}
+              {/* Profile Section */}
+              <div className="flex items-center gap-6 mb-6">
+                <div className="relative">
+                  {alumni.profile_picture_url ? (
+                    <img
+                      src={alumni.profile_picture_url}
+                      alt={alumni.full_name}
+                      className="w-20 h-20 rounded-full object-cover"
                     />
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="relative z-20 p-8">
-                    {/* Profile Header */}
-                    <div className="flex items-center gap-6 mb-6">
-                      <div className="relative w-24 h-24 rounded-full ring-4 ring-white shadow-xl overflow-hidden">
-                        {alumni.profile_picture_url ? (
-                          <img
-                            src={alumni.profile_picture_url}
-                            alt={alumni.full_name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-green-light to-primary flex items-center justify-center">
-                            <User className="h-10 w-10 text-white" />
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div>
-                        <h3 className="font-display text-2xl text-neutral-dark mb-1">
-                          {alumni.full_name}
-                        </h3>
-                        <div className="flex items-center gap-2 text-green">
-                          <GraduationCap className="h-4 w-4" />
-                          <span className="font-medium">Class of {alumni.batch_year}</span>
-                        </div>
-                      </div>
+                  ) : (
+                    <div className="w-20 h-20 rounded-full bg-neutral-light/50 flex items-center justify-center">
+                      <User className="h-8 w-8 text-neutral-dark/30" />
                     </div>
-
-                    {/* Details */}
-                    <div className="space-y-3">
-                      {alumni.occupation && (
-                        <div className="flex items-center gap-3 text-neutral-dark/70">
-                          <Briefcase className="h-5 w-5" />
-                          <span>{alumni.occupation}</span>
-                        </div>
-                      )}
-                      {alumni.company && (
-                        <div className="flex items-center gap-3 text-neutral-dark/70">
-                          <Building2 className="h-5 w-5" />
-                          <span>{alumni.company}</span>
-                        </div>
-                      )}
-                      {alumni.current_location && (
-                        <div className="flex items-center gap-3 text-neutral-dark/70">
-                          <MapPin className="h-5 w-5" />
-                          <span>{alumni.current_location}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Social Links */}
-                    {(alumni.linkedin_url || alumni.facebook_url || alumni.instagram_url) && (
-                      <div className="mt-6 pt-6 border-t border-neutral-light/30">
-                        <div className="flex items-center gap-4">
-                          {alumni.linkedin_url && (
-                            <a
-                              href={alumni.linkedin_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-neutral-dark/70 hover:text-primary transition-colors"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <LinkedinIcon className="h-5 w-5" />
-                            </a>
-                          )}
-                          {alumni.facebook_url && (
-                            <a
-                              href={alumni.facebook_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-neutral-dark/70 hover:text-primary transition-colors"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <FaFacebook className="h-5 w-5" />
-                            </a>
-                          )}
-                          {alumni.instagram_url && (
-                            <a
-                              href={alumni.instagram_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-neutral-dark/70 hover:text-primary transition-colors"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <FaInstagram className="h-5 w-5" />
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                    )}
+                  )}
+                  <div className="absolute -bottom-2 -right-2 bg-green text-white p-1 rounded-full">
+                    <GraduationCap className="h-4 w-4" />
                   </div>
-                </motion.div>
-              ))}
+                </div>
+                
+                <div>
+                  <h3 className="font-display text-xl text-neutral-dark">{alumni.full_name}</h3>
+                  <p className="text-neutral-dark/70">Batch of {alumni.batch_year}</p>
+                </div>
+              </div>
+
+              {/* Details */}
+              <div className="space-y-3">
+                {alumni.occupation && (
+                  <div className="flex items-center gap-3 text-neutral-dark/70">
+                    <Briefcase className="h-5 w-5" />
+                    <span>
+                      {alumni.occupation}
+                      {alumni.company && ` at ${alumni.company}`}
+                    </span>
+                  </div>
+                )}
+                {alumni.current_location && (
+                  <div className="flex items-center gap-3 text-neutral-dark/70">
+                    <MapPin className="h-5 w-5" />
+                    <span>{alumni.current_location}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Details Link */}
+              <div className="mt-6 pt-6 border-t border-neutral-light/30">
+                <button
+                  onClick={() => setSelectedAlumni(alumni)}
+                  className="text-primary hover:text-primary-dark transition-colors inline-flex items-center gap-2 group"
+                >
+                  <span>View Details</span>
+                  <ChevronRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
             </motion.div>
-          )}
-        </ScrollReveal>
+          ))}
+        </div>
 
         {/* Alumni Detail Modal */}
         {selectedAlumni && (

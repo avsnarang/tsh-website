@@ -116,42 +116,46 @@ export default function AlumniDetailModal({ alumni, onClose }: AlumniDetailModal
                 )}
               </div>
 
-              {/* Social Links & Additional Info */}
-              <div className="space-y-6">
-                <h3 className="font-display text-xl text-neutral-dark mb-4">Social Links</h3>
-                <div className="flex gap-4">
-                  {alumni.linkedin_url && (
-                    <a
-                      href={alumni.linkedin_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 rounded-full bg-neutral-light hover:bg-primary hover:text-white transition-colors"
-                    >
-                      <LinkedinIcon className="h-6 w-6" />
-                    </a>
-                  )}
-                  {alumni.instagram_url && (
-                    <a
-                      href={alumni.instagram_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 rounded-full bg-neutral-light hover:bg-primary hover:text-white transition-colors"
-                    >
-                      <Instagram className="h-6 w-6" />
-                    </a>
-                  )}
-                  {alumni.facebook_url && (
-                    <a
-                      href={alumni.facebook_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 rounded-full bg-neutral-light hover:bg-primary hover:text-white transition-colors"
-                    >
-                      <Facebook className="h-6 w-6" />
-                    </a>
-                  )}
+              {/* Only render social links section if at least one social link exists */}
+              {(alumni.linkedin_url?.trim() || 
+                alumni.facebook_url?.trim() || 
+                alumni.instagram_url?.trim()) && (
+                <div className="space-y-6">
+                  <h3 className="font-display text-xl text-neutral-dark mb-4">Social Links</h3>
+                  <div className="flex gap-4">
+                    {alumni.linkedin_url && (
+                      <a
+                        href={alumni.linkedin_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 rounded-full bg-neutral-light hover:bg-primary hover:text-white transition-colors"
+                      >
+                        <LinkedinIcon className="h-6 w-6" />
+                      </a>
+                    )}
+                    {alumni.instagram_url && (
+                      <a
+                        href={alumni.instagram_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 rounded-full bg-neutral-light hover:bg-primary hover:text-white transition-colors"
+                      >
+                        <Instagram className="h-6 w-6" />
+                      </a>
+                    )}
+                    {alumni.facebook_url && (
+                      <a
+                        href={alumni.facebook_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 rounded-full bg-neutral-light hover:bg-primary hover:text-white transition-colors"
+                      >
+                        <Facebook className="h-6 w-6" />
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Bio or Additional Information */}

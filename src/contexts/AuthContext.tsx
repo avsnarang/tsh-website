@@ -32,16 +32,8 @@ const PROFILE_DELETED_KEY = 'tsh_profile_deleted';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Helper function to check if we're on the login page or register page
-const isAuthPage = () => {
-  const path = window.location.pathname;
-  return path.includes('/login') || path.includes('/register');
-};
-
 const fetchUserRole = async (userId: string): Promise<UserRole | null> => {
   try {
-    console.log('Fetching role for user:', userId);
-    
     const { data: authRoleData, error: authRoleError } = await supabase
       .from('auth_user_roles')
       .select('role')
@@ -54,11 +46,9 @@ const fetchUserRole = async (userId: string): Promise<UserRole | null> => {
     }
 
     if (authRoleData?.role) {
-      console.log(`User role found: ${authRoleData.role}`);
       return authRoleData.role as UserRole;
     }
 
-    console.log('No role found for user');
     return null;
     
   } catch (error) {
@@ -168,7 +158,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
 
   // Add a ref to track if we've fetched the role for the current user
-  const roleFetchedForUser = useRef<string | null>(null);
+  const roleFetchedForUser = useRef<{ userId: string | null, lastFetch: number } | null>(null);
 
   // Function to mark a profile as deleted
   const markProfileDeleted = () => {
@@ -177,9 +167,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setProfileDeleted(true);
   };
 
-  // Function to reset the profile deleted state (called when user attempts to sign in again)
+  // Function to reset the profile deleted state
   const resetProfileDeletedState = () => {
-    console.log('Resetting profile deleted state');
     localStorage.removeItem(PROFILE_DELETED_KEY);
     setProfileDeleted(false);
   };
@@ -187,11 +176,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Update the clearAdminSession function
   const clearAdminSession = async () => {
     try {
-      // Get current location
       const currentPath = window.location.pathname;
       const isLoginPage = currentPath.includes('/login');
       
-      // Only proceed with admin session clearing if we're on the login page
       if (!isLoginPage) {
         return;
       }
@@ -202,28 +189,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const sessionUserId = data.session.user.id;
         const role = await fetchUserRole(sessionUserId);
         
-        // Only clear if admin is specifically on the login page
         if (role === 'admin' && isLoginPage) {
-          console.log('Admin user detected on login page - redirecting to dashboard');
           window.location.href = '/admin/dashboard';
           return;
         }
       }
-    } catch (err) {
-      console.error('Error in clearAdminSession:', err);
+    } catch (error) {
+      console.error('Error clearing admin session:', error);
     }
   };
 
   const handleUserSession = async (session: Session | null) => {
-    // If profile is marked as deleted locally AND we're not on auth pages,
-    // don't process session
-    if (profileDeleted && !isAuthPage()) {
-      console.log('Profile previously deleted locally. Skipping session processing.');
-      setLoading(false);
-      setSessionState('invalid');
-      return;
-    }
-    
     setLoading(true);
     
     try {
@@ -235,17 +211,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      // Only fetch role if we haven't fetched it for this user yet
-      if (roleFetchedForUser.current !== session.user.id) {
-        console.log('Fetching role for user:', session.user.id);
+      setUser(session.user);
+      
+      const now = Date.now();
+      const lastFetchTime = roleFetchedForUser.current?.lastFetch || 0;
+      const shouldFetchRole = 
+        roleFetchedForUser.current?.userId !== session.user.id || 
+        (now - lastFetchTime) > 300000; // 5 minutes
+
+      if (shouldFetchRole) {
         const role = await fetchUserRole(session.user.id);
         setUserRole(role);
-        roleFetchedForUser.current = session.user.id;
+        roleFetchedForUser.current = {
+          userId: session.user.id,
+          lastFetch: now
+        };
       }
 
-      setUser(session.user);
       setSessionState('valid');
-
     } catch (error) {
       console.error('Error handling user session:', error);
       setUser(null);
