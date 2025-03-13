@@ -4,6 +4,7 @@ import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
 import { useSEO } from '../../lib/seo';
 import { motion } from 'framer-motion';
+import BreadcrumbNav from '../../components/navigation/BreadcrumbNav';
 
 export default function Vision() {
   useSEO({
@@ -32,6 +33,9 @@ export default function Vision() {
       </div>
 
       <Container className="relative">
+        <nav className="pt-8 -mb-8">
+          <BreadcrumbNav />
+        </nav>
         <ScrollReveal>
           <div className="text-center mb-16">
             <motion.div

@@ -6,27 +6,27 @@ import type { CampusActivity } from '../../types/components';
 const activities: CampusActivity[] = [
   {
     title: "Sports & Athletics",
-    image: "/images/campus/sports.jpg",
+    image: "https://images.tsh.edu.in/homepage/tsh-life/sports.jpg",
     description: "State-of-the-art facilities for various sports including cricket, basketball, and athletics",
-    link: "/campus-life/sports"
+    link: "/co-curricular/sports-athletics"
   },
   {
     title: "Arts & Culture",
-    image: "/images/campus/arts.jpg",
+    image: "https://images.tsh.edu.in/homepage/tsh-life/arts.jpg",
     description: "Regular cultural events, art exhibitions, and performing arts programs",
-    link: "/campus-life/arts"
+    link: "/co-curricular/visual-arts"
   },
   {
     title: "Science & Technology",
-    image: "/images/campus/science.jpg",
+    image: "https://images.tsh.edu.in/homepage/tsh-life/science.jpg",
     description: "Modern laboratories and regular STEM activities and competitions",
-    link: "/campus-life/science"
+    link: "/co-curricular/science-technology"
   },
   {
     title: "Community Service",
-    image: "/images/campus/community.jpg",
+    image: "https://images.tsh.edu.in/homepage/tsh-life/community.jpg",
     description: "Regular outreach programs and social responsibility initiatives",
-    link: "/campus-life/community"
+    link: "/co-curricular/clubs-societies"
   }
 ];
 
@@ -95,7 +95,6 @@ export default function CampusLife() {
                   alt={activity.title}
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/80 to-transparent" />
               </div>
 
               {/* Content Container */}

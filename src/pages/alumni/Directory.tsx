@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import Container from '../../components/ui/Container';
 import { useSEO } from '../../lib/seo';
-import ScrollReveal from '../../components/animations/ScrollReveal';
 import { useAlumniProfiles } from '../../lib/queries';
 import { 
   User, 
@@ -19,7 +18,7 @@ import NotionDropdown from '../../components/ui/NotionDropdown';
 import { Profile } from '../../types/alumni';
 
 export default function Directory() {
-  const { data: alumniProfiles, isLoading } = useAlumniProfiles();
+  const { data: alumniProfiles } = useAlumniProfiles();
   const [selectedAlumni, setSelectedAlumni] = useState<Profile | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBatch, setSelectedBatch] = useState<number | 'all'>('all');

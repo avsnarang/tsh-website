@@ -1,11 +1,10 @@
-import { Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 const socialLinks = [
-  { Icon: Facebook, href: '#', label: 'Facebook' },
-  { Icon: Twitter, href: '#', label: 'Twitter' },
-  { Icon: Instagram, href: '#', label: 'Instagram' },
-  { Icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { Icon: Youtube, href: '#', label: 'YouTube' }
+  { Icon: Facebook, href: 'https://www.facebook.com/tscholarshome', label: 'Facebook' },
+  { Icon: Instagram, href: 'https://www.instagram.com/thescholars.home', label: 'Instagram' },
+  { Icon: Linkedin, href: 'https://www.linkedin.com/school/thescholarshome', label: 'LinkedIn' },
+  { Icon: Youtube, href: 'https://www.youtube.com/@the.scholarshome', label: 'YouTube' }
 ];
 
 export default function SocialLinks() {

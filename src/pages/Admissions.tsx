@@ -1,103 +1,86 @@
-import { Link } from 'react-router-dom';
-import { MapPin, Users, BookOpen, GraduationCap, ArrowRight, Phone, Mail } from 'lucide-react';
-import { schoolInfo } from '../data/schoolData';
-import Button from '../components/ui/Button';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { Users, BookOpen, Building2, ArrowRight, CheckCircle2, Calendar } from 'lucide-react';
 import Container from '../components/ui/Container';
 import ScrollReveal from '../components/animations/ScrollReveal';
-import TextReveal from '../components/animations/TextReveal';
-import { trackEvent } from '../lib/analytics';
 import { useSEO } from '../lib/seo';
+import BreadcrumbNav from '../components/navigation/BreadcrumbNav';
 
-const getRegistrationLink = (location: string) => {
-  switch (location) {
-    case 'Paonta Sahib':
-      return 'https://learn.tsh.edu.in/#/erp/the_scholars_home_registration_form_cbse';
-    case 'Juniors':
-      return 'https://learn.tsh.edu.in/#/erp/the_scholars_home_registration_form_juniors';
-    case 'Majra':
-      return 'https://learn.tsh.edu.in/#/erp/the_scholars_home_registration_form_majra';
-    default:
-      return 'https://learn.tsh.edu.in/#/erp/the_scholars_home_registration_form_cbse';
-  }
-};
+interface Campus {
+  name: string;
+  description: string;
+  image: string;
+  location: string;
+  phone: string;
+  email: string;
+  features: string[];
+  classSize: string;
+  registrationLink: string;
+}
 
-const getProgramsForCampus = (location: string) => {
-  switch (location) {
-    case 'Paonta Sahib':
-      return [
-        { 
-          name: 'Pre-Primary',
-          description: 'Pre-Nursery (2-3 years), Nursery (3-4 years), LKG (4-5 years), UKG (5-6 years)'
-        },
-        { 
-          name: 'Primary',
-          description: 'Grades 1-5 (Ages 6-11 years)'
-        },
-        { 
-          name: 'Middle School',
-          description: 'Grades 6-8 (Ages 11-14 years)'
-        },
-        { 
-          name: 'Secondary',
-          description: 'Grades 9-10 (Ages 14-16 years)'
-        },
-        { 
-          name: 'Senior Secondary',
-          description: 'Grades 11-12 (Ages 16-18 years)'
-        }
-      ];
-    case 'Juniors':
-      return [
-        { 
-          name: 'Pre-Primary',
-          description: 'Pre-Nursery (2-3 years), Nursery (3-4 years), LKG (4-5 years), UKG (5-6 years)'
-        },
-        { 
-          name: 'Primary',
-          description: 'Grade 1 (Ages 6-7 years)'
-        }
-      ];
-    case 'Majra':
-      return [
-        { 
-          name: 'Pre-Primary',
-          description: 'Pre-Nursery (2-3 years), Nursery (3-4 years), LKG (4-5 years), UKG (5-6 years)'
-        },
-        { 
-          name: 'Primary',
-          description: 'Grades 1-5 (Ages 6-11 years)'
-        },
-        { 
-          name: 'Middle School',
-          description: 'Grade 6 (Ages 11-12 years)'
-        }
-      ];
-    default:
-      return [];
+const CAMPUSES: Campus[] = [
+  {
+    name: 'TSH, Paonta Sahib',
+    description: 'Our flagship campus offering comprehensive education from primary to senior secondary levels with state-of-the-art facilities.',
+    image: 'https://images.tsh.edu.in/campus/paonta-sahib.jpg',
+    location: 'Jamniwala Road, Badripur, Paonta Sahib, H.P.',
+    phone: '+91 8628800056',
+    email: 'info@ps.tsh.edu.in',
+    features: ['CBSE Affiliated', 'Classes Pre-Nursery to XII', 'Science, Commerce, Arts for Classes XI & XII', 'Safe Environment'],
+    classSize: '28',
+    registrationLink: 'https://learn.tsh.edu.in/#/erp/the_scholars_home_registration_form_cbse'
+  },
+  {
+    name: 'TSH, Juniors',
+    description: 'Specialized campus for early childhood education with a focus on foundational learning and holistic development.',
+    image: 'https://images.tsh.edu.in/campus/juniors.jpg',
+    location: 'Near Degree College, Devinagar, Paonta Sahib, H.P.',
+    phone: '+91 98057 35656',
+    email: 'info@jun.tsh.edu.in',
+    features: ['Pre-Nursery to I', 'Play-based Learning', 'Individual Attention', 'Safe Environment'],
+    classSize: '24',
+    registrationLink: 'https://learn.tsh.edu.in/#/erp/the_scholars_home_registration_form_juniors'
+  },
+  {
+    name: 'TSH, Majra',
+    description: 'A modern campus combining traditional values with contemporary teaching methodologies.',
+    image: 'https://images.tsh.edu.in/campus/majra.jpg',
+    location: 'Near SBI Majra, Majra, Paonta Sahib, H.P.',
+    phone: '+91 96927 00056',
+    email: 'info@majra.tsh.edu.in',
+    features: ['Classes Pre-Nursery to VI', 'Smart Classrooms', 'Sports Facilities', 'Safe Environment'],
+    classSize: '28',
+    registrationLink: 'https://learn.tsh.edu.in/#/erp/the_scholars_home_registration_form_majra'
   }
-};
+];
 
-const getCampusPhone = (location: string) => {
-  switch (location) {
-    case 'Juniors':
-      return '+91 98057 35656';
-    case 'Majra':
-      return '+91 96927 00056';
-    default:
-      return '+91 8628800056';
+const ADMISSION_STEPS = [
+  {
+    title: "Submit Application",
+    description: "Fill out the online application form for your preferred campus",
+    icon: BookOpen
+  },
+  {
+    title: "Entrance Assessment",
+    description: "Complete a grade-appropriate assessment test",
+    icon: Users
+  },
+  {
+    title: "Interview",
+    description: "Parent and student interaction with school leadership",
+    icon: Calendar
+  },
+  {
+    title: "Document Verification",
+    description: "Submit required documents for verification",
+    icon: CheckCircle2
+  },
+  {
+    title: "Fee Payment",
+    description: "Complete the admission process with fee payment",
+    icon: Building2
   }
-};
-
-const getCampusLocation = (location: string) => {
-  switch (location) {
-    case 'Juniors':
-      return 'Near Degree College, Devinagar, Paonta Sahib, H.P.';
-    case 'Majra':
-      return 'Near SBI Majra, Majra, Paonta Sahib, H.P.';
-    default:
-      return 'Jamniwala Road, Badripur, Paonta Sahib, H.P.';
-  }
-};
+];
 
 export default function Admissions() {
   useSEO({
@@ -106,200 +89,160 @@ export default function Admissions() {
     url: "https://tsh.edu.in/admissions"
   });
 
-  return (
-    <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
-      <Container>
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <TextReveal>
-              <h1 className="text-5xl text-neutral-dark mb-4">Admissions Open 2025-26</h1>
-            </TextReveal>
-            <TextReveal delay={0.2}>
-              <p className="text-xl text-primary font-body max-w-2xl mx-auto">
-                Join The Scholars' Home and embark on a journey of excellence
-              </p>
-            </TextReveal>
-          </div>
-        </ScrollReveal>
+  const [] = useState<Campus | null>(null);
 
-        <div className="space-y-24">
-          {schoolInfo.branches.map((branch, index) => (
-            <ScrollReveal key={branch.location} delay={index * 0.1}>
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                <div className="relative h-64">
-                  <img
-                    src={branch.imageUrl}
-                    alt={`${branch.location} Campus`}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-dark/80 to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <h2 className="text-3xl text-neutral-light mb-2">{branch.location} Campus</h2>
-                    <div className="flex items-center gap-4 text-primary-light">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4" />
-                        <a 
-                          href="#" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="hover:text-neutral-light transition-colors"
-                        >
-                          {getCampusLocation(branch.location)}
-                        </a>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4" />
-                        <span>Limited seats available</span>
+  return (
+    <>
+      <section className="relative py-40">
+        {/* Top fade-in gradient */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white via-white to-transparent z-10" />
+
+        {/* Unique geometric background */}
+        <div className="absolute inset-0 bg-[#f8fafc]">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 2% 50%, rgba(166, 212, 180, 0.9) 0%, transparent 35%),
+                             radial-gradient(circle at 98% 20%, rgba(166, 212, 180, 0.9) 0%, transparent 35%),
+                             radial-gradient(circle at 50% 90%, rgba(255, 162, 86, 0.7) 0%, transparent 35%)`,
+          }} />
+          
+          {/* Animated wave pattern */}
+          <div className="absolute inset-0 opacity-[0.07]" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='%23374151' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+            backgroundSize: '100px 20px',
+            animation: 'wave 60s linear infinite',
+          }} />
+        </div>
+
+        <Container className="relative z-20">
+          <BreadcrumbNav />
+          <ScrollReveal>
+            <div className="text-center mb-20">
+              <span className="inline-block px-6 py-2 bg-green-light/20 text-green rounded-full text-sm font-medium mb-6">
+                Admissions Open 2025-26
+              </span>
+              <h1 className="text-5xl md:text-6xl font-display text-neutral-dark mb-8">
+                Shape Your <span className="text-green">Future</span> With Us
+              </h1>
+              <p className="text-neutral-dark/70 text-xl max-w-2xl mx-auto">
+                Join a legacy of excellence at The Scholars' Home, where every student's potential is nurtured and transformed into achievement.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid lg:grid-cols-3 gap-10">
+            {CAMPUSES.map((campus, index) => (
+              <ScrollReveal key={campus.name} delay={index * 0.1}>
+                <motion.div
+                  whileHover={{ y: -12, scale: 1.02 }}
+                  className="relative group h-full"
+                >
+                  {/* Card background effects */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-light/10 via-primary-light/5 to-transparent rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute -inset-0.5 bg-gradient-to-br from-green-light/30 to-primary-light/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500" />
+                  
+                  {/* Main card */}
+                  <div className="relative bg-white rounded-3xl overflow-hidden shadow-xl h-full flex flex-col">
+                    {/* Large Image Section */}
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={campus.image}
+                        alt={campus.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <h3 className="text-2xl font-display text-white mb-1">{campus.name}</h3>
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                <div className="p-8">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div>
-                      <h3 className="text-2xl text-neutral-dark mb-4">Programs Offered</h3>
-                      <div className="space-y-4">
-                        {getProgramsForCampus(branch.location).map((program, idx) => (
-                          <div key={idx} className="flex flex-col gap-1">
-                            <div className="flex items-center gap-3">
-                              <BookOpen className="h-5 w-5 text-primary shrink-0" />
-                              <span className="text-neutral-dark font-semibold">
-                                {program.name}
-                              </span>
-                            </div>
-                            <div className="ml-8 text-neutral-dark/80 text-sm">
-                              {program.description}
-                            </div>
+                    {/* Content Section */}
+                    <div className="p-8 flex flex-col flex-grow">
+                      <p className="text-neutral-dark/80 text-lg leading-relaxed mb-6">
+                        {campus.description}
+                      </p>
+
+                      <div className="space-y-3 mb-6 flex-grow">
+                        {campus.features.map(feature => (
+                          <div key={feature} className="flex items-center gap-3 text-neutral-dark/80">
+                            <CheckCircle2 className="h-5 w-5 text-green flex-shrink-0" />
+                            <span>{feature}</span>
                           </div>
                         ))}
                       </div>
 
-                      <div className="mt-6 space-y-4">
-                        <h4 className="text-xl text-neutral-dark">Key Features</h4>
-                        <div className="grid grid-cols-2 gap-3">
-                          {branch.features.map((feature, idx) => (
-                            <div key={idx} className="flex items-center gap-2 text-primary">
-                              <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                              <span>{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-6">
-                      <div className="bg-primary-light/10 p-6 rounded-xl">
-                        <h4 className="text-xl text-neutral-dark mb-4">Contact Information</h4>
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3">
-                            <Phone className="h-5 w-5 text-primary" />
-                            <a 
-                              href={`tel:${getCampusPhone(branch.location).replace(/\s/g, '')}`}
-                              className="text-neutral-dark/80 hover:text-primary transition-colors"
-                            >
-                              {getCampusPhone(branch.location)}
-                            </a>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Mail className="h-5 w-5 text-primary" />
-                            <a 
-                              href="mailto:admissions@tsh.edu.in"
-                              className="text-neutral-dark/80 hover:text-primary transition-colors"
-                            >
-                              admissions@tsh.edu.in
-                            </a>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <MapPin className="h-5 w-5 text-primary mt-1" />
-                            <a 
-                              href="#" 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-neutral-dark/80 hover:text-primary transition-colors"
-                            >
-                              {getCampusLocation(branch.location)}
-                            </a>
-                          </div>
+                      {/* Key Statistics */}
+                      <div className="mb-6 pt-6 border-t border-neutral-100">
+                        <div className="text-center">
+                          <Users className="h-6 w-6 text-green mx-auto mb-2" />
+                          <p className="text-sm text-neutral-dark/70">Class Size</p>
+                          <p className="text-lg font-semibold text-neutral-dark">{campus.classSize}</p>
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-4">
-                        <a 
-                          href={getRegistrationLink(branch.location)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => trackEvent('Registration Button Clicked', {
-                            campus: branch.location,
-                            button_location: 'card',
-                            registration_url: getRegistrationLink(branch.location)
-                          })}
-                        >
-                          <Button 
-                            variant="cta-green"
-                            className="w-full flex items-center justify-center gap-2 text-lg"
-                          >
-                            <GraduationCap className="h-6 w-6" />
-                            Apply for Admission
-                          </Button>
-                        </a>
-                        <Link to={`/campus/${branch.location.toLowerCase().replace(' ', '')}`}>
-                          <Button 
-                            variant="outline"
-                            className="w-full flex items-center justify-center gap-2 group"
-                          >
-                            Learn More About Campus
-                            <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                          </Button>
-                        </Link>
-                      </div>
+                      <motion.button
+                        onClick={() => window.location.href = campus.registrationLink}
+                        className="inline-flex items-center justify-center gap-2 w-full bg-green text-white py-3 rounded-xl hover:bg-green-dark transition-colors"
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        Apply Now
+                        <ArrowRight className="h-5 w-5" />
+                      </motion.button>
                     </div>
                   </div>
-                </div>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-
-        <ScrollReveal>
-          <div className="mt-16 bg-primary p-8 rounded-2xl text-center">
-            <h2 className="text-3xl text-neutral-light mb-4">Need Help?</h2>
-            <p className="text-primary-light mb-8 max-w-2xl mx-auto">
-              Our admissions team is here to assist you with the application process and answer any questions you may have.
-            </p>
-            <div className="flex flex-wrap justify-center gap-6">
-              <a 
-                href="tel:+918628800056"
-                className="flex items-center gap-2 text-neutral-light hover:text-primary-light transition-colors"
-              >
-                <Phone className="h-5 w-5" />
-                <span>Paonta Sahib: +91 8628800056</span>
-              </a>
-              <a 
-                href="tel:+919805735656"
-                className="flex items-center gap-2 text-neutral-light hover:text-primary-light transition-colors"
-              >
-                <Phone className="h-5 w-5" />
-                <span>Juniors: +91 98057 35656</span>
-              </a>
-              <a 
-                href="tel:+919692700056"
-                className="flex items-center gap-2 text-neutral-light hover:text-primary-light transition-colors"
-              >
-                <Phone className="h-5 w-5" />
-                <span>Majra: +91 96927 00056</span>
-              </a>
-              <a 
-                href="mailto:admissions@tsh.edu.in"
-                className="flex items-center gap-2 text-neutral-light hover:text-primary-light transition-colors"
-              >
-                <Mail className="h-5 w-5" />
-                admissions@tsh.edu.in
-              </a>
-            </div>
+                </motion.div>
+              </ScrollReveal>
+            ))}
           </div>
-        </ScrollReveal>
-      </Container>
-    </div>
+        </Container>
+
+        {/* Bottom decorative element */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white to-transparent z-10" />
+      </section>
+
+      {/* Admission Steps Section */}
+      <section className="pt-2 pb-24 bg-white">
+        <Container>
+          <ScrollReveal>
+            <div className="text-center mb-20">
+              <span className="inline-block px-6 py-2 bg-green-light/20 text-green rounded-full text-sm font-medium mb-6">
+                Simple Process
+              </span>
+              <h2 className="text-4xl md:text-5xl font-display text-neutral-dark mb-8">
+                Your Journey <span className="text-green">Begins Here</span>
+              </h2>
+              <p className="text-neutral-dark/70 text-xl max-w-2xl mx-auto">
+                A straightforward path to joining our community of learners
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-8">
+            {ADMISSION_STEPS.map((step, index) => (
+              <ScrollReveal key={step.title} delay={index * 0.1}>
+                <motion.div
+                  whileHover={{ y: -8 }}
+                  className="relative group"
+                >
+                  <div className="bg-white rounded-2xl p-6 shadow-lg group-hover:shadow-xl transition-all duration-300">
+                    <div className="w-12 h-12 rounded-full bg-green-light/20 flex items-center justify-center mb-4 text-green group-hover:bg-green group-hover:text-white transition-all duration-300">
+                      <step.icon className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-xl font-display mb-2 text-neutral-dark group-hover:text-green transition-colors duration-300">
+                      {step.title}
+                    </h3>
+                    <p className="text-neutral-dark/70">
+                      {step.description}
+                    </p>
+                  </div>
+                  {index < ADMISSION_STEPS.length - 1 && (
+                    <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-px bg-green/20" />
+                  )}
+                </motion.div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </Container>
+      </section>
+    </>
   );
 }

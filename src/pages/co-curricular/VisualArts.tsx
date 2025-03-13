@@ -1,4 +1,3 @@
-import React from 'react';
 import Container from '../../components/ui/Container';
 import { Palette, Image, Brush, Award } from 'lucide-react';
 import { useSEO } from '../../lib/seo';
