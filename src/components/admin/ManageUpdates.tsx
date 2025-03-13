@@ -327,7 +327,7 @@ export default function ManageUpdates() {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" variant="success">
+                  <Button type="submit" variant="cta-green">
                     {editingUpdate ? 'Save Changes' : 'Create Update'}
                   </Button>
                 </div>

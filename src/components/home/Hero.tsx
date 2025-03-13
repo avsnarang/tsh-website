@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { GraduationCap, ArrowRight, BookOpen, Medal, Users } from 'lucide-react';
+import { GraduationCap, ArrowRight, BookOpen, School, Users } from 'lucide-react';
 import Button from '../ui/Button';
 
 const fadeIn = {
@@ -10,10 +10,10 @@ const fadeIn = {
 };
 
 const quickStats = [
-  { icon: Users, value: "1200+", label: "Students" },
-  { icon: GraduationCap, value: "98%", label: "Success Rate" },
+  { icon: Users, value: "1700+", label: "Students" },
+  { icon: GraduationCap, value: "100%", label: "Success Rate" },
   { icon: BookOpen, value: "25+", label: "Programs" },
-  { icon: Medal, value: "150+", label: "Awards" },
+  { icon: School, value: "130+", label: "Qualified Faculty" },
 ];
 
 export default function Hero() {
@@ -46,12 +46,12 @@ export default function Hero() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* School Name Tag */}
+            {/* School Tag */}
             <motion.div
               className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-12"
               {...fadeIn}
             >
-              <span className="text-sm font-semibold">CBSE Affiliated</span>
+              <span className="text-sm font-semibold">Best Educational Institute in your region!</span>
             </motion.div>
 
             {/* Main Heading */}
@@ -62,9 +62,7 @@ export default function Hero() {
 
             {/* Description */}
             <p className="text-lg text-neutral-dark/70 mb-8 max-w-2xl">
-              Join The Scholars' Home for a transformative educational journey.
-              We combine academic excellence with character development to
-              prepare future leaders.
+              Join The Scholars' Home for a transformative educational journey. We combine academic excellence with character development to prepare future leaders.
             </p>
 
             {/* CTA Buttons */}

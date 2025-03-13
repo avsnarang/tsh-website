@@ -7,6 +7,7 @@ import Button from '../ui/Button';
 import HorizontalTimeline from './HorizontalTimeline';
 import { useSEO } from '../../lib/seo';
 import { motion } from 'framer-motion';
+import BreadcrumbNav from '../navigation/BreadcrumbNav';
 
 const timelineEvents = [
   {
@@ -69,6 +70,7 @@ export default function About() {
         </div>
 
         <Container className="relative">
+          <BreadcrumbNav />
           <ScrollReveal>
             <div className="text-center mb-16">
               <motion.div
@@ -96,7 +98,9 @@ export default function About() {
 
           {/* Timeline Section */}
           <ScrollReveal>
-            <div className="relative mt-16 scroll-mt-16"> {/* Added scroll-mt-16 */}
+            <div className="relative mt-16 scroll-mt-16">
+              {" "}
+              {/* Added scroll-mt-16 */}
               <div className="relative bg-white rounded-2xl shadow-xl">
                 <HorizontalTimeline events={timelineEvents} />
               </div>
@@ -127,18 +131,20 @@ export default function About() {
                   <div className="text-left space-y-8">
                     <TextReveal>
                       <h2 className="text-4xl md:text-5xl font-display text-neutral-light leading-tight">
-                        Shaping Tomorrow's <span className="text-orange-light">Leaders</span> Today
+                        Shaping Tomorrow's{" "}
+                        <span className="text-orange-light">Leaders</span> Today
                       </h2>
                     </TextReveal>
                     <TextReveal delay={0.2}>
                       <p className="text-neutral-light/80 text-lg">
-                        Our vision and mission are the cornerstones of our educational philosophy, 
-                        guiding us in nurturing young minds to become future leaders and innovators.
+                        Our vision and mission are the cornerstones of our
+                        educational philosophy, guiding us in nurturing young
+                        minds to become future leaders and innovators.
                       </p>
                     </TextReveal>
                     <TextReveal delay={0.3}>
                       <Link to="/about/vision">
-                        <Button 
+                        <Button
                           variant="cta"
                           className="flex items-center gap-2 group hover:bg-orange-light/90"
                         >
@@ -155,7 +161,7 @@ export default function About() {
                       { label: "Years of Excellence", value: "20+" },
                       { label: "Student Success Rate", value: "98%" },
                       { label: "Qualified Teachers", value: "100+" },
-                      { label: "Academic Programs", value: "25+" }
+                      { label: "Academic Programs", value: "25+" },
                     ].map((stat, index) => (
                       <motion.div
                         key={index}
@@ -165,7 +171,9 @@ export default function About() {
                         className="text-center"
                       >
                         <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-orange-light to-orange mb-3 mx-auto">
-                          <span className="text-lg font-display text-neutral-light">{index + 1}</span>
+                          <span className="text-lg font-display text-neutral-light">
+                            {index + 1}
+                          </span>
                         </div>
                         <div className="text-2xl font-display text-orange-light">
                           {stat.value}

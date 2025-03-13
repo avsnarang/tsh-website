@@ -7,8 +7,6 @@ import {
   Calendar, 
   Image, 
   Bell, 
-  Users, 
-  GraduationCap,
   School,
   UserPlus,
   BookOpen

@@ -48,7 +48,7 @@ const CLASS_LEVELS = ['NTT', 'PRT', 'TGT', 'PGT'] as const;
 
 export default function ManageTeachers() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [uploadError, setUploadError] = useState('');
   const [uploadSuccess, setUploadSuccess] = useState('');
   const [searchTerm, setSearchTerm] = useState('');

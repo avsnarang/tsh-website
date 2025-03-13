@@ -43,7 +43,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
         
         if (storedSession && isLoginPage && !isLoggingIn) {
           try {
-            const sessionData = JSON.parse(storedSession);
             return localStorage.getItem(key);
           } catch (e) {
             console.error('Error parsing session data:', e);
@@ -67,7 +66,7 @@ const initializeSupabase = async () => {
 
   while (retries > 0) {
     try {
-      const { data: authData, error: authError } = await supabase.auth.getSession()
+      const { error: authError } = await supabase.auth.getSession()
       
       if (authError) {
         throw authError

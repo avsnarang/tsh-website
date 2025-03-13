@@ -74,6 +74,7 @@ const ClubsSocieties = lazy(() => import('./pages/co-curricular/ClubsSocieties')
 const Contact = lazy(() => import('./pages/Contact'));
 const Invites = lazy(() => import('./pages/Invites'));
 const Scholarship = lazy(() => import('./pages/Scholarship'));
+const SportDetail = lazy(() => import('./pages/co-curricular/SportDetail'));
 
 const Calendar = lazy(() => import('./pages/Calendar'));
 
@@ -134,6 +135,15 @@ const router = createBrowserRouter(
       <Route path="co-curricular" element={<CoCurricular />} />
       <Route path="co-curricular/performing-arts" element={<PerformingArts />} />
       <Route path="co-curricular/sports-athletics" element={<SportsAthletics />} />
+      <Route path="co-curricular/sports-athletics/:id" element={
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          </div>
+        }>
+          <SportDetail />
+        </Suspense>
+      } />
       <Route path="co-curricular/visual-arts" element={<VisualArts />} />
       <Route path="co-curricular/clubs-societies" element={<ClubsSocieties />} />
       {/* Alumni routes */}

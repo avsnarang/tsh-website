@@ -5,9 +5,6 @@ import {
   BookOpen, 
   Clock, 
   GraduationCap, 
-  Users, 
-  Award, 
-  Heart, 
   User,
   Star,
   Search
@@ -17,13 +14,7 @@ import { useSEO } from '../lib/seo';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import type { Teacher } from '../types/teacher';
 import { seoConfig } from '../config/seoConfig';
-
-const stats = [
-  { icon: Users, value: "50+", label: "Expert Teachers" },
-  { icon: Award, value: "15+", label: "Years Average Experience" },
-  { icon: GraduationCap, value: "90%", label: "Post Graduates" },
-  { icon: Heart, value: "100%", label: "Dedication" },
-];
+import BreadcrumbNav from '../components/navigation/BreadcrumbNav';
 
 const CLASS_LEVELS = {
   ALL: 'all',
@@ -39,13 +30,6 @@ const CLASS_LEVEL_LABELS = {
   [CLASS_LEVELS.PRT]: 'Primary (PRT)',
   [CLASS_LEVELS.TGT]: 'Secondary (TGT)',
   [CLASS_LEVELS.PGT]: 'Senior Secondary (PGT)'
-} as const;
-
-const CLASS_LEVEL_DESCRIPTIONS = {
-  [CLASS_LEVELS.NTT]: 'Pre-Nursery to UKG',
-  [CLASS_LEVELS.PRT]: 'Classes I to V',
-  [CLASS_LEVELS.TGT]: 'Classes VI to X',
-  [CLASS_LEVELS.PGT]: 'Classes XI and XII'
 } as const;
 
 export default function Faculty() {
@@ -133,6 +117,9 @@ export default function Faculty() {
         </div>
 
         <Container className="relative z-20">
+          <nav className="pt-8 -mb-8">
+            <BreadcrumbNav />
+          </nav>
           <ScrollReveal>
             <div className="text-center mb-8">
               <span className="inline-block px-6 py-2 bg-green-light/20 text-green rounded-full text-sm font-medium mb-6">

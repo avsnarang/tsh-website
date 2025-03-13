@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Container from '../components/ui/Container';
-import { Calendar, ArrowRight, MapPin, Camera, Image, Search, ChevronDown, X } from 'lucide-react';
+import { Calendar, ArrowRight, MapPin, Camera, Image, Search, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import { useSEO } from '../lib/seo';

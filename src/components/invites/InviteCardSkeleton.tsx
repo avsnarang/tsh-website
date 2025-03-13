@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 export default function InviteCardSkeleton() {
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden">

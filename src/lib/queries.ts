@@ -1,22 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from './supabase';
-import { useAuth } from '../contexts/AuthContext';
-import { Profile as AlumniProfile } from '../types/campus';
+import { Profile as AlumniProfile } from '../types/alumni';
 import { useEffect } from 'react';
-
-interface SuccessStory {
-  id: string;
-  title: string;
-  content: string;
-  created_at: string;
-  alumni_profiles: {
-    id: string;
-    full_name: string;
-    occupation?: string;
-    company?: string;
-    profile_picture_url?: string;
-  };
-}
 
 export function useAlumniProfiles() {
   return useQuery({

@@ -9,7 +9,7 @@ import { initPostHog } from './lib/analytics';
 initPostHog();
 
 // Initialize Supabase
-initializeSupabase().then(isConnected => {
+initializeSupabase().then(_ => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <App />
