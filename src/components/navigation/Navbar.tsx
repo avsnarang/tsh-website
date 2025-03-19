@@ -5,22 +5,14 @@ import {
   Info, BookOpen, Building, Trophy, 
   Music, Palette, Users, Calendar,
   Heart, Star, Brain, Award,
-  Phone, Image, ArrowRight,
+  Phone, Image,
   LucideIcon
 } from 'lucide-react';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import Logo from '../ui/Logo';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { supabase } from '../../lib/supabase';
-
-interface Update {
-  id: string;
-  content: string;
-  is_active: boolean;
-  created_at: string;
-  link?: string;
-}
 
 interface NavItem {
   icon: LucideIcon;
@@ -166,6 +158,7 @@ export default function Navbar() {
   const [updates, setUpdates] = useState<Array<{ content: string; link?: string }>>([]);
   const [currentUpdateIndex, setCurrentUpdateIndex] = useState(0);
   const { scrollY } = useScroll();
+  
   const backgroundColor = useTransform(
     scrollY,
     [0, 100],
@@ -180,6 +173,18 @@ export default function Navbar() {
     scrollY,
     [0, 100],
     ['none', '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)']
+  );
+
+  // Add these new transforms
+  const bannerOpacity = useTransform(scrollY, [0, 100], [1, 0]);
+  const bannerTransform = useTransform(
+    scrollY,
+    [0, 100],
+    ['translateY(0px)', 'translateY(-20px)']
+  );
+  const bannerPointerEvents = useTransform(
+    scrollY,
+    (value) => value > 50 ? 'none' : 'auto'
   );
 
   useEffect(() => {
@@ -413,27 +418,33 @@ export default function Navbar() {
           </motion.div>
 
           {/* Dynamic Updates Banner */}
-          {updates.length > 0 && (
-            <div className="absolute left-0 right-0 md:right-[60px] md:left-auto top-[80px] -z-40 px-4 md:px-0">
-              <AnimatePresence mode="wait">
+          {updates.length > 0 && !isMenuOpen && (
+            <div className="absolute left-0 right-0 md:right-[60px] md:left-auto top-[80px] -z-40">
+              <Container>
                 <motion.div
                   key={currentUpdateIndex}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
+                  style={{
+                    opacity: bannerOpacity,
+                    transform: bannerTransform,
+                    pointerEvents: bannerPointerEvents
+                  }}
                   transition={{ 
                     duration: 0.3,
                     ease: [0.25, 0.1, 0.25, 1]
                   }}
+                  className="px-6 md:px-0"
                 >
                   <Link
                     to={updates[currentUpdateIndex]?.link || "/announcements"}
-                    className="inline-flex items-center gap-2 px-4 md:px-6 py-3 md:py-5 text-xs md:text-sm font-semibold bg-orange-light/40 text-orange-dark hover:bg-orange-light/70 transition-all duration-300 rounded-b-[30px] hover:scale-100 hover:translate-y-2 transform border border-orange/20 w-full md:w-auto justify-center md:justify-start"
+                    className="inline-flex items-center gap-2 px-4 md:px-6 py-3 md:pt-6 md:pb-4 text-xs md:text-sm font-semibold bg-orange-light/40 text-orange-dark hover:bg-orange-light/70 transition-all duration-300 rounded-b-[30px] md:rounded-b-[30px] hover:scale-100 hover:translate-y-2 transform border border-orange/20 w-full md:w-auto justify-center md:justify-start text-center"
                   >
                     {updates[currentUpdateIndex]?.content.split('•')[0].trim()} →
                   </Link>
                 </motion.div>
-              </AnimatePresence>
+              </Container>
             </div>
           )}
         </Container>
