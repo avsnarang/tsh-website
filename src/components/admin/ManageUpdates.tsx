@@ -13,6 +13,7 @@ interface Update {
   content: string;
   is_active: boolean;
   created_at: string;
+  link?: string;
 }
 
 export default function ManageUpdates() {
@@ -23,6 +24,7 @@ export default function ManageUpdates() {
   const [showForm, setShowForm] = useState(false);
   const [editingUpdate, setEditingUpdate] = useState<Update | null>(null);
   const [formContent, setFormContent] = useState('');
+  const [formLink, setFormLink] = useState('');
 
   useEffect(() => {
     fetchUpdates();
@@ -52,23 +54,24 @@ export default function ManageUpdates() {
     e.preventDefault();
     try {
       setError('');
-      const { error: fetchError } = await supabase
-        .from('latest_updates')
-        .select('id, is_active')
-        .single();
+      
+      // Split content by bullet points and validate
+      const updates = formContent.split('•').map(update => update.trim()).filter(Boolean);
+      if (updates.length === 0) {
+        throw new Error('Please enter at least one update');
+      }
 
-      if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
-
-      const updates = {
+      const updateData = {
         content: formContent,
         is_active: true,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
+        ...(formLink.trim() ? { link: formLink.trim() } : {})
       };
 
       if (editingUpdate) {
         const { error } = await supabase
           .from('latest_updates')
-          .update(updates)
+          .update(updateData)
           .eq('id', editingUpdate.id);
 
         if (error) throw error;
@@ -76,33 +79,30 @@ export default function ManageUpdates() {
       } else {
         const { error } = await supabase
           .from('latest_updates')
-          .insert([updates]);
+          .insert([{
+            ...updateData,
+            created_at: new Date().toISOString()
+          }]);
 
         if (error) throw error;
         setSuccess('Update created successfully!');
       }
 
+      // Reset form and refresh updates
       setShowForm(false);
       setEditingUpdate(null);
       setFormContent('');
+      setFormLink('');
       await fetchUpdates();
     } catch (error) {
       console.error('Error saving update:', error);
-      setError('Failed to save update');
+      setError(error instanceof Error ? error.message : 'Failed to save update');
     }
   };
 
   const toggleActive = async (update: Update) => {
     try {
       setError('');
-
-      // If activating this update, deactivate all others
-      if (!update.is_active) {
-        await supabase
-          .from('latest_updates')
-          .update({ is_active: false })
-          .neq('id', update.id);
-      }
 
       const { error } = await supabase
         .from('latest_updates')
@@ -120,6 +120,7 @@ export default function ManageUpdates() {
   const handleEdit = (update: Update) => {
     setEditingUpdate(update);
     setFormContent(update.content);
+    setFormLink(update.link || '');
     setShowForm(true);
   };
 
@@ -185,6 +186,7 @@ export default function ManageUpdates() {
               onClick={() => {
                 setEditingUpdate(null);
                 setFormContent('');
+                setFormLink('');
                 setShowForm(true);
               }}
               className="inline-flex items-center gap-2 px-6 py-3 bg-green text-white rounded-xl hover:bg-green-dark transition-colors"
@@ -291,6 +293,7 @@ export default function ManageUpdates() {
                     setShowForm(false);
                     setEditingUpdate(null);
                     setFormContent('');
+                    setFormLink('');
                   }}
                   className="p-2 text-neutral-dark/70 hover:text-neutral-dark rounded-lg transition-colors"
                 >
@@ -315,19 +318,36 @@ export default function ManageUpdates() {
                   />
                 </div>
 
+                <div>
+                  <label className="block text-neutral-dark mb-2">
+                    Link (Optional)
+                    <span className="text-neutral-dark/60 text-sm ml-2">
+                      (Where should this update link to?)
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formLink}
+                    onChange={(e) => setFormLink(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                    placeholder="Example: /admissions or https://external-link.com"
+                  />
+                </div>
+
                 <div className="flex justify-end gap-4">
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="outline2"
                     onClick={() => {
                       setShowForm(false);
                       setEditingUpdate(null);
                       setFormContent('');
+                      setFormLink('');
                     }}
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" variant="cta-green">
+                  <Button type="submit" variant="primary">
                     {editingUpdate ? 'Save Changes' : 'Create Update'}
                   </Button>
                 </div>

@@ -5,13 +5,22 @@ import {
   Info, BookOpen, Building, Trophy, 
   Music, Palette, Users, Calendar,
   Heart, Star, Brain, Award,
-  Phone, Image,
+  Phone, Image, ArrowRight,
   LucideIcon
 } from 'lucide-react';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import Logo from '../ui/Logo';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { supabase } from '../../lib/supabase';
+
+interface Update {
+  id: string;
+  content: string;
+  is_active: boolean;
+  created_at: string;
+  link?: string;
+}
 
 interface NavItem {
   icon: LucideIcon;
@@ -154,6 +163,8 @@ function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps)
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [updates, setUpdates] = useState<Array<{ content: string; link?: string }>>([]);
+  const [currentUpdateIndex, setCurrentUpdateIndex] = useState(0);
   const { scrollY } = useScroll();
   const backgroundColor = useTransform(
     scrollY,
@@ -170,6 +181,37 @@ export default function Navbar() {
     [0, 100],
     ['none', '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)']
   );
+
+  useEffect(() => {
+    fetchUpdates();
+  }, []);
+
+  useEffect(() => {
+    if (updates.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentUpdateIndex((prevIndex) => 
+          prevIndex === updates.length - 1 ? 0 : prevIndex + 1
+        );
+      }, 10000); // Rotate every 10 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [updates]);
+
+  const fetchUpdates = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('latest_updates')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setUpdates(data || []);
+    } catch (error) {
+      console.error('Error fetching updates:', error);
+    }
+  };
 
   const navItems: NavItemType[] = [
     {
@@ -308,20 +350,20 @@ export default function Navbar() {
     <>
       <nav className="fixed w-full z-50 pt-4">
         <Container>
-          <motion.div 
-            style={{ 
-              backgroundColor: isMenuOpen ? 'transparent' : backgroundColor,
-              boxShadow: isMenuOpen ? 'none' : boxShadow
+          <motion.div
+            style={{
+              backgroundColor: isMenuOpen ? "transparent" : backgroundColor,
+              boxShadow: isMenuOpen ? "none" : boxShadow,
             }}
             className="relative flex justify-between items-center rounded-full px-6 py-3 backdrop-blur-sm"
           >
-            <motion.div style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}>
-              <Logo variant={isMenuOpen ? 'light' : 'default'} />
+            <motion.div style={{ color: isMenuOpen ? "#FFFFFF" : textColor }}>
+              <Logo variant={isMenuOpen ? "light" : "default"} />
             </motion.div>
-            
+
             <div className="hidden md:flex items-center space-x-4">
-              {navItems.map((item) => (
-                item.type === 'dropdown' ? (
+              {navItems.map((item) =>
+                item.type === "dropdown" ? (
                   <NavDropdown
                     key={item.label}
                     label={item.label}
@@ -331,9 +373,12 @@ export default function Navbar() {
                   />
                 ) : (
                   item.icon && (
-                    <motion.div key={item.label} style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}>
-                      <Link 
-                        to={item.href as To} 
+                    <motion.div
+                      key={item.label}
+                      style={{ color: isMenuOpen ? "#FFFFFF" : textColor }}
+                    >
+                      <Link
+                        to={item.href as To}
                         className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
                       >
                         <item.icon className="h-4 w-4" />
@@ -342,9 +387,9 @@ export default function Navbar() {
                     </motion.div>
                   )
                 )
-              ))}
+              )}
               <Link to="/admissions" className="ml-2">
-                <Button 
+                <Button
                   variant="cta-green"
                   className="min-w-[140px] flex items-center justify-center gap-2"
                 >
@@ -357,23 +402,54 @@ export default function Navbar() {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden p-2 z-50"
-              style={{ color: isMenuOpen ? '#FFFFFF' : textColor.toString() }}
+              style={{ color: isMenuOpen ? "#FFFFFF" : textColor.toString() }}
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </motion.div>
+
+          {/* Dynamic Updates Banner */}
+          {updates.length > 0 && (
+            <div className="absolute left-0 right-0 md:right-[60px] md:left-auto top-[80px] -z-40 px-4 md:px-0">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentUpdateIndex}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ 
+                    duration: 0.3,
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }}
+                >
+                  <Link
+                    to={updates[currentUpdateIndex]?.link || "/announcements"}
+                    className="inline-flex items-center gap-2 px-4 md:px-6 py-3 md:py-5 text-xs md:text-sm font-semibold bg-orange-light/40 text-orange-dark hover:bg-orange-light/70 transition-all duration-300 rounded-b-[30px] hover:scale-100 hover:translate-y-2 transform border border-orange/20 w-full md:w-auto justify-center md:justify-start"
+                  >
+                    {updates[currentUpdateIndex]?.content.split('•')[0].trim()} →
+                  </Link>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          )}
         </Container>
       </nav>
 
       {/* Mobile Menu */}
       <motion.div
-        initial={{ opacity: 0, x: '100%' }}
-        animate={{ 
+        initial={{ opacity: 0, x: "100%" }}
+        animate={{
           opacity: isMenuOpen ? 1 : 0,
-          x: isMenuOpen ? 0 : '100%'
+          x: isMenuOpen ? 0 : "100%",
         }}
         transition={{ duration: 0.3 }}
-        className={`fixed inset-0 bg-primary z-40 ${isMenuOpen ? 'block' : 'hidden'}`}
+        className={`fixed inset-0 bg-primary z-40 ${
+          isMenuOpen ? "block" : "hidden"
+        }`}
       >
         <div className="absolute inset-0 overflow-y-auto overscroll-contain">
           <Container>
@@ -381,12 +457,16 @@ export default function Navbar() {
               <div className="space-y-8">
                 {navItems.map((item) => (
                   <div key={item.label}>
-                    {item.type === 'dropdown' && item.groups ? (
+                    {item.type === "dropdown" && item.groups ? (
                       <div className="space-y-6">
-                        <h3 className="text-xl text-neutral-light font-semibold">{item.label}</h3>
+                        <h3 className="text-xl text-neutral-light font-semibold">
+                          {item.label}
+                        </h3>
                         {item.groups.map((group) => (
                           <div key={group.label} className="space-y-4">
-                            <h4 className="text-primary-light font-medium">{group.label}</h4>
+                            <h4 className="text-primary-light font-medium">
+                              {group.label}
+                            </h4>
                             <div className="space-y-3 pl-4">
                               {group.items.map((subItem) => (
                                 <Link
@@ -415,13 +495,13 @@ export default function Navbar() {
                     ) : null}
                   </div>
                 ))}
-                <Link 
-                  to="/admissions" 
+                <Link
+                  to="/admissions"
                   onClick={() => setIsMenuOpen(false)}
                   className="block mt-8"
                 >
-                  <Button 
-                    variant="cta"
+                  <Button
+                    variant="cta-green"
                     className="w-full text-lg flex items-center justify-center gap-2"
                   >
                     <GraduationCap className="h-5 w-5" />

@@ -1,7 +1,8 @@
 import { useParams, Navigate } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Check, User, Clock } from 'lucide-react';
 import Container from '../../components/ui/Container';
+import InterestForm from '../../components/sports/InterestForm';
 
 interface Facility {
   name: string;
@@ -72,6 +73,7 @@ const sportsData: SportCategory[] = [
 
 export default function SportDetail() {
   const { id } = useParams<{ id: string }>();
+  const [showInterestForm, setShowInterestForm] = useState(false);
 
   const sport = useMemo(() => {
     return sportsData
@@ -188,9 +190,25 @@ export default function SportDetail() {
                 ))}
               </div>
             </div>
+
+            <div className="bg-white rounded-xl p-6">
+              <button
+                onClick={() => setShowInterestForm(true)}
+                className="w-full bg-green text-white py-3 px-6 rounded-lg font-medium hover:bg-green-dark transition-colors"
+              >
+                Show Interest
+              </button>
+            </div>
           </div>
         </div>
       </Container>
+      {showInterestForm && (
+        <InterestForm
+          sportId={sport.id}
+          sportName={sport.name}
+          onClose={() => setShowInterestForm(false)}
+        />
+      )}
     </div>
   );
 }

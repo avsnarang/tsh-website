@@ -5,7 +5,8 @@ import {
   createRoutesFromElements,
   Route,
   Link,
-  Outlet
+  Outlet,
+  useLocation
 } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
@@ -79,6 +80,10 @@ const SportDetail = lazy(() => import('./pages/co-curricular/SportDetail'));
 const Calendar = lazy(() => import('./pages/Calendar'));
 
 const RootLayout = () => {
+  const location = useLocation();
+  const hideFooterPaths = ['/gallery', '/invites']; // Add invites to the paths where footer should be hidden
+  const shouldHideFooter = hideFooterPaths.includes(location.pathname);
+
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
@@ -87,7 +92,7 @@ const RootLayout = () => {
       <main className="flex-grow">
         <Outlet />
       </main>
-      <Footer />
+      {!shouldHideFooter && <Footer />}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Container from '../components/ui/Container';
-import { Calendar, ArrowRight, MapPin, Camera, Image, Search, X } from 'lucide-react';
+import { Calendar, ArrowRight, MapPin, Camera, Image, Search } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import { useSEO } from '../lib/seo';
@@ -177,151 +177,88 @@ export default function Gallery() {
       </div>
 
       {/* Main Content */}
-      <div className="relative flex-1 flex flex-col w-full pt-24 pb-24">
-        <Container className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header Section */}
-          <ScrollReveal>
-            <div className="flex-1 text-center mb-16">
-              <motion.div
-                className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-8 mt-16"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Camera className="h-4 w-4 mr-2" />
-                <span className="text-sm font-semibold">CAPTURED MOMENTS</span>
-              </motion.div>
+      <div className="h-screen pt-20 flex">
+        {/* Left Column - Fixed */}
+        <div className="w-[30%] h-full flex items-center justify-center fixed left-0 top-0 pt-20 px-8">
+          <div className="max-w-md">
+            <ScrollReveal>
+              <div className="flex-1 text-left mb-8">
+                <motion.div
+                  className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Camera className="h-4 w-4 mr-2" />
+                  <span className="text-sm font-semibold">CAPTURED MOMENTS</span>
+                </motion.div>
 
-              <h1 className="font-display text-5xl lg:text-7xl text-neutral-dark mb-6">
-                <span className="text-green">Memories</span> in{" "}
-                <span className="text-orange">Motion</span>
-              </h1>
+                <h1 className="font-display text-4xl text-neutral-dark mb-4">
+                  <span className="text-green">Memories</span> in{" "}
+                  <span className="text-orange">Motion</span>
+                </h1>
 
-              <p className="text-lg text-neutral-dark/70 mb-8 max-w-2xl mx-auto">
-                Journey through our visual storytelling, where every photograph captures the essence of life at The Scholars' Home.
-              </p>
-            </div>
-          </ScrollReveal>
+                <p className="text-lg text-neutral-dark/70 mb-8">
+                  Journey through our visual storytelling, where every photograph captures the essence of life at The Scholars' Home.
+                </p>
+              </div>
 
-          {/* Filters Section */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-16"
-          >
-            <div className="max-w-4xl mx-auto">
-              <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-visible">
-                {/* Decorative Elements */}
+              {/* Filters Section */}
+              <div className="bg-white rounded-2xl shadow-xl p-6 relative mb-8">
                 <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl z-[1]" />
                 <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl z-[1]" />
                 
-                <div className="relative z-[2]">
-                  {/* Filters content */}
-                  <div className="relative flex flex-col md:flex-row gap-4">
-                    {/* Year Filter */}
-                    <div className="relative flex-1 z-[30]">
-                      <NotionDropdown
-                        value={selectedYear.toString()}
-                        onChange={(value) => setSelectedYear(value === 'all' ? 'all' : Number(value))}
-                        options={yearOptions}
-                        placeholder="Select Year"
-                        searchable={false}
-                        className="w-full"
-                      />
-                    </div>
-
-                    {/* Campus Filter */}
-                    <div className="relative flex-1 z-[20]">
-                      <NotionDropdown
-                        value={selectedCampus}
-                        onChange={(value) => setSelectedCampus(value)}
-                        options={campusOptions}
-                        placeholder="Select Campus"
-                        searchable={false}
-                        className="w-full"
-                      />
-                    </div>
-
-                    {/* Search Input */}
-                    <div className="relative flex-1 z-[10]">
-                      <input
-                        type="text"
-                        placeholder="Search events..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full px-4 py-4 pl-12 rounded-lg border-2 border-neutral-dark/10 
-                          focus:ring-2 focus:ring-green/20 focus:border-green
-                          text-neutral-dark placeholder:text-neutral-dark/50
-                          transition-all duration-200"
-                      />
-                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-green" />
-                    </div>
+                <div className="relative z-[2] space-y-4">
+                  {/* Year Filter */}
+                  <div className="relative z-[30]">
+                    <NotionDropdown
+                      value={selectedYear.toString()}
+                      onChange={(value) => setSelectedYear(value === 'all' ? 'all' : Number(value))}
+                      options={yearOptions}
+                      placeholder="Select Year"
+                      searchable={false}
+                      className="w-full"
+                    />
                   </div>
 
-                  {/* Active Filters Display */}
-                  {(selectedYear !== 'all' || selectedCampus !== 'All Campuses' || searchQuery) && (
-                    <div className="mt-4 flex flex-wrap gap-2 relative z-[5]">
-                      {selectedYear !== 'all' && (
-                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-light/20 text-green text-sm relative">
-                          Year: {selectedYear}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedYear('all');
-                            }}
-                            className="p-1 hover:text-green-dark transition-colors cursor-pointer z-30"
-                            aria-label="Clear year filter"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </span>
-                      )}
-                      {selectedCampus !== 'All Campuses' && (
-                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-light/20 text-orange text-sm relative">
-                          Campus: {selectedCampus}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedCampus('All Campuses');
-                            }}
-                            className="p-1 hover:text-orange-dark transition-colors cursor-pointer z-30"
-                            aria-label="Clear campus filter"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </span>
-                      )}
-                      {searchQuery && (
-                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-dark/10 text-neutral-dark text-sm relative">
-                          Search: {searchQuery}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSearchQuery('');
-                            }}
-                            className="p-1 hover:text-neutral-dark/70 transition-colors cursor-pointer z-30"
-                            aria-label="Clear search filter"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </span>
-                      )}
-                    </div>
-                  )}
+                  {/* Campus Filter */}
+                  <div className="relative z-[20]">
+                    <NotionDropdown
+                      value={selectedCampus}
+                      onChange={(value) => setSelectedCampus(value)}
+                      options={campusOptions}
+                      placeholder="Select Campus"
+                      searchable={false}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Search Input */}
+                  <div className="relative z-[10]">
+                    <input
+                      type="text"
+                      placeholder="Search events..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full px-4 py-4 pl-12 rounded-lg border-2 border-neutral-dark/10 
+                        focus:ring-2 focus:ring-green/20 focus:border-green
+                        text-neutral-dark placeholder:text-neutral-dark/50
+                        transition-all duration-200"
+                    />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-green" />
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </ScrollReveal>
+          </div>
+        </div>
 
+        {/* Right Column - Scrollable */}
+        <div className="w-[70%] min-h-screen ml-[30%] pt-24 pb-24 px-8 overflow-y-auto">
           {/* Gallery Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {loading ? (
-              // Show skeleton cards while loading
-              [...Array(9)].map((_, index) => (
+              [...Array(6)].map((_, index) => (
                 <ScrollReveal key={`skeleton-${index}`}>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -393,7 +330,7 @@ export default function Gallery() {
               ))
             )}
           </div>
-        </Container>
+        </div>
       </div>
     </div>
   );

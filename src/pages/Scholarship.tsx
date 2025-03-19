@@ -187,6 +187,7 @@ export default function Scholarship() {
 
                     <Link to="/admissions">
                       <Button 
+                        variant="cta"
                         className="flex items-center gap-2 group"
                       >
                         Apply Now
