@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Container from '../components/ui/Container';
 import InviteCard from '../components/invites/InviteCard';
 import InviteModal from '../components/invites/InviteModal';
 import { Invite } from '../types/invite';
@@ -194,63 +193,57 @@ export default function Invites() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-light">
-      {/* Hero Section */}
-      <div className="relative pt-40 pb-20 overflow-hidden">
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Top right decorative circle */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
-          {/* Bottom left decorative circle */}
-          <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
-          {/* Center decorative pattern */}
-          <div className="absolute inset-0 opacity-5">
-            <div
-              className="h-full w-full"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              }}
-            />
-          </div>
+    <div className="h-screen overflow-hidden"> {/* Changed to h-screen and overflow-hidden */}
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
         </div>
+      </div>
 
-        <Container className="relative">
-          <ScrollReveal>
-            <div className="text-center mb-16">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full mb-8"
-              >
-                <Calendar className="h-4 w-4" />
-                <span className="font-semibold">School Events</span>
-              </motion.div>
-              <TextReveal>
-                <h1 className="font-display text-5xl md:text-7xl text-neutral-dark mb-6">
-                  Join Our <span className="text-green">School</span>{" "}
-                  <span className="text-orange">Events</span>
-                </h1>
-              </TextReveal>
-              <TextReveal delay={0.2}>
-                <p className="text-xl text-neutral-dark/70 font-body max-w-2xl mx-auto">
-                  Be part of our vibrant school community and celebrations
-                </p>
-              </TextReveal>
-            </div>
-          </ScrollReveal>
+      {/* Main Content */}
+      <div className="h-full flex">
+        {/* Left Column - Fixed */}
+        <div className="w-[30%] h-full flex items-center justify-center fixed left-0 top-0 px-8">
+          <div className="max-w-md">
+            <ScrollReveal>
+              <div className="text-center mb-16">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full mb-8"
+                >
+                  <Calendar className="h-4 w-4" />
+                  <span className="font-semibold">School Events</span>
+                </motion.div>
+                <TextReveal>
+                  <h1 className="font-display text-4xl text-neutral-dark mb-6">
+                    Join Our <span className="text-green">School</span>{" "}
+                    <span className="text-orange">Events</span>
+                  </h1>
+                </TextReveal>
+                <TextReveal delay={0.2}>
+                  <p className="text-lg text-neutral-dark/70 font-body">
+                    Be part of our vibrant school community and celebrations
+                  </p>
+                </TextReveal>
+              </div>
 
-          {/* Filter Toggle */}
-          <ScrollReveal>
-            <div className="flex justify-center mb-12">
-              <div className="bg-white rounded-2xl shadow-lg p-1.5">
+              {/* Filter Toggle */}
+              <div className="bg-white rounded-2xl shadow-lg p-1.5 mb-8">
                 <motion.button
                   onClick={() => setShowUpcomingOnly(!showUpcomingOnly)}
-                  className="relative flex items-center"
+                  className="relative flex items-center w-full"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {/* Background pill that slides */}
                   <motion.div
                     className="absolute h-full w-[50%] bg-green rounded-xl"
                     initial={false}
@@ -260,8 +253,6 @@ export default function Invites() {
                     }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
-
-                  {/* Filter Options */}
                   <div 
                     className={`flex items-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
                       showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
@@ -280,27 +271,29 @@ export default function Invites() {
                   </div>
                 </motion.button>
               </div>
-            </div>
-          </ScrollReveal>
 
-          {/* Messages */}
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-8">
-              {error}
-            </div>
-          )}
+              {/* Messages */}
+              {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-8">
+                  {error}
+                </div>
+              )}
 
-          {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-8">
-              {success}
-            </div>
-          )}
+              {success && (
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-8">
+                  {success}
+                </div>
+              )}
+            </ScrollReveal>
+          </div>
+        </div>
 
-          {/* Events Grid with Skeleton Loading */}
-          <ScrollReveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Right Column - Scrollable */}
+        <div className="w-[70%] h-screen ml-[30%] bg-transparent">
+          <div className="h-full overflow-y-auto px-8 py-20">
+            {/* Events Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {loading ? (
-                // Show 6 skeleton cards while loading
                 [...Array(6)].map((_, index) => (
                   <motion.div
                     key={`skeleton-${index}`}
@@ -332,8 +325,8 @@ export default function Invites() {
                 ))
               )}
             </div>
-          </ScrollReveal>
-        </Container>
+          </div>
+        </div>
       </div>
 
       {selectedInvite && (

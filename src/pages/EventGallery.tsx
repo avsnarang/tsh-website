@@ -186,7 +186,7 @@ export default function EventGallery() {
             {/* Header Section */}
             <div className="pt-24 pb-12">
               <Container>
-                <div className="max-w-3xl mx-auto">
+                <div className="max-w-7xl mx-auto"> {/* Changed from max-w-3xl to max-w-4xl */}
                   <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
                     {/* Decorative Elements */}
                     <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
@@ -203,18 +203,26 @@ export default function EventGallery() {
                       </Link>
 
                       <div className="text-center">
-                        <h1 className="font-display text-4xl md:text-5xl text-neutral-dark mb-4">{event?.title}</h1>
+                        <h1 className="font-display text-4xl md:text-5xl text-neutral-dark mb-4">
+                          {event?.title}
+                        </h1>
                         <div className="flex flex-wrap items-center justify-center gap-4 text-primary mb-4">
                           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-light/20 text-green">
                             <Calendar className="h-5 w-5" />
-                            <span>{event && new Date(event.date).toLocaleDateString()}</span>
+                            <span className="text-sm"> {/* Added text-sm */}
+                              {event && new Date(event.date).toLocaleDateString()}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-orange-light/20 text-orange">
                             <MapPin className="h-5 w-5" />
-                            <span>{event?.campus}</span>
+                            <span className="text-sm"> {/* Added text-sm */}
+                              {event?.campus}
+                            </span>
                           </div>
                         </div>
-                        <p className="text-xl text-neutral-dark/80">{event?.description}</p>
+                        <p className="text-base text-neutral-dark/80"> {/* Changed from text-xl to text-base */}
+                          {event?.description}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -253,7 +261,7 @@ export default function EventGallery() {
                             />
                             {image.caption && (
                               <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 backdrop-blur-sm 
-                                text-white p-4 text-sm"
+                                text-white p-4 text-sm" /* Added text-sm */
                               >
                                 {image.caption}
                               </div>

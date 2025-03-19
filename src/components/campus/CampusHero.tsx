@@ -11,7 +11,7 @@ interface CampusHeroProps {
 
 export default function CampusHero({ info }: CampusHeroProps) {
   return (
-    <section className="relative py-56 overflow-hidden">
+    <section className="relative py-64 overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         {/* Unique geometric background */}

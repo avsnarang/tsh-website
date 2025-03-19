@@ -7,143 +7,125 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export default function Button({ variant = 'primary', children, className = '', ...props }: ButtonProps) {
-  const baseStyles = `
-    px-6 py-3
-    rounded-full
-    font-body font-semibold
-    transition-all duration-300
-    disabled:opacity-50
-    disabled:cursor-not-allowed
-    relative
-    overflow-hidden
-  `;
+  const baseStyles = "relative font-medium transition-all duration-300 px-6 py-3 rounded-full";
 
   const variants = {
     primary: `
-      bg-orange text-neutral-light
-      hover:bg-orange-dark
-      hover:shadow-lg hover:shadow-orange/20
+      bg-primary text-primary-foreground 
+      hover:bg-primary/90
+      shadow-[0_2px_4px_rgba(0,0,0,0.1)]
+      hover:shadow-[0_4px_8px_rgba(0,0,0,0.15)]
+    `,
+    secondary: `
+      bg-secondary text-secondary-foreground 
+      hover:bg-secondary/80
+      shadow-[0_2px_4px_rgba(0,0,0,0.1)]
+      hover:shadow-[0_4px_8px_rgba(0,0,0,0.15)]
     `,
     outline: `
-      bg-white/10 backdrop-blur-sm
-      border-2 border-white
-      text-white
-      hover:bg-white/20
-      hover:shadow-lg hover:shadow-white/20
+      border border-input bg-background 
+      hover:bg-accent hover:text-accent-foreground
+      shadow-[0_2px_4px_rgba(0,0,0,0.05)]
+      hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]
     `,
     outline2: `
-      bg-white/10 backdrop-blur-sm
-      border-2 border-[#00501b]
-      text-[#00501b]
-      hover:bg-white/20
-      hover:shadow-lg hover:shadow-white/20
+      border border-input bg-background 
+      hover:bg-accent hover:text-accent-foreground
+      shadow-[0_2px_4px_rgba(0,0,0,0.05)]
+      hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]
     `,
-    redOutline: `
-      bg-white/10 backdrop-blur-sm
-      border-2 border-[#FF0000]
-      text-[#FF0000]
-      hover:bg-[#B53737]
-      hover:shadow-lg hover:shadow-[#B53737]/20
+    ghost: `
+      hover:bg-accent hover:text-accent-foreground
+      shadow-[0_2px_4px_rgba(0,0,0,0.05)]
+      hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]
     `,
+    link: 'text-primary underline-offset-4 hover:underline',
     cta: `
-      bg-orange text-neutral-light
-      group
-      ring-2 ring-orange/30
-      hover:ring-4 hover:ring-orange/50
-      hover:shadow-[0_0_30px_rgba(166,90,32,0.6)]
+      text-white
+      relative
+      overflow-hidden
+      bg-gradient-to-r from-orange via-[rgba(166,90,32,0.8)] to-orange
+      border border-white/10
+      shadow-[0_4px_12px_rgba(166,90,32,0.2)]
+      hover:shadow-[0_8px_24px_rgba(166,90,32,0.3)]
+      before:absolute before:inset-0
+      before:bg-gradient-to-r before:from-white/0 before:via-white/20 before:to-white/0
+      before:translate-x-[-100%]
+      hover:before:translate-x-[100%]
+      before:transition-transform before:duration-1000
+      before:ease-out
+      after:absolute after:inset-0
+      after:bg-gradient-to-r after:from-white/0 after:via-white/10 after:to-white/0
+      after:translate-x-[-100%]
+      after:animate-[shine_3s_ease-in-out_infinite]
+      hover:after:animate-none
+      disabled:opacity-70 disabled:cursor-not-allowed
+      disabled:hover:shadow-[0_4px_12px_rgba(166,90,32,0.2)]
     `,
     'cta-green': `
-      bg-primary text-neutral-light
-      group
-      ring-2 ring-green/30
-      hover:ring-4 hover:ring-green/50
-      hover:shadow-[0_0_30px_rgba(0,80,27,0.6)]
+      text-white
+      relative
+      overflow-hidden
+      bg-gradient-to-r from-green via-[rgba(0,80,27,0.8)] to-green
+      border border-white/10
+      shadow-[0_4px_12px_rgba(0,80,27,0.2)]
+      hover:shadow-[0_8px_24px_rgba(0,80,27,0.3)]
+      before:absolute before:inset-0
+      before:bg-gradient-to-r before:from-white/0 before:via-white/20 before:to-white/0
+      before:translate-x-[-100%]
+      hover:before:translate-x-[100%]
+      before:transition-transform before:duration-1000
+      before:ease-out
+      after:absolute after:inset-0
+      after:bg-gradient-to-r after:from-white/0 after:via-white/10 after:to-white/0
+      after:translate-x-[-100%]
+      after:animate-[shine_3s_ease-in-out_infinite]
+      hover:after:animate-none
+      disabled:opacity-70 disabled:cursor-not-allowed
+      disabled:hover:shadow-[0_4px_12px_rgba(0,80,27,0.2)]
     `,
-    edit: `
-      bg-green text-neutral-light
-      hover:bg-green-dark
-      hover:shadow-lg hover:shadow-green/20
-    `,
-    delete: `
-      bg-[#DC2626] text-white
-      hover:bg-[#B91C1C]
-      hover:shadow-lg hover:shadow-red-600/20
-      ring-1 ring-red-600/50
-      hover:ring-2 hover:ring-red-600/70
-      transition-all duration-300
-    `,
-    download: `
-      bg-[#2563EB] text-white
-      hover:bg-[#1D4ED8]
-      hover:shadow-lg hover:shadow-blue-600/20
-      ring-1 ring-blue-600/50
-      hover:ring-2 hover:ring-blue-600/70
-      transition-all duration-300
-    `
   };
 
   if (variant === 'cta' || variant === 'cta-green') {
-    const isGreen = variant === 'cta-green';
-    
     return (
       <motion.button 
         type="button"
         className={`${baseStyles} ${variants[variant]} ${className}`}
         onClick={props.onClick}
         disabled={props.disabled}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={{ 
+          scale: 1.02,
+          transition: { duration: 0.2 }
+        }}
+        whileTap={{ 
+          scale: 0.98,
+          transition: { duration: 0.1 }
+        }}
         initial={false}
       >
-        {/* Static glowing gradient background */}
-        <div className={`absolute inset-0 ${
-          isGreen 
-            ? 'bg-gradient-to-r from-primary via-primary-dark to-primary'
-            : 'bg-gradient-to-r from-orange via-orange-dark to-orange'
-        } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}>
-          <div className="absolute inset-0 animate-gradient-x" />
-        </div>
-        
-        {/* Continuous pulsing ring effect */}
-        <div className={`absolute -inset-1 ${
-          isGreen
-            ? 'bg-gradient-to-r from-green-light to-primary'
-            : 'bg-gradient-to-r from-orange-light to-orange'
-        } rounded-full blur opacity-20 group-hover:opacity-60 transition-all duration-500 group-hover:blur-xl animate-pulse`} />
-        
-        {/* Continuous moving shine effect */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 transform animate-shine bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-        </div>
-        
-        {/* Glowing border with continuous animation */}
-        <div className={`absolute inset-0 rounded-full border-2 ${
-          isGreen ? 'border-green-light' : 'border-orange-light'
-        } opacity-20 group-hover:opacity-50 transition-opacity duration-500`}>
-          <div className="absolute inset-0 animate-border-glow" />
-        </div>
-
-        {/* Button content */}
-        <span className="relative z-10 flex items-center justify-center gap-2">
+        <span className="relative z-10 flex items-center justify-center gap-2 font-semibold text-lg tracking-wide">
           {children}
         </span>
-
-        {/* Additional hover glow effect */}
-        <div className={`absolute inset-0 ${
-          isGreen
-            ? 'bg-gradient-to-r from-green-light/0 via-green-light/30 to-green-light/0'
-            : 'bg-gradient-to-r from-orange-light/0 via-orange-light/30 to-orange-light/0'
-        } opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500`} />
       </motion.button>
     );
   }
 
   return (
-    <button 
-      className={`${baseStyles} ${variants[variant]} ${className}`}
-      {...props}
+    <motion.button 
+      type="button"
+      className={`${baseStyles} ${variants[variant as keyof typeof variants]} ${className}`}
+      whileHover={{ 
+        scale: 1.01,
+        transition: { duration: 0.2 }
+      }}
+      whileTap={{ 
+        scale: 0.99,
+        transition: { duration: 0.1 }
+      }}
+      initial={false}
+      {...(props as any)} // Type assertion to avoid conflicts between HTML and Framer Motion props
     >
       {children}
-    </button>
+    </motion.button>
   );
 }
