@@ -29,8 +29,14 @@ export default function Button({ variant = 'primary', children, className = '', 
       hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]
     `,
     outline2: `
-      border border-input bg-background 
+      border border-green bg-background 
       hover:bg-accent hover:text-accent-foreground
+      shadow-[0_2px_4px_rgba(0,0,0,0.05)]
+      hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]
+    `,
+    redOutline: `
+      border-2 border-red-500 bg-background text-red-500
+      hover:bg-accent hover:text-red-500
       shadow-[0_2px_4px_rgba(0,0,0,0.05)]
       hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]
     `,
@@ -39,7 +45,7 @@ export default function Button({ variant = 'primary', children, className = '', 
       shadow-[0_2px_4px_rgba(0,0,0,0.05)]
       hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)]
     `,
-    link: 'text-primary underline-offset-4 hover:underline',
+    link: "text-primary underline-offset-4 hover:underline",
     cta: `
       text-white
       relative
@@ -62,7 +68,7 @@ export default function Button({ variant = 'primary', children, className = '', 
       disabled:opacity-70 disabled:cursor-not-allowed
       disabled:hover:shadow-[0_4px_12px_rgba(166,90,32,0.2)]
     `,
-    'cta-green': `
+    "cta-green": `
       text-white
       relative
       overflow-hidden
