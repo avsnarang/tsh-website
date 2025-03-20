@@ -184,7 +184,7 @@ export default function EventGallery() {
           // Event Content
           <>
             {/* Header Section */}
-            <div className="pt-24 pb-12">
+            <div className="pt-44 pb-12 relative z-10">
               <Container>
                 <div className="max-w-7xl mx-auto"> {/* Changed from max-w-3xl to max-w-4xl */}
                   <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
