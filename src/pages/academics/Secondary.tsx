@@ -13,7 +13,7 @@ export default function Secondary() {
   });
 
   return (
-    <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
+    <div className="min-h-screen pt-44 pb-24 bg-neutral-light">
       {/* Decorative Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary-light/30" />

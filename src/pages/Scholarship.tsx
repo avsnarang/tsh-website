@@ -5,6 +5,8 @@ import Button from '../components/ui/Button';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
 import { useSEO } from '../lib/seo';
+import BreadcrumbNav from '../components/navigation/BreadcrumbNav';
+import { motion } from 'framer-motion';
 
 const scholarships = [
   {
@@ -101,35 +103,62 @@ export default function Scholarship() {
 
   return (
     <div className="min-h-screen bg-neutral-light">
-      {/* Hero Section */}
+      {/* Hero Section with Background Pattern */}
       <div className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-primary/5" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full -translate-x-48 -translate-y-48 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange/10 rounded-full translate-x-24 translate-y-24 blur-3xl" />
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 bg-[#f8fafc]">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              radial-gradient(circle at 2% 50%, rgba(166, 212, 180, 0.9) 0%, transparent 35%),
+              radial-gradient(circle at 98% 20%, rgba(166, 212, 180, 0.9) 0%, transparent 35%),
+              radial-gradient(circle at 50% 90%, rgba(255, 162, 86, 0.7) 0%, transparent 35%)
+            `,
+          }} />
+        </div>
         
-        <Container className="relative">
+        <Container className="relative z-20">
+          <nav className="mb-12">
+            <BreadcrumbNav />
+          </nav>
+          
           <ScrollReveal>
-            <div className="text-center mb-16 relative">
+            <div className="text-center mb-16">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary-light/20 text-primary rounded-full mb-8"
+              >
+                <Award className="h-4 w-4" />
+                <span className="font-semibold">Financial Aid Programs</span>
+              </motion.div>
+              
               <TextReveal>
-                <h1 className="text-5xl md:text-6xl text-neutral-dark mb-6">Scholarship Programs</h1>
+                <h1 className="font-display text-5xl md:text-7xl text-neutral-dark mb-6">
+                  Scholarship <span className="text-primary">Programs</span>
+                </h1>
               </TextReveal>
+              
               <TextReveal delay={0.2}>
                 <p className="text-xl text-primary font-body max-w-2xl mx-auto mb-12">
                   Making Quality Education Accessible Through Merit and Need-Based Support
                 </p>
               </TextReveal>
 
-              {/* Stats */}
+              {/* Stats Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-5xl mx-auto">
                 {stats.map((stat, index) => (
                   <ScrollReveal key={index} delay={0.3 + index * 0.1}>
-                    <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group h-full flex flex-col items-center justify-center">
-                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <stat.icon className="h-8 w-8 text-primary" />
+                    <motion.div
+                      whileHover={{ y: -8 }}
+                      className="bg-white p-6 md:p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group"
+                    >
+                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                        <stat.icon className="h-8 w-8 text-primary group-hover:text-white transition-colors" />
                       </div>
                       <div className="text-3xl font-bold text-neutral-dark mb-2">{stat.value}</div>
                       <div className="text-primary text-sm text-center">{stat.label}</div>
-                    </div>
+                    </motion.div>
                   </ScrollReveal>
                 ))}
               </div>
@@ -139,46 +168,49 @@ export default function Scholarship() {
       </div>
 
       {/* Scholarships Section */}
-      <div className="py-24">
+      <div className="py-24 bg-white">
         <Container>
-          <div className="space-y-16">
+          <div className="space-y-24">
             {scholarships.map((scholarship, index) => (
               <ScrollReveal 
                 key={scholarship.title}
                 delay={index * 0.1}
                 direction={index % 2 === 0 ? 'left' : 'right'}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <motion.div
+                  whileHover={{ y: -8 }}
+                  className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+                >
                   <div className={`order-2 ${index % 2 === 0 ? 'lg:order-1' : 'lg:order-2'}`}>
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary transition-colors">
                         <scholarship.icon className="h-8 w-8 text-primary" />
                       </div>
-                      <h2 className="text-3xl text-neutral-dark">{scholarship.title}</h2>
+                      <h2 className="text-3xl font-display text-neutral-dark">{scholarship.title}</h2>
                     </div>
                     
                     <p className="text-lg text-neutral-dark/80 mb-8">{scholarship.description}</p>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
                       <div>
-                        <h3 className="text-xl text-primary mb-4">Eligibility Criteria</h3>
+                        <h3 className="text-xl text-primary mb-4 font-display">Eligibility Criteria</h3>
                         <div className="space-y-3">
                           {scholarship.criteria.map((criterion, idx) => (
                             <div key={idx} className="flex items-center gap-3">
                               <div className="w-2 h-2 bg-primary rounded-full" />
-                              <span className="text-primary">{criterion}</span>
+                              <span className="text-neutral-dark/80">{criterion}</span>
                             </div>
                           ))}
                         </div>
                       </div>
                       
                       <div>
-                        <h3 className="text-xl text-primary mb-4">Benefits</h3>
+                        <h3 className="text-xl text-primary mb-4 font-display">Benefits</h3>
                         <div className="space-y-3">
                           {scholarship.benefits.map((benefit, idx) => (
                             <div key={idx} className="flex items-center gap-3">
                               <div className="w-2 h-2 bg-primary rounded-full" />
-                              <span className="text-primary">{benefit}</span>
+                              <span className="text-neutral-dark/80">{benefit}</span>
                             </div>
                           ))}
                         </div>
@@ -206,7 +238,7 @@ export default function Scholarship() {
                       <div className="absolute inset-0 bg-gradient-to-t from-neutral-dark/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </ScrollReveal>
             ))}
           </div>
@@ -214,14 +246,16 @@ export default function Scholarship() {
       </div>
 
       {/* CTA Section */}
-      <div className="py-24 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary-light/10 via-transparent to-transparent" />
+      <div className="relative py-24 bg-primary overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/patterns/noise.png')] opacity-5" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-orange/20 rounded-full -translate-x-48 -translate-y-48 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-green/20 rounded-full translate-x-24 translate-y-24 blur-3xl" />
         
         <Container className="relative">
           <ScrollReveal>
             <div className="text-center max-w-3xl mx-auto">
               <TextReveal>
-                <h2 className="text-4xl text-neutral-light mb-6">Apply for Scholarship</h2>
+                <h2 className="text-4xl text-white mb-6 font-display">Apply for Scholarship</h2>
               </TextReveal>
               <TextReveal delay={0.2}>
                 <p className="text-primary-light text-lg mb-8">
@@ -232,7 +266,7 @@ export default function Scholarship() {
                 <Link to="/admissions">
                   <Button 
                     variant="cta"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 bg-white text-primary hover:bg-white/90"
                   >
                     <GraduationCap className="h-5 w-5" />
                     Start Application
@@ -241,10 +275,10 @@ export default function Scholarship() {
                 <Link to="/contact">
                   <Button 
                     variant="outline"
-                    className="flex items-center gap-2 group"
+                    className="flex items-center gap-2 group border-white text-white hover:bg-white hover:text-primary"
                   >
                     Contact Us
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
                   </Button>
                 </Link>
               </div>

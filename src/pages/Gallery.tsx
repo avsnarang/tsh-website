@@ -177,75 +177,78 @@ export default function Gallery() {
       </div>
 
       {/* Main Content */}
-      <div className="h-screen pt-20 flex">
-        {/* Left Column - Fixed */}
-        <div className="w-[30%] h-full flex items-center justify-center fixed left-0 top-0 pt-20 px-8">
-          <div className="max-w-md">
+      <div className="min-h-screen pt-44 flex flex-col lg:flex-row">
+        {/* Left Column - Now centers all content vertically */}
+        <div className="w-full lg:w-[30%] lg:h-screen lg:fixed lg:left-0 lg:top-0 lg:flex lg:items-center px-4 lg:px-8">
+          <div className="w-full px-4 lg:px-8 pt-4 lg:pt-0">
             <ScrollReveal>
-              <div className="flex-1 text-left mb-8">
-                <motion.div
-                  className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Camera className="h-4 w-4 mr-2" />
-                  <span className="text-sm font-semibold">CAPTURED MOMENTS</span>
-                </motion.div>
+              <div className="max-w-md mx-auto lg:mx-0 space-y-8">
+                {/* Header Section */}
+                <div className="text-left">
+                  <motion.div
+                    className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Camera className="h-4 w-4 mr-2" />
+                    <span className="text-sm font-semibold">CAPTURED MOMENTS</span>
+                  </motion.div>
 
-                <h1 className="font-display text-4xl text-neutral-dark mb-4">
-                  <span className="text-green">Memories</span> in{" "}
-                  <span className="text-orange">Motion</span>
-                </h1>
+                  <h1 className="font-display text-3xl lg:text-4xl text-neutral-dark mb-4">
+                    <span className="text-green">Memories</span> in{" "}
+                    <span className="text-orange">Motion</span>
+                  </h1>
 
-                <p className="text-lg text-neutral-dark/70 mb-8">
-                  Journey through our visual storytelling, where every photograph captures the essence of life at The Scholars' Home.
-                </p>
-              </div>
+                  <p className="text-base lg:text-lg text-neutral-dark/70">
+                    Journey through our visual storytelling, where every photograph captures the essence of life at The Scholars' Home.
+                  </p>
+                </div>
 
-              {/* Filters Section */}
-              <div className="bg-white rounded-2xl shadow-xl p-6 relative mb-8">
-                <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl z-[1]" />
-                <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl z-[1]" />
-                
-                <div className="relative z-[2] space-y-4">
-                  {/* Year Filter */}
-                  <div className="relative z-[30]">
-                    <NotionDropdown
-                      value={selectedYear.toString()}
-                      onChange={(value) => setSelectedYear(value === 'all' ? 'all' : Number(value))}
-                      options={yearOptions}
-                      placeholder="Select Year"
-                      searchable={false}
-                      className="w-full"
-                    />
-                  </div>
+                {/* Filters Section */}
+                <div className="bg-white rounded-2xl shadow-xl p-4 lg:p-6 relative">
+                  <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl z-[1]" />
+                  <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl z-[1]" />
+                  
+                  <div className="relative z-[2] space-y-4 pt-4 pb-4">
+                    {/* Year Filter */}
+                    <div className="relative z-[30] flex justify-center">
+                      <NotionDropdown
+                        value={selectedYear.toString()}
+                        onChange={(value) => setSelectedYear(value === 'all' ? 'all' : Number(value))}
+                        options={yearOptions}
+                        placeholder="Select Year"
+                        searchable={false}
+                        className="w-10/12 h-auto"
+                      />
+                    </div>
 
-                  {/* Campus Filter */}
-                  <div className="relative z-[20]">
-                    <NotionDropdown
-                      value={selectedCampus}
-                      onChange={(value) => setSelectedCampus(value)}
-                      options={campusOptions}
-                      placeholder="Select Campus"
-                      searchable={false}
-                      className="w-full"
-                    />
-                  </div>
+                    {/* Campus Filter */}
+                    <div className="relative z-[20] flex justify-center">
+                      <NotionDropdown
+                        value={selectedCampus}
+                        onChange={(value) => setSelectedCampus(value)}
+                        options={campusOptions}
+                        placeholder="Select Campus"
+                        searchable={false}
+                        className="w-10/12"
+                      />
+                    </div>
 
-                  {/* Search Input */}
-                  <div className="relative z-[10]">
-                    <input
-                      type="text"
-                      placeholder="Search events..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full px-4 py-4 pl-12 rounded-lg border-2 border-neutral-dark/10 
-                        focus:ring-2 focus:ring-green/20 focus:border-green
-                        text-neutral-dark placeholder:text-neutral-dark/50
-                        transition-all duration-200"
-                    />
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-green" />
+                    {/* Search Input */}
+                    <div className="relative z-[10] flex justify-center">
+                      <input
+                        type="text"
+                        placeholder="Search events..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-10/12 px-4 py-4 pl-12 rounded-lg border-2 border-neutral-dark/10 
+                          focus:ring-2 focus:ring-green/20 focus:border-green
+                          text-neutral-dark placeholder:text-neutral-dark/50
+                          transition-all duration-200"
+                      />
+                      <Search className="absolute left-14 top-1/2 -translate-y-1/2 h-4 w-4 text-green" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -254,9 +257,9 @@ export default function Gallery() {
         </div>
 
         {/* Right Column - Scrollable */}
-        <div className="w-[70%] min-h-screen ml-[30%] pt-24 pb-24 px-8 overflow-y-auto">
+        <div className="w-full lg:w-[70%] lg:ml-[30%] pt-4 lg:pt-4 pb-8 px-4 lg:px-8">
           {/* Gallery Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-8 pt-8">
             {loading ? (
               [...Array(6)].map((_, index) => (
                 <ScrollReveal key={`skeleton-${index}`}>
@@ -271,10 +274,10 @@ export default function Gallery() {
               ))
             ) : filteredEvents.length === 0 ? (
               <ScrollReveal className="col-span-full">
-                <div className="relative bg-white p-8 rounded-2xl shadow-lg text-center overflow-hidden">
+                <div className="relative bg-white p-6 lg:p-8 rounded-2xl shadow-lg text-center overflow-hidden">
                   <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
-                  <Image className="h-16 w-16 text-neutral-dark/20 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-neutral-dark mb-2">No Events Found</h3>
+                  <Image className="h-12 lg:h-16 w-12 lg:w-16 text-neutral-dark/20 mx-auto mb-4" />
+                  <h3 className="text-lg lg:text-xl font-semibold text-neutral-dark mb-2">No Events Found</h3>
                   <p className="text-neutral-dark/70">Try adjusting your filters or search terms</p>
                 </div>
               </ScrollReveal>
