@@ -16,4 +16,10 @@ export const ADMIN_ROUTES = {
   STUDENTS: '/admin/students',
   ALUMNI: '/admin/alumni',
   CALENDAR: '/admin/calendar',
+  YOUTUBE: '/admin/youtube',
+} as const;
+
+export const PUBLIC_ROUTES = {
+  // ... existing routes ...
+  YOUTUBE: '/video-gallery',
 } as const;

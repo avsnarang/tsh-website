@@ -5,7 +5,7 @@ import {
   Info, BookOpen, Building, Trophy, 
   Music, Palette, Users, Calendar,
   Heart, Star, Brain, Award,
-  Phone, Image,
+  Phone, Image, Video,
   LucideIcon
 } from 'lucide-react';
 import Container from '../ui/Container';
@@ -328,6 +328,12 @@ export default function Navbar() {
               description: 'Explore our collection of memories through photos from various school events, celebrations, and achievements.' 
             },
             { 
+              icon: Video, 
+              label: 'Video Gallery', 
+              href: '/video-gallery', 
+              description: 'Watch our curated collection of videos showcasing school events, student performances, and educational content.' 
+            },
+            { 
               icon: Calendar, 
               label: 'Events', 
               href: '/invites', 
@@ -438,8 +444,13 @@ export default function Navbar() {
                   className="px-6 md:px-0"
                 >
                   <Link
-                    to={updates[currentUpdateIndex]?.link || "/announcements"}
+                    to={updates[currentUpdateIndex]?.link || "#"}
                     className="inline-flex items-center gap-2 px-4 md:px-6 py-3 md:pt-6 md:pb-4 text-xs md:text-sm font-semibold bg-orange-light/60 text-orange-dark hover:bg-orange-light/90 transition-all duration-300 rounded-b-[30px] md:rounded-b-[30px] hover:scale-100 hover:translate-y-2 transform border border-orange/20 w-full md:w-auto justify-center md:justify-start text-center"
+                    onClick={(e) => {
+                      if (!updates[currentUpdateIndex]?.link) {
+                        e.preventDefault();
+                      }
+                    }}
                   >
                     {updates[currentUpdateIndex]?.content.split('•')[0].trim()} →
                   </Link>

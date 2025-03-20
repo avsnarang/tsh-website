@@ -77,6 +77,9 @@ import SportDetails from "./pages/co-curricular/SportDetails";
 
 const Calendar = lazy(() => import('./pages/Calendar'));
 
+const YouTubeGallery = lazy(() => import('./pages/YouTubeGallery'));
+const ManageYouTubeVideos = lazy(() => import('./components/admin/ManageYouTubeVideos'));
+
 const RootLayout = () => {
   const location = useLocation();
   const hideFooterPaths = ['/gallery', '/invites']; // Add invites to the paths where footer should be hidden
@@ -250,6 +253,11 @@ const router = createBrowserRouter(
             <ManageSports />
           </ProtectedRoute>
         } />
+        <Route path="youtube" element={
+          <ProtectedRoute requiredRole="admin">
+            <ManageYouTubeVideos />
+          </ProtectedRoute>
+        } />
       </Route>
       <Route path="calendar" element={
         <Suspense fallback={
@@ -258,6 +266,15 @@ const router = createBrowserRouter(
           </div>
         }>
           <Calendar />
+        </Suspense>
+      } />
+      <Route path="video-gallery" element={
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          </div>
+        }>
+          <YouTubeGallery />
         </Suspense>
       } />
       <Route path="*" element={

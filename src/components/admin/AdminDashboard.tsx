@@ -10,7 +10,8 @@ import {
   School,
   UserPlus,
   BookOpen,
-  Trophy
+  Trophy,
+  Video
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
@@ -74,6 +75,13 @@ export default function AdminDashboard() {
       icon: Trophy,
       path: '/admin/sports',
       color: 'from-green-light to-green'
+    },
+    {
+      title: 'YouTube Videos',
+      description: 'Manage YouTube video gallery',
+      icon: Video,
+      path: '/admin/youtube',
+      color: 'from-red-light to-red'
     }
   ];
 
