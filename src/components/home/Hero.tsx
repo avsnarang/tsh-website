@@ -37,7 +37,7 @@ export default function Hero() {
       </div>
 
       {/* Main Content */}
-      <div className="relative container mx-auto px-4">
+      <div className="relative container mx-auto px-4 pt-12">
         <div className="flex flex-col lg:flex-row items-center min-h-[90vh] gap-12 pt-40 lg:pt-20 pb-20">
           {/* Left Column - Main Content */}
           <motion.div
@@ -48,14 +48,14 @@ export default function Hero() {
           >
             {/* School Tag */}
             <motion.div
-              className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-12"
+              className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-4"
               {...fadeIn}
             >
               <span className="text-sm font-semibold">Best Educational Institute in your region!</span>
             </motion.div>
 
             {/* Main Heading */}
-            <h1 className="font-display text-5xl lg:text-7xl text-neutral-dark mb-6">
+            <h1 className="font-display text-5xl lg:text-7xl text-neutral-dark mb-4">
               <span className="text-green">Nurturing</span> Excellence,{" "}
               <span className="text-orange">Building</span> Character
             </h1>

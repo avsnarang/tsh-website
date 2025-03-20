@@ -8,6 +8,7 @@ import {
   Phone, Image, Video,
   LucideIcon
 } from 'lucide-react';
+import { Bell, ArrowRight } from 'lucide-react';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import Logo from '../ui/Logo';
@@ -425,37 +426,67 @@ export default function Navbar() {
 
           {/* Dynamic Updates Banner */}
           {updates.length > 0 && !isMenuOpen && (
-            <div className="absolute left-0 right-0 md:right-[60px] md:left-auto top-[80px] -z-40">
-              <Container>
-                <motion.div
-                  key={currentUpdateIndex}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  style={{
-                    opacity: bannerOpacity,
-                    transform: bannerTransform,
-                    pointerEvents: bannerPointerEvents
+            <div className="absolute right-0 md:right-6 top-[calc(100%-16px)] -z-10 w-[calc(100%-4.5rem)] md:w-[480px] mx-9 md:mx-10">
+              <motion.div
+                key={currentUpdateIndex}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                style={{
+                  opacity: bannerOpacity,
+                  transform: bannerTransform,
+                  pointerEvents: bannerPointerEvents
+                }}
+                transition={{ 
+                  duration: 0.3,
+                  ease: [0.25, 0.1, 0.25, 1]
+                }}
+              >
+                <Link
+                  to={updates[currentUpdateIndex]?.link || "#"}
+                  className="group relative flex items-start gap-3 px-4 md:px-6 pt-6 pb-4
+                    bg-gradient-to-r from-green-light/90 to-green-light/70 
+                    hover:from-green-light hover:to-green-light/80 backdrop-blur-sm
+                    text-green-dark border border-green/10
+                    rounded-b-2xl rounded-t-none md:rounded-2xl
+                    transition-all duration-300 hover:scale-[1.02] transform
+                    shadow-[0_2px_8px_rgba(0,80,27,0.08),0_1px_2px_rgba(0,80,27,0.04)]
+                    hover:shadow-[0_4px_12px_rgba(0,80,27,0.12),0_2px_4px_rgba(0,80,27,0.08)]
+                    before:absolute before:inset-0 before:-z-10 
+                    before:bg-green/20 before:blur-lg before:rounded-b-2xl before:rounded-t-none md:before:rounded-2xl
+                    before:transition-opacity before:duration-300
+                    hover:before:opacity-100 before:opacity-0
+                    min-h-[80px]"
+                  onClick={(e) => {
+                    if (!updates[currentUpdateIndex]?.link) {
+                      e.preventDefault();
+                    }
                   }}
-                  transition={{ 
-                    duration: 0.3,
-                    ease: [0.25, 0.1, 0.25, 1]
-                  }}
-                  className="px-6 md:px-0"
                 >
-                  <Link
-                    to={updates[currentUpdateIndex]?.link || "#"}
-                    className="inline-flex items-center gap-2 px-4 md:px-6 py-3 md:pt-6 md:pb-4 text-xs md:text-sm font-semibold bg-orange-light/60 text-orange-dark hover:bg-orange-light/90 transition-all duration-300 rounded-b-[30px] md:rounded-b-[30px] hover:scale-100 hover:translate-y-2 transform border border-orange/20 w-full md:w-auto justify-center md:justify-start text-center"
-                    onClick={(e) => {
-                      if (!updates[currentUpdateIndex]?.link) {
-                        e.preventDefault();
-                      }
-                    }}
-                  >
-                    {updates[currentUpdateIndex]?.content.split('•')[0].trim()} →
-                  </Link>
-                </motion.div>
-              </Container>
+                  {/* Ambient glow effect */}
+                  <div className="absolute inset-0 -z-10 bg-gradient-to-r from-green/40 to-green-light/40 blur-xl opacity-75" />
+                  
+                  {/* Icon with enhanced glow */}
+                  <div className="relative shrink-0 p-1.5 bg-green-dark/10 rounded-full
+                    ring-1 ring-green-dark/20 ring-offset-1 ring-offset-green-light/50 mt-1">
+                    <Bell className="h-4 w-4 text-green-dark drop-shadow-sm" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex flex-col gap-1 flex-1 min-w-0"> {/* Added min-w-0 for text truncation */}
+                    <span className="relative text-sm font-medium text-green-dark/80">
+                      Latest Update
+                    </span>
+                    <span className="relative text-sm font-medium text-green-dark break-words">
+                      {updates[currentUpdateIndex]?.content.split('•')[0].trim()}
+                    </span>
+                  </div>
+
+                  {/* Arrow */}
+                  <ArrowRight className="h-4 w-4 text-green-dark transition-transform 
+                    group-hover:translate-x-1 drop-shadow-sm shrink-0 mt-1" />
+                </Link>
+              </motion.div>
             </div>
           )}
         </Container>

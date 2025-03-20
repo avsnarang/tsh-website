@@ -5,11 +5,12 @@ import Button from '../ui/Button';
 interface InviteCardProps {
   invite: Invite;
   onRSVP: (inviteId: string) => void;
+  className?: string;
 }
 
-export default function InviteCard({ invite, onRSVP }: InviteCardProps) {
+export default function InviteCard({ invite, onRSVP, className = '' }: InviteCardProps) {
   return (
-    <div className="group relative aspect-[4/5] overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-xl transition-all duration-500">
+    <div className={`group relative aspect-[4/5] overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-xl transition-all duration-500 ${className}`}>
       <div className="absolute inset-0">
         <img
           src={invite.coverImage}

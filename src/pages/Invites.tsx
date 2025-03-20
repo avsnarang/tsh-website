@@ -193,138 +193,138 @@ export default function Invites() {
   };
 
   return (
-    <div className="h-screen overflow-hidden"> {/* Changed to h-screen and overflow-hidden */}
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="h-full w-full"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
-        </div>
-      </div>
-
+    <div className="min-h-screen overflow-x-hidden pt-44">
       {/* Main Content */}
-      <div className="h-full flex">
-        {/* Left Column - Fixed */}
-        <div className="w-[30%] h-full flex items-center justify-center fixed left-0 top-0 px-8">
-          <div className="max-w-md">
-            <ScrollReveal>
-              <div className="text-center mb-16">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full mb-8"
-                >
-                  <Calendar className="h-4 w-4" />
-                  <span className="font-semibold">School Events</span>
-                </motion.div>
-                <TextReveal>
-                  <h1 className="font-display text-4xl text-neutral-dark mb-6">
-                    Join Our <span className="text-green">School</span>{" "}
-                    <span className="text-orange">Events</span>
-                  </h1>
-                </TextReveal>
-                <TextReveal delay={0.2}>
-                  <p className="text-lg text-neutral-dark/70 font-body">
-                    Be part of our vibrant school community and celebrations
-                  </p>
-                </TextReveal>
-              </div>
-
-              {/* Filter Toggle */}
-              <div className="bg-white rounded-2xl shadow-lg p-1.5 mb-8">
-                <motion.button
-                  onClick={() => setShowUpcomingOnly(!showUpcomingOnly)}
-                  className="relative flex items-center w-full"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <motion.div
-                    className="absolute h-full w-[50%] bg-green rounded-xl"
-                    initial={false}
-                    animate={{
-                      x: showUpcomingOnly ? '0%' : '100%',
-                      opacity: 0.1
-                    }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                  <div 
-                    className={`flex items-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
-                      showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
-                    }`}
-                  >
-                    <Filter className="w-4 h-4" />
-                    <span>Upcoming</span>
-                  </div>
-                  <div 
-                    className={`flex items-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
-                      !showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
-                    }`}
-                  >
-                    <Calendar className="w-4 h-4" />
-                    <span>All Events</span>
-                  </div>
-                </motion.button>
-              </div>
-
-              {/* Messages */}
-              {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-8">
-                  {error}
-                </div>
-              )}
-
-              {success && (
-                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-8">
-                  {success}
-                </div>
-              )}
-            </ScrollReveal>
+      <div className="flex flex-col lg:flex-row min-h-screen relative">
+        {/* Background decorative elements - moved outside the scrollable area */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
+          <div className="absolute inset-0 opacity-5">
+            <div
+              className="h-full w-full"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            />
           </div>
         </div>
 
-        {/* Right Column - Scrollable */}
-        <div className="w-[70%] h-screen ml-[30%] bg-transparent">
-          <div className="h-full overflow-y-auto px-8 py-20">
-            {/* Events Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {loading ? (
-                [...Array(6)].map((_, index) => (
+        {/* Header Section - Full width on mobile, 30% on desktop */}
+        <div className="w-full lg:w-[30%] lg:fixed lg:left-0 lg:top-0 lg:h-screen px-4 lg:px-8 pt-8 lg:pt-0">
+          <div className="lg:h-full lg:flex lg:items-center lg:justify-center">
+            <div className="max-w-md mx-auto lg:mx-0">
+              <ScrollReveal>
+                <div className="text-center lg:text-left mb-8 lg:mb-16">
                   <motion.div
-                    key={`skeleton-${index}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    <InviteCardSkeleton />
-                  </motion.div>
-                ))
-              ) : events.length === 0 ? (
-                <div className="col-span-full text-center text-neutral-dark/60 py-12">
-                  <Star className="h-12 w-12 mx-auto mb-4 text-orange-light" />
-                  <p className="text-lg">No upcoming events at this time.</p>
-                </div>
-              ) : (
-                events.map((invite) => (
-                  <motion.div
-                    key={invite.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full mb-8"
                   >
-                    <InviteCard
-                      invite={invite}
-                      onRSVP={handleRSVP}
-                    />
+                    <Calendar className="h-4 w-4" />
+                    <span className="font-semibold">School Events</span>
                   </motion.div>
-                ))
-              )}
+                  <TextReveal>
+                    <h1 className="font-display text-3xl lg:text-4xl text-neutral-dark mb-6">
+                      Join Our <span className="text-green">School</span>{" "}
+                      <span className="text-orange">Events</span>
+                    </h1>
+                  </TextReveal>
+                  <TextReveal delay={0.2}>
+                    <p className="text-base lg:text-lg text-neutral-dark/70 font-body">
+                      Be part of our vibrant school community and celebrations
+                    </p>
+                  </TextReveal>
+                </div>
+
+                {/* Filter Toggle */}
+                <div className="bg-white rounded-2xl shadow-lg p-1.5 mb-8">
+                  <motion.button
+                    onClick={() => setShowUpcomingOnly(!showUpcomingOnly)}
+                    className="relative flex items-center w-full"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <motion.div
+                      className="absolute h-full w-[50%] bg-green rounded-xl"
+                      initial={false}
+                      animate={{
+                        x: showUpcomingOnly ? '0%' : '100%',
+                        opacity: 0.1
+                      }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                    <div 
+                      className={`flex items-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
+                        showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
+                      }`}
+                    >
+                      <Filter className="w-4 h-4" />
+                      <span>Upcoming</span>
+                    </div>
+                    <div 
+                      className={`flex items-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
+                        !showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
+                      }`}
+                    >
+                      <Calendar className="w-4 h-4" />
+                      <span>All Events</span>
+                    </div>
+                  </motion.button>
+                </div>
+
+                {/* Messages */}
+                {error && (
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-8">
+                    {error}
+                  </div>
+                )}
+
+                {success && (
+                  <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-8">
+                    {success}
+                  </div>
+                )}
+              </ScrollReveal>
             </div>
+          </div>
+        </div>
+
+        {/* Events Grid Section - Scrollable */}
+        <div className="w-full lg:w-[70%] lg:ml-[30%] px-4 lg:px-8 py-8 lg:py-8 lg:max-h-screen lg:overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 pb-10">
+            {loading ? (
+              [...Array(6)].map((_, index) => (
+                <motion.div
+                  key={`skeleton-${index}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <InviteCardSkeleton />
+                </motion.div>
+              ))
+            ) : events.length === 0 ? (
+              <div className="col-span-full text-center text-neutral-dark/60 py-4">
+                <Star className="h-6 w-6 mx-auto mb-1 text-orange-light" />
+                <p className="text-sm">No upcoming events at this time.</p>
+              </div>
+            ) : (
+              events.map((invite) => (
+                <motion.div
+                  key={invite.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <InviteCard
+                    invite={invite}
+                    onRSVP={handleRSVP}
+                    className="aspect-[3/4] md:max-w-lg mx-auto"
+                  />
+                </motion.div>
+              ))
+            )}
           </div>
         </div>
       </div>
