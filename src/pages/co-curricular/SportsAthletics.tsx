@@ -71,8 +71,9 @@ export default function SportsAthletics() {
         throw error;
       }
 
-      if (!data) {
-        throw new Error('No data returned from the database');
+      if (!data || data.length === 0) {
+        setPrograms([]);
+        return;
       }
 
       // Group sports by category
