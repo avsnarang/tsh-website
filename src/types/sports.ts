@@ -1,3 +1,9 @@
+export interface Schedule {
+  type: 'Weekday' | 'Weekend' | 'Summer' | 'Winter';
+  timings: string[];
+  notes?: string;
+}
+
 export interface SportFacility {
   id: string;
   name: string;
@@ -24,4 +30,5 @@ export interface Sport {
   facilities: SportFacility[];
   teams: SportTeam[];
   achievements: string[];
+  schedules: Schedule[];
 }

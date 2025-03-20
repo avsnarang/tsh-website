@@ -4,6 +4,7 @@ import Container from '../ui/Container';
 import Button from '../ui/Button';
 import { CampusInfo } from '../../types/campus';
 import OptimizedImage from '../OptimizedImage';
+import { Link } from 'react-router-dom';
 
 interface CampusHeroProps {
   info: CampusInfo;
@@ -107,13 +108,14 @@ export default function CampusHero({ info }: CampusHeroProps) {
                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Button>
               
-              <Button
-                variant="outline2"
-                className="group text-lg px-8 py-4 border-2"
-              >
-                Virtual Tour
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </Button>
+              <Link to="/about">
+                <Button
+                  variant="outline2"
+                  className="group text-lg px-12 py-4 border-2 flex items-center justify-center"
+                >
+                  Our Story <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1 ml-2" />
+                </Button>
+              </Link>
             </motion.div>
           </div>
 

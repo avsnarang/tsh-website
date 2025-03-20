@@ -1,20 +1,31 @@
+import { useState, useEffect } from 'react';
 import Container from '../../components/ui/Container';
 import { Trophy, Medal, Building2, ArrowRight, Clock, Check, User } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
 import { useSEO } from '../../lib/seo';
-import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../lib/supabase';
+import { Link } from 'react-router-dom';
+import SportCardSkeleton from '../../components/skeletons/SportCardSkeleton';
+
+interface SportImages {
+  main_image: string;
+  gallery_images: string[];
+  training_images: string[];
+  facility_images: string[];
+}
 
 interface Sport {
   id: string;
   name: string;
-  levels: string[];
-  schedule: string;
+  category: string;
+  description: string;
   coach: string;
   achievements: string;
-  image: string;
-  description: string;
+  age_groups: string[];
+  schedules: any;
+  images: SportImages;
 }
 
 interface Program {
@@ -23,58 +34,91 @@ interface Program {
 }
 
 export default function SportsAthletics() {
-  const programs: Program[] = [
-    {
-      category: "Team Sports",
-      sports: [
-        {
-          id: "basketball",
-          name: "Basketball",
-          levels: ["Junior", "Senior"],
-          schedule: "Mon, Wed, Fri",
-          coach: "Coach Sarah Williams",
-          achievements: "State Champions 2023",
-          image: "/images/sports/basketball-court.jpg",
-          description: "Professional basketball training program with state-of-the-art indoor courts."
-        },
-        {
-          id: "football",
-          name: "Football",
-          levels: ["Junior", "Senior"],
-          schedule: "Tue, Thu, Sat",
-          coach: "Coach Michael Chen",
-          achievements: "Regional Champions 2023",
-          image: "/images/sports/football-field.jpg",
-          description: "Comprehensive football program with FIFA standard synthetic turf."
-        },
-        // ... other sports
-      ]
-    },
-    {
-      category: "Individual Sports",
-      sports: [
-        {
-          id: "swimming",
-          name: "Swimming",
-          levels: ["Beginner", "Advanced"],
-          schedule: "Mon to Fri",
-          coach: "Coach David Kumar",
-          achievements: "6 National Records",
-          image: "/images/sports/swimming-pool.jpg",
-          description: "Professional swimming program with Olympic-size pool and certified coaches."
-        },
-        // ... other individual sports
-      ]
-    }
-  ];
-
-  const navigate = useNavigate();
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>('');
 
   useSEO({
     title: "Sports & Athletics | The Scholars' Home",
     description: "Excellence in sports and athletics at The Scholars' Home. Professional coaching and world-class facilities for comprehensive physical development.",
     url: "https://tsh.edu.in/co-curricular/sports-athletics"
   });
+
+  useEffect(() => {
+    fetchSports();
+  }, []);
+
+  const fetchSports = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('sports_programs')
+        .select(`
+          id,
+          name,
+          category,
+          description,
+          coach,
+          achievements,
+          age_groups,
+          schedules,
+          images
+        `)
+        .order('category');
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error('No data returned from the database');
+      }
+
+      // Group sports by category
+      const groupedSports = data.reduce((acc: Program[], sport: Sport) => {
+        const existingCategory = acc.find(p => p.category === sport.category);
+        if (existingCategory) {
+          existingCategory.sports.push(sport);
+        } else {
+          acc.push({
+            category: sport.category,
+            sports: [sport]
+          });
+        }
+        return acc;
+      }, []);
+
+      setPrograms(groupedSports);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch sports programs';
+      setError(errorMessage);
+      console.error('Error fetching sports:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderSkeletonLoaders = () => (
+    <div className="space-y-12">
+      {[...Array(3)].map((_, categoryIndex) => (
+        <div key={categoryIndex} className="mb-12">
+          {/* Category title skeleton */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-8 w-1 bg-gray-200 rounded-full" />
+            <div className="h-8 w-48 bg-gray-200 rounded" />
+          </div>
+
+          {/* Sports grid skeleton */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(3)].map((_, cardIndex) => (
+              <SportCardSkeleton key={cardIndex} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
@@ -92,7 +136,7 @@ export default function SportsAthletics() {
         </div>
       </div>
 
-      <Container className="relative">
+      <Container className="relative py-12">
         <ScrollReveal>
           <div className="text-center mb-16">
             <motion.div
@@ -118,88 +162,98 @@ export default function SportsAthletics() {
         {/* Program Overview */}
         <ScrollReveal>
           <div className="mb-20">
-            <h2 className="font-display text-3xl text-neutral-dark mb-8">
-              Program Overview
-            </h2>
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="font-display text-3xl text-neutral-dark">
+                Program Overview
+              </h2>
+            </div>
             
-            {programs.map((program, index) => (
-              <div key={index} className="mb-12">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="h-8 w-1 bg-green rounded-full" />
-                  <h3 className="font-display text-2xl text-neutral-dark">
-                    {program.category}
-                  </h3>
-                </div>
-
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {program.sports.map((sport) => (
-                    <div 
-                      key={sport.id}
-                      className="group bg-white rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300"
-                    >
-                      {/* Image Section */}
-                      <div className="relative h-48 overflow-hidden">
-                        <img
-                          src={sport.image}
-                          alt={`${sport.name} facilities`}
-                          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <div className="flex gap-2">
-                            {sport.levels.map((level, levelIndex) => (
-                              <span 
-                                key={levelIndex}
-                                className="text-xs px-2 py-1 bg-green/90 text-white rounded-full"
-                              >
-                                {level}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Content Section */}
-                      <div className="p-6">
-                        <div className="flex items-start justify-between mb-4">
-                          <h4 className="font-display text-xl text-neutral-dark">
-                            {sport.name}
-                          </h4>
-                          <div className="w-10 h-10 rounded-full bg-orange-light/20 flex items-center justify-center">
-                            <Trophy className="w-5 h-5 text-orange" />
-                          </div>
-                        </div>
-
-                        <div className="space-y-3 text-sm mb-4">
-                          <div className="flex items-center gap-2 text-neutral-dark/70">
-                            <Clock className="w-4 h-4" />
-                            <span>{sport.schedule}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-neutral-dark/70">
-                            <User className="w-4 h-4" />
-                            <span>{sport.coach}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-neutral-dark/70">
-                            <Medal className="w-4 h-4" />
-                            <span>{sport.achievements}</span>
-                          </div>
-                        </div>
-
-                        <div className="pt-4 border-t border-neutral-dark/10">
-                          <button 
-                            onClick={() => navigate(`/co-curricular/sports-athletics/${sport.id}`)}
-                            className="w-full text-sm font-medium text-green hover:text-green-dark flex items-center justify-center gap-2 group-hover:gap-3 transition-all"
-                          >
-                            Learn More 
-                            <ArrowRight className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+            {loading ? (
+              renderSkeletonLoaders()
+            ) : error ? (
+              <div className="text-center text-red-600 py-8">
+                {error}
               </div>
-            ))}
+            ) : (
+              programs.map((program, index) => (
+                <div key={index} className="mb-12">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="h-8 w-1 bg-green rounded-full" />
+                    <h3 className="font-display text-2xl text-neutral-dark">
+                      {program.category}
+                    </h3>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {program.sports.map((sport) => (
+                      <div 
+                        key={sport.id}
+                        className="group bg-white rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300"
+                      >
+                        {/* Image Section */}
+                        <div className="relative h-48 overflow-hidden">
+                          <img
+                            src={sport.images.main_image}
+                            alt={`${sport.name} facilities`}
+                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                          <div className="absolute bottom-4 left-4 right-4">
+                            <div className="flex gap-2">
+                              {sport.age_groups.map((level, levelIndex) => (
+                                <span 
+                                  key={levelIndex}
+                                  className="text-xs px-2 py-1 bg-green/90 text-white rounded-full"
+                                >
+                                  {level}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Content Section */}
+                        <div className="p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <h4 className="font-display text-xl text-neutral-dark">
+                              {sport.name}
+                            </h4>
+                            <div className="w-10 h-10 rounded-full bg-orange-light/20 flex items-center justify-center">
+                              <Trophy className="w-5 h-5 text-orange" />
+                            </div>
+                          </div>
+
+                          <div className="space-y-3 text-sm mb-4">
+                            <div className="flex items-center gap-2 text-neutral-dark/70">
+                              <Clock className="w-4 h-4" />
+                              <span>{sport.schedules?.schedule || 'Schedule to be announced'}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-neutral-dark/70">
+                              <User className="w-4 h-4" />
+                              <span>{sport.coach}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-neutral-dark/70">
+                              <Medal className="w-4 h-4" />
+                              <span>{sport.achievements}</span>
+                            </div>
+                          </div>
+
+                          <div className="pt-4 border-t border-neutral-dark/10">
+                            <Link 
+                              to={`/co-curricular/sports-athletics/${sport.id}`}
+                              className="inline-flex items-center gap-2 text-sm font-medium text-green hover:text-green-dark group-hover:gap-3 transition-all"
+                            >
+                              Learn More 
+                              <ArrowRight className="w-4 h-4" />
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </ScrollReveal>
 
@@ -234,29 +288,3 @@ export default function SportsAthletics() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

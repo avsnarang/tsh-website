@@ -23,8 +23,8 @@ export const campusInfo: { [key: string]: CampusInfo } = {
     stats: [
       { label: "Students", value: "1400+" },
       { label: "Faculty", value: "100+" },
-      { label: "Acres Campus", value: "25" },
-      { label: "Years of Excellence", value: "20+" }
+      { label: "Hectares Campus", value: "28+" },
+      { label: "Years of Excellence", value: "21+" }
     ],
     facilities: [
       {
