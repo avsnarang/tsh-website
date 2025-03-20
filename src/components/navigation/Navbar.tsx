@@ -439,7 +439,7 @@ export default function Navbar() {
                 >
                   <Link
                     to={updates[currentUpdateIndex]?.link || "/announcements"}
-                    className="inline-flex items-center gap-2 px-4 md:px-6 py-3 md:pt-6 md:pb-4 text-xs md:text-sm font-semibold bg-orange-light/40 text-orange-dark hover:bg-orange-light/70 transition-all duration-300 rounded-b-[30px] md:rounded-b-[30px] hover:scale-100 hover:translate-y-2 transform border border-orange/20 w-full md:w-auto justify-center md:justify-start text-center"
+                    className="inline-flex items-center gap-2 px-4 md:px-6 py-3 md:pt-6 md:pb-4 text-xs md:text-sm font-semibold bg-orange-light/60 text-orange-dark hover:bg-orange-light/90 transition-all duration-300 rounded-b-[30px] md:rounded-b-[30px] hover:scale-100 hover:translate-y-2 transform border border-orange/20 w-full md:w-auto justify-center md:justify-start text-center"
                   >
                     {updates[currentUpdateIndex]?.content.split('•')[0].trim()} →
                   </Link>

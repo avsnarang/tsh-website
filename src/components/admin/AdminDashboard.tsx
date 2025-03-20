@@ -9,7 +9,8 @@ import {
   Bell, 
   School,
   UserPlus,
-  BookOpen
+  BookOpen,
+  Trophy
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
@@ -66,6 +67,13 @@ export default function AdminDashboard() {
       icon: Calendar,
       path: '/admin/calendar',
       color: 'from-red-light to-red'
+    },
+    {
+      title: 'Sports',
+      description: 'Manage Sports Programs',
+      icon: Trophy,
+      path: '/admin/sports',
+      color: 'from-green-light to-green'
     }
   ];
 

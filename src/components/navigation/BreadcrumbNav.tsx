@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { HomeIcon } from 'lucide-react';
 import {
@@ -48,6 +48,19 @@ const routeLabels: Record<string, string> = {
 
 export default function BreadcrumbNav() {
   const location = useLocation();
+  const [dynamicLabel, setDynamicLabel] = useState<string>('');
+
+  useEffect(() => {
+    const handleUpdateLabel = (event: CustomEvent) => {
+      setDynamicLabel(event.detail);
+    };
+
+    window.addEventListener('updateBreadcrumbLabel', handleUpdateLabel as EventListener);
+
+    return () => {
+      window.removeEventListener('updateBreadcrumbLabel', handleUpdateLabel as EventListener);
+    };
+  }, []);
 
   if (location.pathname === '/') return null;
 
@@ -69,9 +82,12 @@ export default function BreadcrumbNav() {
           {segments.map((segment, index) => {
             const path = `/${segments.slice(0, index + 1).join('/')}`;
             const isLast = index === segments.length - 1;
-            const label =
-              routeLabels[segment] ||
-              segment.charAt(0).toUpperCase() + segment.slice(1);
+            
+            // Check if this is a UUID pattern and we have a dynamic label
+            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(segment);
+            const label = (isLast && isUUID && dynamicLabel) 
+              ? dynamicLabel 
+              : (routeLabels[segment] || segment.charAt(0).toUpperCase() + segment.slice(1));
 
             return (
               <React.Fragment key={path}>
@@ -81,9 +97,7 @@ export default function BreadcrumbNav() {
                     <BreadcrumbPage>{label}</BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink asChild>
-                      <Link to={path}>
-                        {label}
-                      </Link>
+                      <Link to={path}>{label}</Link>
                     </BreadcrumbLink>
                   )}
                 </BreadcrumbItem>
@@ -95,3 +109,8 @@ export default function BreadcrumbNav() {
     </div>
   );
 }
+
+// Add a method to update the dynamic label
+BreadcrumbNav.setDynamicLabel = (label: string) => {
+  window.dispatchEvent(new CustomEvent('updateBreadcrumbLabel', { detail: label }));
+};

@@ -1,6 +1,31 @@
+export type Schedule = {
+  type: 'Weekday' | 'Weekend' | 'Summer' | 'Winter';
+  timings: string[];
+  notes?: string;
+}
+
 export interface Database {
   public: {
     Tables: {
+      sports_programs: {
+        Row: {
+          id: string;
+          name: string;
+          category: string;
+          description: string;
+          coach: string;
+          schedules: Schedule[];
+          achievements: string;
+          image: string;
+          levels: string[];
+          facilities: SportFacility[];
+          training_schedule: Record<string, string[]>;
+          images: SportImages;
+          created_at: string;
+        };
+        Insert: Omit<Tables['sports_programs']['Row'], 'id' | 'created_at'>;
+        Update: Partial<Omit<Tables['sports_programs']['Row'], 'id' | 'created_at'>>;
+      };
       leadership_messages: {
         Row: {
           id: string

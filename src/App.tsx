@@ -6,7 +6,8 @@ import {
   Route,
   Link,
   Outlet,
-  useLocation
+  useLocation,
+  Navigate
 } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
@@ -16,7 +17,6 @@ import Navbar from './components/navigation/Navbar';
 import Footer from './components/footer/Footer';
 import { AuthProvider } from './contexts/AuthContext';
 import { MessagesProvider } from './contexts/MessagesContext';
-import RequireAdmin from './components/auth/RequireAdmin';
 import ErrorBoundary from './components/ErrorBoundary';
 import Login from './pages/auth/Login';
 import AuthInitializer from './components/auth/AuthInitializer';
@@ -55,16 +55,14 @@ const Gallery = lazy(() => import('./pages/Gallery'));
 const EventGallery = lazy(() => import('./pages/EventGallery'));
 
 // Admin pages
-const AdminSetup = lazy(() => import('./components/admin/AdminSetup'));
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard'));
 const ManageEvents = lazy(() => import('./components/admin/ManageEvents'));
-const ManageMessages = lazy(() => import('./components/admin/ManageMessages'));
 const ManageUpdates = lazy(() => import('./components/admin/ManageUpdates'));
-const AdminGallery = lazy(() => import('./components/admin/AdminGallery'));
 const ManageStudents = lazy(() => import('./components/admin/ManageStudents'));
 const ManageAlumni = lazy(() => import('./components/admin/ManageAlumni').then(module => ({ default: module.default })));
 const AdminCalendar = lazy(() => import('./components/admin/AdminCalendar'));
-const ManageTeachers = lazy(() => import('./components/admin/ManageTeachers'));
+const ManageGallery = lazy(() => import('./components/admin/AdminGallery'));
+const ManageSports = lazy(() => import('./components/admin/ManageSports'));
 
 // Co-curricular
 const CoCurricular = lazy(() => import('./pages/CoCurricular'));
@@ -75,7 +73,7 @@ const ClubsSocieties = lazy(() => import('./pages/co-curricular/ClubsSocieties')
 const Contact = lazy(() => import('./pages/Contact'));
 const Invites = lazy(() => import('./pages/Invites'));
 const Scholarship = lazy(() => import('./pages/Scholarship'));
-const SportDetail = lazy(() => import('./pages/co-curricular/SportDetail'));
+import SportDetails from "./pages/co-curricular/SportDetails";
 
 const Calendar = lazy(() => import('./pages/Calendar'));
 
@@ -146,7 +144,7 @@ const router = createBrowserRouter(
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
           </div>
         }>
-          <SportDetail />
+          <SportDetails />
         </Suspense>
       } />
       <Route path="co-curricular/visual-arts" element={<VisualArts />} />
@@ -211,57 +209,46 @@ const router = createBrowserRouter(
       } />
       {/* Admin routes */}
       <Route path="admin">
-        <Route path="setup" element={<AdminSetup />} />
+        <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={
-          <RequireAdmin>
+          <ProtectedRoute requiredRole="admin">
             <AdminDashboard />
-          </RequireAdmin>
+          </ProtectedRoute>
         } />
         <Route path="events" element={
-          <RequireAdmin>
+          <ProtectedRoute requiredRole="admin">
             <ManageEvents />
-          </RequireAdmin>
-        } />
-        <Route path="messages" element={
-          <RequireAdmin>
-            <ManageMessages />
-          </RequireAdmin>
-        } />
-        <Route path="updates" element={
-          <RequireAdmin>
-            <ManageUpdates />
-          </RequireAdmin>
+          </ProtectedRoute>
         } />
         <Route path="gallery" element={
-          <RequireAdmin>
-            <AdminGallery />
-          </RequireAdmin>
+          <ProtectedRoute requiredRole="admin">
+            <ManageGallery />
+          </ProtectedRoute>
+        } />
+        <Route path="updates" element={
+          <ProtectedRoute requiredRole="admin">
+            <ManageUpdates />
+          </ProtectedRoute>
         } />
         <Route path="students" element={
-          <RequireAdmin>
+          <ProtectedRoute requiredRole="admin">
             <ManageStudents />
-          </RequireAdmin>
+          </ProtectedRoute>
         } />
         <Route path="alumni" element={
-          <RequireAdmin>
+          <ProtectedRoute requiredRole="admin">
             <ManageAlumni />
-          </RequireAdmin>
+          </ProtectedRoute>
         } />
         <Route path="calendar" element={
-          <RequireAdmin>
-            <Suspense fallback={
-              <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-              </div>
-            }>
-              <AdminCalendar />
-            </Suspense>
-          </RequireAdmin>
+          <ProtectedRoute requiredRole="admin">
+            <AdminCalendar />
+          </ProtectedRoute>
         } />
-        <Route path="teachers" element={
-          <RequireAdmin>
-            <ManageTeachers />
-          </RequireAdmin>
+        <Route path="sports" element={
+          <ProtectedRoute requiredRole="admin">
+            <ManageSports />
+          </ProtectedRoute>
         } />
       </Route>
       <Route path="calendar" element={
