@@ -64,6 +64,7 @@ export default function SportsAthletics() {
           schedules,
           images
         `)
+        .eq('is_published', true)  // Only fetch published sports
         .order('category');
 
       if (error) {

@@ -25,18 +25,25 @@ ALTER TABLE students ENABLE ROW LEVEL SECURITY;
 -- Drop existing policies if they exist
 DROP POLICY IF EXISTS "Management users can manage students" ON students;
 DROP POLICY IF EXISTS "Anyone can verify admission numbers" ON students;
+DROP POLICY IF EXISTS "Admin users can manage students" ON students;
 
 -- Create policies
-CREATE POLICY "Management users can manage students"
+CREATE POLICY "Admin users can manage students"
   ON students
   USING (EXISTS (
-    SELECT 1 FROM management_users 
+    SELECT 1 FROM admin_users 
     WHERE id = auth.uid()
   ));
 
 CREATE POLICY "Anyone can verify admission numbers"
   ON students
+  FOR SELECT
   USING (true);
+
+CREATE POLICY "Users can insert their own registrations"
+  ON sports_registrations
+  FOR INSERT
+  WITH CHECK (auth.uid() = student_id);
 
 -- Create function to verify admission number
 CREATE OR REPLACE FUNCTION verify_admission_number(admission_number text)

@@ -4,6 +4,19 @@ export type Schedule = {
   notes?: string;
 }
 
+export interface Sport {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  coach: string;
+  achievements: string;
+  age_groups: string[];
+  schedules: any;
+  images: SportImages;
+  is_published: boolean;
+}
+
 export interface Database {
   public: {
     Tables: {

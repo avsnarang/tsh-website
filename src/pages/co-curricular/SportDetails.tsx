@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import Container from '../../components/ui/Container';
 import { Trophy, Medal, Clock, User, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSEO } from '../../lib/seo';
 import BreadcrumbNav from '../../components/navigation/BreadcrumbNav';
+import { toast } from 'react-hot-toast';
 
 interface Sport {
   id: string;
@@ -24,13 +25,36 @@ interface Sport {
   };
 }
 
+interface SportRegistration {
+  sport_id: string;
+  admission_number: string;
+  medical_conditions: string;
+  preferred_schedule: string;
+  student_id?: string; // Added this field
+}
+
+interface Student {
+  id: string;
+  auth_user_id: string;
+  full_name: string;
+  admission_number: string;
+}
+
+interface RegistrationModalProps {
+  sport: Sport | null;
+  onClose: () => void;
+  onSubmit: (data: SportRegistration) => Promise<void>;
+}
+
 export default function SportDetails() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [sport, setSport] = useState<Sport | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [error, setError] = useState<string>('');
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
 
   useEffect(() => {
     fetchSportDetails();
@@ -66,8 +90,58 @@ export default function SportDetails() {
   };
 
   const handleRegister = () => {
-    // Implement registration logic or navigation
-    navigate(`/register/sports/${id}`);
+    setShowRegistrationModal(true);
+  };
+
+  const handleRegistrationSubmit = async (data: SportRegistration) => {
+    try {
+      if (!id) {
+        throw new Error('Sport ID is missing');
+      }
+
+      // Check if student has already registered for this sport
+      const { data: existingReg, error: checkError } = await supabase
+        .from('sports_registrations')
+        .select('id')
+        .eq('admission_number', data.admission_number.trim())
+        .eq('sport_id', id)
+        .maybeSingle(); // Use maybeSingle() instead of single()
+
+      if (checkError) {
+        console.error('Registration check error:', checkError);
+        throw new Error('Failed to check existing registration');
+      }
+
+      if (existingReg) {
+        toast.error('You have already registered for this sport');
+        return;
+      }
+
+      const { error: insertError } = await supabase
+        .from('sports_registrations')
+        .insert({
+          admission_number: data.admission_number.trim(),
+          sport_id: id,
+          medical_conditions: data.medical_conditions?.trim() || 'None',
+          preferred_schedule: data.preferred_schedule.trim(),
+          status: 'pending'
+        });
+
+      if (insertError) {
+        console.error('Insert error:', insertError);
+        if (insertError.code === '23505') {
+          throw new Error('You have already registered for this sport');
+        }
+        throw new Error('Failed to submit registration');
+      }
+
+      toast.success('Registration submitted successfully!');
+      setShowRegistrationModal(false);
+    } catch (err) {
+      console.error('Registration error:', err);
+      toast.error(err instanceof Error ? err.message : 'Failed to submit registration');
+      throw err;
+    }
   };
 
   const nextImage = () => {
@@ -177,6 +251,187 @@ export default function SportDetails() {
   }
 
   const allImages = [sport.images.main_image, ...sport.images.gallery_images];
+
+  const RegistrationModal = ({ sport, onClose, onSubmit }: RegistrationModalProps) => {
+    const [registrationData, setRegistrationData] = useState<SportRegistration>({
+      sport_id: sport?.id || '',  // Initialize with the sport ID
+      admission_number: '',
+      medical_conditions: '',
+      preferred_schedule: ''
+    });
+    const [verifying, setVerifying] = useState(false);
+    const [verified, setVerified] = useState(false);
+    const [studentName, setStudentName] = useState('');
+    const [admissionError, setAdmissionError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const verifyAdmissionNumber = async (number: string) => {
+      try {
+        setVerifying(true);
+        setAdmissionError('');
+        setVerified(false);
+        setStudentName('');
+
+        if (!number.trim()) {
+          setAdmissionError('Please enter an admission number');
+          return;
+        }
+
+        const { data: student, error: studentError } = await supabase
+          .from('students')
+          .select('full_name')  // Remove auth_user_id from select
+          .eq('admission_number', number.trim())
+          .single();
+
+        if (studentError) {
+          if (studentError.code === 'PGRST116') {
+            setAdmissionError('Invalid admission number');
+            return;
+          }
+          throw studentError;
+        }
+
+        setStudentName(student.full_name);
+        setVerified(true);
+      } catch (error) {
+        console.error('Error verifying admission number:', error);
+        setAdmissionError('Failed to verify admission number');
+      } finally {
+        setVerifying(false);
+      }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      
+      try {
+        if (!verified) {
+          toast.error('Please verify your admission number first');
+          return;
+        }
+
+        if (!registrationData.preferred_schedule) {
+          toast.error('Please select a preferred schedule');
+          return;
+        }
+
+        setIsSubmitting(true);
+        await onSubmit({
+          ...registrationData,
+          sport_id: sport?.id || '', // Ensure sport_id is set
+          medical_conditions: registrationData.medical_conditions || 'None' // Default value if empty
+        });
+      } catch (error) {
+        console.error('Form submission error:', error);
+        toast.error('Failed to submit registration');
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+
+    return (
+      <div className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6">
+          <h2 className="text-2xl font-bold mb-4">Register for {sport?.name}</h2>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Admission Number</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  required
+                  value={registrationData.admission_number}
+                  onChange={(e) => setRegistrationData(prev => ({
+                    ...prev,
+                    admission_number: e.target.value
+                  }))}
+                  className="flex-1 px-3 py-2 border rounded-lg"
+                  placeholder="Enter your admission number"
+                  disabled={verified}
+                />
+                <button
+                  type="button"
+                  onClick={() => verifyAdmissionNumber(registrationData.admission_number)}
+                  disabled={verifying || verified || !registrationData.admission_number}
+                  className="px-4 py-2 bg-green hover:bg-green-dark disabled:bg-neutral-300 text-white rounded-xl transition-colors"
+                >
+                  {verifying ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white" />
+                  ) : verified ? 'Verified' : 'Verify'}
+                </button>
+              </div>
+              {admissionError && (
+                <p className="text-red-500 text-sm mt-1">{admissionError}</p>
+              )}
+              {verified && studentName && (
+                <p className="text-green-600 text-sm mt-1">Verified: {studentName}</p>
+              )}
+            </div>
+
+            {verified && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Medical Conditions (if any)</label>
+                  <textarea
+                    value={registrationData.medical_conditions}
+                    onChange={(e) => setRegistrationData(prev => ({
+                      ...prev,
+                      medical_conditions: e.target.value
+                    }))}
+                    className="w-full px-3 py-2 border rounded-lg h-20"
+                    placeholder="List any medical conditions or allergies..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Preferred Schedule</label>
+                  <select
+                    required
+                    value={registrationData.preferred_schedule}
+                    onChange={(e) => setRegistrationData(prev => ({
+                      ...prev,
+                      preferred_schedule: e.target.value
+                    }))}
+                    className="w-full px-3 py-2 border rounded-lg"
+                  >
+                    <option value="">Select Schedule</option>
+                    {sport?.schedules.map((schedule) => (
+                      <option key={schedule.type} value={schedule.type}>
+                        {schedule.type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 text-neutral-dark hover:bg-neutral-100 rounded-xl transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting || !verified}
+                className="px-6 py-2 bg-green hover:bg-green-dark disabled:bg-neutral-300 text-white rounded-xl transition-colors flex items-center gap-2"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white"></div>
+                    <span>Registering...</span>
+                  </>
+                ) : 'Register'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -296,6 +551,13 @@ export default function SportDetails() {
           </div>
         </div>
       </Container>
+      {showRegistrationModal && (
+        <RegistrationModal
+          sport={sport}
+          onClose={() => setShowRegistrationModal(false)}
+          onSubmit={handleRegistrationSubmit}
+        />
+      )}
     </div>
   );
 }

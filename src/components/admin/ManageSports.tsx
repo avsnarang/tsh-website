@@ -42,6 +42,7 @@ interface SportData {
   facilities: SportFacility[];
   training_schedule: Record<string, string[]>;
   images?: SportImages;
+  is_published: boolean;
 }
 
 export default function ManageSports() {
@@ -258,7 +259,18 @@ export default function ManageSports() {
                 >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="text-xl font-display text-neutral-dark">{sport.name}</h3>
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-xl font-display text-neutral-dark">{sport.name}</h3>
+                        <span
+                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            sport.is_published
+                              ? 'bg-green-light/20 text-green'
+                              : 'bg-neutral-light text-neutral-dark/60'
+                          }`}
+                        >
+                          {sport.is_published ? 'Published' : 'Draft'}
+                        </span>
+                      </div>
                       <p className="text-neutral-dark/70">{sport.category}</p>
                     </div>
                     <div className="flex gap-2">

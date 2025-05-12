@@ -24,6 +24,7 @@ import { AlumniAuthProvider } from './contexts/AlumniAuthContext';
 import ScrollToTop from './components/utils/ScrollToTop';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import { HelmetProvider } from 'react-helmet-async';
+import { Toaster } from 'react-hot-toast';
 
 // Pages
 const Admissions = lazy(() => import('./pages/Admissions'));
@@ -325,6 +326,7 @@ function App() {
           </Suspense>
         </QueryClientProvider>
       </HelmetProvider>
+      <Toaster position="top-right" />
     </ErrorBoundary>
   );
 }
