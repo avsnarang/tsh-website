@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import Container from '../ui/Container';
-import { Plus, Pencil, X, ArrowUp, ArrowDown, ArrowLeft, Video, AlertTriangle } from 'lucide-react';
+import { Plus, Pencil, X, ArrowUp, ArrowDown, ArrowLeft, Video, AlertTriangle, Trash2 } from 'lucide-react';
 import ScrollReveal from '../animations/ScrollReveal';
 import TextReveal from '../animations/TextReveal';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -140,6 +140,34 @@ export default function ManageYouTubeVideos() {
       await fetchVideos();
     } catch (error) {
       setError('Failed to update position');
+    }
+  };
+
+  const handleDelete = async (video: YouTubeVideo) => {
+    if (!window.confirm('Are you sure you want to delete this video?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('youtube_videos')
+        .delete()
+        .eq('id', video.id);
+
+      if (error) throw error;
+      
+      // Update positions of remaining videos
+      const remainingVideos = videos.filter(v => v.id !== video.id);
+      const updates = remainingVideos.map((v, index) => ({
+        id: v.id,
+        position: index
+      }));
+
+      await supabase
+        .from('youtube_videos')
+        .upsert(updates);
+
+      await fetchVideos();
+    } catch (error) {
+      setError('Failed to delete video');
     }
   };
 
@@ -299,6 +327,13 @@ export default function ManageYouTubeVideos() {
                         title="Edit"
                       >
                         <Pencil className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(video)}
+                        className="p-1.5 text-red-500 hover:text-red-600 rounded-lg transition-colors"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
