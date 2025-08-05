@@ -59,6 +59,7 @@ const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard'));
 const ManageEvents = lazy(() => import('./components/admin/ManageEvents'));
 const ManageUpdates = lazy(() => import('./components/admin/ManageUpdates'));
 const ManageStudents = lazy(() => import('./components/admin/ManageStudents'));
+const ManageTeachers = lazy(() => import('./components/admin/ManageTeachers'));
 const ManageAlumni = lazy(() => import('./components/admin/ManageAlumni').then(module => ({ default: module.default })));
 const AdminCalendar = lazy(() => import('./components/admin/AdminCalendar'));
 const ManageGallery = lazy(() => import('./components/admin/AdminGallery'));
@@ -236,6 +237,11 @@ const router = createBrowserRouter(
         <Route path="students" element={
           <ProtectedRoute requiredRole="admin">
             <ManageStudents />
+          </ProtectedRoute>
+        } />
+        <Route path="teachers" element={
+          <ProtectedRoute requiredRole="admin">
+            <ManageTeachers />
           </ProtectedRoute>
         } />
         <Route path="alumni" element={

@@ -14,6 +14,7 @@ export const ADMIN_ROUTES = {
   UPDATES: '/admin/updates',
   GALLERY: '/admin/gallery',
   STUDENTS: '/admin/students',
+  TEACHERS: '/admin/teachers',
   ALUMNI: '/admin/alumni',
   CALENDAR: '/admin/calendar',
   YOUTUBE: '/admin/youtube',

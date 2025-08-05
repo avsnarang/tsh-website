@@ -73,10 +73,10 @@ export default function Footer() {
               className="flex gap-6"
             >
               {[
-                { icon: Facebook, href: "#" },
-                { icon: Instagram, href: "#" },
-                { icon: Linkedin, href: "#" },
-                { icon: Youtube, href: "#" }
+                { icon: Facebook, href: "https://www.facebook.com/tscholarshome" },
+                { icon: Instagram, href: "https://www.instagram.com/thescholars.home" },
+                { icon: Linkedin, href: "https://www.linkedin.com/school/thescholarshome" },
+                { icon: Youtube, href: "https://www.youtube.com/@the.scholarshome" }
               ].map((social, index) => (
                 <motion.a
                   key={index}
