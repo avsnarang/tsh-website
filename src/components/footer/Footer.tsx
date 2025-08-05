@@ -73,10 +73,10 @@ export default function Footer() {
               className="flex gap-6"
             >
               {[
-                { icon: Facebook, href: "https://www.facebook.com/tscholarshome" },
-                { icon: Instagram, href: "https://www.instagram.com/thescholars.home" },
-                { icon: Linkedin, href: "https://www.linkedin.com/school/thescholarshome" },
-                { icon: Youtube, href: "https://www.youtube.com/@the.scholarshome" }
+                { icon: Facebook, href: "https://www.facebook.com/tscholarshome", target: "_blank", rel: "noopener noreferrer" },
+                { icon: Instagram, href: "https://www.instagram.com/thescholars.home", target: "_blank", rel: "noopener noreferrer" },
+                { icon: Linkedin, href: "https://www.linkedin.com/school/thescholarshome", target: "_blank", rel: "noopener noreferrer" },
+                { icon: Youtube, href: "https://www.youtube.com/@the.scholarshome", target: "_blank", rel: "noopener noreferrer" }
               ].map((social, index) => (
                 <motion.a
                   key={index}
