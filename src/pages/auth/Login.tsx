@@ -1,11 +1,12 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, Link } from 'react-router-dom'; // Removed useNavigate since it's unused
+import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
 import Container from '../../components/ui/Container';
-// Removed unused Button import
 import { Lock, ArrowRight, AlertTriangle, Mail, Star } from 'lucide-react';
-// If ALUMNI_ROUTES is needed, create the constants file or import from correct location
-import { ALUMNI_ROUTES } from '../../config/routes'; // Removed unused ALUMNI_ROUTES
+import { ALUMNI_ROUTES } from '../../config/routes';
 import { supabase } from '../../lib/supabase';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
@@ -18,8 +19,9 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [blockRedirect, setBlockRedirect] = useState(true);
   const timeoutRef = useRef<number | null>(null);
-  const location = useLocation();
-  const { signIn, user, userRole, loading: authLoading, clearAdminSession } = useAuth(); // Removed unused signOut
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { signIn, user, userRole, loading: authLoading, clearAdminSession } = useAuth();
   const [justLoaded, setJustLoaded] = useState(true);
 
   const inputClasses = `
@@ -119,15 +121,15 @@ export default function Login() {
     if (user && userRole) {
       console.log('User already logged in with role:', userRole);
       
-      // Use window.location for a more direct redirect
+      // Use router.push for navigation
       if (userRole === 'admin') {
-        window.location.href = '/admin/dashboard';
+        router.push('/admin/dashboard');
       } else if (userRole === 'alumni') {
-        const from = location.state?.from?.pathname || '/alumni/profile';
-        window.location.href = from;
+        const from = searchParams.get('redirect') || '/alumni/profile';
+        router.push(from);
       }
     }
-  }, [user, userRole, authLoading, location, blockRedirect, justLoaded]);
+  }, [user, userRole, authLoading, searchParams, router, blockRedirect, justLoaded]);
 
   // Debug function to check Supabase connection
   const checkSupabaseConnection = async () => {
@@ -333,7 +335,7 @@ export default function Login() {
                   <p className="text-neutral-dark/70">
                     Don't have an account?{' '}
                     <Link
-                      to={ALUMNI_ROUTES.REGISTER}
+                      href={ALUMNI_ROUTES.REGISTER}
                       className="text-green hover:text-green-dark transition-colors inline-flex items-center gap-1"
                     >
                       Register

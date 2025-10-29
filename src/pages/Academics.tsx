@@ -1,10 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import Container from '../components/ui/Container';
 import { BookOpen, Award, Users, Brain, ArrowRight, GraduationCap, Star, Heart } from 'lucide-react';
 import Button from '../components/ui/Button';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
-import { useSEO } from '../lib/seo';
 
 const programs = [
   {
@@ -92,13 +93,7 @@ const stats = [
 ];
 
 export default function Academics() {
-  const navigate = useNavigate();
-
-  useSEO({
-    title: "Academics | The Scholars' Home",
-    description: "Explore our comprehensive academic programs from pre-primary to senior secondary. CBSE curriculum with focus on holistic development and excellence.",
-    url: "https://tsh.edu.in/academics"
-  });
+  const router = useRouter();
 
   return (
     <div className="min-h-screen bg-neutral-light">
@@ -173,7 +168,7 @@ export default function Academics() {
                     </div>
 
                     <Button 
-                      onClick={() => navigate(program.link)}
+                      onClick={() => router.push(program.link)}
                       className="flex items-center gap-2 group"
                     >
                       Learn More
@@ -215,7 +210,7 @@ export default function Academics() {
               </TextReveal>
               <Button 
                 variant="cta"
-                onClick={() => navigate('/admissions')}
+                onClick={() => router.push('/admissions')}
                 className="flex items-center gap-2 mx-auto"
               >
                 <GraduationCap className="h-5 w-5" />
