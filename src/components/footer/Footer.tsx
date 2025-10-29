@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Container from '../ui/Container';
 import { Phone, Mail, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react';

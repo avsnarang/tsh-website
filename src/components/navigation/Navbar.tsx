@@ -1,5 +1,8 @@
+'use client';
+
 import { useState, useEffect, useRef } from 'react';
-import { Link, To } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { 
   Menu, X, GraduationCap, ChevronDown,
   Info, BookOpen, Building, Trophy, 

@@ -1,5 +1,7 @@
+'use client';
+
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 interface Props {
   children?: ReactNode;
