@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
@@ -40,7 +42,6 @@ export default function Faculty() {
   const [selectedClassLevel, setSelectedClassLevel] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  useSEO(seoConfig.faculty);
 
   useEffect(() => {
     const fetchTeachers = async () => {

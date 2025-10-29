@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import Container from '../../components/ui/Container';
 import { Trophy, Medal, Building2, ArrowRight, Clock, Check, User } from 'lucide-react';
@@ -6,7 +8,7 @@ import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
 import { useSEO } from '../../lib/seo';
 import { supabase } from '../../lib/supabase';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import SportCardSkeleton from '../../components/skeletons/SportCardSkeleton';
 
 interface SportImages {
@@ -38,7 +40,6 @@ export default function SportsAthletics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
 
-  useSEO({
     title: "Sports & Athletics | The Scholars' Home",
     description: "Excellence in sports and athletics at The Scholars' Home. Professional coaching and world-class facilities for comprehensive physical development.",
     url: "https://tsh.edu.in/co-curricular/sports-athletics"
@@ -240,7 +241,7 @@ export default function SportsAthletics() {
 
                           <div className="pt-4 border-t border-neutral-dark/10">
                             <Link 
-                              to={`/co-curricular/sports-athletics/${sport.id}`}
+                              href={`/co-curricular/sports-athletics/${sport.id}`}
                               className="inline-flex items-center gap-2 text-sm font-medium text-green hover:text-green-dark group-hover:gap-3 transition-all"
                             >
                               Learn More 

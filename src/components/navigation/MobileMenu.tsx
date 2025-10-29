@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import { 
   ChevronRight, 
   GraduationCap,
@@ -81,7 +83,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
             <motion.div variants={itemVariants}>
               <div className="space-y-4">
                 <Link 
-                  to="/about" 
+                  href="/about" 
                   className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
                   onClick={handleLinkClick}
                 >
@@ -93,14 +95,14 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
                 </Link>
                 <div className="pl-4 space-y-3">
                   <Link 
-                    to="/about/vision" 
+                    href="/about/vision" 
                     className="block text-lg text-neutral-light/80 hover:text-primary-light transition-colors"
                     onClick={handleLinkClick}
                   >
                     Vision & Mission
                   </Link>
                   <Link 
-                    to="/about/messages" 
+                    href="/about/messages" 
                     className="block text-lg text-neutral-light/80 hover:text-primary-light transition-colors"
                     onClick={handleLinkClick}
                   >
@@ -113,7 +115,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
             <motion.div variants={itemVariants}>
               <div className="space-y-4">
                 <Link 
-                  to="/campuses" 
+                  href="/campuses" 
                   className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
                   onClick={handleLinkClick}
                 >
@@ -125,21 +127,21 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
                 </Link>
                 <div className="pl-4 space-y-3">
                   <Link 
-                    to="/campus/paonta-sahib" 
+                    href="/campus/paonta-sahib" 
                     className="block text-lg text-neutral-light/80 hover:text-primary-light transition-colors"
                     onClick={handleLinkClick}
                   >
                     Paonta Sahib
                   </Link>
                   <Link 
-                    to="/campus/juniors" 
+                    href="/campus/juniors" 
                     className="block text-lg text-neutral-light/80 hover:text-primary-light transition-colors"
                     onClick={handleLinkClick}
                   >
                     Juniors
                   </Link>
                   <Link 
-                    to="/campus/majra" 
+                    href="/campus/majra" 
                     className="block text-lg text-neutral-light/80 hover:text-primary-light transition-colors"
                     onClick={handleLinkClick}
                   >
@@ -151,7 +153,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
 
             <motion.div variants={itemVariants}>
               <Link 
-                to="/academics" 
+                href="/academics" 
                 className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
                 onClick={handleLinkClick}
               >
@@ -165,7 +167,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
 
             <motion.div variants={itemVariants}>
               <Link 
-                to="/scholarship" 
+                href="/scholarship" 
                 className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
                 onClick={handleLinkClick}
               >
@@ -179,7 +181,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
 
             <motion.div variants={itemVariants}>
               <Link 
-                to="/co-curricular" 
+                href="/co-curricular" 
                 className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
                 onClick={handleLinkClick}
               >
@@ -193,7 +195,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
 
             <motion.div variants={itemVariants}>
               <Link 
-                to={ALUMNI_ROUTES.HOME}
+                href={ALUMNI_ROUTES.HOME}
                 className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
                 onClick={handleLinkClick}
               >
@@ -207,7 +209,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
 
             <motion.div variants={itemVariants}>
               <Link 
-                to="/invites" 
+                href="/invites" 
                 className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
                 onClick={handleLinkClick}
               >
@@ -221,7 +223,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
 
             <motion.div variants={itemVariants}>
               <Link 
-                to="/gallery" 
+                href="/gallery" 
                 className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
                 onClick={handleLinkClick}
               >
@@ -235,7 +237,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
 
             <motion.div variants={itemVariants}>
               <Link 
-                to="/contact" 
+                href="/contact" 
                 className="flex items-center justify-between text-xl text-neutral-light hover:text-primary-light transition-colors"
                 onClick={handleLinkClick}
               >
@@ -248,7 +250,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
             </motion.div>
 
             <motion.div variants={itemVariants} className="pt-4">
-              <Link to="/admissions" onClick={handleLinkClick}>
+              <Link href="/admissions" onClick={handleLinkClick}>
                 <Button 
                   variant="cta"
                   className="w-full text-lg flex items-center justify-center gap-2"

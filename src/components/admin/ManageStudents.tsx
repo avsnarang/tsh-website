@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import { motion } from 'framer-motion';
@@ -284,7 +286,7 @@ export default function ManageStudents() {
               {/* Back to Dashboard Link */}
               <div className="flex items-center justify-between gap-4 mb-8">
                 <Link
-                  to="/admin/dashboard"
+                  href="/admin/dashboard"
                   className="flex items-center gap-2 text-green hover:text-green-dark transition-colors"
                 >
                   <ArrowLeft className="h-5 w-5" />

@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { GraduationCap, ArrowRight, BookOpen, School, Users } from 'lucide-react';
 import Button from '../ui/Button';
@@ -67,13 +69,13 @@ export default function Hero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-12">
-              <Link to="/admissions">
+              <Link href="/admissions">
                 <Button variant="cta" className="flex items-center gap-2 group">
                   <GraduationCap className="h-5 w-5" />
                   Begin Your Journey
                 </Button>
               </Link>
-              <Link to="/about">
+              <Link href="/about">
                 <Button
                   variant="outline2"
                   className="flex items-center gap-2 group"

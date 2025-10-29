@@ -1,5 +1,7 @@
+'use client';
+
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ArrowRight, Compass } from 'lucide-react';
 import type { CampusActivity } from '../../types/components';
 
@@ -108,7 +110,7 @@ export default function CampusLife() {
                     {activity.description}
                   </p>
                   <Link
-                    to={activity.link}
+                    href={activity.link}
                     className="inline-flex items-center text-sm text-orange hover:text-orange-600 transition-colors group/link"
                   >
                     <span className="mr-2">Explore More</span>

@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '../../components/ui/Container';
 import { Brain, Heart, Star, Users, BookOpen } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';
@@ -6,7 +8,6 @@ import { motion } from 'framer-motion';
 import { useSEO } from '../../lib/seo';
 
 export default function SeniorSecondary() {
-  useSEO({
     title: "Senior Secondary School | The Scholars' Home",
     description: "Senior secondary education at The Scholars' Home. Specialized streams in Science, Commerce, and Humanities with expert faculty guidance.",
     url: "https://tsh.edu.in/academics/senior-secondary"

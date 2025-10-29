@@ -1,5 +1,7 @@
+'use client';
+
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { supabase } from '../../lib/supabase';
 import Container from '../ui/Container';
 import { Plus, Pencil, X, ArrowUp, ArrowDown, ArrowLeft, Video, AlertTriangle, Trash2 } from 'lucide-react';
@@ -199,7 +201,7 @@ export default function ManageYouTubeVideos() {
             <div className="text-center mb-12">
               <div className="flex items-center justify-between gap-4 mb-8">
                 <Link
-                  to="/admin/dashboard"
+                  href="/admin/dashboard"
                   className="flex items-center gap-2 text-green hover:text-green-dark transition-colors"
                 >
                   <ArrowLeft className="h-5 w-5" />

@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface ProtectedAdminRouteProps {
@@ -19,7 +22,7 @@ export default function ProtectedAdminRoute({ children }: ProtectedAdminRoutePro
   }
 
   if (!user || userRole !== 'admin') {
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    return <redirect to="/admin/login" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { ALUMNI_ROUTES } from '../../config/routes';
 
@@ -36,26 +39,26 @@ export default function ProtectedRoute({
     
     // Otherwise redirect based on role
     if (userRole === 'admin') {
-      return <Navigate to="/admin/dashboard" replace />;
+      return <redirect to="/admin/dashboard" replace />;
     }
-    return <Navigate to={ALUMNI_ROUTES.PROFILE} replace />;
+    return <redirect to={ALUMNI_ROUTES.PROFILE} replace />;
   }
 
   // For protected pages, redirect to login if not logged in
   if (requireAuth && !user) {
-    return <Navigate to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
+    return <redirect to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
   // If specific role is required, check if user has that role
   if (requireAuth && requiredRole && userRole !== requiredRole) {
     // If user is logged in but doesn't have the required role
     if (userRole === 'admin') {
-      return <Navigate to="/admin/dashboard" replace />;
+      return <redirect to="/admin/dashboard" replace />;
     } else if (userRole === 'alumni') {
-      return <Navigate to={ALUMNI_ROUTES.PROFILE} replace />;
+      return <redirect to={ALUMNI_ROUTES.PROFILE} replace />;
     } else {
       // If no valid role, log them out and send to login
-      return <Navigate to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
+      return <redirect to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
     }
   }
 

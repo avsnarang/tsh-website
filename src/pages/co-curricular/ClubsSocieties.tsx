@@ -1,9 +1,10 @@
+'use client';
+
 import Container from '../../components/ui/Container';
 import { Users, Brain, Globe, Lightbulb } from 'lucide-react';
 import { useSEO } from '../../lib/seo';
 
 export default function ClubsSocieties() {
-  useSEO({
     title: "Clubs & Societies | The Scholars' Home",
     description: "Explore our diverse clubs and societies. Fostering interests and building communities through extra-curricular activities.",
     url: "https://tsh.edu.in/co-curricular/clubs-societies"

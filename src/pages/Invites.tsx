@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import InviteCard from '../components/invites/InviteCard';
 import InviteModal from '../components/invites/InviteModal';
@@ -20,7 +22,6 @@ export default function Invites() {
   const [success, setSuccess] = useState('');
   const [showUpcomingOnly, setShowUpcomingOnly] = useState(true); // New state for filter
 
-  useSEO({
     title: "School Events | The Scholars' Home",
     description: "Join us for our upcoming events and celebrations at The Scholars' Home. RSVP for school functions and special occasions.",
   });

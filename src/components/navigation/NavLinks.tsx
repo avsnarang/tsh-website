@@ -1,5 +1,7 @@
+'use client';
+
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { motion, MotionValue } from 'framer-motion';
 import { ALUMNI_ROUTES } from '../../config/routes';
@@ -26,7 +28,7 @@ export default function NavLinks({ textColor, isMenuOpen }: NavLinksProps) {
       >
         <motion.div style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}>
           <Link 
-            to="/about" 
+            href="/about" 
             className="flex items-center gap-1"
           >
             About
@@ -37,25 +39,25 @@ export default function NavLinks({ textColor, isMenuOpen }: NavLinksProps) {
         {isAboutHovered && (
           <div className={dropdownClass}>
             <Link 
-              to="/about" 
+              href="/about" 
               className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
             >
               Overview
             </Link>
             <Link 
-              to="/about/vision" 
+              href="/about/vision" 
               className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
             >
               Mission & Vision
             </Link>
             <Link 
-              to="/about/messages" 
+              href="/about/messages" 
               className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
             >
               What our Leaders Say
             </Link>
             <Link 
-              to="/scholarship" 
+              href="/scholarship" 
               className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
             >
               Scholarship
@@ -71,7 +73,7 @@ export default function NavLinks({ textColor, isMenuOpen }: NavLinksProps) {
       >
         <motion.div style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}>
           <Link 
-            to="/campuses" 
+            href="/campuses" 
             className="flex items-center gap-1"
           >
             Campuses
@@ -82,19 +84,19 @@ export default function NavLinks({ textColor, isMenuOpen }: NavLinksProps) {
         {isCampusesHovered && (
           <div className={dropdownClass}>
             <Link 
-              to="./campus/paonta-sahib" 
+              href="./campus/paonta-sahib" 
               className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
             >
               Paonta Sahib
             </Link>
             <Link 
-              to="./campus/juniors" 
+              href="./campus/juniors" 
               className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
             >
               Juniors
             </Link>
             <Link 
-              to="./campus/majra" 
+              href="./campus/majra" 
               className={`block px-4 py-2 ${isMenuOpen ? 'hover:bg-orange-dark text-neutral-light' : 'hover:bg-primary/10 text-neutral-dark'}`}
             >
               Majra
@@ -113,7 +115,7 @@ export default function NavLinks({ textColor, isMenuOpen }: NavLinksProps) {
         { to: "/contact", text: "Contact" }
       ].map((link) => (
         <motion.div key={link.to} style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}>
-          <Link to={link.to}>{link.text}</Link>
+          <Link href={link.to}>{link.text}</Link>
         </motion.div>
       ))}
     </div>

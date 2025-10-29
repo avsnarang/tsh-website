@@ -1,3 +1,5 @@
+'use client';
+
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Users, BookOpen, Building2, ArrowRight, CheckCircle2, Calendar } from 'lucide-react';
@@ -83,7 +85,6 @@ const ADMISSION_STEPS = [
 ];
 
 export default function Admissions() {
-  useSEO({
     title: "Admissions 2025-26 | The Scholars' Home",
     description: "Join The Scholars' Home for the academic year 2025-26. Information about admission process, eligibility, and campus-specific details.",
     url: "https://tsh.edu.in/admissions"

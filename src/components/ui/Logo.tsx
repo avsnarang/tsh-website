@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface LogoProps {
@@ -14,7 +16,7 @@ export default function Logo({ variant = 'default', className = '' }: LogoProps)
   // For footer, always use white text
   if (variant === 'footer') {
     return (
-      <Link to="/" className={`flex items-center gap-3 ${className}`}>
+      <Link href="/" className={`flex items-center gap-3 ${className}`}>
         <img 
           src="https://images.tsh.edu.in/mobile_logo.png"
           alt="The Scholars' Home"

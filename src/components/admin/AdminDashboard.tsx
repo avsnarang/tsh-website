@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import { 
@@ -126,7 +128,7 @@ export default function AdminDashboard() {
             </motion.div>
 
             <div className="flex justify-end items-center gap-4 mb-12">
-              <Link to="/admin/settings">
+              <Link href="/admin/settings">
                 <Button variant="outline" className="flex items-center gap-2">
                   <Settings className="h-5 w-5" />
                   Settings
@@ -151,7 +153,7 @@ export default function AdminDashboard() {
                   transition={{ delay: index * 0.1 }}
                 >
                   <Link 
-                    to={item.path}
+                    href={item.path}
                     className="group block relative"
                   >
                     <div 

@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '../ui/Container';
 import { CampusInfo } from '../../types/campus';
 

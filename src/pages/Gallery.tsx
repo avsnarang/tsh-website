@@ -1,5 +1,7 @@
+'use client';
+
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import Container from '../components/ui/Container';
 import { Calendar, ArrowRight, MapPin, Camera, Image, Search } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -38,17 +40,16 @@ export default function Gallery() {
   const [searchQuery, setSearchQuery] = useState('');
   const [events, setEvents] = useState<GalleryEvent[]>([]);
   const [campuses, setCampuses] = useState<string[]>(['All Campuses']);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleEventClick = (eventId: string) => {
-    navigate(`/gallery/event/${eventId}`);
+    router.push(`/gallery/event/${eventId}`);
   };
 
   useEffect(() => {
     fetchGalleryEvents();
   }, []);
 
-  useSEO({
     title: "Photo Gallery | The Scholars' Home",
     description: "Browse through our photo gallery showcasing school events, activities, and memorable moments at The Scholars' Home.",
     url: "https://tsh.edu.in/gallery"

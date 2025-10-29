@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Container from '../components/ui/Container';
@@ -18,7 +20,6 @@ export default function YouTubeGallery() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
   
-  useSEO({
     title: "Video Gallery | The Scholars' Home",
     description: "Watch videos from The Scholars' Home YouTube channel featuring school events, student achievements, and more."
   });

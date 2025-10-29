@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
@@ -26,7 +28,7 @@ interface Sport {
 
 export default function SportDetails() {
   const { id } = useParams();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [sport, setSport] = useState<Sport | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -67,7 +69,7 @@ export default function SportDetails() {
 
   const handleRegister = () => {
     // Implement registration logic or navigation
-    navigate(`/register/sports/${id}`);
+    router.push(`/register/sports/${id}`);
   };
 
   const nextImage = () => {
@@ -84,7 +86,6 @@ export default function SportDetails() {
     }
   };
 
-  useSEO({
     title: sport ? `${sport.name} | The Scholars' Home` : "Sports Program",
     description: sport?.description || "Sports program details",
     url: `https://tsh.edu.in/co-curricular/sports-athletics/${id}`
@@ -165,7 +166,7 @@ export default function SportDetails() {
         <div className="text-center">
           <p className="text-red-600 mb-4">{error || 'Sport not found'}</p>
           <button
-            onClick={() => navigate('/co-curricular/sports-athletics')}
+            onClick={() => router.push('/co-curricular/sports-athletics')}
             className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full"
           >
             <ArrowLeft className="w-4 h-4" />

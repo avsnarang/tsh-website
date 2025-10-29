@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef } from 'react';
 import { useAlumniProfile } from '../../lib/queries';
 import { useAuth } from '../../contexts/AuthContext';
@@ -9,7 +11,7 @@ import { useProfileActions } from '../../hooks/useProfileActions';
 import { Star } from 'lucide-react';
 import TextReveal from '../../components/animations/TextReveal';
 import ScrollReveal from '../../components/animations/ScrollReveal';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 export default function Profile() {
   const { user } = useAuth();
@@ -76,7 +78,7 @@ export default function Profile() {
             </TextReveal>
             <TextReveal delay={0.2}>
               <p className="text-neutral-dark/70 text-lg max-w-2xl mx-auto">
-                Update your information or <Link to="/alumni/directory" className="text-primary hover:text-primary-dark underline underline-offset-2 decoration-primary/30 hover:decoration-primary font-medium">browse the alumni directory →</Link>
+                Update your information or <Link href="/alumni/directory" className="text-primary hover:text-primary-dark underline underline-offset-2 decoration-primary/30 hover:decoration-primary font-medium">browse the alumni directory →</Link>
               </p>
             </TextReveal>
           </div>

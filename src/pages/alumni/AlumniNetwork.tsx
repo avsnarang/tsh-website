@@ -1,4 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { Users, UserPlus, ArrowRight, BookOpen, LogIn, User } from 'lucide-react';
 import Container from '../../components/ui/Container';
 import { useAuth } from '../../contexts/AuthContext';
@@ -12,21 +14,20 @@ import { useAlumniProfiles, useSuccessStories } from '../../lib/queries';
 
 export default function AlumniNetwork() {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { data: alumniProfiles, isLoading: isLoadingProfiles } = useAlumniProfiles();
   const { data: successStories, isLoading: isLoadingStories } = useSuccessStories();
 
   const handleDirectoryClick = () => {
     if (!user) {
-      navigate(ALUMNI_ROUTES.LOGIN, { 
+      router.push(ALUMNI_ROUTES.LOGIN, { 
         state: { from: ALUMNI_ROUTES.DIRECTORY }
       });
       return;
     }
-    navigate(ALUMNI_ROUTES.DIRECTORY);
+    router.push(ALUMNI_ROUTES.DIRECTORY);
   };
 
-  useSEO({
     title: "Alumni Network | The Scholars' Home",
     description: "Join our alumni network to connect with fellow graduates and share your success stories",
     url: "https://tsh.edu.in/alumni/network"
@@ -99,7 +100,7 @@ export default function AlumniNetwork() {
                 <Button 
                   variant="cta-green"
                   className="w-full flex items-center justify-center gap-2 group"
-                  onClick={() => navigate(ALUMNI_ROUTES.SUCCESS)}
+                  onClick={() => router.push(ALUMNI_ROUTES.SUCCESS)}
                 >
                   Explore Stories
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -129,7 +130,7 @@ export default function AlumniNetwork() {
                   <Button 
                     variant="cta-green"
                     className="w-full flex items-center justify-center gap-2 group"
-                    onClick={() => navigate(ALUMNI_ROUTES.LOGIN)}
+                    onClick={() => router.push(ALUMNI_ROUTES.LOGIN)}
                   >
                     Sign In
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -156,7 +157,7 @@ export default function AlumniNetwork() {
                   <Button 
                     variant="cta-green"
                     className="w-full flex items-center justify-center gap-2 group"
-                    onClick={() => navigate(ALUMNI_ROUTES.REGISTER)}
+                    onClick={() => router.push(ALUMNI_ROUTES.REGISTER)}
                   >
                     Get Started
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -185,7 +186,7 @@ export default function AlumniNetwork() {
                   <Button 
                     variant="cta-green"
                     className="w-full flex items-center justify-center gap-2 group"
-                    onClick={() => navigate(ALUMNI_ROUTES.PROFILE)}
+                    onClick={() => router.push(ALUMNI_ROUTES.PROFILE)}
                   >
                     View Profile
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />

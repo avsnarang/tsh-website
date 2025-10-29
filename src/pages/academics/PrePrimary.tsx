@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '../../components/ui/Container';
 import { Brain, Heart, Star, Users, BookOpen } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';
@@ -6,7 +8,6 @@ import { motion } from 'framer-motion';
 import { useSEO } from '../../lib/seo';
 
 export default function PrePrimary() {
-  useSEO({
     title: "Pre-Primary Education | The Scholars' Home",
     description: "Early childhood education program at The Scholars' Home. Nurturing young minds through play-based learning and holistic development.",
     url: "https://tsh.edu.in/academics/pre-primary"

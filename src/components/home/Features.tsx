@@ -1,5 +1,7 @@
+'use client';
+
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { BookOpen, Users, Trophy, Globe, ArrowRight } from 'lucide-react';
 import type { Feature } from '../../types/components';
 
@@ -95,7 +97,7 @@ export default function Features() {
                   <h3 className="text-xl font-display text-neutral-dark mb-3">{feature.title}</h3>
                   <p className="text-neutral-dark/70 mb-6">{feature.description}</p>
                   <Link
-                    to={feature.link}
+                    href={feature.link}
                     className="text-green hover:text-green-dark font-medium transition-colors inline-flex items-center gap-2 group"
                   >
                     Learn More

@@ -1,7 +1,9 @@
+'use client';
+
 import Container from '../components/ui/Container';
 import { MapPin, Users, ArrowRight } from 'lucide-react';
 import { schoolInfo } from '../data/schoolData';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Button from '../components/ui/Button';
 
 export default function Campuses() {
@@ -39,7 +41,7 @@ export default function Campuses() {
                     <span className="text-neutral-dark/80">Student capacity: 1000+</span>
                   </div>
                   <div className="mt-8">
-                    <Link to={`/campus/${branch.location.toLowerCase().replace(' ', '-')}`}>
+                    <Link href={`/campus/${branch.location.toLowerCase().replace(' ', '-')}`}>
                       <Button className="flex items-center gap-2 group">
                         See More About {branch.location} Campus
                         <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />

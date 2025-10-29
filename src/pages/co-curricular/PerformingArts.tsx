@@ -1,9 +1,10 @@
+'use client';
+
 import Container from '../../components/ui/Container';
 import { Music, Mic, Users, Star } from 'lucide-react';
 import { useSEO } from '../../lib/seo';
 
 export default function PerformingArts() {
-  useSEO({
     title: "Performing Arts | The Scholars' Home",
     description: "Discover our performing arts program including music, dance, and theater. Nurturing artistic talents and creative expression.",
     url: "https://tsh.edu.in/co-curricular/performing-arts"

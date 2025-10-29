@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '../../components/ui/Container';
 import { Target, Compass, Star, Award } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';
@@ -7,7 +9,6 @@ import { motion } from 'framer-motion';
 import BreadcrumbNav from '../../components/navigation/BreadcrumbNav';
 
 export default function Vision() {
-  useSEO({
     title: "Vision & Mission | The Scholars' Home",
     description: "Explore The Scholars' Home's vision and mission for educational excellence. Learn about our core values and strategic objectives for shaping tomorrow's leaders.",
     url: "https://tsh.edu.in/about/vision"

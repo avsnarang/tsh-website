@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '../../components/ui/Container';
 import { Brain, Heart, Star, Users, BookOpen } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';
@@ -6,7 +8,6 @@ import { motion } from 'framer-motion';
 import { useSEO } from '../../lib/seo';
 
 export default function Secondary() {
-  useSEO({
     title: "Secondary School | The Scholars' Home",
     description: "Secondary education program at The Scholars' Home. Preparing students for CBSE board examinations with comprehensive subject coverage.",
     url: "https://tsh.edu.in/academics/secondary"

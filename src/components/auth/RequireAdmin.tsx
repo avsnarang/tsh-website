@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { ALUMNI_ROUTES } from '../../config/routes';
 
@@ -21,18 +24,18 @@ export default function RequireAdmin({ children }: RequireAdminProps) {
 
   // If user is not logged in
   if (!user) {
-    return <Navigate to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
+    return <redirect to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
   // If user is not an admin
   if (userRole !== 'admin') {
     // If user is an alumni, redirect to alumni profile
     if (userRole === 'alumni') {
-      return <Navigate to={ALUMNI_ROUTES.PROFILE} replace />;
+      return <redirect to={ALUMNI_ROUTES.PROFILE} replace />;
     }
     
     // Otherwise, redirect to login
-    return <Navigate to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
+    return <redirect to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

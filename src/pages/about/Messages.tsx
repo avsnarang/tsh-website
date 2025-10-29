@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { User, X, ArrowRight } from 'lucide-react';
 import { LeadershipMessage } from '../../types/leadership';
@@ -16,7 +18,6 @@ export default function Messages() {
   const { messages } = useMessages();
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
 
-  useSEO({
     title: "Leadership Messages | The Scholars' Home",
     description: "Read inspiring messages from The Scholars' Home's leadership team.",
     url: "https://tsh.edu.in/about/messages"

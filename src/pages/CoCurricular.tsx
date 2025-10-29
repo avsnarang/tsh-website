@@ -1,4 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import Container from '../components/ui/Container';
 import { Music, Palette, Trophy, Theater, ArrowRight, Star, Users, Award, Heart } from 'lucide-react';
 import Button from '../components/ui/Button';
@@ -73,9 +75,8 @@ const stats = [
 ];
 
 export default function CoCurricular() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
-  useSEO({
     title: "Co-Curricular Activities | The Scholars' Home",
     description: "Explore our diverse co-curricular programs including performing arts, sports, visual arts, and clubs. Nurturing talents beyond academics.",
     url: "https://tsh.edu.in/co-curricular"
@@ -151,7 +152,7 @@ export default function CoCurricular() {
                     </div>
 
                     <Button 
-                      onClick={() => navigate(activity.link)}
+                      onClick={() => router.push(activity.link)}
                       className="flex items-center gap-2 group"
                     >
                       Learn More
@@ -193,7 +194,7 @@ export default function CoCurricular() {
               </TextReveal>
               <Button 
                 variant="cta"
-                onClick={() => navigate('/admissions')}
+                onClick={() => router.push('/admissions')}
                 className="flex items-center gap-2 mx-auto"
               >
                 <Heart className="h-5 w-5" />

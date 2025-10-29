@@ -1,6 +1,8 @@
+'use client';
+
 import Container from '../components/ui/Container';
 import { GraduationCap, Award, BookOpen, ArrowRight, Heart, Star, Users, Trophy } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Button from '../components/ui/Button';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
@@ -95,7 +97,6 @@ const stats = [
 ];
 
 export default function Scholarship() {
-  useSEO({
     title: "Scholarships | The Scholars' Home",
     description: "Explore scholarship opportunities at The Scholars' Home. Merit-based and need-based financial aid programs for deserving students.",
     url: "https://tsh.edu.in/scholarship"
@@ -217,7 +218,7 @@ export default function Scholarship() {
                       </div>
                     </div>
 
-                    <Link to="/admissions">
+                    <Link href="/admissions">
                       <Button 
                         variant="cta"
                         className="flex items-center gap-2 group"
@@ -263,7 +264,7 @@ export default function Scholarship() {
                 </p>
               </TextReveal>
               <div className="flex flex-wrap justify-center gap-4">
-                <Link to="/admissions">
+                <Link href="/admissions">
                   <Button 
                     variant="cta"
                     className="flex items-center gap-2 bg-white text-primary hover:bg-white/90"
@@ -272,7 +273,7 @@ export default function Scholarship() {
                     Start Application
                   </Button>
                 </Link>
-                <Link to="/contact">
+                <Link href="/contact">
                   <Button 
                     variant="outline"
                     className="flex items-center gap-2 group border-white text-white hover:bg-white hover:text-primary"

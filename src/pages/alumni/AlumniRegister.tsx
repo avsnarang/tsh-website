@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useAlumniAuth } from '../../contexts/AlumniAuthContext';
 import Container from '../../components/ui/Container';
 import { ALUMNI_ROUTES } from '../../config/routes';
@@ -7,7 +9,7 @@ import { UserPlus, GraduationCap, MapPin, Briefcase, Mail, Lock, Star, ArrowRigh
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 export default function AlumniRegister() {
   const [fullName, setFullName] = useState('');
@@ -19,13 +21,13 @@ export default function AlumniRegister() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user, signUp } = useAlumniAuth();
 
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      navigate(ALUMNI_ROUTES.PROFILE);
+      router.push(ALUMNI_ROUTES.PROFILE);
     }
   }, [user, navigate]);
 
@@ -63,7 +65,7 @@ export default function AlumniRegister() {
       await signUp(email, password, profileData);
 
       // Redirect to profile page on success
-      navigate(`${ALUMNI_ROUTES.PROFILE}?registered=true`);
+      router.push(`${ALUMNI_ROUTES.PROFILE}?registered=true`);
 
     } catch (err: any) {
       setError(err.message);
@@ -302,7 +304,7 @@ export default function AlumniRegister() {
                           <p className="text-neutral-dark/70">
                             Already have an account?{' '}
                             <Link
-                              to={ALUMNI_ROUTES.LOGIN}
+                              href={ALUMNI_ROUTES.LOGIN}
                               className="text-green hover:text-green-dark transition-colors inline-flex items-center gap-1"
                             >
                               Sign In

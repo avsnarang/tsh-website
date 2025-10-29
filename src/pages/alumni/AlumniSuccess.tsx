@@ -1,3 +1,5 @@
+'use client';
+
 import { motion } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import { Star, Search, Filter, User, Quote, Briefcase, Building2 } from 'lucide-react';
@@ -22,7 +24,6 @@ export default function AlumniSuccess() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBatch, setSelectedBatch] = useState<number | 'all'>('all');
 
-  useSEO({
     title: 'Alumni Success Stories | The Scholars Home',
     description: 'Discover inspiring success stories from The Scholars Home alumni community.'
   });

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
@@ -5,7 +7,7 @@ import { Plus, Pencil, AlertTriangle, Calendar, MapPin, X, Star, ArrowLeft } fro
 import ScrollReveal from '../animations/ScrollReveal';
 import TextReveal from '../animations/TextReveal';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 interface GalleryImage {
   id: string;
@@ -285,7 +287,7 @@ export default function AdminGallery() {
             {/* Add Back Button */}
             <div className="flex items-center justify-between gap-4 mb-8">
               <Link
-                to="/admin/dashboard"
+                href="/admin/dashboard"
                 className="flex items-center gap-2 text-green hover:text-green-dark transition-colors"
               >
                 <ArrowLeft className="h-5 w-5" />

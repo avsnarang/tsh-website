@@ -1,9 +1,10 @@
+'use client';
+
 import Container from '../../components/ui/Container';
 import { Palette, Image, Brush, Award } from 'lucide-react';
 import { useSEO } from '../../lib/seo';
 
 export default function VisualArts() {
-  useSEO({
     title: "Visual Arts | The Scholars' Home",
     description: "Visual arts program at The Scholars' Home. Nurturing creativity through various art forms and modern techniques.",
     url: "https://tsh.edu.in/co-curricular/visual-arts"

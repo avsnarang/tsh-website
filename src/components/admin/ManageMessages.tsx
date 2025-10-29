@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Container from '../ui/Container';
 import { ArrowLeft, User, Pencil, X, AlertCircle, Plus, AlertTriangle, Trash2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
@@ -231,7 +233,7 @@ export default function ManageMessages() {
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between gap-4 mb-12">
               <Link
-                to="/admin/dashboard"
+                href="/admin/dashboard"
                 className="flex items-center gap-2 text-green hover:text-green-dark transition-colors"
               >
                 <ArrowLeft className="h-5 w-5" />

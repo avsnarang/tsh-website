@@ -1,3 +1,5 @@
+'use client';
+
 
 const NewsTicker = ({ latestUpdate }: { latestUpdate: string }) => {
   return (

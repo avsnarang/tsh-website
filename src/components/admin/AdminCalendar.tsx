@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
@@ -137,7 +139,7 @@ export default function AdminCalendar() {
         {/* Header Section */}
         <div className="mb-8">
           <Link 
-            to="/admin/dashboard"
+            href="/admin/dashboard"
             className="inline-flex items-center text-neutral-dark/60 hover:text-neutral-dark mb-6"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />

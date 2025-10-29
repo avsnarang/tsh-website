@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import Container from '../components/ui/Container';
 import { Calendar as CalendarIcon, List, Grid, MapPin, Filter, ChevronDown } from 'lucide-react';
@@ -68,7 +70,6 @@ export default function Calendar() {
     loadEvents();
   }, [selectedEventType, selectedBranch, selectedSession]);
 
-  useSEO({
     title: "Academic Calendar | The Scholars' Home",
     description: "View our comprehensive academic calendar featuring all school events, activities, and important dates.",
     url: "https://tsh.edu.in/calendar"

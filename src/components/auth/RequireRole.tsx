@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface RequireAuthProps {
@@ -20,11 +23,11 @@ export default function RequireAuth({ children, allowedRoles }: RequireAuthProps
   }
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <redirect to="/login" state={{ from: location }} replace />;
   }
 
   if (!userRole || !allowedRoles.includes(userRole)) {
-    return <Navigate to="/" replace />;
+    return <redirect to="/" replace />;
   }
 
   return <>{children}</>;

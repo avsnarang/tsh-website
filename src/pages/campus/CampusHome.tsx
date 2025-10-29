@@ -1,3 +1,5 @@
+'use client';
+
 import { useParams, Navigate } from 'react-router-dom';
 import { campusInfo } from '../../data/campusData';
 import { contactInfo, CampusKey } from '../../data/contactInfo';
@@ -38,7 +40,6 @@ export default function CampusHome() {
   const info = campusKey ? campusInfo[campusKey] : null;
   const contact = campusKey ? contactInfo[campusKey] : null;
 
-  useSEO({
     title: `${campusNames[campus as keyof typeof campusNames] || ''} Campus | The Scholars' Home`,
     description: info?.description || "Explore our campus facilities, programs, and achievements. Join The Scholars' Home for excellence in education.",
     url: `https://tsh.edu.in/campus/${campus}`,
@@ -47,7 +48,7 @@ export default function CampusHome() {
   });
 
   if (!info || !contact) {
-    return <Navigate to="/campuses" replace />;
+    return <Navigate href="/campuses" replace />;
   }
 
   return (

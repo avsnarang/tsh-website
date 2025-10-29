@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Container from '../components/ui/Container';
@@ -117,7 +119,6 @@ export default function EventGallery() {
   };
 
   // Set SEO data when event is loaded
-  useSEO({
     title: event ? `${event.title} | Gallery | The Scholars' Home` : "Gallery | The Scholars' Home",
     description: event?.description || "View our gallery of school events and activities",
     url: `https://tsh.edu.in/gallery/event/${eventId}`
@@ -170,7 +171,7 @@ export default function EventGallery() {
                   The event you're looking for doesn't exist or has been removed.
                 </p>
                 <Link 
-                  to="/gallery" 
+                  href="/gallery" 
                   className="inline-flex items-center gap-2 px-6 py-3 bg-green text-white rounded-lg 
                     hover:bg-green-dark transition-colors"
                 >
@@ -194,7 +195,7 @@ export default function EventGallery() {
                     
                     <div className="relative">
                       <Link
-                        to="/gallery"
+                        href="/gallery"
                         className="inline-flex items-center text-primary hover:text-primary-dark transition-colors mb-8 
                           px-4 py-2 rounded-lg hover:bg-primary/5"
                       >

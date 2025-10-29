@@ -1,3 +1,5 @@
+'use client';
+
 import { motion } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import Container from '../../components/ui/Container';
@@ -23,7 +25,6 @@ export default function Directory() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBatch, setSelectedBatch] = useState<number | 'all'>('all');
 
-  useSEO({
     title: 'Alumni Directory | The Scholars Home',
     description: 'Browse through our distinguished alumni network and connect with fellow graduates.'
   });

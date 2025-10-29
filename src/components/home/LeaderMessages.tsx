@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { User, ArrowRight, X, MessageSquareQuote } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
