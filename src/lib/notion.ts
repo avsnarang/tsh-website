@@ -13,7 +13,7 @@ interface SubmissionResponse {
   data?: any;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
 
 export async function submitSportsInterest(data: SportsInterestData): Promise<SubmissionResponse> {
   try {

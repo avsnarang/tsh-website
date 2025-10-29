@@ -105,7 +105,7 @@ function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps)
                       return (
                         <Link 
                           key={item.href}
-                          to={item.href} 
+                          href={item.href} 
                           className={`group px-4 py-2 flex items-center gap-3 transition-colors ${
                             isMenuOpen 
                               ? 'hover:bg-orange-dark text-neutral-light' 
@@ -392,7 +392,7 @@ export default function Navbar() {
                       style={{ color: isMenuOpen ? "#FFFFFF" : textColor }}
                     >
                       <Link
-                        to={item.href as To}
+                        href={item.href}
                         className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
                       >
                         <item.icon className="h-4 w-4" />
@@ -402,7 +402,7 @@ export default function Navbar() {
                   )
                 )
               )}
-              <Link to="/admissions" className="ml-2">
+              <Link href="/admissions" className="ml-2">
                 <Button
                   variant="cta-green"
                   className="min-w-[140px] flex items-center justify-center gap-2"
@@ -447,7 +447,7 @@ export default function Navbar() {
                   className="px-6 md:px-0"
                 >
                   <Link
-                    to={updates[currentUpdateIndex]?.link || "#"}
+                    href={updates[currentUpdateIndex]?.link || "#"}
                     className="inline-flex items-center gap-2 px-4 md:px-6 py-3 md:pt-6 md:pb-4 text-xs md:text-sm font-semibold bg-orange-light/60 text-orange-dark hover:bg-orange-light/90 transition-all duration-300 rounded-b-[30px] md:rounded-b-[30px] hover:scale-100 hover:translate-y-2 transform border border-orange/20 w-full md:w-auto justify-center md:justify-start text-center"
                     onClick={(e) => {
                       if (!updates[currentUpdateIndex]?.link) {
@@ -496,7 +496,7 @@ export default function Navbar() {
                               {group.items.map((subItem) => (
                                 <Link
                                   key={subItem.href}
-                                  to={subItem.href}
+                                  href={subItem.href}
                                   onClick={() => setIsMenuOpen(false)}
                                   className="flex items-center gap-3 text-neutral-light/80 hover:text-neutral-light transition-colors"
                                 >
@@ -510,7 +510,7 @@ export default function Navbar() {
                       </div>
                     ) : item.icon && item.href ? (
                       <Link
-                        to={item.href}
+                        href={item.href}
                         onClick={() => setIsMenuOpen(false)}
                         className="flex items-center gap-3 text-xl text-neutral-light hover:text-neutral-light/80 transition-colors"
                       >
@@ -521,7 +521,7 @@ export default function Navbar() {
                   </div>
                 ))}
                 <Link
-                  to="/admissions"
+                  href="/admissions"
                   onClick={() => setIsMenuOpen(false)}
                   className="block mt-8"
                 >
