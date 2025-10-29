@@ -2,7 +2,6 @@
 
 import Container from '../../components/ui/Container';
 import { Users, Brain, Globe, Lightbulb } from 'lucide-react';
-import { useSEO } from '../../lib/seo';
 
 export default function ClubsSocieties() {
     title: "Clubs & Societies | The Scholars' Home",

@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Button from '../components/ui/Button';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
-import { useSEO } from '../lib/seo';
 import BreadcrumbNav from '../components/navigation/BreadcrumbNav';
 import { motion } from 'framer-motion';
 

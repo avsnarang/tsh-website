@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Container from '../components/ui/Container';
-import { useSEO } from '../lib/seo';
 import { Video } from 'lucide-react';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';

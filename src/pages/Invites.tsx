@@ -8,7 +8,6 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
-import { useSEO } from '../lib/seo';
 import { Filter, Calendar, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import InviteCardSkeleton from '../components/invites/InviteCardSkeleton';

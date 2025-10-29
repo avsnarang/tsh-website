@@ -6,7 +6,6 @@ import { LeadershipMessage } from '../../types/leadership';
 import Button from '../../components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMessages } from '../../contexts/MessagesContext';
-import { useSEO } from '../../lib/seo';
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },

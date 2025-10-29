@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Users, BookOpen, Building2, ArrowRight, CheckCircle2, Calendar } from 'lucide-react';
 import Container from '../components/ui/Container';
 import ScrollReveal from '../components/animations/ScrollReveal';
-import { useSEO } from '../lib/seo';
 import BreadcrumbNav from '../components/navigation/BreadcrumbNav';
 
 interface Campus {

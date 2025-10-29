@@ -7,7 +7,6 @@ import TextReveal from '../animations/TextReveal';
 import Link from 'next/link';
 import Button from '../ui/Button';
 import HorizontalTimeline from './HorizontalTimeline';
-import { useSEO } from '../../lib/seo';
 import { motion } from 'framer-motion';
 import BreadcrumbNav from '../navigation/BreadcrumbNav';
 

@@ -5,7 +5,6 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import Container from '../../components/ui/Container';
 import { Trophy, Medal, Clock, User, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useSEO } from '../../lib/seo';
 import BreadcrumbNav from '../../components/navigation/BreadcrumbNav';
 
 interface Sport {

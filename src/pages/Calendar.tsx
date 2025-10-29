@@ -6,7 +6,6 @@ import { Calendar as CalendarIcon, List, Grid, MapPin, Filter, ChevronDown } fro
 import { motion } from 'framer-motion';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
-import { useSEO } from '../lib/seo';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';

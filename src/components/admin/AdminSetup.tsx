@@ -6,7 +6,6 @@ import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
 import { Lock } from 'lucide-react';
 import Button from '../ui/Button';
-import { useSEO } from '../../lib/seo';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function AdminSetup() {

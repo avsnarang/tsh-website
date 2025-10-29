@@ -10,7 +10,6 @@ import CampusAchievements from '../../components/campus/CampusAchievements';
 import LeadershipMessages from '../../components/campus/LeadershipMessages';
 import Container from '../../components/ui/Container';
 import { MapPin, Phone, Mail } from 'lucide-react';
-import { useSEO } from '../../lib/seo';
 import { generateCampusSchema } from '../../lib/schemas/campusSchema';
 
 // Convert URL parameter to campusInfo key format

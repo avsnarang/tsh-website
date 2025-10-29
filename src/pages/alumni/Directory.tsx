@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import Container from '../../components/ui/Container';
-import { useSEO } from '../../lib/seo';
 import { useAlumniProfiles } from '../../lib/queries';
 import { 
   User, 

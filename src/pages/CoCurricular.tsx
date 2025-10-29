@@ -6,7 +6,6 @@ import { Music, Palette, Trophy, Theater, ArrowRight, Star, Users, Award, Heart 
 import Button from '../components/ui/Button';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
-import { useSEO } from '../lib/seo';
 
 const activities = [
   {

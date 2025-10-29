@@ -4,7 +4,6 @@ import Container from '../../components/ui/Container';
 import { Target, Compass, Star, Award } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
-import { useSEO } from '../../lib/seo';
 import { motion } from 'framer-motion';
 import BreadcrumbNav from '../../components/navigation/BreadcrumbNav';
 

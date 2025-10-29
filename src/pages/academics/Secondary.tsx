@@ -5,7 +5,6 @@ import { Brain, Heart, Star, Users, BookOpen } from 'lucide-react';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
-import { useSEO } from '../../lib/seo';
 
 export default function Secondary() {
     title: "Secondary School | The Scholars' Home",

@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import { Star, Search, Filter, User, Quote, Briefcase, Building2 } from 'lucide-react';
 import Container from '../../components/ui/Container';
-import { useSEO } from '../../lib/seo';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import { useSuccessStories } from '../../lib/queries';
 

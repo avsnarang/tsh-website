@@ -5,7 +5,6 @@ import { Users, UserPlus, ArrowRight, BookOpen, LogIn, User } from 'lucide-react
 import Container from '../../components/ui/Container';
 import { useAuth } from '../../contexts/AuthContext';
 import { motion } from 'framer-motion';
-import { useSEO } from '../../lib/seo';
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
 import { ALUMNI_ROUTES } from '../../config/routes';

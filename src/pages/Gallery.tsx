@@ -6,7 +6,6 @@ import Container from '../components/ui/Container';
 import { Calendar, ArrowRight, MapPin, Camera, Image, Search } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import ScrollReveal from '../components/animations/ScrollReveal';
-import { useSEO } from '../lib/seo';
 import { motion } from 'framer-motion';
 import GalleryCardSkeleton from '../components/gallery/GalleryCardSkeleton';
 import NotionDropdown from '../components/ui/NotionDropdown';

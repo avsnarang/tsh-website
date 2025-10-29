@@ -12,7 +12,6 @@ import {
   Search
 } from 'lucide-react';
 import Container from '../components/ui/Container';
-import { useSEO } from '../lib/seo';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import type { Teacher } from '../types/teacher';
 import { seoConfig } from '../config/seoConfig';

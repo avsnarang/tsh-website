@@ -5,7 +5,6 @@ import { MapPin, Phone, Mail, Clock, Send, Users, Star, Award, ArrowRight } from
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
 import Button from '../components/ui/Button';
-import { useSEO } from '../lib/seo';
 
 const contactInfo = [
   {

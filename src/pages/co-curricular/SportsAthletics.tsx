@@ -6,7 +6,6 @@ import { Trophy, Medal, Building2, ArrowRight, Clock, Check, User } from 'lucide
 import ScrollReveal from '../../components/animations/ScrollReveal';
 import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
-import { useSEO } from '../../lib/seo';
 import { supabase } from '../../lib/supabase';
 import Link from 'next/link';
 import SportCardSkeleton from '../../components/skeletons/SportCardSkeleton';
