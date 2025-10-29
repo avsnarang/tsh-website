@@ -44,10 +44,6 @@ const timelineEvents = [
 ];
 
 export default function About() {
-    title: "Our Story | The Scholars' Home",
-    description: "Discover the journey of The Scholars' Home since 2003. Learn about our legacy of educational excellence and commitment to nurturing future leaders."
-  });
-
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section */}

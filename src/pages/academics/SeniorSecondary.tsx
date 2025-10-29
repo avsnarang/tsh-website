@@ -7,10 +7,6 @@ import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
 
 export default function SeniorSecondary() {
-    title: "Senior Secondary School | The Scholars' Home",
-    description: "Senior secondary education at The Scholars' Home. Specialized streams in Science, Commerce, and Humanities with expert faculty guidance.",
-    url: "https://tsh.edu.in/academics/senior-secondary"
-  });
 
   return (
     <div className="min-h-screen pt-44 pb-24 bg-neutral-light">

@@ -21,9 +21,6 @@ export default function Invites() {
   const [success, setSuccess] = useState('');
   const [showUpcomingOnly, setShowUpcomingOnly] = useState(true); // New state for filter
 
-    title: "School Events | The Scholars' Home",
-    description: "Join us for our upcoming events and celebrations at The Scholars' Home. RSVP for school functions and special occasions.",
-  });
 
   useEffect(() => {
     fetchEvents();

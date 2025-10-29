@@ -84,12 +84,6 @@ const ADMISSION_STEPS = [
 ];
 
 export default function Admissions() {
-    title: "Admissions 2025-26 | The Scholars' Home",
-    description: "Join The Scholars' Home for the academic year 2025-26. Information about admission process, eligibility, and campus-specific details.",
-    url: "https://tsh.edu.in/admissions"
-  });
-
-  const [] = useState<Campus | null>(null);
 
   return (
     <>

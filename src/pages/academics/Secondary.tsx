@@ -7,10 +7,6 @@ import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
 
 export default function Secondary() {
-    title: "Secondary School | The Scholars' Home",
-    description: "Secondary education program at The Scholars' Home. Preparing students for CBSE board examinations with comprehensive subject coverage.",
-    url: "https://tsh.edu.in/academics/secondary"
-  });
 
   return (
     <div className="min-h-screen pt-44 pb-24 bg-neutral-light">

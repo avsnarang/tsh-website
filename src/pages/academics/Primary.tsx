@@ -7,10 +7,6 @@ import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
 
 export default function Primary() {
-    title: "Primary School | The Scholars' Home",
-    description: "Primary education program at The Scholars' Home. Building strong foundations through comprehensive curriculum and personalized attention.",
-    url: "https://tsh.edu.in/academics/primary"
-  });
 
   return (
     <div className="min-h-screen pt-44 pb-24 bg-neutral-light">

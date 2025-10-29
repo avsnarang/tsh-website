@@ -96,11 +96,6 @@ const stats = [
 ];
 
 export default function Scholarship() {
-    title: "Scholarships | The Scholars' Home",
-    description: "Explore scholarship opportunities at The Scholars' Home. Merit-based and need-based financial aid programs for deserving students.",
-    url: "https://tsh.edu.in/scholarship"
-  });
-
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section with Background Pattern */}

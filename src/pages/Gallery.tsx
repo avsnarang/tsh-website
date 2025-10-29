@@ -49,10 +49,6 @@ export default function Gallery() {
     fetchGalleryEvents();
   }, []);
 
-    title: "Photo Gallery | The Scholars' Home",
-    description: "Browse through our photo gallery showcasing school events, activities, and memorable moments at The Scholars' Home.",
-    url: "https://tsh.edu.in/gallery"
-  });
 
   const fetchGalleryEvents = async () => {
     try {

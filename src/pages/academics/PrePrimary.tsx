@@ -7,10 +7,6 @@ import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
 
 export default function PrePrimary() {
-    title: "Pre-Primary Education | The Scholars' Home",
-    description: "Early childhood education program at The Scholars' Home. Nurturing young minds through play-based learning and holistic development.",
-    url: "https://tsh.edu.in/academics/pre-primary"
-  });
 
   return (
     <div className="min-h-screen pt-44 pb-24 bg-neutral-light">

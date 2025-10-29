@@ -4,10 +4,6 @@ import Container from '../../components/ui/Container';
 import { Users, Brain, Globe, Lightbulb } from 'lucide-react';
 
 export default function ClubsSocieties() {
-    title: "Clubs & Societies | The Scholars' Home",
-    description: "Explore our diverse clubs and societies. Fostering interests and building communities through extra-curricular activities.",
-    url: "https://tsh.edu.in/co-curricular/clubs-societies"
-  });
 
   return (
     <div className="pt-32 pb-24">

@@ -39,12 +39,6 @@ export default function CampusHome() {
   const info = campusKey ? campusInfo[campusKey] : null;
   const contact = campusKey ? contactInfo[campusKey] : null;
 
-    title: `${campusNames[campus as keyof typeof campusNames] || ''} Campus | The Scholars' Home`,
-    description: info?.description || "Explore our campus facilities, programs, and achievements. Join The Scholars' Home for excellence in education.",
-    url: `https://tsh.edu.in/campus/${campus}`,
-    image: info?.facilities[0]?.image || "https://tsh.edu.in/campus.jpg",
-    schema: info && campus ? generateCampusSchema(info, campus) : undefined
-  });
 
   if (!info || !contact) {
     return <Navigate href="/campuses" replace />;

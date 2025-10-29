@@ -27,10 +27,6 @@ export default function AlumniNetwork() {
     router.push(ALUMNI_ROUTES.DIRECTORY);
   };
 
-    title: "Alumni Network | The Scholars' Home",
-    description: "Join our alumni network to connect with fellow graduates and share your success stories",
-    url: "https://tsh.edu.in/alumni/network"
-  });
 
   return (
     <div className="min-h-screen pt-32 pb-24 bg-neutral-light">

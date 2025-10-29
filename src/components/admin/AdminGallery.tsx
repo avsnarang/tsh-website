@@ -42,12 +42,10 @@ export default function AdminGallery() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [editingEvent, setEditingEvent] = useState<GalleryEvent | null>(null);
   const [formData, setFormData] = useState<FormData>({
-    title: '',
+    event_name: '',
+    event_date: '',
     description: '',
-    date: '',
-    campus: '',
-    primaryImageUrl: '',
-    images: []
+    is_visible: true
   });
   const [bulkImageUrls, setBulkImageUrls] = useState('');
 

@@ -23,9 +23,6 @@ export default function AlumniSuccess() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBatch, setSelectedBatch] = useState<number | 'all'>('all');
 
-    title: 'Alumni Success Stories | The Scholars Home',
-    description: 'Discover inspiring success stories from The Scholars Home alumni community.'
-  });
 
   // Get unique batch years
   const batchYears = useMemo(() => {

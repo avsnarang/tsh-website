@@ -85,10 +85,6 @@ export default function SportDetails() {
     }
   };
 
-    title: sport ? `${sport.name} | The Scholars' Home` : "Sports Program",
-    description: sport?.description || "Sports program details",
-    url: `https://tsh.edu.in/co-curricular/sports-athletics/${id}`
-  });
 
   const renderSkeleton = () => (
     <Container className="py-40">

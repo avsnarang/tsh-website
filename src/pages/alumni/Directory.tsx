@@ -24,9 +24,6 @@ export default function Directory() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBatch, setSelectedBatch] = useState<number | 'all'>('all');
 
-    title: 'Alumni Directory | The Scholars Home',
-    description: 'Browse through our distinguished alumni network and connect with fellow graduates.'
-  });
 
   // Get unique batch years
   const batchYears = useMemo(() => {

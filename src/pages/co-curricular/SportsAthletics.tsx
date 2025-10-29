@@ -39,10 +39,6 @@ export default function SportsAthletics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
 
-    title: "Sports & Athletics | The Scholars' Home",
-    description: "Excellence in sports and athletics at The Scholars' Home. Professional coaching and world-class facilities for comprehensive physical development.",
-    url: "https://tsh.edu.in/co-curricular/sports-athletics"
-  });
 
   useEffect(() => {
     fetchSports();

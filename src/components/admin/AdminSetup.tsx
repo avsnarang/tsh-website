@@ -17,9 +17,6 @@ export default function AdminSetup() {
   const router = useRouter();
   const { signUp } = useAuth();
 
-    title: "Admin Setup | The Scholars' Home",
-    description: "Create administrator account for The Scholars' Home website management."
-  });
 
   useEffect(() => {
     checkExistingSetup();

@@ -27,9 +27,8 @@ export default function ManageYouTubeVideos() {
 
   const [formData, setFormData] = useState({
     title: '',
-    description: '',
-    embed_code: '',
-    is_visible: true
+    url: '',
+    description: ''
   });
 
   useEffect(() => {

@@ -145,16 +145,16 @@ export default function EventModal({ event, onClose, onSave, onDelete }: EventMo
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    start_date: new Date().toISOString().split('T')[0],
-    end_date: new Date().toISOString().split('T')[0],
+    is_all_day: false,
+    start_date: '',
+    end_date: '',
     start_time: '09:00',
     end_time: '17:00',
-    is_all_day: false,
     location: '',
-    event_type: 'academic',
-    branch: 'All Campuses',
-    session: '2023-24',
-    is_public: false
+    event_type: 'Academic' as const,
+    branch: 'all' as const,
+    session: 'all' as const,
+    is_public: true
   });
 
   useEffect(() => {

@@ -69,10 +69,6 @@ export default function Calendar() {
     loadEvents();
   }, [selectedEventType, selectedBranch, selectedSession]);
 
-    title: "Academic Calendar | The Scholars' Home",
-    description: "View our comprehensive academic calendar featuring all school events, activities, and important dates.",
-    url: "https://tsh.edu.in/calendar"
-  });
 
   return (
     <div className="min-h-screen bg-neutral-light pt-32 pb-24">

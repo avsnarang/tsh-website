@@ -19,9 +19,6 @@ export default function YouTubeGallery() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
   
-    title: "Video Gallery | The Scholars' Home",
-    description: "Watch videos from The Scholars' Home YouTube channel featuring school events, student achievements, and more."
-  });
 
   // Function to sanitize and format embed code
   const formatEmbedCode = (embedCode: string) => {

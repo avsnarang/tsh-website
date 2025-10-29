@@ -76,11 +76,6 @@ const stats = [
 export default function CoCurricular() {
   const router = useRouter();
 
-    title: "Co-Curricular Activities | The Scholars' Home",
-    description: "Explore our diverse co-curricular programs including performing arts, sports, visual arts, and clubs. Nurturing talents beyond academics.",
-    url: "https://tsh.edu.in/co-curricular"
-  });
-
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section */}

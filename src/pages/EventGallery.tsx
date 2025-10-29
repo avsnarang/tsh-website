@@ -118,10 +118,6 @@ export default function EventGallery() {
   };
 
   // Set SEO data when event is loaded
-    title: event ? `${event.title} | Gallery | The Scholars' Home` : "Gallery | The Scholars' Home",
-    description: event?.description || "View our gallery of school events and activities",
-    url: `https://tsh.edu.in/gallery/event/${eventId}`
-  });
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-light">

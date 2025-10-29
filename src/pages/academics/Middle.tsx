@@ -7,10 +7,6 @@ import TextReveal from '../../components/animations/TextReveal';
 import { motion } from 'framer-motion';
 
 export default function Middle() {
-    title: "Middle School | The Scholars' Home",
-    description: "Middle school education at The Scholars' Home. Fostering critical thinking and comprehensive development for grades 6-8.",
-    url: "https://tsh.edu.in/academics/middle"
-  });
 
   return (
     <div className="min-h-screen pt-44 pb-24 bg-neutral-light">

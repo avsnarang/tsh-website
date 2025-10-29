@@ -41,10 +41,6 @@ const stats = [
 ];
 
 export default function Contact() {
-    title: "Contact Us | The Scholars' Home",
-    description: "Get in touch with The Scholars' Home. Contact information for all our campuses and admission inquiries.",
-    url: "https://tsh.edu.in/contact"
-  });
 
   return (
     <div className="min-h-screen bg-neutral-light">

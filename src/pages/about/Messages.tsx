@@ -17,10 +17,6 @@ export default function Messages() {
   const { messages } = useMessages();
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
 
-    title: "Leadership Messages | The Scholars' Home",
-    description: "Read inspiring messages from The Scholars' Home's leadership team.",
-    url: "https://tsh.edu.in/about/messages"
-  });
 
   const leadershipMessages = messages.filter(msg => 
     msg.display_locations.includes('all') || msg.display_locations.includes('leadership')
