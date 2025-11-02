@@ -292,9 +292,9 @@ export default function Invites() {
 
         {/* Right Column - Scrollable */}
         <div className="w-[70%] h-screen ml-[30%] bg-transparent">
-          <div className="h-full overflow-y-auto px-8 pt-32 pb-20">
+          <div className="h-full overflow-y-auto px-8 pt-40 pb-20">
             {/* Events Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {loading ? (
                 [...Array(6)].map((_, index) => (
                   <motion.div
