@@ -251,7 +251,7 @@ export default function Invites() {
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                   <div 
-                    className={`flex items-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
+                    className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
                       showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
                     }`}
                   >
@@ -259,7 +259,7 @@ export default function Invites() {
                     <span>Upcoming</span>
                   </div>
                   <div 
-                    className={`flex items-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
+                    className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
                       !showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
                     }`}
                   >
