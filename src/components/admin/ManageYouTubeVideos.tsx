@@ -148,7 +148,7 @@ export default function ManageYouTubeVideos() {
 
       const results = await Promise.all(updatePromises);
       const errors = results.filter(r => r.error);
-      
+
       if (errors.length > 0) {
         throw errors[0].error;
       }
@@ -176,7 +176,7 @@ export default function ManageYouTubeVideos() {
       const updatePromises = remainingVideos.map((v, index) => {
         if (v.position !== index) {
           return supabase
-            .from('youtube_videos')
+        .from('youtube_videos')
             .update({ position: index })
             .eq('id', v.id);
         }
@@ -368,8 +368,8 @@ export default function ManageYouTubeVideos() {
                   <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-neutral-light">
                     <div 
                       className="absolute inset-0 w-full h-full overflow-hidden [&_iframe]:absolute [&_iframe]:inset-0 [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:max-w-full [&_iframe]:max-h-full [&_iframe]:border-0"
-                      dangerouslySetInnerHTML={{ __html: video.embed_code }} 
-                    />
+                    dangerouslySetInnerHTML={{ __html: video.embed_code }} 
+                  />
                   </div>
                 </motion.div>
               ))}

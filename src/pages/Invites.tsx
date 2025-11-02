@@ -340,7 +340,7 @@ export default function Invites() {
           ) : (
             <>
               {/* Full Screen Card */}
-              <div className="absolute inset-0 pt-32 pb-20 px-8">
+              <div className="absolute inset-0 pt-48 pb-20 px-8">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentIndex}
