@@ -155,8 +155,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [sessionState, setSessionState] = useState<'valid' | 'invalid' | 'unknown'>('unknown');
   // New state to track if a profile has been deleted
   const [profileDeleted, setProfileDeleted] = useState(() => {
-    // Check localStorage for deleted profile flag on initialization
-    return localStorage.getItem(PROFILE_DELETED_KEY) === 'true';
+    // Check localStorage for deleted profile flag on initialization (client-side only)
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(PROFILE_DELETED_KEY) === 'true';
+    }
+    return false;
   });
 
   // Add a ref to track if we've fetched the role for the current user
@@ -165,18 +168,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Function to mark a profile as deleted
   const markProfileDeleted = () => {
     console.log('Marking profile as deleted');
-    localStorage.setItem(PROFILE_DELETED_KEY, 'true');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(PROFILE_DELETED_KEY, 'true');
+    }
     setProfileDeleted(true);
   };
 
   // Function to reset the profile deleted state
   const resetProfileDeletedState = () => {
-    localStorage.removeItem(PROFILE_DELETED_KEY);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(PROFILE_DELETED_KEY);
+    }
     setProfileDeleted(false);
   };
 
   // Update the clearAdminSession function
   const clearAdminSession = async () => {
+    if (typeof window === 'undefined') return;
+    
     try {
       const currentPath = window.location.pathname;
       const isLoginPage = currentPath.includes('/login');

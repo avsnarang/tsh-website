@@ -9,6 +9,8 @@ export default function AuthInitializer() {
   const { clearAdminSession } = useAuth();
   
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const isLoginPage = pathname?.includes('/login');
     const loginInProgress = sessionStorage.getItem('login_in_progress');
     

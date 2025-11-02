@@ -59,16 +59,18 @@ export default function Login() {
     console.log('Login page mounted. Stored sessions detected:', hasStoredSessions);
     
     // Clear any lingering login progress indicators
-    const loginInProgress = sessionStorage.getItem('login_in_progress');
-    if (loginInProgress) {
-      const loginTimestamp = parseInt(loginInProgress);
-      const currentTime = new Date().getTime();
-      // If login has been in progress for more than 30 seconds, clear it
-      if (currentTime - loginTimestamp > 30000) {
-        console.log('Clearing stale login progress indicator');
-        sessionStorage.removeItem('login_in_progress');
-      } else {
-        console.log('Login attempt in progress, preserving session');
+    if (typeof window !== 'undefined') {
+      const loginInProgress = sessionStorage.getItem('login_in_progress');
+      if (loginInProgress) {
+        const loginTimestamp = parseInt(loginInProgress);
+        const currentTime = new Date().getTime();
+        // If login has been in progress for more than 30 seconds, clear it
+        if (currentTime - loginTimestamp > 30000) {
+          console.log('Clearing stale login progress indicator');
+          sessionStorage.removeItem('login_in_progress');
+        } else {
+          console.log('Login attempt in progress, preserving session');
+        }
       }
     }
   }, []);
@@ -166,7 +168,9 @@ export default function Login() {
       setLoading(true);
       
       // Mark login as in progress
-      sessionStorage.setItem('login_in_progress', new Date().getTime().toString());
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('login_in_progress', new Date().getTime().toString());
+      }
       
       // Check Supabase connection first
       const isConnected = await checkSupabaseConnection();
@@ -180,7 +184,9 @@ export default function Login() {
       // Set a timeout to handle stalled requests
       timeoutRef.current = window.setTimeout(() => {
         console.error(`Sign in timed out after ${SIGN_IN_TIMEOUT/1000} seconds`);
-        sessionStorage.removeItem('login_in_progress');
+        if (typeof window !== 'undefined') {
+          sessionStorage.removeItem('login_in_progress');
+        }
         setError('Sign in timed out. Please check your network connection and try again.');
         setLoading(false);
       }, SIGN_IN_TIMEOUT);
