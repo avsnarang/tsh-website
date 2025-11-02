@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Montserrat, Lilita_One } from 'next/font/google';
+import '../src/styles/index.css';
 import '../src/styles/globals.css';
+import '../src/styles/calendar.css';
 import { Providers } from './providers';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
