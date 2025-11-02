@@ -338,7 +338,7 @@ export default function Invites() {
               </div>
                 </div>
               ) : (
-            <div className="absolute inset-0 pt-4 md:pt-48 pb-8 md:pb-20 px-4 md:px-8 flex items-center gap-2 md:gap-4">
+            <div className="absolute inset-0 pt-24 md:pt-48 pb-8 md:pb-20 px-4 md:px-8 flex items-center gap-2 md:gap-4">
               {/* Left Navigation Button - Hidden on mobile */}
               {events.length > 1 && (
                 <button

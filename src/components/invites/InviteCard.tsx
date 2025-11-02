@@ -13,13 +13,17 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
     return (
       <div className="group relative h-full w-full overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-500">
         <div className="absolute inset-0">
-          <img
-            src={invite.coverImage}
-            alt={invite.title}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
-            decoding="async"
-          />
+          {invite.coverImage ? (
+            <img
+              src={invite.coverImage}
+              alt={invite.title}
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <div className="h-full w-full bg-gradient-to-br from-green-light/20 to-orange-light/20" />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
         </div>
 
@@ -74,15 +78,19 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
   return (
     <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-500">
       <div className="absolute inset-0">
-        <img
-          src={invite.coverImage}
-          alt={invite.title}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-          loading="lazy"
-          decoding="async"
-          width="400"
-          height="500"
-        />
+        {invite.coverImage ? (
+          <img
+            src={invite.coverImage}
+            alt={invite.title}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            width="400"
+            height="500"
+          />
+        ) : (
+          <div className="h-full w-full bg-gradient-to-br from-green-light/20 to-orange-light/20" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
       </div>
 
