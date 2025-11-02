@@ -127,7 +127,7 @@ export default function Login() {
       if (userRole === 'admin') {
         router.push('/admin/dashboard');
       } else if (userRole === 'alumni') {
-        const from = searchParams.get('redirect') || '/alumni/profile';
+        const from = searchParams?.get('redirect') || '/alumni/profile';
         router.push(from);
       }
     }

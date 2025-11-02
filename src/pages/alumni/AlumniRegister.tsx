@@ -29,7 +29,7 @@ export default function AlumniRegister() {
     if (user) {
       router.push(ALUMNI_ROUTES.PROFILE);
     }
-  }, [user, navigate]);
+  }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

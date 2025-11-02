@@ -13,6 +13,7 @@ interface YouTubeVideo {
   id: string;
   title: string;
   description: string | null;
+  url?: string;
   embed_code: string;
   position: number;
   is_visible: boolean;

@@ -1,8 +1,7 @@
 'use client';
 
-'use client';
-
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { campusInfo } from '../../data/campusData';
 import { contactInfo, CampusKey } from '../../data/contactInfo';
 import CampusHero from '../../components/campus/CampusHero';
@@ -35,15 +34,22 @@ const campusNames = {
 };
 
 export default function CampusHome() {
-  const { campus } = useParams<{ campus: string }>();
+  const params = useParams();
+  const router = useRouter();
+  const campus = params?.campus as string | undefined;
 
   const campusKey = campus ? getCampusKey(campus) : null;
   const info = campusKey ? campusInfo[campusKey] : null;
   const contact = campusKey ? contactInfo[campusKey] : null;
 
+  useEffect(() => {
+    if (!info || !contact) {
+      router.replace('/campuses');
+    }
+  }, [info, contact, router]);
 
   if (!info || !contact) {
-    return <Navigate href="/campuses" replace />;
+    return null;
   }
 
   return (

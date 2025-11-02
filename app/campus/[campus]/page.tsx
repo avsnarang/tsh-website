@@ -6,7 +6,8 @@ export const metadata: Metadata = {
   description: 'Explore our campus facilities, features, and achievements.',
 };
 
-export default function CampusPage({ params }: { params: { campus: string } }) {
+export default async function CampusPage({ params }: { params: Promise<{ campus: string }> }) {
+  const { campus } = await params;
   return <CampusHome />;
 }
 

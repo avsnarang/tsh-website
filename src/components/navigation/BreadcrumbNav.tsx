@@ -100,7 +100,7 @@ export default function BreadcrumbNav() {
                     <BreadcrumbPage>{label}</BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink asChild>
-                      <Link to={path}>{label}</Link>
+                      <Link href={path}>{label}</Link>
                     </BreadcrumbLink>
                   )}
                 </BreadcrumbItem>

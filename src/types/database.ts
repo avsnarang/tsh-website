@@ -1,7 +1,14 @@
+import { SportFacility } from './sports';
+
 export type Schedule = {
   type: 'Weekday' | 'Weekend' | 'Summer' | 'Winter';
   timings: string[];
   notes?: string;
+}
+
+export interface SportImages {
+  main_image: string;
+  gallery_images: string[];
 }
 
 export interface Database {
@@ -23,8 +30,8 @@ export interface Database {
           images: SportImages;
           created_at: string;
         };
-        Insert: Omit<Tables['sports_programs']['Row'], 'id' | 'created_at'>;
-        Update: Partial<Omit<Tables['sports_programs']['Row'], 'id' | 'created_at'>>;
+        Insert: Omit<Database['public']['Tables']['sports_programs']['Row'], 'id' | 'created_at'>;
+        Update: Partial<Omit<Database['public']['Tables']['sports_programs']['Row'], 'id' | 'created_at'>>;
       };
       leadership_messages: {
         Row: {

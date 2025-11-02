@@ -19,9 +19,7 @@ export default function AlumniNetwork() {
 
   const handleDirectoryClick = () => {
     if (!user) {
-      router.push(ALUMNI_ROUTES.LOGIN, { 
-        state: { from: ALUMNI_ROUTES.DIRECTORY }
-      });
+      router.push(`${ALUMNI_ROUTES.LOGIN}?redirect=${encodeURIComponent(ALUMNI_ROUTES.DIRECTORY)}`);
       return;
     }
     router.push(ALUMNI_ROUTES.DIRECTORY);

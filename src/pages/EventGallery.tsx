@@ -1,9 +1,8 @@
 'use client';
 
-'use client';
-
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import Container from '../components/ui/Container';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -25,7 +24,8 @@ interface GalleryEvent {
 }
 
 export default function EventGallery() {
-  const { eventId } = useParams<{ eventId: string }>();
+  const params = useParams();
+  const eventId = params?.eventId as string | undefined;
   const [event, setEvent] = useState<GalleryEvent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

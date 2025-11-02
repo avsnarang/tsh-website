@@ -6,7 +6,8 @@ export const metadata: Metadata = {
   description: 'Learn more about our sports programs and register your interest.',
 };
 
-export default function SportDetailsPage({ params }: { params: { id: string } }) {
+export default async function SportDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return <SportDetails />;
 }
 

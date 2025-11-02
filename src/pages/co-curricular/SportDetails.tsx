@@ -1,9 +1,8 @@
 'use client';
 
-'use client';
-
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { supabase } from '../../lib/supabase';
 import Container from '../../components/ui/Container';
 import { Trophy, Medal, Clock, User, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -28,15 +27,18 @@ interface Sport {
 }
 
 export default function SportDetails() {
-  const { id } = useParams();
+  const params = useParams();
   const router = useRouter();
+  const id = params?.id as string | undefined;
   const [sport, setSport] = useState<Sport | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    fetchSportDetails();
+    if (id) {
+      fetchSportDetails();
+    }
   }, [id]);
 
   useEffect(() => {
@@ -51,6 +53,7 @@ export default function SportDetails() {
   }, [sport?.name]);
 
   const fetchSportDetails = async () => {
+    if (!id) return;
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -70,7 +73,9 @@ export default function SportDetails() {
 
   const handleRegister = () => {
     // Implement registration logic or navigation
-    router.push(`/register/sports/${id}`);
+    if (id) {
+      router.push(`/register/sports/${id}`);
+    }
   };
 
   const nextImage = () => {

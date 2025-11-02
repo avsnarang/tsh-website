@@ -6,7 +6,8 @@ export const metadata: Metadata = {
   description: 'View photos from this event.',
 };
 
-export default function EventGalleryPage({ params }: { params: { eventId: string } }) {
+export default async function EventGalleryPage({ params }: { params: Promise<{ eventId: string }> }) {
+  const { eventId } = await params;
   return <EventGallery />;
 }
 
