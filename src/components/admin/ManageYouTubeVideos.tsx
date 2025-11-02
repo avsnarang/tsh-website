@@ -92,58 +92,71 @@ export default function ManageYouTubeVideos() {
 
     if (newIndex < 0 || newIndex >= videos.length) return;
 
-    // Create array of all positions that need to be updated
-    const updates = videos.map((v, index) => {
-      if (index === currentIndex) return { id: v.id, position: newIndex };
-      if (index === newIndex) return { id: v.id, position: currentIndex };
-      return { id: v.id, position: index };
-    });
+    const currentVideo = videos[currentIndex];
+    const swapVideo = videos[newIndex];
 
     try {
-      // Update all positions in a single batch
-      const { error } = await supabase
+      // Swap positions using individual update calls
+      const { error: error1 } = await supabase
         .from('youtube_videos')
-        .upsert(updates.map(u => ({
-          id: u.id,
-          position: u.position
-        })));
+        .update({ position: swapVideo.position })
+        .eq('id', currentVideo.id);
 
-      if (error) throw error;
+      if (error1) throw error1;
+
+      const { error: error2 } = await supabase
+        .from('youtube_videos')
+        .update({ position: currentVideo.position })
+        .eq('id', swapVideo.id);
+
+      if (error2) throw error2;
+
       await fetchVideos();
     } catch (error) {
       setError('Failed to update positions');
+      console.error('Error updating positions:', error);
     }
   };
 
   const handlePositionChange = async (video: YouTubeVideo, newPosition: number) => {
     try {
+      // Validate new position
+      if (newPosition < 0 || newPosition >= videos.length) return;
+
       const oldPosition = video.position;
-      const updates = videos.map(v => {
-        if (v.id === video.id) {
-          return { id: v.id, position: newPosition };
-        } else if (
-          (oldPosition < newPosition && v.position <= newPosition && v.position > oldPosition) ||
-          (oldPosition > newPosition && v.position >= newPosition && v.position < oldPosition)
-        ) {
-          return {
-            id: v.id,
-            position: oldPosition < newPosition ? v.position - 1 : v.position + 1
-          };
+      
+      // If position didn't change, no update needed
+      if (oldPosition === newPosition) return;
+
+      // Create a new array with the video moved to the new position
+      const updatedVideos = [...videos];
+      const videoIndex = updatedVideos.findIndex(v => v.id === video.id);
+      const [movedVideo] = updatedVideos.splice(videoIndex, 1);
+      updatedVideos.splice(newPosition, 0, movedVideo);
+
+      // Update all videos that changed position using individual update calls
+      const updatePromises = updatedVideos.map((v, index) => {
+        const oldVideo = videos.find(original => original.id === v.id);
+        if (oldVideo && oldVideo.position !== index) {
+          return supabase
+            .from('youtube_videos')
+            .update({ position: index })
+            .eq('id', v.id);
         }
-        return { id: v.id, position: v.position };
+        return Promise.resolve({ error: null });
       });
 
-      const { error } = await supabase
-        .from('youtube_videos')
-        .upsert(updates.map(u => ({
-          id: u.id,
-          position: u.position
-        })));
+      const results = await Promise.all(updatePromises);
+      const errors = results.filter(r => r.error);
+      
+      if (errors.length > 0) {
+        throw errors[0].error;
+      }
 
-      if (error) throw error;
       await fetchVideos();
     } catch (error) {
       setError('Failed to update position');
+      console.error('Error updating position:', error);
     }
   };
 
@@ -158,20 +171,29 @@ export default function ManageYouTubeVideos() {
 
       if (error) throw error;
       
-      // Update positions of remaining videos
+      // Update positions of remaining videos using individual updates
       const remainingVideos = videos.filter(v => v.id !== video.id);
-      const updates = remainingVideos.map((v, index) => ({
-        id: v.id,
-        position: index
-      }));
+      const updatePromises = remainingVideos.map((v, index) => {
+        if (v.position !== index) {
+          return supabase
+            .from('youtube_videos')
+            .update({ position: index })
+            .eq('id', v.id);
+        }
+        return Promise.resolve({ error: null });
+      });
 
-      await supabase
-        .from('youtube_videos')
-        .upsert(updates);
+      const results = await Promise.all(updatePromises);
+      const errors = results.filter(r => r.error);
+      
+      if (errors.length > 0) {
+        throw errors[0].error;
+      }
 
       await fetchVideos();
     } catch (error) {
       setError('Failed to delete video');
+      console.error('Error deleting video:', error);
     }
   };
 
@@ -281,7 +303,7 @@ export default function ManageYouTubeVideos() {
                   <div className="flex justify-between items-start gap-3 mb-4">
                     <div className="flex items-start gap-3 flex-1">
                       <select
-                        value={video.position}
+                        value={index}
                         onChange={(e) => handlePositionChange(video, parseInt(e.target.value))}
                         className="w-14 p-1.5 border rounded-lg bg-neutral-light text-sm"
                       >
