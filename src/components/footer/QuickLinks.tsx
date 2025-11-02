@@ -20,7 +20,7 @@ export default function QuickLinks() {
         {links.map((link) => (
           <li key={link.label}>
             <Link
-              to={link.href}
+              href={link.href}
               className="text-neutral-light/80 hover:text-primary-light transition-colors"
             >
               {link.label}

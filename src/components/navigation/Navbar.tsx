@@ -392,7 +392,7 @@ export default function Navbar() {
                       style={{ color: isMenuOpen ? "#FFFFFF" : textColor }}
                     >
                       <Link
-                        href={item.href}
+                        href={item.href || '#'}
                         className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
                       >
                         <item.icon className="h-4 w-4" />

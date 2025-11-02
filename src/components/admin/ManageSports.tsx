@@ -66,7 +66,7 @@ export default function ManageSports() {
       router.push('/admin/dashboard');
       return;
     }
-  }, [user, userRole, sessionState, navigate]);
+  }, [user, userRole, sessionState, router]);
 
   useEffect(() => {
     if (userRole === 'admin' && sessionState === 'valid') {

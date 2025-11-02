@@ -31,7 +31,7 @@ export default function Logo({ variant = 'default', className = '' }: LogoProps)
   }
 
   return (
-    <Link to="/" className={`flex items-center gap-3 ${className}`}>
+    <Link href="/" className={`flex items-center gap-3 ${className}`}>
       <div className="relative h-12 w-12">
         {/* Light variant (white logo) */}
         <motion.img 

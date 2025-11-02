@@ -1,6 +1,7 @@
+'use client';
+
 import { motion } from 'framer-motion';
-import { User, Mail, Phone, MapPin, LinkedinIcon, LogOut, Camera } from 'lucide-react';
-import { FaInstagram, FaFacebook } from 'react-icons/fa';
+import { User, Mail, Phone, MapPin, LinkedinIcon, LogOut, Camera, Instagram, Facebook } from 'lucide-react';
 import type { Profile } from '../../types/alumni';
 import Button from '../ui/Button';
 
@@ -139,7 +140,7 @@ export function ProfileCard({ profile, onUploadClick, uploading, onSignOut }: Pr
               rel="noopener noreferrer"
               className="text-neutral-dark/70 hover:text-primary transition-colors"
             >
-              <FaInstagram className="w-6 h-6" />
+              <Instagram className="w-6 h-6" />
             </a>
           )}
           {profile.facebook_url && (
@@ -149,7 +150,7 @@ export function ProfileCard({ profile, onUploadClick, uploading, onSignOut }: Pr
               rel="noopener noreferrer"
               className="text-neutral-dark/70 hover:text-primary transition-colors"
             >
-              <FaFacebook className="w-6 h-6" />
+              <Facebook className="w-6 h-6" />
             </a>
           )}
         </div>

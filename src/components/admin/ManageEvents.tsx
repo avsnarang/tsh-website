@@ -60,7 +60,11 @@ export default function ManageEvents() {
     description: '',
     date: '',
     time: '',
-    link: ''
+    location: '',
+    coverImage: '',
+    maxCapacity: undefined,
+    maxGuestsPerRsvp: 1,
+    requiresAdmissionNumber: false
   });
 
   useEffect(() => {

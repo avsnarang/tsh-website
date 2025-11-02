@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
-import { usePathname } from 'next/navigation';
-import { redirect } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface RequireAuthProps {
@@ -12,7 +11,20 @@ interface RequireAuthProps {
 
 export default function RequireAuth({ children, allowedRoles }: RequireAuthProps) {
   const { user, userRole, loading } = useAuth();
-  const location = useLocation();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.push(`/login?redirect=${encodeURIComponent(pathname || '/')}`);
+        return;
+      }
+      if (!userRole || !allowedRoles.includes(userRole)) {
+        router.push('/');
+      }
+    }
+  }, [user, userRole, loading, allowedRoles, pathname, router]);
 
   if (loading) {
     return (
@@ -22,12 +34,8 @@ export default function RequireAuth({ children, allowedRoles }: RequireAuthProps
     );
   }
 
-  if (!user) {
-    return <redirect to="/login" state={{ from: location }} replace />;
-  }
-
-  if (!userRole || !allowedRoles.includes(userRole)) {
-    return <redirect to="/" replace />;
+  if (!user || !userRole || !allowedRoles.includes(userRole)) {
+    return null;
   }
 
   return <>{children}</>;

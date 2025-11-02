@@ -28,7 +28,9 @@ export default function ManageYouTubeVideos() {
   const [formData, setFormData] = useState({
     title: '',
     url: '',
-    description: ''
+    description: '',
+    embed_code: '',
+    is_visible: true
   });
 
   useEffect(() => {
@@ -175,6 +177,7 @@ export default function ManageYouTubeVideos() {
   const resetForm = () => {
     setFormData({
       title: '',
+      url: '',
       description: '',
       embed_code: '',
       is_visible: true
@@ -318,6 +321,7 @@ export default function ManageYouTubeVideos() {
                           setEditingVideo(video);
                           setFormData({
                             title: video.title,
+                            url: video.url || '',
                             description: video.description || '',
                             embed_code: video.embed_code,
                             is_visible: video.is_visible

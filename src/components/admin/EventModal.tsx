@@ -77,7 +77,7 @@ export default function EventModal({ event, onClose, onSave, onDelete }: EventMo
 
       // If no event type is selected, set the first available one as default
       if (!formData.event_type && data.length > 0) {
-        setFormData(prev => ({ ...prev, event_type: data[0].value }));
+        setFormData(prev => ({ ...prev, event_type: data[0].value as 'Academic' }));
       }
     };
 
@@ -105,7 +105,7 @@ export default function EventModal({ event, onClose, onSave, onDelete }: EventMo
         value: newValue,
         label: label
       }]);
-      setFormData(prev => ({ ...prev, event_type: newValue }));
+      setFormData(prev => ({ ...prev, event_type: newValue as 'Academic' | 'Sports' | 'Cultural' | 'Other' }));
     } catch (err) {
       console.error('Error saving new event type:', err);
       alert(`Failed to add event type: ${err instanceof Error ? err.message : 'Unknown error'}`);
@@ -134,7 +134,7 @@ export default function EventModal({ event, onClose, onSave, onDelete }: EventMo
 
       // Update local state
       setSessionOptions(prev => [...prev, newOption]);
-      setFormData(prev => ({ ...prev, session: label }));
+      setFormData(prev => ({ ...prev, session: label as 'all' | '2024-25' | '2025-26' }));
     } catch (err) {
       console.error('Error saving new session:', err);
       // You might want to show this error to the user
@@ -142,7 +142,20 @@ export default function EventModal({ event, onClose, onSave, onDelete }: EventMo
     }
   };
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    description: string;
+    is_all_day: boolean;
+    start_date: string;
+    end_date: string;
+    start_time: string;
+    end_time: string;
+    location: string;
+    event_type: 'Academic' | 'Sports' | 'Cultural' | 'Other';
+    branch: 'all' | 'paonta-sahib' | 'juniors' | 'majra';
+    session: 'all' | '2024-25' | '2025-26';
+    is_public: boolean;
+  }>({
     title: '',
     description: '',
     is_all_day: false,
@@ -151,9 +164,9 @@ export default function EventModal({ event, onClose, onSave, onDelete }: EventMo
     start_time: '09:00',
     end_time: '17:00',
     location: '',
-    event_type: 'Academic' as const,
-    branch: 'all' as const,
-    session: 'all' as const,
+    event_type: 'Academic',
+    branch: 'all',
+    session: 'all',
     is_public: true
   });
 
@@ -174,9 +187,9 @@ export default function EventModal({ event, onClose, onSave, onDelete }: EventMo
         start_time: isAllDay ? '09:00' : `${startDate.getHours().toString().padStart(2, '0')}:${startDate.getMinutes().toString().padStart(2, '0')}`,
         end_time: isAllDay ? '17:00' : `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`,
         location: event.location || '',
-        event_type: event.event_type,
-        branch: event.branch,
-        session: event.session,
+        event_type: event.event_type as 'Academic' | 'Sports' | 'Cultural' | 'Other',
+        branch: (event.branch || 'all') as 'all' | 'paonta-sahib' | 'juniors' | 'majra',
+        session: (event.session || 'all') as 'all' | '2024-25' | '2025-26',
         is_public: event.is_public
       });
     }
@@ -367,7 +380,7 @@ export default function EventModal({ event, onClose, onSave, onDelete }: EventMo
               </label>
               <NotionDropdown
                 value={formData.event_type}
-                onChange={(value) => setFormData({ ...formData, event_type: value })}
+                onChange={(value) => setFormData({ ...formData, event_type: value as 'Academic' | 'Sports' | 'Cultural' | 'Other' })}
                 options={eventTypeOptions}
                 placeholder="Select event type"
                 allowAdditions={true}
@@ -382,7 +395,7 @@ export default function EventModal({ event, onClose, onSave, onDelete }: EventMo
               </label>
               <NotionDropdown
                 value={formData.branch}
-                onChange={(value) => setFormData({ ...formData, branch: value })}
+                onChange={(value) => setFormData({ ...formData, branch: value as 'all' | 'paonta-sahib' | 'juniors' | 'majra' })}
                 options={branchOptions}
                 placeholder="Select branch"
               />
@@ -394,7 +407,7 @@ export default function EventModal({ event, onClose, onSave, onDelete }: EventMo
               </label>
               <NotionDropdown
                 value={formData.session}
-                onChange={(value) => setFormData({ ...formData, session: value })}
+                onChange={(value) => setFormData({ ...formData, session: value as 'all' | '2024-25' | '2025-26' })}
                 options={sessionOptions}
                 placeholder="Select session"
                 allowAdditions={true}

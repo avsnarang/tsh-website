@@ -20,7 +20,7 @@ export default function AdminSetup() {
 
   useEffect(() => {
     checkExistingSetup();
-  }, [navigate]);
+  }, [router]);
 
   const checkExistingSetup = async () => {
     try {

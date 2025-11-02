@@ -9,7 +9,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
   
   // Paths where footer should be hidden
   const hideFooterPaths = ['/gallery', '/invites'];
-  const shouldHideFooter = hideFooterPaths.includes(pathname);
+  const shouldHideFooter = pathname ? hideFooterPaths.includes(pathname) : false;
 
   return (
     <div className="flex flex-col min-h-screen">

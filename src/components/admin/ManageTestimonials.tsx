@@ -44,7 +44,7 @@ export default function ManageTestimonials() {
       return;
     }
     fetchTestimonials();
-  }, [user, navigate]);
+  }, [user, router]);
 
   const fetchTestimonials = async () => {
     try {

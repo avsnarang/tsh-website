@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { supabase } from "../../lib/supabase";
 import Container from "../ui/Container";
 import Button from "../ui/Button";
