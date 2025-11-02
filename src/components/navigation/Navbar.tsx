@@ -102,6 +102,7 @@ function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps)
                   <div>
                     {group.items.map((item) => {
                       const Icon = item.icon;
+                      if (!item.href) return null;
                       return (
                         <Link 
                           key={item.href}
