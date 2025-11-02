@@ -278,32 +278,32 @@ export default function Invites() {
                   <button
                     onClick={() => setShowUpcomingOnly(!showUpcomingOnly)}
                     className="relative flex items-center w-full overflow-hidden rounded-xl"
-                  >
-                    <motion.div
+                >
+                  <motion.div
                       className="absolute h-full w-[50%] bg-green rounded-xl z-0"
-                      initial={false}
-                      animate={{
-                        x: showUpcomingOnly ? '0%' : '100%',
-                        opacity: 0.1
-                      }}
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                    <div 
+                    initial={false}
+                    animate={{
+                      x: showUpcomingOnly ? '0%' : '100%',
+                      opacity: 0.1
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                  <div 
                       className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 relative z-10 ${
-                        showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
-                      }`}
-                    >
-                      <Filter className="w-4 h-4" />
-                      <span>Upcoming</span>
-                    </div>
-                    <div 
+                      showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
+                    }`}
+                  >
+                    <Filter className="w-4 h-4" />
+                    <span>Upcoming</span>
+                  </div>
+                  <div 
                       className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 relative z-10 ${
-                        !showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
-                      }`}
-                    >
-                      <Calendar className="w-4 h-4" />
-                      <span>All Events</span>
-                    </div>
+                      !showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
+                    }`}
+                  >
+                    <Calendar className="w-4 h-4" />
+                    <span>All Events</span>
+                  </div>
                   </button>
                 </motion.div>
               </div>
@@ -326,19 +326,19 @@ export default function Invites() {
 
         {/* Right Column - Full Screen Carousel */}
         <div className="w-full md:w-[70%] md:ml-[30%] min-h-screen md:h-screen bg-transparent relative">
-          {loading ? (
+              {loading ? (
             <div className="flex items-center justify-center h-screen md:h-full">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green"></div>
             </div>
-          ) : events.length === 0 ? (
+              ) : events.length === 0 ? (
             <div className="flex items-center justify-center h-screen md:h-full">
               <div className="text-center text-neutral-dark/60">
-                <Star className="h-12 w-12 mx-auto mb-4 text-orange-light" />
-                <p className="text-lg">No upcoming events at this time.</p>
+                  <Star className="h-12 w-12 mx-auto mb-4 text-orange-light" />
+                  <p className="text-lg">No upcoming events at this time.</p>
               </div>
-            </div>
-          ) : (
-            <div className="absolute inset-0 pt-24 md:pt-48 pb-8 md:pb-20 px-4 md:px-8 flex items-center gap-2 md:gap-4">
+                </div>
+              ) : (
+            <div className="absolute inset-0 pt-4 md:pt-48 pb-8 md:pb-20 px-4 md:px-8 flex items-center gap-2 md:gap-4">
               {/* Left Navigation Button - Hidden on mobile */}
               {events.length > 1 && (
                 <button
