@@ -241,10 +241,10 @@ export default function Invites() {
       {/* Main Content */}
       <div className="relative min-h-screen md:h-full flex flex-col md:flex-row">
         {/* Left Column - Top on mobile, fixed sidebar on desktop */}
-        <div className="w-full md:w-[30%] md:h-screen md:fixed md:left-0 md:top-0 flex items-center justify-center px-4 md:px-8 pt-24 md:pt-32 pb-8 md:pb-0 overflow-y-auto md:overflow-y-visible">
+        <div className="w-full md:w-[30%] md:h-screen md:fixed md:left-0 md:top-0 flex items-center justify-center px-4 md:px-8 pt-32 md:pt-32 pb-8 md:pb-0 overflow-y-auto md:overflow-y-visible">
           <div className="max-w-md w-full">
             <ScrollReveal>
-              <div className="text-center mb-16">
+              <div className="text-center mb-8 md:mb-16">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
