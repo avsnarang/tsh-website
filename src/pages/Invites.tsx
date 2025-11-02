@@ -224,7 +224,7 @@ export default function Invites() {
   };
 
   return (
-    <div className="h-screen overflow-hidden"> {/* Changed to h-screen and overflow-hidden */}
+    <div className="min-h-screen md:h-screen overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
@@ -239,10 +239,10 @@ export default function Invites() {
       </div>
 
       {/* Main Content */}
-      <div className="h-full flex">
-        {/* Left Column - Fixed */}
-        <div className="w-[30%] h-full flex items-center justify-center fixed left-0 top-0 px-8 pt-32">
-          <div className="max-w-md">
+      <div className="relative min-h-screen md:h-full flex flex-col md:flex-row">
+        {/* Left Column - Top on mobile, fixed sidebar on desktop */}
+        <div className="w-full md:w-[30%] md:h-screen md:fixed md:left-0 md:top-0 flex items-center justify-center px-4 md:px-8 pt-24 md:pt-32 pb-8 md:pb-0 overflow-y-auto md:overflow-y-visible">
+          <div className="max-w-md w-full">
             <ScrollReveal>
               <div className="text-center mb-16">
                 <motion.div
@@ -325,36 +325,49 @@ export default function Invites() {
         </div>
 
         {/* Right Column - Full Screen Carousel */}
-        <div className="w-[70%] h-screen ml-[30%] bg-transparent relative">
+        <div className="w-full md:w-[70%] md:ml-[30%] min-h-screen md:h-screen bg-transparent relative">
           {loading ? (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center h-screen md:h-full">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green"></div>
             </div>
           ) : events.length === 0 ? (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center h-screen md:h-full">
               <div className="text-center text-neutral-dark/60">
                 <Star className="h-12 w-12 mx-auto mb-4 text-orange-light" />
                 <p className="text-lg">No upcoming events at this time.</p>
               </div>
             </div>
           ) : (
-            <div className="absolute inset-0 pt-48 pb-20 px-8 flex items-center gap-4">
-              {/* Left Navigation Button */}
+            <div className="absolute inset-0 pt-24 md:pt-48 pb-8 md:pb-20 px-4 md:px-8 flex items-center gap-2 md:gap-4">
+              {/* Left Navigation Button - Hidden on mobile */}
               {events.length > 1 && (
                 <button
                   onClick={goToPrevious}
-                  className="shrink-0 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110 z-20"
+                  className="hidden md:flex shrink-0 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110 z-20"
                   aria-label="Previous event"
                 >
                   <ChevronLeft className="h-6 w-6 text-neutral-dark" />
                 </button>
               )}
 
-              {/* Full Screen Card Container */}
-              <div className="flex-1 h-full relative">
-                <AnimatePresence mode="wait">
+              {/* Full Screen Card Container with Swipe Support */}
+              <div className="flex-1 h-full relative touch-pan-y">
+                <AnimatePresence mode="wait" initial={false}>
                   <motion.div
                     key={currentIndex}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.2}
+                    onDragEnd={(e, { offset, velocity }) => {
+                      const swipe = Math.abs(offset.x) * velocity.x;
+                      const swipeThreshold = 10000;
+
+                      if (swipe < -swipeThreshold) {
+                        goToNext();
+                      } else if (swipe > swipeThreshold) {
+                        goToPrevious();
+                      }
+                    }}
                     initial={{ opacity: 0, x: 300 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -300 }}
@@ -388,11 +401,11 @@ export default function Invites() {
                 )}
               </div>
 
-              {/* Right Navigation Button */}
+              {/* Right Navigation Button - Hidden on mobile */}
               {events.length > 1 && (
                 <button
                   onClick={goToNext}
-                  className="shrink-0 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110 z-20"
+                  className="hidden md:flex shrink-0 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110 z-20"
                   aria-label="Next event"
                 >
                   <ChevronRight className="h-6 w-6 text-neutral-dark" />
