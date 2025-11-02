@@ -8,8 +8,8 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import ScrollReveal from '../components/animations/ScrollReveal';
 import TextReveal from '../components/animations/TextReveal';
-import { Filter, Calendar, Star } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Filter, Calendar, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import InviteCardSkeleton from '../components/invites/InviteCardSkeleton';
 
 export default function Invites() {
@@ -20,6 +20,7 @@ export default function Invites() {
   const [selectedInvite, setSelectedInvite] = useState<Invite | null>(null);
   const [success, setSuccess] = useState('');
   const [showUpcomingOnly, setShowUpcomingOnly] = useState(true); // New state for filter
+  const [currentIndex, setCurrentIndex] = useState(0);
 
 
   useEffect(() => {
@@ -120,6 +121,39 @@ export default function Invites() {
       setSelectedInvite(invite);
     }
   };
+
+  const goToNext = () => {
+    if (events.length > 0) {
+      setCurrentIndex((prev) => (prev + 1) % events.length);
+    }
+  };
+
+  const goToPrevious = () => {
+    if (events.length > 0) {
+      setCurrentIndex((prev) => (prev - 1 + events.length) % events.length);
+    }
+  };
+
+  // Reset index when events change
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [events.length, showUpcomingOnly]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (events.length === 0) return;
+      
+      if (e.key === 'ArrowLeft') {
+        setCurrentIndex((prev) => (prev - 1 + events.length) % events.length);
+      } else if (e.key === 'ArrowRight') {
+        setCurrentIndex((prev) => (prev + 1) % events.length);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [events.length]);
 
   const handleSubmitRSVP = async (
     status: 'attending' | 'not_attending' | 'maybe', 
@@ -290,44 +324,80 @@ export default function Invites() {
           </div>
         </div>
 
-        {/* Right Column - Scrollable */}
-        <div className="w-[70%] h-screen ml-[30%] bg-transparent">
-          <div className="h-full overflow-y-auto px-8 pt-40 pb-20">
-            {/* Events Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {loading ? (
-                [...Array(6)].map((_, index) => (
+        {/* Right Column - Full Screen Carousel */}
+        <div className="w-[70%] h-screen ml-[30%] bg-transparent relative">
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green"></div>
+            </div>
+          ) : events.length === 0 ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center text-neutral-dark/60">
+                <Star className="h-12 w-12 mx-auto mb-4 text-orange-light" />
+                <p className="text-lg">No upcoming events at this time.</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Full Screen Card */}
+              <div className="absolute inset-0 pt-32 pb-20 px-8">
+                <AnimatePresence mode="wait">
                   <motion.div
-                    key={`skeleton-${index}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    <InviteCardSkeleton />
-                  </motion.div>
-                ))
-              ) : events.length === 0 ? (
-                <div className="col-span-full text-center text-neutral-dark/60 py-12">
-                  <Star className="h-12 w-12 mx-auto mb-4 text-orange-light" />
-                  <p className="text-lg">No upcoming events at this time.</p>
-                </div>
-              ) : (
-                events.map((invite) => (
-                  <motion.div
-                    key={invite.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
+                    key={currentIndex}
+                    initial={{ opacity: 0, x: 300 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -300 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    className="h-full w-full"
                   >
                     <InviteCard
-                      invite={invite}
+                      invite={events[currentIndex]}
                       onRSVP={handleRSVP}
+                      isFullScreen
                     />
                   </motion.div>
-                ))
+                </AnimatePresence>
+              </div>
+
+              {/* Navigation Buttons */}
+              {events.length > 1 && (
+                <>
+                  <button
+                    onClick={goToPrevious}
+                    className="absolute left-8 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110"
+                    aria-label="Previous event"
+                  >
+                    <ChevronLeft className="h-6 w-6 text-neutral-dark" />
+                  </button>
+                  <button
+                    onClick={goToNext}
+                    className="absolute right-8 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110"
+                    aria-label="Next event"
+                  >
+                    <ChevronRight className="h-6 w-6 text-neutral-dark" />
+                  </button>
+                </>
               )}
-            </div>
-          </div>
+
+              {/* Card Indicator */}
+              {events.length > 1 && (
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                  {events.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentIndex(index)}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        index === currentIndex
+                          ? 'w-8 bg-green'
+                          : 'w-2 bg-neutral-dark/30 hover:bg-neutral-dark/50'
+                      }`}
+                      aria-label={`Go to event ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
 
