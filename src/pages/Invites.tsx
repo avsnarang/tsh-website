@@ -357,15 +357,18 @@ export default function Invites() {
                     key={currentIndex}
                     drag="x"
                     dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.2}
+                    dragElastic={0.3}
                     onDragEnd={(e, { offset, velocity }) => {
-                      const swipe = Math.abs(offset.x) * velocity.x;
-                      const swipeThreshold = 10000;
+                      const swipeThreshold = 50;
+                      const velocityThreshold = 500;
 
-                      if (swipe < -swipeThreshold) {
-                        goToNext();
-                      } else if (swipe > swipeThreshold) {
-                        goToPrevious();
+                      // Check for swipe based on distance and velocity
+                      if (Math.abs(offset.x) > swipeThreshold || Math.abs(velocity.x) > velocityThreshold) {
+                        if (offset.x > 0 || velocity.x > 0) {
+                          goToPrevious();
+                        } else {
+                          goToNext();
+                        }
                       }
                     }}
                     initial={{ opacity: 0, x: 300 }}
