@@ -21,6 +21,7 @@ interface Event {
   location: string;
   description: string;
   cover_image: string;
+  cover_image_mobile?: string;
   max_capacity?: number;
   max_guests_per_rsvp: number;
   requires_admission_number: boolean;
@@ -42,6 +43,7 @@ interface FormData {
   time: string;
   location: string;
   coverImage: string;
+  coverImageMobile: string;
   maxCapacity?: number;
   maxGuestsPerRsvp: number;
   requiresAdmissionNumber: boolean;
@@ -62,6 +64,7 @@ export default function ManageEvents() {
     time: '',
     location: '',
     coverImage: '',
+    coverImageMobile: '',
     maxCapacity: undefined,
     maxGuestsPerRsvp: 1,
     requiresAdmissionNumber: false
@@ -171,6 +174,7 @@ export default function ManageEvents() {
         time: formData.time,
         location: formData.location,
         cover_image: formData.coverImage,
+        cover_image_mobile: formData.coverImageMobile || null,
         max_capacity: formData.maxCapacity,
         max_guests_per_rsvp: formData.maxGuestsPerRsvp,
         requires_admission_number: formData.requiresAdmissionNumber,
@@ -233,6 +237,7 @@ export default function ManageEvents() {
       time: '',
       location: '',
       coverImage: '',
+      coverImageMobile: '',
       maxCapacity: undefined,
       maxGuestsPerRsvp: 4,
       requiresAdmissionNumber: true
@@ -401,6 +406,7 @@ export default function ManageEvents() {
                                 time: event.time,
                                 location: event.location,
                                 coverImage: event.cover_image,
+                                coverImageMobile: event.cover_image_mobile || '',
                                 maxCapacity: event.max_capacity,
                                 maxGuestsPerRsvp: event.max_guests_per_rsvp,
                                 requiresAdmissionNumber: event.requires_admission_number
@@ -531,15 +537,39 @@ export default function ManageEvents() {
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-neutral-dark mb-2">Cover Image URL</label>
-                      <input
-                        type="url"
-                        value={formData.coverImage}
-                        onChange={(e) => setFormData(prev => ({ ...prev, coverImage: e.target.value }))}
-                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                        required
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-neutral-dark mb-2">
+                          Desktop Cover Image URL
+                          <span className="text-xs text-neutral-dark/50 block mt-1 font-normal">
+                            Recommended: 1200 × 900 px (4:3 ratio)
+                          </span>
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.coverImage}
+                          onChange={(e) => setFormData(prev => ({ ...prev, coverImage: e.target.value }))}
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          required
+                          placeholder="https://example.com/image.jpg"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-neutral-dark mb-2">
+                          Mobile Cover Image URL (Optional)
+                          <span className="text-xs text-neutral-dark/50 block mt-1 font-normal">
+                            Recommended: 800 × 1200 px (2:3 ratio)
+                          </span>
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.coverImageMobile}
+                          onChange={(e) => setFormData(prev => ({ ...prev, coverImageMobile: e.target.value }))}
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          placeholder="https://example.com/image-mobile.jpg"
+                        />
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

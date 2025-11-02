@@ -6,6 +6,7 @@ export interface Invite {
   location: string;
   description: string;
   coverImage: string;
+  coverImageMobile?: string;
   status: 'upcoming' | 'past';
   rsvpCount: number;
   maxCapacity?: number;

@@ -9,18 +9,50 @@ interface InviteCardProps {
 }
 
 export default function InviteCard({ invite, onRSVP, isFullScreen = false }: InviteCardProps) {
+  // Determine which image to use based on screen size
+  const getImageSrc = () => {
+    if (!invite.coverImage) return null;
+    // Use mobile image if available and on mobile, otherwise use desktop image
+    return invite.coverImageMobile || invite.coverImage;
+  };
+
+  const imageSrc = getImageSrc();
+
   if (isFullScreen) {
     return (
       <div className="group relative h-full w-full overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-500">
         <div className="absolute inset-0">
-          {invite.coverImage ? (
-            <img
-              src={invite.coverImage}
-              alt={invite.title}
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              loading="lazy"
-              decoding="async"
-            />
+          {imageSrc ? (
+            <>
+              {/* Desktop image */}
+              <img
+                src={invite.coverImage}
+                alt={invite.title}
+                className="hidden md:block h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
+              />
+              {/* Mobile image */}
+              {invite.coverImageMobile && (
+                <img
+                  src={invite.coverImageMobile}
+                  alt={invite.title}
+                  className="block md:hidden h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              {/* Fallback if no mobile image is provided */}
+              {!invite.coverImageMobile && (
+                <img
+                  src={invite.coverImage}
+                  alt={invite.title}
+                  className="block md:hidden h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+            </>
           ) : (
             <div className="h-full w-full bg-gradient-to-br from-green-light/20 to-orange-light/20" />
           )}
@@ -78,16 +110,43 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
   return (
     <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-500">
       <div className="absolute inset-0">
-        {invite.coverImage ? (
-          <img
-            src={invite.coverImage}
-            alt={invite.title}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
-            decoding="async"
-            width="400"
-            height="500"
-          />
+        {imageSrc ? (
+          <>
+            {/* Desktop image */}
+            <img
+              src={invite.coverImage}
+              alt={invite.title}
+              className="hidden md:block h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              loading="lazy"
+              decoding="async"
+              width="400"
+              height="500"
+            />
+            {/* Mobile image */}
+            {invite.coverImageMobile && (
+              <img
+                src={invite.coverImageMobile}
+                alt={invite.title}
+                className="block md:hidden h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
+                width="400"
+                height="500"
+              />
+            )}
+            {/* Fallback if no mobile image is provided */}
+            {!invite.coverImageMobile && (
+              <img
+                src={invite.coverImage}
+                alt={invite.title}
+                className="block md:hidden h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
+                width="400"
+                height="500"
+              />
+            )}
+          </>
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-green-light/20 to-orange-light/20" />
         )}
