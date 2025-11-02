@@ -109,11 +109,11 @@ export default function NavLinks({ textColor, isMenuOpen }: NavLinksProps) {
         { to: "/academics", text: "Academics" },
         { to: "/scholarship", text: "Scholarship" },
         { to: "/co-curricular", text: "Co-curricular" },
-        { to: ALUMNI_ROUTES.HOME, text: "Alumni" },
+        { to: ALUMNI_ROUTES.HOME || "/alumni", text: "Alumni" },
         { to: "/invites", text: "Events" },
         { to: "/gallery", text: "Gallery" },
         { to: "/contact", text: "Contact" }
-      ].map((link) => (
+      ].filter(link => link.to).map((link) => (
         <motion.div key={link.to} style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}>
           <Link href={link.to}>{link.text}</Link>
         </motion.div>

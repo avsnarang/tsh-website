@@ -494,15 +494,17 @@ export default function Navbar() {
                             </h4>
                             <div className="space-y-3 pl-4">
                               {group.items.map((subItem) => (
-                                <Link
-                                  key={subItem.href}
-                                  href={subItem.href}
-                                  onClick={() => setIsMenuOpen(false)}
-                                  className="flex items-center gap-3 text-neutral-light/80 hover:text-neutral-light transition-colors"
-                                >
-                                  <subItem.icon className="h-4 w-4" />
-                                  <span>{subItem.label}</span>
-                                </Link>
+                                subItem.href ? (
+                                  <Link
+                                    key={subItem.href}
+                                    href={subItem.href}
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="flex items-center gap-3 text-neutral-light/80 hover:text-neutral-light transition-colors"
+                                  >
+                                    <subItem.icon className="h-4 w-4" />
+                                    <span>{subItem.label}</span>
+                                  </Link>
+                                ) : null
                               ))}
                             </div>
                           </div>
