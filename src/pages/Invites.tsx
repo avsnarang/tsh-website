@@ -234,15 +234,16 @@ export default function Invites() {
               </div>
 
               {/* Filter Toggle */}
-              <div className="bg-white rounded-2xl shadow-lg p-1.5 mb-8">
+              <div className="bg-white rounded-2xl shadow-lg p-1.5 mb-8 overflow-hidden">
                 <motion.button
                   onClick={() => setShowUpcomingOnly(!showUpcomingOnly)}
                   className="relative flex items-center w-full"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  style={{ transformOrigin: 'center' }}
                 >
                   <motion.div
-                    className="absolute h-full w-[50%] bg-green rounded-xl"
+                    className="absolute h-full w-[50%] bg-green rounded-xl z-0"
                     initial={false}
                     animate={{
                       x: showUpcomingOnly ? '0%' : '100%',
@@ -251,7 +252,7 @@ export default function Invites() {
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                   <div 
-                    className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
+                    className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 relative z-10 ${
                       showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
                     }`}
                   >
@@ -259,7 +260,7 @@ export default function Invites() {
                     <span>Upcoming</span>
                   </div>
                   <div 
-                    className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 ${
+                    className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 relative z-10 ${
                       !showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
                     }`}
                   >
