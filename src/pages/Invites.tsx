@@ -234,40 +234,44 @@ export default function Invites() {
               </div>
 
               {/* Filter Toggle */}
-              <div className="bg-white rounded-2xl shadow-lg p-1.5 mb-8 overflow-hidden">
-                <motion.button
-                  onClick={() => setShowUpcomingOnly(!showUpcomingOnly)}
-                  className="relative flex items-center w-full"
+              <div className="mb-8">
+                <motion.div 
+                  className="bg-white rounded-2xl shadow-lg p-1.5 origin-center"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  style={{ transformOrigin: 'center' }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <motion.div
-                    className="absolute h-full w-[50%] bg-green rounded-xl z-0"
-                    initial={false}
-                    animate={{
-                      x: showUpcomingOnly ? '0%' : '100%',
-                      opacity: 0.1
-                    }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                  <div 
-                    className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 relative z-10 ${
-                      showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
-                    }`}
+                  <button
+                    onClick={() => setShowUpcomingOnly(!showUpcomingOnly)}
+                    className="relative flex items-center w-full overflow-hidden rounded-xl"
                   >
-                    <Filter className="w-4 h-4" />
-                    <span>Upcoming</span>
-                  </div>
-                  <div 
-                    className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 relative z-10 ${
-                      !showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
-                    }`}
-                  >
-                    <Calendar className="w-4 h-4" />
-                    <span>All Events</span>
-                  </div>
-                </motion.button>
+                    <motion.div
+                      className="absolute h-full w-[50%] bg-green rounded-xl z-0"
+                      initial={false}
+                      animate={{
+                        x: showUpcomingOnly ? '0%' : '100%',
+                        opacity: 0.1
+                      }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                    <div 
+                      className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 relative z-10 ${
+                        showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
+                      }`}
+                    >
+                      <Filter className="w-4 h-4" />
+                      <span>Upcoming</span>
+                    </div>
+                    <div 
+                      className={`flex items-center justify-center gap-2 px-6 py-3 w-[50%] transition-colors duration-200 relative z-10 ${
+                        !showUpcomingOnly ? 'text-green font-semibold' : 'text-neutral-400'
+                      }`}
+                    >
+                      <Calendar className="w-4 h-4" />
+                      <span>All Events</span>
+                    </div>
+                  </button>
+                </motion.div>
               </div>
 
               {/* Messages */}
