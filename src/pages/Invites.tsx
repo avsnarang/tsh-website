@@ -338,9 +338,20 @@ export default function Invites() {
               </div>
             </div>
           ) : (
-            <>
-              {/* Full Screen Card */}
-              <div className="absolute inset-0 pt-48 pb-20 px-8">
+            <div className="absolute inset-0 pt-48 pb-20 px-8 flex items-center gap-4">
+              {/* Left Navigation Button */}
+              {events.length > 1 && (
+                <button
+                  onClick={goToPrevious}
+                  className="shrink-0 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110 z-20"
+                  aria-label="Previous event"
+                >
+                  <ChevronLeft className="h-6 w-6 text-neutral-dark" />
+                </button>
+              )}
+
+              {/* Full Screen Card Container */}
+              <div className="flex-1 h-full relative">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentIndex}
@@ -357,46 +368,37 @@ export default function Invites() {
                     />
                   </motion.div>
                 </AnimatePresence>
+
+                {/* Card Indicator */}
+                {events.length > 1 && (
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                    {events.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentIndex(index)}
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          index === currentIndex
+                            ? 'w-8 bg-green'
+                            : 'w-2 bg-white/50 hover:bg-white/70'
+                        }`}
+                        aria-label={`Go to event ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Navigation Buttons */}
+              {/* Right Navigation Button */}
               {events.length > 1 && (
-                <>
-                  <button
-                    onClick={goToPrevious}
-                    className="absolute left-8 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110"
-                    aria-label="Previous event"
-                  >
-                    <ChevronLeft className="h-6 w-6 text-neutral-dark" />
-                  </button>
-                  <button
-                    onClick={goToNext}
-                    className="absolute right-8 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110"
-                    aria-label="Next event"
-                  >
-                    <ChevronRight className="h-6 w-6 text-neutral-dark" />
-                  </button>
-                </>
+                <button
+                  onClick={goToNext}
+                  className="shrink-0 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110 z-20"
+                  aria-label="Next event"
+                >
+                  <ChevronRight className="h-6 w-6 text-neutral-dark" />
+                </button>
               )}
-
-              {/* Card Indicator */}
-              {events.length > 1 && (
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-                  {events.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentIndex(index)}
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        index === currentIndex
-                          ? 'w-8 bg-green'
-                          : 'w-2 bg-neutral-dark/30 hover:bg-neutral-dark/50'
-                      }`}
-                      aria-label={`Go to event ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
-            </>
+            </div>
           )}
         </div>
       </div>
