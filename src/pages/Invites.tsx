@@ -241,7 +241,7 @@ export default function Invites() {
       {/* Main Content */}
       <div className="relative min-h-screen md:h-full flex flex-col md:flex-row">
         {/* Left Column - Top on mobile, fixed sidebar on desktop */}
-        <div className="w-full md:w-[30%] md:h-screen md:fixed md:left-0 md:top-0 flex items-center justify-center px-4 md:px-8 pt-32 md:pt-32 pb-8 md:pb-0 overflow-y-auto md:overflow-y-visible">
+        <div className="w-full md:w-[30%] md:h-screen md:fixed md:left-0 md:top-0 flex items-center justify-center px-4 md:px-8 pt-32 md:pt-32 pb-4 md:pb-0 overflow-y-auto md:overflow-y-visible">
           <div className="max-w-md w-full">
             <ScrollReveal>
               <div className="text-center mb-8 md:mb-16">
@@ -268,7 +268,7 @@ export default function Invites() {
               </div>
 
               {/* Filter Toggle */}
-              <div className="mb-8">
+              <div className="mb-4 md:mb-8">
                 <motion.div 
                   className="bg-white rounded-2xl shadow-lg p-1.5 origin-center"
                   whileHover={{ scale: 1.02 }}
