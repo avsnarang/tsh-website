@@ -207,7 +207,7 @@ export default function Invites() {
       {/* Main Content */}
       <div className="h-full flex">
         {/* Left Column - Fixed */}
-        <div className="w-[30%] h-full flex items-center justify-center fixed left-0 top-0 px-8">
+        <div className="w-[30%] h-full flex items-center justify-center fixed left-0 top-0 px-8 pt-32">
           <div className="max-w-md">
             <ScrollReveal>
               <div className="text-center mb-16">
@@ -287,7 +287,7 @@ export default function Invites() {
 
         {/* Right Column - Scrollable */}
         <div className="w-[70%] h-screen ml-[30%] bg-transparent">
-          <div className="h-full overflow-y-auto px-8 py-20">
+          <div className="h-full overflow-y-auto px-8 pt-32 pb-20">
             {/* Events Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {loading ? (
