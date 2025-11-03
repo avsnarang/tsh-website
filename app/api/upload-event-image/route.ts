@@ -78,12 +78,16 @@ export async function POST(request: NextRequest) {
       ? 'image/png'
       : 'image/jpeg';
 
+    console.log('Uploading to GCP Storage...', { fileName, contentType, compressedSize });
+
     // Upload to GCP Storage
     const publicUrl = await uploadToGCPStorage(
       compressedBuffer,
       fileName,
       contentType
     );
+
+    console.log('GCP upload successful:', { publicUrl });
 
     return NextResponse.json({
       url: publicUrl,

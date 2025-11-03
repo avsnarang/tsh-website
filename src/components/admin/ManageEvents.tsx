@@ -169,54 +169,94 @@ export default function ManageEvents() {
   const uploadEventImage = async (files: File[], type: 'desktop' | 'mobile'): Promise<string[]> => {
     const urls: string[] = [];
     
-    for (const file of files) {
-      const uploadFormData = new FormData();
-      uploadFormData.append('image', file);
-      uploadFormData.append('type', type);
+    // Initialize file state with uploading status
+    const uploadingFiles: UploadedFile[] = files.map(file => ({
+      file,
+      preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined,
+      progress: 0,
+      status: 'uploading'
+    }));
 
-      const response = await fetch('/api/upload-event-image', {
-        method: 'POST',
-        body: uploadFormData
-      });
+    if (type === 'desktop') {
+      setCoverImageFiles(uploadingFiles);
+    } else {
+      setCoverImageMobileFiles(uploadingFiles);
+    }
+    
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const uploadFormData = new FormData();
+        uploadFormData.append('image', file);
+        uploadFormData.append('type', type);
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Upload failed');
+        console.log('Uploading image to GCP...', { fileName: file.name, type, size: file.size });
+        
+        const response = await fetch('/api/upload-event-image', {
+          method: 'POST',
+          body: uploadFormData
+        });
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+          console.error('Upload failed:', error);
+          throw new Error(error.error || `Upload failed: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Upload successful:', { url: data.url, compressionRatio: data.compressionRatio });
+        urls.push(data.url);
+        
+        // Update the file state with the uploaded URL
+        if (type === 'desktop') {
+          setCoverImageFiles(prev => {
+            const updated = [...prev];
+            const fileIndex = updated.findIndex(f => f.file === file);
+            if (fileIndex !== -1) {
+              updated[fileIndex] = {
+                ...updated[fileIndex],
+                status: 'success',
+                progress: 100,
+                url: data.url
+              };
+            }
+            return updated;
+          });
+        } else {
+          setCoverImageMobileFiles(prev => {
+            const updated = [...prev];
+            const fileIndex = updated.findIndex(f => f.file === file);
+            if (fileIndex !== -1) {
+              updated[fileIndex] = {
+                ...updated[fileIndex],
+                status: 'success',
+                progress: 100,
+                url: data.url
+              };
+            }
+            return updated;
+          });
+        }
       }
-
-      const data = await response.json();
-      urls.push(data.url);
+    } catch (error) {
+      // Update files with error status
+      const errorMessage = error instanceof Error ? error.message : 'Upload failed';
       
-      // Update the file state with the uploaded URL
       if (type === 'desktop') {
-        setCoverImageFiles(prev => {
-          const updated = [...prev];
-          const fileIndex = updated.findIndex(f => f.file === file);
-          if (fileIndex !== -1) {
-            updated[fileIndex] = {
-              ...updated[fileIndex],
-              status: 'success',
-              progress: 100,
-              url: data.url
-            };
-          }
-          return updated;
-        });
+        setCoverImageFiles(prev => prev.map(f => ({
+          ...f,
+          status: 'error' as const,
+          error: errorMessage
+        })));
       } else {
-        setCoverImageMobileFiles(prev => {
-          const updated = [...prev];
-          const fileIndex = updated.findIndex(f => f.file === file);
-          if (fileIndex !== -1) {
-            updated[fileIndex] = {
-              ...updated[fileIndex],
-              status: 'success',
-              progress: 100,
-              url: data.url
-            };
-          }
-          return updated;
-        });
+        setCoverImageMobileFiles(prev => prev.map(f => ({
+          ...f,
+          status: 'error' as const,
+          error: errorMessage
+        })));
       }
+      
+      throw error;
     }
 
     return urls;

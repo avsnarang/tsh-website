@@ -22,24 +22,41 @@ export async function uploadToGCPStorage(
   fileBuffer: Buffer,
   fileName: string,
   contentType: string,
-  bucketName: string = 'scholarise-events'
+  bucketName?: string
 ): Promise<string> {
+  const bucket = bucketName || GOOGLE_STORAGE_CONFIG.BUCKET_NAME;
+  
+  if (!bucket) {
+    throw new Error('GCP Storage bucket name not configured. Please set GCP_STORAGE_BUCKET in environment variables.');
+  }
+
   const storage = getGCPStorageClient();
-  const bucket = storage.bucket(bucketName);
+  const bucketClient = storage.bucket(bucket);
+
+  // Check if bucket exists
+  const [exists] = await bucketClient.exists();
+  if (!exists) {
+    throw new Error(`GCP Storage bucket "${bucket}" does not exist. Please create it in GCP Console.`);
+  }
 
   // Upload file to GCP Storage
-  const file = bucket.file(`cover-images/${fileName}`);
+  const file = bucketClient.file(`cover-images/${fileName}`);
   
-  await file.save(fileBuffer, {
-    metadata: {
-      contentType,
-      cacheControl: 'public, max-age=3600',
-    },
-    public: true, // Make file publicly accessible
-  });
+  try {
+    await file.save(fileBuffer, {
+      metadata: {
+        contentType,
+        cacheControl: 'public, max-age=3600',
+      },
+      public: true, // Make file publicly accessible
+    });
+  } catch (error) {
+    console.error('Error saving file to GCP:', error);
+    throw new Error(`Failed to upload file to GCP Storage: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 
   // Return public URL
-  const publicUrl = `https://storage.googleapis.com/${bucketName}/cover-images/${fileName}`;
+  const publicUrl = `https://storage.googleapis.com/${bucket}/cover-images/${fileName}`;
   return publicUrl;
 }
 

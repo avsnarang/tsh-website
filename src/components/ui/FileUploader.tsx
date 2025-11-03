@@ -91,17 +91,9 @@ export default function FileUploader({
     }
 
     if (validFiles.length > 0) {
-      const updatedFiles = [...files, ...validFiles];
+      // Add files to state first (only if using internal state)
       if (!externalFiles) {
-        setInternalFiles(updatedFiles);
-      }
-
-      // Update files with uploading status
-      if (!externalFiles) {
-        setInternalFiles(prev => {
-          const updated = [...prev, ...validFiles.map(f => ({ ...f, status: 'uploading' as const }))];
-          return updated;
-        });
+        setInternalFiles(prev => [...prev, ...validFiles.map(f => ({ ...f, status: 'uploading' as const }))]);
       }
 
       // Auto-upload
@@ -110,39 +102,51 @@ export default function FileUploader({
         const filesToUpload = validFiles.map(f => f.file);
         const urls = await onUpload(filesToUpload);
         
-        // Update files with success status and URLs
+        // Update files with success status and URLs (only if using internal state)
+        // For external files, parent component handles state updates
         if (!externalFiles) {
           setInternalFiles(prev => {
             const updated = [...prev];
             validFiles.forEach((fileObj, index) => {
-              const fileIndex = updated.length - validFiles.length + index;
-              updated[fileIndex] = {
-                ...fileObj,
-                status: 'success',
-                progress: 100,
-                url: urls[index]
-              };
+              const fileIndex = updated.findIndex(f => f.file === fileObj.file);
+              if (fileIndex !== -1) {
+                updated[fileIndex] = {
+                  ...fileObj,
+                  status: 'success',
+                  progress: 100,
+                  url: urls[index]
+                };
+              }
             });
             return updated;
           });
         }
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Upload failed';
-        // Update files with error status
+        console.error('FileUploader upload error:', error);
+        
+        // Update files with error status (only if using internal state)
+        // For external files, parent component handles error state
         if (!externalFiles) {
           setInternalFiles(prev => {
             const updated = [...prev];
             validFiles.forEach((fileObj, index) => {
-              const fileIndex = updated.length - validFiles.length + index;
-              updated[fileIndex] = {
-                ...fileObj,
-                status: 'error',
-                error: errorMessage
-              };
+              const fileIndex = updated.findIndex(f => f.file === fileObj.file);
+              if (fileIndex !== -1) {
+                updated[fileIndex] = {
+                  ...fileObj,
+                  status: 'error',
+                  error: errorMessage
+                };
+              }
             });
             return updated;
           });
         }
+        
+        // Show error alert for user feedback
+        alert(`Upload failed: ${errorMessage}`);
+        throw error;
       } finally {
         setUploading(false);
       }
