@@ -12,6 +12,7 @@ import Button from '../ui/Button';
 import ScrollReveal from '../animations/ScrollReveal';
 import TextReveal from '../animations/TextReveal';
 import { motion } from 'framer-motion';
+import FileUploader, { UploadedFile } from '../ui/FileUploader';
 
 interface Event {
   id: string;
@@ -69,6 +70,9 @@ export default function ManageEvents() {
     maxGuestsPerRsvp: 1,
     requiresAdmissionNumber: false
   });
+  const [coverImageFiles, setCoverImageFiles] = useState<UploadedFile[]>([]);
+  const [coverImageMobileFiles, setCoverImageMobileFiles] = useState<UploadedFile[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchEvents();
@@ -162,10 +166,87 @@ export default function ManageEvents() {
     }
   };
 
+  const uploadEventImage = async (files: File[], type: 'desktop' | 'mobile'): Promise<string[]> => {
+    const urls: string[] = [];
+    
+    for (const file of files) {
+      const uploadFormData = new FormData();
+      uploadFormData.append('image', file);
+      uploadFormData.append('type', type);
+
+      const response = await fetch('/api/upload-event-image', {
+        method: 'POST',
+        body: uploadFormData
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Upload failed');
+      }
+
+      const data = await response.json();
+      urls.push(data.url);
+      
+      // Update the file state with the uploaded URL
+      if (type === 'desktop') {
+        setCoverImageFiles(prev => {
+          const updated = [...prev];
+          const fileIndex = updated.findIndex(f => f.file === file);
+          if (fileIndex !== -1) {
+            updated[fileIndex] = {
+              ...updated[fileIndex],
+              status: 'success',
+              progress: 100,
+              url: data.url
+            };
+          }
+          return updated;
+        });
+      } else {
+        setCoverImageMobileFiles(prev => {
+          const updated = [...prev];
+          const fileIndex = updated.findIndex(f => f.file === file);
+          if (fileIndex !== -1) {
+            updated[fileIndex] = {
+              ...updated[fileIndex],
+              status: 'success',
+              progress: 100,
+              url: data.url
+            };
+          }
+          return updated;
+        });
+      }
+    }
+
+    return urls;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setError('');
+      setUploading(true);
+
+      // Upload images if new files were added
+      let coverImageUrl = formData.coverImage;
+      let coverImageMobileUrl = formData.coverImageMobile;
+
+      if (coverImageFiles.length > 0 && coverImageFiles[0].url) {
+        coverImageUrl = coverImageFiles[0].url;
+      } else if (coverImageFiles.length > 0) {
+        // Upload new desktop image
+        const desktopUrls = await uploadEventImage([coverImageFiles[0].file], 'desktop');
+        coverImageUrl = desktopUrls[0];
+      }
+
+      if (coverImageMobileFiles.length > 0 && coverImageMobileFiles[0].url) {
+        coverImageMobileUrl = coverImageMobileFiles[0].url;
+      } else if (coverImageMobileFiles.length > 0) {
+        // Upload new mobile image
+        const mobileUrls = await uploadEventImage([coverImageMobileFiles[0].file], 'mobile');
+        coverImageMobileUrl = mobileUrls[0];
+      }
 
       const eventData = {
         title: formData.title,
@@ -173,8 +254,8 @@ export default function ManageEvents() {
         date: formData.date,
         time: formData.time,
         location: formData.location,
-        cover_image: formData.coverImage,
-        cover_image_mobile: formData.coverImageMobile || null,
+        cover_image: coverImageUrl,
+        cover_image_mobile: coverImageMobileUrl || null,
         max_capacity: formData.maxCapacity,
         max_guests_per_rsvp: formData.maxGuestsPerRsvp,
         requires_admission_number: formData.requiresAdmissionNumber,
@@ -204,7 +285,9 @@ export default function ManageEvents() {
       await fetchEvents();
     } catch (error) {
       console.error('Error saving event:', error);
-      setError('Failed to save event');
+      setError(error instanceof Error ? error.message : 'Failed to save event');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -242,6 +325,8 @@ export default function ManageEvents() {
       maxGuestsPerRsvp: 4,
       requiresAdmissionNumber: true
     });
+    setCoverImageFiles([]);
+    setCoverImageMobileFiles([]);
   };
 
   useEffect(() => {
@@ -411,6 +496,9 @@ export default function ManageEvents() {
                                 maxGuestsPerRsvp: event.max_guests_per_rsvp,
                                 requiresAdmissionNumber: event.requires_admission_number
                               });
+                              // Reset file uploads when editing
+                              setCoverImageFiles([]);
+                              setCoverImageMobileFiles([]);
                               setShowEventForm(true);
                             }}
                             className="p-2 text-neutral-dark/70 hover:text-green rounded-lg transition-colors"
@@ -539,36 +627,59 @@ export default function ManageEvents() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-neutral-dark mb-2">
-                          Desktop Cover Image URL
-                          <span className="text-xs text-neutral-dark/50 block mt-1 font-normal">
-                            Recommended: 1200 × 900 px (4:3 ratio)
-                          </span>
-                        </label>
-                        <input
-                          type="url"
-                          value={formData.coverImage}
-                          onChange={(e) => setFormData(prev => ({ ...prev, coverImage: e.target.value }))}
-                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                          required
-                          placeholder="https://example.com/image.jpg"
+                        <FileUploader
+                          accept="image/*"
+                          maxSize={5 * 1024 * 1024} // 5MB
+                          maxFiles={1}
+                          multiple={false}
+                          onUpload={(files) => uploadEventImage(files, 'desktop')}
+                          files={coverImageFiles}
+                          onRemove={() => setCoverImageFiles([])}
+                          disabled={uploading}
+                          label="Desktop Cover Image"
+                          description="Recommended: 1200 × 900 px (4:3 ratio), max 5MB"
                         />
+                        {formData.coverImage && !coverImageFiles.length && (
+                          <div className="mt-2">
+                            <p className="text-xs text-neutral-dark/50 mb-1">Current image:</p>
+                            <a
+                              href={formData.coverImage}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-green hover:underline"
+                            >
+                              {formData.coverImage}
+                            </a>
+                          </div>
+                        )}
                       </div>
 
                       <div>
-                        <label className="block text-neutral-dark mb-2">
-                          Mobile Cover Image URL (Optional)
-                          <span className="text-xs text-neutral-dark/50 block mt-1 font-normal">
-                            Recommended: 800 × 1200 px (2:3 ratio)
-                          </span>
-                        </label>
-                        <input
-                          type="url"
-                          value={formData.coverImageMobile}
-                          onChange={(e) => setFormData(prev => ({ ...prev, coverImageMobile: e.target.value }))}
-                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                          placeholder="https://example.com/image-mobile.jpg"
+                        <FileUploader
+                          accept="image/*"
+                          maxSize={5 * 1024 * 1024} // 5MB
+                          maxFiles={1}
+                          multiple={false}
+                          onUpload={(files) => uploadEventImage(files, 'mobile')}
+                          files={coverImageMobileFiles}
+                          onRemove={() => setCoverImageMobileFiles([])}
+                          disabled={uploading}
+                          label="Mobile Cover Image (Optional)"
+                          description="Recommended: 800 × 1200 px (2:3 ratio), max 5MB"
                         />
+                        {formData.coverImageMobile && !coverImageMobileFiles.length && (
+                          <div className="mt-2">
+                            <p className="text-xs text-neutral-dark/50 mb-1">Current image:</p>
+                            <a
+                              href={formData.coverImageMobile}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-green hover:underline"
+                            >
+                              {formData.coverImageMobile}
+                            </a>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -619,8 +730,9 @@ export default function ManageEvents() {
                         onClick={handleSubmit}
                         variant="edit"
                         className="px-6 py-2"
+                        disabled={uploading}
                       >
-                        {editingEvent ? 'Update Event' : 'Create Event'}
+                        {uploading ? 'Uploading...' : (editingEvent ? 'Update Event' : 'Create Event')}
                       </Button>
                     </div>
                   </form>

@@ -23,6 +23,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
 # Supabase (Server-side - admin operations)
 SUPABASE_SERVICE_KEY=your_service_role_key_here
 
+# Prisma Database Connection
+# Format: postgresql://postgres:[PASSWORD]@[HOST]:[PORT]/postgres?schema=public
+# Find connection details in Supabase Dashboard → Settings → Database
+DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres?schema=public
+
 # Notion (for sports interest submissions)
 NOTION_TOKEN=your_notion_token_here
 NOTION_SPORTS_DATABASE_ID=your_database_id_here
@@ -50,6 +55,11 @@ NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
    - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon` `public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `service_role` `secret` key → `SUPABASE_SERVICE_KEY` (keep this secret!)
+4. Settings → Database
+   - Copy the connection string (Connection pooling → Transaction mode)
+   - Format: `postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres`
+   - Or use direct connection: `postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres`
+   - Add `?schema=public` at the end → `DATABASE_URL`
 
 ### Notion
 1. Create a Notion integration: https://www.notion.so/my-integrations

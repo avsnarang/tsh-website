@@ -1,0 +1,322 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Note: auth.users is managed by Supabase Auth and is not included here
+// The users table below references auth.users(id)
+
+model User {
+  id        String   @id @db.Uuid
+  email     String   @unique @db.Text
+  role      UserRole @default(alumni)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@map("users")
+}
+
+enum UserRole {
+  admin
+  alumni
+
+  @@map("user_role")
+}
+
+model AlumniProfile {
+  id                String   @id @db.Uuid // References auth.users(id)
+  fullName          String   @map("full_name") @db.Text
+  batchYear         Int      @map("batch_year")
+  currentLocation   String?  @map("current_location") @db.Text
+  occupation        String?  @db.Text
+  company           String?  @db.Text
+  bio               String?  @db.Text
+  linkedinUrl       String?  @map("linkedin_url") @db.Text
+  isPublic          Boolean  @default(false) @map("is_public")
+  profilePictureUrl String?  @map("profile_picture_url") @db.Text
+  phone             String?  @db.Text
+  email             String?  @db.Text
+  instagramUrl      String?  @map("instagram_url") @db.Text
+  facebookUrl       String?  @map("facebook_url") @db.Text
+  showContactInfo   Boolean  @default(false) @map("show_contact_info")
+  showTestimonial Boolean? @default(true) @map("show_testimonial")
+  showInSuccess     Boolean? @default(false) @map("show_in_success")
+  testimonial       String?  @db.Text
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  featuredTestimonials FeaturedTestimonial[]
+  testimonials         Testimonial[]
+  successStories       SuccessStory[]
+
+  @@index([batchYear], map: "idx_alumni_profiles_batch_year")
+  @@index([showTestimonial], map: "idx_alumni_profiles_show_testimonial")
+  @@map("alumni_profiles")
+}
+
+model SportsProgram {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String   @db.Text
+  category    String?  @db.Text
+  coach       String?  @db.Text
+  achievements String? @db.Text
+  description String?  @db.Text
+  ageGroups   String[] @default([]) @map("age_groups") @db.Text
+  schedules   Json?    @default("[]") // Array of Schedule objects
+  images      Json?    @default("{\"main_image\": \"\", \"gallery_images\": []}") // SportImages object
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([schedules(ops: Raw("gin"))], map: "idx_sports_programs_schedules")
+  @@map("sports_programs")
+}
+
+model LeadershipMessage {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String   @db.Text
+  role            String   @db.Text
+  preview         String   @db.Text
+  fullMessage     String   @map("full_message") @db.Text
+  photoUrl        String?  @map("photo_url") @db.Text
+  order           Int      @map("order")
+  displayLocations String[] @default(["all"]) @map("display_locations") @db.Text
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([order], map: "idx_leadership_messages_order")
+  @@map("leadership_messages")
+}
+
+model FeaturedTestimonial {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alumniProfileId String?  @map("alumni_profile_id") @db.Uuid
+  isVisible       Boolean  @default(true) @map("is_visible")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  alumniProfile AlumniProfile? @relation(fields: [alumniProfileId], references: [id])
+
+  @@index([createdAt], map: "idx_featured_testimonials_visible")
+  @@map("featured_testimonials")
+}
+
+model GalleryEvent {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String   @db.Text
+  description String?  @db.Text
+  date        DateTime @db.Date
+  campus      String   @db.Text
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  galleryImages GalleryImage[]
+
+  @@index([date], map: "idx_gallery_events_date")
+  @@map("gallery_events")
+}
+
+model GalleryImage {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  eventId   String   @map("event_id") @db.Uuid
+  imageUrl  String   @map("image_url") @db.Text
+  caption   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  event GalleryEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId], map: "idx_gallery_images_event_id")
+  @@map("gallery_images")
+}
+
+model ManagementUser {
+  id        String   @id @db.Uuid // References auth.users(id)
+  role      String   @default("manager") @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("management_users")
+}
+
+model Event {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title                 String    @db.Text
+  date                  DateTime  @db.Date
+  time                  String    @db.Text
+  location              String    @db.Text
+  description           String    @db.Text
+  coverImage            String    @map("cover_image") @db.Text
+  maxCapacity           Int?      @map("max_capacity")
+  maxGuestsPerRsvp      Int       @default(4) @map("max_guests_per_rsvp")
+  requiresAdmissionNumber Boolean @default(false) @map("requires_admission_number")
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  rsvps EventRsvp[]
+
+  @@map("events")
+}
+
+model EventRsvp {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  eventId       String          @map("event_id") @db.Uuid
+  userId        String          @map("user_id") @db.Uuid // References auth.users(id), not directly modelable in Prisma
+  status        EventRsvpStatus
+  guests        Int             @default(1)
+  admissionNumber String?       @map("admission_number") @db.Text
+  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime        @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  event        Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@map("event_rsvps")
+}
+
+enum EventRsvpStatus {
+  attending
+  notAttending @map("not_attending")
+  maybe
+
+  @@map("event_rsvp_status")
+}
+
+model CalendarEvent {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title              String   @db.Text
+  description        String?  @db.Text
+  startTime           DateTime @map("start_time") @db.Timestamptz(6)
+  endTime             DateTime @map("end_time") @db.Timestamptz(6)
+  location            String?  @db.Text
+  eventType           String   @map("event_type") @db.Text
+  branch              String   @db.Text
+  session             String   @db.Text
+  isPublic            Boolean  @default(false) @map("is_public")
+  syncedWithGoogle    Boolean  @default(false) @map("synced_with_google")
+  googleEventId       String?  @map("google_event_id") @db.Text
+  isAllDay            Boolean  @default(false) @map("is_all_day")
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  // Relation to EventType (enforced by foreign key in database)
+  // Note: Prisma doesn't support foreign keys to tables without a model,
+  // but the constraint exists in the database
+
+  @@map("calendar_events")
+}
+
+model EventType {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  value     String   @unique @db.Text
+  label     String   @db.Text
+  iconType  String   @map("icon_type") @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("event_types")
+}
+
+model YoutubeVideo {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String   @db.Text
+  description String? @db.Text
+  embedCode String   @map("embed_code") @db.Text
+  position  Int      @default(0)
+  isVisible Boolean  @default(true) @map("is_visible")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([position], map: "idx_youtube_videos_position")
+  @@map("youtube_videos")
+}
+
+model Teacher {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullName        String   @map("full_name") @db.Text
+  subject         String   @db.Text
+  classLevel      String   @map("class_level") @db.Text
+  qualifications String   @db.Text
+  experienceYears Int      @map("experience_years")
+  photoUrl        String?  @map("photo_url") @db.Text
+  isVisible       Boolean  @default(true) @map("is_visible")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([fullName], map: "idx_teachers_full_name")
+  @@index([subject], map: "idx_teachers_subject")
+  @@index([classLevel], map: "idx_teachers_class_level")
+  @@map("teachers")
+}
+
+model LatestUpdate {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content   String   @db.Text
+  link      String?  @db.Text
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([createdAt], map: "idx_latest_updates_active")
+  @@index([link], map: "idx_latest_updates_link")
+  @@map("latest_updates")
+}
+
+model Testimonial {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sourceType      TestimonialSourceType @map("source_type") @db.Text
+  authorName      String           @map("author_name") @db.Text
+  studentName     String?          @map("student_name") @db.Text
+  class           String?          @db.Text
+  content         String           @db.Text
+  profilePictureUrl String?        @map("profile_picture_url") @db.Text
+  alumniProfileId String?          @map("alumni_profile_id") @db.Uuid
+  isVisible       Boolean          @default(false) @map("is_visible")
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime         @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  alumniProfile AlumniProfile? @relation(fields: [alumniProfileId], references: [id])
+
+  @@index([alumniProfileId], map: "idx_testimonials_alumni_profile_id")
+  @@index([sourceType], map: "idx_testimonials_source_type")
+  @@index([isVisible], map: "idx_testimonials_is_visible")
+  @@map("testimonials")
+}
+
+enum TestimonialSourceType {
+  parent
+  student
+  alumni
+}
+
+model Student {
+  admissionNumber String   @id @map("admission_number") @db.Text
+  fullName        String   @map("full_name") @db.Text
+  class           String?  @db.Text
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@map("students")
+}
+
+model SuccessStory {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title     String   @db.Text
+  content   String   @db.Text
+  alumniId  String   @map("alumni_id") @db.Uuid
+  createdBy String   @map("created_by") @db.Uuid // References auth.users(id), not directly modelable in Prisma
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  alumni AlumniProfile @relation(fields: [alumniId], references: [id], onDelete: Cascade)
+
+  @@index([alumniId], map: "idx_success_stories_alumni_id")
+  @@index([createdAt], map: "idx_success_stories_created_at")
+  @@map("success_stories")
+}

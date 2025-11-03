@@ -42,7 +42,6 @@ export default function Invites() {
           location,
           description,
           cover_image,
-          cover_image_mobile,
           max_capacity,
           max_guests_per_rsvp,
           requires_admission_number,
@@ -62,10 +61,29 @@ export default function Invites() {
       // Get RSVP counts and user's RSVP status for each event
       const eventsWithDetails = await Promise.all(
         (eventsData || []).map(async (event) => {
-          const { data: totalGuests, error: countError } = await supabase
+          // Try to get total guests count via RPC function, fallback to direct query
+          let totalGuests = 0;
+          const { data: rpcCount, error: rpcError } = await supabase
             .rpc('get_event_total_guests', { p_event_id: event.id });
 
-          if (countError) throw countError;
+          if (rpcError) {
+            console.warn('RPC call failed, using direct query:', rpcError);
+            // Fallback: calculate directly from event_rsvps table
+            const { data: rsvpsData, error: rsvpsError } = await supabase
+              .from('event_rsvps')
+              .select('guests')
+              .eq('event_id', event.id)
+              .eq('status', 'attending');
+
+            if (rsvpsError) {
+              console.error('Error fetching RSVP counts:', rsvpsError);
+              totalGuests = 0;
+            } else {
+              totalGuests = (rsvpsData || []).reduce((sum, rsvp) => sum + (rsvp.guests || 0), 0);
+            }
+          } else {
+            totalGuests = rpcCount || 0;
+          }
 
           let userRsvp = null;
           if (user) {
@@ -92,7 +110,7 @@ export default function Invites() {
             location: event.location,
             description: event.description,
             coverImage: event.cover_image,
-            coverImageMobile: event.cover_image_mobile,
+            coverImageMobile: event.cover_image, // Use cover_image as fallback until cover_image_mobile is added
             maxCapacity: event.max_capacity,
             maxGuestsPerRsvp: event.max_guests_per_rsvp,
             requiresAdmissionNumber: true,
@@ -107,7 +125,14 @@ export default function Invites() {
       setEvents(eventsWithDetails as Invite[]);
     } catch (error) {
       console.error('Error fetching events:', error);
-      setError('Failed to load events');
+      // Log more details about the error
+      if (error instanceof Error) {
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      } else if (typeof error === 'object' && error !== null) {
+        console.error('Error object:', JSON.stringify(error, null, 2));
+      }
+      setError('Failed to load events. Please refresh the page.');
     } finally {
       setLoading(false);
     }
