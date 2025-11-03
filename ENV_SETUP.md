@@ -41,6 +41,12 @@ GOOGLE_SERVICE_ACCOUNT_EMAIL=your-email@project.iam.gserviceaccount.com
 GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 NEXT_PUBLIC_GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
 
+# GCP Storage (for event images)
+GCP_PROJECT_ID=scholarise
+GCP_STORAGE_BUCKET=scholarise-events
+# Note: Uses same GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY as Google Calendar
+# Make sure the service account has "Storage Object Admin" role in GCP Console
+
 # PostHog Analytics
 NEXT_PUBLIC_POSTHOG_KEY=your_posthog_key
 NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
@@ -66,12 +72,16 @@ NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
 2. Copy the integration token → `NOTION_TOKEN`
 3. Get your database ID from the database URL → `NOTION_SPORTS_DATABASE_ID`
 
-### Google Calendar
-1. Create a service account in Google Cloud Console
+### Google Calendar & GCP Storage
+1. Create a service account in Google Cloud Console (Project: scholarise)
 2. Download the JSON key file
 3. Extract email → `GOOGLE_SERVICE_ACCOUNT_EMAIL`
 4. Extract private key (keep newlines as `\n`) → `GOOGLE_PRIVATE_KEY`
-5. Share calendar with service account email and get calendar ID → `NEXT_PUBLIC_GOOGLE_CALENDAR_ID`
+5. For Calendar: Share calendar with service account email and get calendar ID → `NEXT_PUBLIC_GOOGLE_CALENDAR_ID`
+6. For Storage: 
+   - Grant service account "Storage Object Admin" role
+   - Create bucket named "scholarise-events" (or set custom name in `GCP_STORAGE_BUCKET`)
+   - Make bucket publicly accessible for reads (or use signed URLs)
 
 ## Important Notes
 
