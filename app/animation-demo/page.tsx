@@ -128,146 +128,47 @@ export default function AnimationDemoPage() {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-neutral-light via-[#faf9f6] to-[#f5f3ef]">
-      {/* Multi-layered sophisticated background */}
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-neutral-light via-[#faf9f6] to-neutral-light">
+      {/* Enhanced decorative background */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        {/* Base gradient layer */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#fefefe] via-[#faf9f6] via-60% to-[#f5f3ef]" />
+        {/* Animated gradient orbs */}
+        <div className="absolute left-8 top-20 h-96 w-96 rounded-full bg-green-light/25 blur-[140px] animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="absolute right-12 top-32 h-[500px] w-[500px] rounded-full bg-orange-light/20 blur-[160px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
+        <div className="absolute bottom-24 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-green-light/15 blur-[180px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
         
-        {/* Animated gradient orbs with better positioning and movement */}
-        <div 
-          className="absolute left-8 top-20 h-[500px] w-[500px] rounded-full bg-green-light/30 blur-[180px]"
-          style={{ 
-            animation: 'float-orb-1 20s ease-in-out infinite',
-            animationDelay: '0s'
-          }}
-        />
-        <div 
-          className="absolute right-12 top-32 h-[600px] w-[600px] rounded-full bg-orange-light/25 blur-[200px]"
-          style={{ 
-            animation: 'float-orb-2 25s ease-in-out infinite',
-            animationDelay: '2s'
-          }}
-        />
-        <div 
-          className="absolute bottom-24 left-1/2 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-green-light/20 blur-[220px]"
-          style={{ 
-            animation: 'float-orb-3 30s ease-in-out infinite',
-            animationDelay: '4s'
-          }}
-        />
-        <div 
-          className="absolute top-1/2 left-1/4 h-[400px] w-[400px] -translate-y-1/2 rounded-full bg-orange-light/15 blur-[150px]"
-          style={{ 
-            animation: 'float-orb-4 18s ease-in-out infinite',
-            animationDelay: '1s'
-          }}
-        />
-        
-        {/* Paper texture overlay with better opacity */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(255,255,255,0.6),_transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,_rgba(166,212,180,0.08),_transparent_50%)]" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLDAsMCwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-25" />
-        
-        {/* Subtle noise texture */}
-        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOSIgbnVtT2N0YXZlcz0iNCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNub2lzZSkiIG9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')]" />
-        
-        {/* Animated keyframes for orb movement */}
-        <style dangerouslySetInnerHTML={{__html: `
-          @keyframes float-orb-1 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -40px) scale(1.1); }
-            66% { transform: translate(-20px, 30px) scale(0.95); }
-          }
-          @keyframes float-orb-2 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(-40px, 50px) scale(1.15); }
-            66% { transform: translate(25px, -30px) scale(0.9); }
-          }
-          @keyframes float-orb-3 {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            33% { transform: translate(calc(-50% + 50px), calc(-50% - 60px)) scale(1.2); }
-            66% { transform: translate(calc(-50% - 40px), calc(-50% + 40px)) scale(0.85); }
-          }
-          @keyframes float-orb-4 {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            33% { transform: translate(calc(-50% + 35px), calc(-50% + 45px)) scale(1.05); }
-            66% { transform: translate(calc(-50% - 30px), calc(-50% - 35px)) scale(0.98); }
-          }
-        `}} />
+        {/* Paper texture with subtle animation */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(255,255,255,0.5),_transparent_50%)]" />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLDAsMCwwLjAyKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20" />
       </div>
 
-      {/* Enhanced connecting decorative lines with more sophistication */}
+      {/* Connecting decorative lines */}
       <div className="pointer-events-none absolute inset-0 z-[4]" aria-hidden>
-        <svg className="w-full h-full opacity-30">
+        <svg className="w-full h-full opacity-20">
           <defs>
             <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#00501B" stopOpacity="0.4" />
-              <stop offset="30%" stopColor="#A65A20" stopOpacity="0.3" />
-              <stop offset="60%" stopColor="#00501B" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#A65A20" stopOpacity="0.35" />
+              <stop offset="0%" stopColor="#00501B" stopOpacity="0.3" />
+              <stop offset="50%" stopColor="#A65A20" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#00501B" stopOpacity="0.3" />
             </linearGradient>
-            <linearGradient id="lineGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#A65A20" stopOpacity="0.35" />
-              <stop offset="50%" stopColor="#00501B" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#A65A20" stopOpacity="0.4" />
-            </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
           </defs>
-          {/* More sophisticated curved connecting lines */}
+          {/* Curved connecting lines */}
           <path
             d="M 5% 20% Q 15% 30%, 25% 25% T 45% 30%"
             stroke="url(#lineGradient)"
-            strokeWidth="2.5"
+            strokeWidth="3"
             fill="none"
-            strokeDasharray="10 6"
+            strokeDasharray="8 4"
             className="hidden lg:block"
-            filter="url(#glow)"
-            style={{ animation: 'dash-move 8s linear infinite' }}
           />
           <path
             d="M 95% 25% Q 85% 35%, 75% 30% T 55% 35%"
-            stroke="url(#lineGradient2)"
-            strokeWidth="2.5"
-            fill="none"
-            strokeDasharray="10 6"
-            className="hidden lg:block"
-            filter="url(#glow)"
-            style={{ animation: 'dash-move 10s linear infinite reverse' }}
-          />
-          <path
-            d="M 8% 60% Q 20% 50%, 30% 55% T 50% 50%"
             stroke="url(#lineGradient)"
-            strokeWidth="2"
+            strokeWidth="3"
             fill="none"
-            strokeDasharray="8 5"
-            className="hidden xl:block"
-            opacity="0.4"
-            style={{ animation: 'dash-move 12s linear infinite' }}
-          />
-          <path
-            d="M 92% 60% Q 80% 50%, 70% 55% T 50% 50%"
-            stroke="url(#lineGradient2)"
-            strokeWidth="2"
-            fill="none"
-            strokeDasharray="8 5"
-            className="hidden xl:block"
-            opacity="0.4"
-            style={{ animation: 'dash-move 14s linear infinite reverse' }}
+            strokeDasharray="8 4"
+            className="hidden lg:block"
           />
         </svg>
-        <style dangerouslySetInnerHTML={{__html: `
-          @keyframes dash-move {
-            0% { stroke-dashoffset: 0; }
-            100% { stroke-dashoffset: 32; }
-          }
-        `}} />
       </div>
 
       {/* Main content container */}
@@ -288,18 +189,18 @@ export default function AnimationDemoPage() {
                   mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{
-                  ...(photo.position.top ? { top: photo.position.top } : {}),
-                  ...(photo.position.bottom ? { bottom: photo.position.bottom } : {}),
-                  ...('left' in photo.position && photo.position.left ? { left: photo.position.left } : {}),
-                  ...('right' in photo.position && photo.position.right ? { right: photo.position.right } : {}),
-                  ...('transform' in photo.position && photo.position.transform ? { transform: photo.position.transform } : {}),
+                  top: 'top' in photo.position ? photo.position.top : undefined,
+                  bottom: 'bottom' in photo.position ? photo.position.bottom : undefined,
+                  left: 'left' in photo.position ? photo.position.left : undefined,
+                  right: 'right' in photo.position ? photo.position.right : undefined,
+                  transform: 'transform' in photo.position ? (photo.position.transform as string) : 'none',
                   transitionDelay: `${photo.delay}s`,
                   animationName: mounted ? `float-${idx % 4}-${photo.rotation}` : 'none',
                   animationDuration: `${6 + (idx % 3)}s`,
                   animationTimingFunction: 'ease-in-out',
                   animationIterationCount: 'infinite',
                   animationDelay: `${photo.delay + 1}s`,
-                } as React.CSSProperties}
+                }}
                 aria-hidden
               >
                 <style dangerouslySetInnerHTML={{__html: `
@@ -321,85 +222,49 @@ export default function AnimationDemoPage() {
                   }
                 `}} />
 
-                {/* Polaroid style - Enhanced with better shadows and depth */}
+                {/* Polaroid style */}
                 {isPolaroid && (
-                  <div className={`${idx % 2 === 0 ? 'bg-orange-light' : 'bg-green-light'} p-3.5 shadow-[0_30px_80px_-15px_rgba(0,0,0,0.4),0_10px_30px_-10px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.8)] rounded-sm relative transition-all duration-300 hover:shadow-[0_35px_90px_-10px_rgba(0,0,0,0.45),0_15px_35px_-8px_rgba(0,0,0,0.25)]`}>
-                    {/* Enhanced tape decorations with better shadows */}
+                  <div className={`${idx % 2 === 0 ? 'bg-orange-light' : 'bg-green-light'} p-3 shadow-[0_25px_70px_-20px_rgba(0,0,0,0.35)] rounded-sm relative`}>
+                    {/* Enhanced tape decorations */}
                     {photo.decorations?.includes('tape-top-left') && (
                       <>
-                        <div className="absolute -top-2.5 -left-2.5 w-[72px] h-9 bg-white/95 opacity-90 shadow-[0_8px_20px_rgba(0,0,0,0.15),inset_0_1px_2px_rgba(255,255,255,0.9)] rounded-sm rotate-[-22deg] border border-neutral-DEFAULT/25 z-30 transition-transform duration-300 hover:scale-105" style={{
-                          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)'
+                        <div className="absolute -top-2 -left-2 w-16 h-8 bg-white/90 opacity-80 shadow-xl rounded-sm rotate-[-20deg] border border-neutral-DEFAULT/20 z-30" style={{
+                          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px)'
                         }} />
-                        <div className="absolute -top-1.5 -left-1.5 w-4.5 h-4.5 bg-white/80 rounded-full shadow-[0_4px_8px_rgba(0,0,0,0.2)] z-30" />
+                        <div className="absolute -top-1 -left-1 w-4 h-4 bg-white/70 rounded-full shadow-md z-30" />
                       </>
                     )}
                     {photo.decorations?.includes('tape-top-right') && (
                       <>
-                        <div className="absolute -top-2.5 -right-2.5 w-18 h-9 bg-white/95 opacity-90 shadow-[0_8px_20px_rgba(0,0,0,0.15),inset_0_1px_2px_rgba(255,255,255,0.9)] rounded-sm rotate-[22deg] border border-neutral-DEFAULT/25 z-30 transition-transform duration-300 hover:scale-105" style={{
-                          backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)'
+                        <div className="absolute -top-2 -right-2 w-16 h-8 bg-white/90 opacity-80 shadow-xl rounded-sm rotate-[20deg] border border-neutral-DEFAULT/20 z-30" style={{
+                          backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px)'
                         }} />
-                        <div className="absolute -top-1.5 -right-1.5 w-4.5 h-4.5 bg-white/80 rounded-full shadow-[0_4px_8px_rgba(0,0,0,0.2)] z-30" />
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-white/70 rounded-full shadow-md z-30" />
                       </>
                     )}
                     {photo.decorations?.includes('tape-bottom-left') && (
                       <>
-                        <div className="absolute -bottom-2.5 -left-2.5 w-18 h-9 bg-white/95 opacity-90 shadow-[0_8px_20px_rgba(0,0,0,0.15),inset_0_1px_2px_rgba(255,255,255,0.9)] rounded-sm rotate-[22deg] border border-neutral-DEFAULT/25 z-30 transition-transform duration-300 hover:scale-105" style={{
-                          backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)'
+                        <div className="absolute -bottom-2 -left-2 w-16 h-8 bg-white/90 opacity-80 shadow-xl rounded-sm rotate-[20deg] border border-neutral-DEFAULT/20 z-30" style={{
+                          backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px)'
                         }} />
-                        <div className="absolute -bottom-1.5 -left-1.5 w-4.5 h-4.5 bg-white/80 rounded-full shadow-[0_4px_8px_rgba(0,0,0,0.2)] z-30" />
+                        <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-white/70 rounded-full shadow-md z-30" />
                       </>
                     )}
                     {photo.decorations?.includes('tape-bottom-right') && (
                       <>
-                        <div className="absolute -bottom-2.5 -right-2.5 w-18 h-9 bg-white/95 opacity-90 shadow-[0_8px_20px_rgba(0,0,0,0.15),inset_0_1px_2px_rgba(255,255,255,0.9)] rounded-sm rotate-[-22deg] border border-neutral-DEFAULT/25 z-30 transition-transform duration-300 hover:scale-105" style={{
-                          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)'
+                        <div className="absolute -bottom-2 -right-2 w-16 h-8 bg-white/90 opacity-80 shadow-xl rounded-sm rotate-[-20deg] border border-neutral-DEFAULT/20 z-30" style={{
+                          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px)'
                         }} />
-                        <div className="absolute -bottom-1.5 -right-1.5 w-4.5 h-4.5 bg-white/80 rounded-full shadow-[0_4px_8px_rgba(0,0,0,0.2)] z-30" />
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-white/70 rounded-full shadow-md z-30" />
                       </>
                     )}
 
-                    {/* Enhanced decorative icons with better animations */}
+                    {/* Decorative icons */}
                     {photo.decorations?.includes('star') && (
-                      <div className="absolute -top-7 -right-7 w-14 h-14 z-30" style={{ animation: `star-twinkle-${idx} 2.5s ease-in-out infinite` }}>
-                        <style dangerouslySetInnerHTML={{__html: `
-                          @keyframes star-twinkle-${idx} {
-                            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.95; }
-                            25% { transform: scale(1.1) rotate(5deg); opacity: 1; }
-                            50% { transform: scale(1.15) rotate(-5deg); opacity: 0.9; }
-                            75% { transform: scale(1.05) rotate(3deg); opacity: 1; }
-                          }
-                        `}} />
-                        <svg viewBox="0 0 24 24" className="text-orange-DEFAULT drop-shadow-[0_4px_12px_rgba(166,90,32,0.4)]">
+                      <div className="absolute -top-6 -right-6 w-12 h-12 z-30 animate-pulse" style={{ animationDuration: '2.5s' }}>
+                        <svg viewBox="0 0 24 24" className="text-orange-DEFAULT opacity-95 drop-shadow-xl">
                           <defs>
                             <filter id={`star-glow-${idx}`}>
-                              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                              <feMerge>
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                              </feMerge>
-                            </filter>
-                            <radialGradient id={`star-gradient-${idx}`}>
-                              <stop offset="0%" stopColor="#A65A20" stopOpacity="1" />
-                              <stop offset="100%" stopColor="#A65A20" stopOpacity="0.7" />
-                            </radialGradient>
-                          </defs>
-                          <path d="M12 2 L14.5 8.5 L21 11 L14.5 13.5 L12 20 L9.5 13.5 L3 11 L9.5 8.5 Z" fill={`url(#star-gradient-${idx})`} filter={`url(#star-glow-${idx})`} />
-                        </svg>
-                      </div>
-                    )}
-                    {photo.decorations?.includes('heart') && (
-                      <div className="absolute -bottom-7 -left-7 w-12 h-12 z-30" style={{ animation: 'heartbeat 1.8s ease-in-out infinite' }}>
-                        <style dangerouslySetInnerHTML={{__html: `
-                          @keyframes heartbeat {
-                            0%, 100% { transform: scale(1); }
-                            25% { transform: scale(1.1); }
-                            50% { transform: scale(1.2); }
-                            75% { transform: scale(1.05); }
-                          }
-                        `}} />
-                        <svg viewBox="0 0 24 24" className="text-green-DEFAULT drop-shadow-[0_4px_10px_rgba(0,80,27,0.35)]">
-                          <defs>
-                            <filter id={`heart-glow-${idx}`}>
                               <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
                               <feMerge>
                                 <feMergeNode in="coloredBlur"/>
@@ -407,52 +272,53 @@ export default function AnimationDemoPage() {
                               </feMerge>
                             </filter>
                           </defs>
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" filter={`url(#heart-glow-${idx})`} />
+                          <path d="M12 2 L14.5 8.5 L21 11 L14.5 13.5 L12 20 L9.5 13.5 L3 11 L9.5 8.5 Z" fill="currentColor" filter={`url(#star-glow-${idx})`} />
+                        </svg>
+                      </div>
+                    )}
+                    {photo.decorations?.includes('heart') && (
+                      <div className="absolute -bottom-6 -left-6 w-10 h-10 z-30" style={{ animation: 'heartbeat 1.8s ease-in-out infinite' }}>
+                        <style dangerouslySetInnerHTML={{__html: `
+                          @keyframes heartbeat {
+                            0%, 100% { transform: scale(1); }
+                            50% { transform: scale(1.15); }
+                          }
+                        `}} />
+                        <svg viewBox="0 0 24 24" className="text-green-DEFAULT opacity-85 drop-shadow-lg">
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" />
                         </svg>
                       </div>
                     )}
                     {photo.decorations?.includes('arrow') && (
-                      <div className="absolute -top-7 -left-7 w-14 h-14 z-30" style={{ animation: 'arrow-bounce 2.2s ease-in-out infinite' }}>
+                      <div className="absolute -top-6 -left-6 w-12 h-12 z-30" style={{ animation: 'arrow-bounce 2.2s ease-in-out infinite' }}>
                         <style dangerouslySetInnerHTML={{__html: `
                           @keyframes arrow-bounce {
-                            0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
-                            25% { transform: translateX(4px) translateY(-2px) rotate(3deg); }
-                            50% { transform: translateX(8px) translateY(-4px) rotate(5deg); }
-                            75% { transform: translateX(4px) translateY(-2px) rotate(2deg); }
+                            0%, 100% { transform: translateX(0) rotate(0deg); }
+                            50% { transform: translateX(6px) rotate(5deg); }
                           }
                         `}} />
-                        <svg viewBox="0 0 24 24" className="text-green-DEFAULT drop-shadow-[0_4px_10px_rgba(0,80,27,0.35)]">
-                          <defs>
-                            <filter id={`arrow-glow-${idx}`}>
-                              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                              <feMerge>
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                              </feMerge>
-                            </filter>
-                          </defs>
-                          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" fill="currentColor" filter={`url(#arrow-glow-${idx})`} />
+                        <svg viewBox="0 0 24 24" className="text-green-DEFAULT opacity-85 drop-shadow-lg">
+                          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" fill="currentColor" />
                         </svg>
                       </div>
                     )}
 
-                    <div className="bg-white p-3 shadow-[inset_0_4px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.9)] relative z-0 rounded-sm">
+                    <div className="bg-white p-2.5 shadow-[inset_0_3px_6px_rgba(0,0,0,0.12)] relative z-0">
                       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm">
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/12 via-transparent to-transparent z-10 pointer-events-none" />
-                        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/5 z-10 pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/8 via-transparent to-transparent z-10 pointer-events-none" />
                         <Image
                           src={photo.src}
                           alt={photo.caption}
                           width={280}
                           height={350}
-                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                          className="h-full w-full object-cover"
                         />
                       </div>
-                      <div className="mt-3 px-4 py-2.5 text-center bg-gradient-to-r from-transparent via-neutral-DEFAULT/10 to-transparent rounded-sm border-t border-neutral-DEFAULT/5">
+                      <div className="mt-2.5 px-3 py-2 text-center bg-gradient-to-r from-transparent via-neutral-DEFAULT/8 to-transparent rounded-sm">
                         <p className="text-xs font-display text-neutral-DEFAULT font-bold" style={{ 
                           fontFamily: 'var(--font-display), cursive',
-                          textShadow: '0 2px 4px rgba(0,0,0,0.12)',
-                          letterSpacing: '0.6px'
+                          textShadow: '0 2px 4px rgba(0,0,0,0.15)',
+                          letterSpacing: '0.5px'
                         }}>
                           {photo.caption}
                         </p>
@@ -461,9 +327,9 @@ export default function AnimationDemoPage() {
                   </div>
                 )}
 
-                {/* Pinned frame style - Enhanced */}
+                {/* Pinned frame style */}
                 {isPinned && (
-                  <div className={`relative rounded-xl border-4 ${idx % 2 === 0 ? 'border-green-DEFAULT' : 'border-orange-DEFAULT'} bg-white p-3.5 shadow-[0_25px_70px_-12px_rgba(0,0,0,0.35),0_8px_25px_-8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] transition-all duration-300 hover:shadow-[0_30px_80px_-10px_rgba(0,0,0,0.4),0_12px_30px_-6px_rgba(0,0,0,0.25)]`}>
+                  <div className={`relative rounded-xl border-4 ${idx % 2 === 0 ? 'border-green-DEFAULT' : 'border-orange-DEFAULT'} bg-white p-3 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)]`}>
                     {photo.decorations?.includes('pin-top') && (
                       <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-12 h-12 z-30">
                         <div className="w-full h-full bg-white/98 rounded-full border-2 border-neutral-DEFAULT/30 shadow-[0_6px_12px_rgba(0,0,0,0.25)] flex items-center justify-center">
@@ -490,24 +356,23 @@ export default function AnimationDemoPage() {
                       </div>
                     )}
                     <div className="overflow-hidden rounded-lg relative z-0">
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/15 z-10 pointer-events-none" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/8 via-transparent to-transparent z-10 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/12 z-10 pointer-events-none" />
                       <Image
                         src={photo.src}
                         alt={photo.caption}
                         width={200}
                         height={250}
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                        className="h-full w-full object-cover"
                       />
                     </div>
-                    <div className="absolute -top-3.5 -right-3.5 h-9 w-9 rounded-full bg-orange-light border-2 border-white shadow-[0_8px_20px_rgba(166,90,32,0.5),inset_0_1px_2px_rgba(255,255,255,0.8)] z-20 transition-transform duration-300 hover:scale-110" />
-                    <div className="absolute -bottom-3.5 -left-3.5 h-8 w-8 rounded-full bg-green-light border-2 border-white shadow-[0_8px_20px_rgba(0,80,27,0.5),inset_0_1px_2px_rgba(255,255,255,0.8)] z-20 transition-transform duration-300 hover:scale-110" />
+                    <div className="absolute -top-3 -right-3 h-8 w-8 rounded-full bg-orange-light border-2 border-white shadow-[0_6px_16px_rgba(166,90,32,0.5)] z-20" />
+                    <div className="absolute -bottom-3 -left-3 h-7 w-7 rounded-full bg-green-light border-2 border-white shadow-[0_6px_16px_rgba(0,80,27,0.5)] z-20" />
                   </div>
                 )}
 
-                {/* Tape frame style - Enhanced */}
+                {/* Tape frame style */}
                 {isTape && (
-                  <div className={`relative rounded-xl border-4 ${idx % 2 === 0 ? 'border-green-DEFAULT' : 'border-orange-DEFAULT'} bg-white p-3.5 shadow-[0_25px_70px_-12px_rgba(0,0,0,0.35),0_8px_25px_-8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] transition-all duration-300 hover:shadow-[0_30px_80px_-10px_rgba(0,0,0,0.4),0_12px_30px_-6px_rgba(0,0,0,0.25)]`}>
+                  <div className={`relative rounded-xl border-4 ${idx % 2 === 0 ? 'border-green-DEFAULT' : 'border-orange-DEFAULT'} bg-white p-3 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)]`}>
                     {photo.decorations?.includes('tape-all') && (
                       <>
                         {['-top-3 -left-3 rotate-[-25deg]', '-top-3 -right-3 rotate-[25deg]', '-bottom-3 -left-3 rotate-[25deg]', '-bottom-3 -right-3 rotate-[-25deg]'].map((pos, i) => (
@@ -520,51 +385,38 @@ export default function AnimationDemoPage() {
                       </>
                     )}
                     <div className="overflow-hidden rounded-lg relative z-0">
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/15 z-10 pointer-events-none" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/8 via-transparent to-transparent z-10 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/12 z-10 pointer-events-none" />
                       <Image
                         src={photo.src}
                         alt={photo.caption}
                         width={200}
                         height={250}
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                     {photo.decorations?.includes('star') && (
-                      <div className="absolute -top-7 -right-7 w-16 h-16 z-30" style={{ animation: `star-twinkle-tape-${idx} 3s ease-in-out infinite` }}>
-                        <style dangerouslySetInnerHTML={{__html: `
-                          @keyframes star-twinkle-tape-${idx} {
-                            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.95; }
-                            25% { transform: scale(1.12) rotate(6deg); opacity: 1; }
-                            50% { transform: scale(1.18) rotate(-6deg); opacity: 0.9; }
-                            75% { transform: scale(1.08) rotate(4deg); opacity: 1; }
-                          }
-                        `}} />
-                        <svg viewBox="0 0 24 24" className="text-orange-DEFAULT drop-shadow-[0_4px_12px_rgba(166,90,32,0.4)]">
+                      <div className="absolute -top-6 -right-6 w-14 h-14 z-30 animate-pulse" style={{ animationDuration: '3s' }}>
+                        <svg viewBox="0 0 24 24" className="text-orange-DEFAULT opacity-95 drop-shadow-xl">
                           <defs>
                             <filter id={`star-glow-tape-${idx}`}>
-                              <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
                               <feMerge>
                                 <feMergeNode in="coloredBlur"/>
                                 <feMergeNode in="SourceGraphic"/>
                               </feMerge>
                             </filter>
-                            <radialGradient id={`star-gradient-tape-${idx}`}>
-                              <stop offset="0%" stopColor="#A65A20" stopOpacity="1" />
-                              <stop offset="100%" stopColor="#A65A20" stopOpacity="0.7" />
-                            </radialGradient>
                           </defs>
-                          <path d="M12 2 L14.5 8.5 L21 11 L14.5 13.5 L12 20 L9.5 13.5 L3 11 L9.5 8.5 Z" fill={`url(#star-gradient-tape-${idx})`} filter={`url(#star-glow-tape-${idx})`} />
-                          <circle cx="12" cy="12" r="3" fill="white" opacity="0.95" />
+                          <path d="M12 2 L14.5 8.5 L21 11 L14.5 13.5 L12 20 L9.5 13.5 L3 11 L9.5 8.5 Z" fill="currentColor" filter={`url(#star-glow-tape-${idx})`} />
+                          <circle cx="12" cy="12" r="3" fill="white" opacity="0.9" />
                         </svg>
                       </div>
                     )}
                   </div>
                 )}
 
-                {/* Doodle frame style - Enhanced */}
+                {/* Doodle frame style */}
                 {isDoodle && (
-                  <div className={`relative rounded-xl border-4 ${idx % 2 === 0 ? 'border-green-DEFAULT' : 'border-orange-DEFAULT'} bg-white p-3.5 shadow-[0_25px_70px_-12px_rgba(0,0,0,0.35),0_8px_25px_-8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] transition-all duration-300 hover:shadow-[0_30px_80px_-10px_rgba(0,0,0,0.4),0_12px_30px_-6px_rgba(0,0,0,0.25)]`}>
+                  <div className={`relative rounded-xl border-4 ${idx % 2 === 0 ? 'border-green-DEFAULT' : 'border-orange-DEFAULT'} bg-white p-3 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)]`}>
                     <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
                       <defs>
                         <pattern id={`doodle-pattern-${idx}`} x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
@@ -574,37 +426,19 @@ export default function AnimationDemoPage() {
                       <rect x="0" y="0" width="100%" height="100%" fill={`url(#doodle-pattern-${idx})`} opacity="0.4" />
                     </svg>
                     <div className="overflow-hidden rounded-lg relative z-0">
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/15 z-10 pointer-events-none" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/8 via-transparent to-transparent z-10 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/12 z-10 pointer-events-none" />
                       <Image
                         src={photo.src}
                         alt={photo.caption}
                         width={200}
                         height={250}
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                     {photo.decorations?.includes('star') && (
-                      <div className="absolute -top-6 -right-6 w-12 h-12 z-20" style={{ animation: `star-twinkle-doodle-${idx} 2.5s ease-in-out infinite` }}>
-                        <style dangerouslySetInnerHTML={{__html: `
-                          @keyframes star-twinkle-doodle-${idx} {
-                            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
-                            25% { transform: scale(1.08) rotate(4deg); opacity: 1; }
-                            50% { transform: scale(1.12) rotate(-4deg); opacity: 0.85; }
-                            75% { transform: scale(1.05) rotate(2deg); opacity: 1; }
-                          }
-                        `}} />
-                        <svg viewBox="0 0 24 24" className="text-orange-DEFAULT drop-shadow-[0_3px_10px_rgba(166,90,32,0.35)]">
-                          <defs>
-                            <filter id={`star-glow-doodle-${idx}`}>
-                              <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-                              <feMerge>
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                              </feMerge>
-                            </filter>
-                          </defs>
-                          <path d="M12 2 L14.5 8.5 L21 11 L14.5 13.5 L12 20 L9.5 13.5 L3 11 L9.5 8.5 Z" fill="currentColor" filter={`url(#star-glow-doodle-${idx})`} />
+                      <div className="absolute -top-5 -right-5 w-10 h-10 z-20 animate-pulse" style={{ animationDuration: '2.5s' }}>
+                        <svg viewBox="0 0 24 24" className="text-orange-DEFAULT opacity-90 drop-shadow-lg">
+                          <path d="M12 2 L14.5 8.5 L21 11 L14.5 13.5 L12 20 L9.5 13.5 L3 11 L9.5 8.5 Z" fill="currentColor" />
                         </svg>
                       </div>
                     )}
@@ -632,63 +466,24 @@ export default function AnimationDemoPage() {
             </div>
           </div>
 
-          {/* Enhanced floating decorative sparkles with better animations */}
-          {[...Array(12)].map((_, i) => {
-            const size = 3 + (i % 4);
-            const positions = [
-              { left: '8%', top: '12%' },
-              { left: '15%', top: '35%' },
-              { left: '5%', top: '65%' },
-              { left: '88%', top: '18%' },
-              { left: '92%', top: '42%' },
-              { left: '85%', top: '68%' },
-              { left: '25%', top: '8%' },
-              { left: '75%', top: '25%' },
-              { left: '20%', top: '55%' },
-              { left: '80%', top: '60%' },
-              { left: '12%', top: '80%' },
-              { left: '90%', top: '85%' },
-            ];
-            const pos = positions[i] || { left: `${10 + i * 7}%`, top: `${15 + (i % 3) * 25}%` };
+          {/* Floating decorative sparkles */}
+          {[...Array(6)].map((_, i) => {
+            const size = 2 + (i % 3);
             return (
               <div
                 key={i}
-                className="pointer-events-none absolute z-[4] hidden xl:block"
+                className="pointer-events-none absolute z-[4] hidden xl:block animate-pulse"
                 style={{
-                  left: pos.left,
-                  top: pos.top,
-                  width: `${size * 5}px`,
-                  height: `${size * 5}px`,
-                  animation: `sparkle-float-${i % 3} ${4 + (i % 3) * 1.5}s ease-in-out infinite`,
-                  animationDelay: `${i * 0.4}s`,
+                  left: `${10 + i * 15}%`,
+                  top: `${15 + (i % 3) * 30}%`,
+                  animationDuration: `${2 + i * 0.5}s`,
+                  animationDelay: `${i * 0.3}s`,
+                  width: `${size * 4}px`,
+                  height: `${size * 4}px`,
                 }}
                 aria-hidden
               >
-                <style dangerouslySetInnerHTML={{__html: `
-                  @keyframes sparkle-float-0 {
-                    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.6; }
-                    33% { transform: translate(8px, -12px) scale(1.2) rotate(120deg); opacity: 0.9; }
-                    66% { transform: translate(-6px, 10px) scale(0.9) rotate(240deg); opacity: 0.7; }
-                  }
-                  @keyframes sparkle-float-1 {
-                    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.7; }
-                    33% { transform: translate(-10px, 15px) scale(1.15) rotate(-120deg); opacity: 0.95; }
-                    66% { transform: translate(12px, -8px) scale(0.85) rotate(-240deg); opacity: 0.65; }
-                  }
-                  @keyframes sparkle-float-2 {
-                    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.65; }
-                    33% { transform: translate(6px, 10px) scale(1.1) rotate(90deg); opacity: 0.85; }
-                    66% { transform: translate(-8px, -12px) scale(0.95) rotate(180deg); opacity: 0.7; }
-                  }
-                `}} />
-                <div className={`w-full h-full rounded-full ${i % 2 === 0 ? 'bg-green-DEFAULT' : 'bg-orange-DEFAULT'} shadow-[0_0_12px_currentColor,0_0_24px_currentColor] opacity-80`} 
-                  style={{ 
-                    filter: `blur(${size * 0.5}px)`,
-                    boxShadow: i % 2 === 0 
-                      ? '0 0 8px rgba(0, 80, 27, 0.4), 0 0 16px rgba(0, 80, 27, 0.2)' 
-                      : '0 0 8px rgba(166, 90, 32, 0.4), 0 0 16px rgba(166, 90, 32, 0.2)'
-                  }} 
-                />
+                <div className={`w-full h-full rounded-full ${i % 2 === 0 ? 'bg-green-DEFAULT' : 'bg-orange-DEFAULT'} shadow-lg`} />
               </div>
             );
           })}
