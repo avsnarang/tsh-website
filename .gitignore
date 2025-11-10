@@ -32,3 +32,5 @@ build/
 .env*.local
 
 /generated/prisma
+
+.env.local

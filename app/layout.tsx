@@ -8,7 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import MetaPixel from '@/components/analytics/MetaPixel';
 import UTMTracker from '@/components/analytics/UTMTracker';
-import { PostHogProvider } from '@/components/analytics/PostHogProvider';
+import { PostHogProvider } from '@/components/PostHogProvider';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
