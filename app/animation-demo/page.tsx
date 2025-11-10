@@ -189,11 +189,11 @@ export default function AnimationDemoPage() {
                   mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{
-                  top: 'top' in photo.position ? photo.position.top : undefined,
-                  bottom: 'bottom' in photo.position ? photo.position.bottom : undefined,
-                  left: 'left' in photo.position ? photo.position.left : undefined,
-                  right: 'right' in photo.position ? photo.position.right : undefined,
-                  transform: 'transform' in photo.position ? (photo.position.transform as string) : 'none',
+                  top: photo.position.top,
+                  bottom: photo.position.bottom,
+                  left: photo.position.left,
+                  right: photo.position.right,
+                  transform: photo.position.transform || 'none',
                   transitionDelay: `${photo.delay}s`,
                   animationName: mounted ? `float-${idx % 4}-${photo.rotation}` : 'none',
                   animationDuration: `${6 + (idx % 3)}s`,

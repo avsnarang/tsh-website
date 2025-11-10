@@ -1,11 +1,14 @@
-import type { Metadata } from 'next';
-import { Montserrat, Lilita_One } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Montserrat, Lilita_One, Homemade_Apple, Caveat_Brush } from 'next/font/google';
 import '../src/styles/index.css';
 import '../src/styles/globals.css';
 import '../src/styles/calendar.css';
 import { Providers } from './providers';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import MetaPixel from '@/components/analytics/MetaPixel';
+import UTMTracker from '@/components/analytics/UTMTracker';
+import { PostHogProvider } from '@/components/analytics/PostHogProvider';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -19,6 +22,28 @@ const lilitaOne = Lilita_One({
   variable: '--font-lilita',
   display: 'swap',
 });
+
+const homemadeApple = Homemade_Apple({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-homemade-apple',
+  display: 'swap',
+});
+
+const caveatBrush = Caveat_Brush({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-caveat-brush',
+  display: 'swap',
+});
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: '#ffffff',
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tsh.edu.in'),
@@ -70,15 +95,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${montserrat.variable} ${lilitaOne.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${montserrat.variable} ${lilitaOne.variable} ${homemadeApple.variable} ${caveatBrush.variable}`} suppressHydrationWarning>
       <body className="font-body">
-        <Providers>
-          {children}
-        </Providers>
+        <PostHogProvider>
+          <Providers>
+            {children}
+          </Providers>
+        </PostHogProvider>
         <SpeedInsights />
         <Analytics />
+        <UTMTracker />
+        {process.env.NEXT_PUBLIC_META_PIXEL_ID && (
+          <MetaPixel pixelId={process.env.NEXT_PUBLIC_META_PIXEL_ID} />
+        )}
       </body>
     </html>
   );
 }
-
