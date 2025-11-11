@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import Image from 'next/image';
 import { Users, BookOpen, Building2, ArrowRight, CheckCircle2, Calendar } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import ScrollReveal from '@/components/animations/ScrollReveal';
@@ -138,9 +139,11 @@ export default function Admissions() {
                   <div className="relative bg-white rounded-3xl overflow-hidden shadow-xl h-full flex flex-col">
                     {/* Large Image Section */}
                     <div className="relative h-48 overflow-hidden">
-                      <img
+                      <Image
                         src={campus.image}
                         alt={campus.name}
+                        width={600}
+                        height={192}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />

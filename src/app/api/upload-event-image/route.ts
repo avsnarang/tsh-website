@@ -36,9 +36,17 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const originalBuffer = Buffer.from(arrayBuffer);
 
+    console.log('File details:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      bufferLength: originalBuffer.length,
+      firstBytes: originalBuffer.slice(0, 16).toString('hex'), // Log first 16 bytes for format detection
+    });
+
     // Get optimal compression settings based on image size
     const compressionOptions = getOptimalCompressionSettings(file.size);
-    
+
     // Adjust compression based on image type (desktop vs mobile)
     if (type === 'mobile') {
       // Mobile images can be smaller
@@ -56,7 +64,13 @@ export async function POST(request: NextRequest) {
     });
 
     // Compress the image
-    const compressedBuffer = await compressImage(originalBuffer, compressionOptions);
+    let compressedBuffer;
+    try {
+      compressedBuffer = await compressImage(originalBuffer, compressionOptions);
+    } catch (compressionError) {
+      console.error('Image compression error:', compressionError);
+      throw compressionError; // Re-throw to be caught by outer catch
+    }
     
     const compressedSize = compressedBuffer.length;
     const compressionRatio = ((1 - compressedSize / file.size) * 100).toFixed(1);
@@ -97,8 +111,25 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error uploading image:', error);
-    
+
     if (error instanceof Error) {
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      });
+
+      // Check for image processing errors first
+      if (error.message.includes('1E08010C') ||
+          error.message.includes('DECODER') ||
+          error.message.includes('HEIC') ||
+          error.message.includes('Unsupported image format')) {
+        return NextResponse.json(
+          { error: error.message },
+          { status: 400 } // Use 400 for client errors
+        );
+      }
+
       // Check for GCP-specific errors
       if (error.message.includes('credentials')) {
         return NextResponse.json(
@@ -106,15 +137,15 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
-      
+
       if (error.message.includes('bucket') || error.message.includes('Bucket')) {
         return NextResponse.json(
-          { error: 'GCP Storage bucket not found. Please create "scholarise-events" bucket in GCP Console.' },
+          { error: `GCP Storage bucket not found. Please check that the bucket "${process.env.GCP_STORAGE_BUCKET || 'images.tsh.edu.in'}" exists in GCP Console.` },
           { status: 500 }
         );
       }
     }
-    
+
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }

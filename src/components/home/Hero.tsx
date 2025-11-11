@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { GraduationCap, ArrowRight, BookOpen, School, Users } from 'lucide-react';
 import Button from '../ui/Button';
@@ -120,9 +121,12 @@ export default function Hero() {
             <div className="relative">
               {/* Main Image */}
               <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] sm:aspect-auto">
-                <img
+                <Image
                   src="https://images.tsh.edu.in/homepage/hero.jpeg"
                   alt="Students at The Scholars' Home"
+                  width={800}
+                  height={600}
+                  priority
                   className="w-full h-full object-cover min-h-[300px] sm:min-h-[400px]"
                 />
                 {/* Overlay gradient

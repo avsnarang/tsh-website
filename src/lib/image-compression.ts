@@ -8,6 +8,22 @@ export interface CompressionOptions {
 }
 
 /**
+ * Detects if a buffer contains a HEIC/HEIF image by checking file signature
+ */
+function isHEIC(buffer: Buffer): boolean {
+  // HEIC files have 'ftyp' at bytes 4-7 and then 'heic', 'heix', 'hevc', 'hevx', 'heim', 'heis', 'hevm', 'hevs', 'mif1' as brand
+  if (buffer.length < 12) return false;
+
+  const ftyp = buffer.toString('ascii', 4, 8);
+  if (ftyp !== 'ftyp') return false;
+
+  const brand = buffer.toString('ascii', 8, 12);
+  const heicBrands = ['heic', 'heix', 'hevc', 'hevx', 'heim', 'heis', 'hevm', 'hevs'];
+
+  return heicBrands.includes(brand);
+}
+
+/**
  * Compresses an image buffer while maintaining quality
  * Uses smart compression techniques to minimize file size
  */
@@ -22,11 +38,37 @@ export async function compressImage(
     format = 'webp', // WebP provides better compression than JPEG
   } = options;
 
-  let pipeline = sharp(imageBuffer);
+  try {
+    // Check for HEIC format first before Sharp tries to process it
+    if (isHEIC(imageBuffer)) {
+      throw new Error('HEIC/HEIF format detected. Please convert your image to JPEG, PNG, or WebP before uploading. On iPhone, you can change your camera settings to "Most Compatible" to save photos as JPEG instead of HEIC.');
+    }
 
-  // Get image metadata to determine best approach
-  const metadata = await pipeline.metadata();
-  const originalFormat = metadata.format;
+    // Create Sharp instance with minimal options first
+    let pipeline = sharp(imageBuffer);
+
+    // Get image metadata to determine best approach
+    let metadata;
+    try {
+      metadata = await pipeline.metadata();
+    } catch (metadataError) {
+      // If metadata extraction fails, it's likely an unsupported or corrupted file
+      console.error('Metadata extraction failed:', metadataError);
+      throw new Error('Unable to read image file. The file may be corrupted, in an unsupported format (like HEIC), or not a valid image. Please try converting it to JPEG or PNG first.');
+    }
+
+    const originalFormat = metadata.format;
+
+    // Validate that we can process this image
+    if (!metadata.width || !metadata.height) {
+      throw new Error('Unable to read image dimensions. The image may be corrupted or in an unsupported format.');
+    }
+
+    // Check for unsupported formats
+    const supportedFormats = ['jpeg', 'png', 'webp', 'gif', 'tiff', 'avif', 'svg'];
+    if (originalFormat && !supportedFormats.includes(originalFormat)) {
+      throw new Error(`Unsupported image format: ${originalFormat}. Please use JPEG, PNG, WebP, GIF, or TIFF.`);
+    }
 
   // Resize if needed (maintains aspect ratio)
   if (metadata.width && metadata.height) {
@@ -65,11 +107,32 @@ export async function compressImage(
     });
   }
 
-  // Apply additional optimizations
-  const compressedBuffer = await pipeline
-    .toBuffer();
+    // Apply additional optimizations
+    const compressedBuffer = await pipeline
+      .toBuffer();
 
-  return compressedBuffer;
+    return compressedBuffer;
+  } catch (error) {
+    // Provide more helpful error messages
+    if (error instanceof Error) {
+      // Check for the specific OpenSSL DECODER error
+      if (error.message.includes('1E08010C') || error.message.includes('DECODER routines')) {
+        throw new Error('Unsupported image format detected (OpenSSL decode error). This usually happens with HEIC/HEIF images from iPhones or corrupted files. Please convert your image to JPEG, PNG, or WebP before uploading. On iPhone: Settings > Camera > Formats > Most Compatible.');
+      }
+      if (error.message.includes('unsupported') || error.message.includes('DECODER')) {
+        throw new Error('Unsupported image format. Please convert your image to JPEG, PNG, or WebP format before uploading. If using an iPhone, make sure to convert HEIC images to JPEG first.');
+      }
+      if (error.message.includes('Input buffer') || error.message.includes('Input file')) {
+        throw new Error('The image file appears to be corrupted or invalid. Please try a different image or convert it to JPEG/PNG first.');
+      }
+      if (error.message.includes('VipsJpeg') || error.message.includes('VipsPng')) {
+        throw new Error('Error processing image format. The file may be corrupted. Please try re-saving the image or converting it to a standard JPEG or PNG format.');
+      }
+      // Re-throw with original message if we don't have a specific handler
+      throw error;
+    }
+    throw new Error('Failed to process image. Please try a different file.');
+  }
 }
 
 /**

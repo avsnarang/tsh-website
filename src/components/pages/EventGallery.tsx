@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import Container from '@/components/ui/Container';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
@@ -249,13 +250,14 @@ export default function EventGallery() {
                           {/* Decorative elements */}
                           <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
                           <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
-                          
+
                           <div className="relative">
-                            <img
+                            <Image
                               src={image.image_url}
                               alt={image.caption || event.title}
+                              width={600}
+                              height={400}
                               className="w-full h-auto"
-                              loading="lazy"
                             />
                             {image.caption && (
                               <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 backdrop-blur-sm 

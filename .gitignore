@@ -31,7 +31,33 @@ build/
 # Environment variables
 .env
 .env*.local
-
-/generated/prisma
-
 .env.local
+.env.production
+.env.development
+
+# Database backups and dumps
+backups/
+database-backups/
+**/database-backups/
+*.sql
+*.dump
+*.backup
+
+# Service account keys and credentials
+*-service-account.json
+credentials.json
+service-account-key.json
+gcp-key.json
+
+# Prisma
+/generated/prisma
+*.db
+*.db-journal
+
+# TypeScript
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Temporary files
+*.tmp
+*.temp

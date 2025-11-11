@@ -268,24 +268,23 @@ export default function ManageEvents() {
       setError('');
       setUploading(true);
 
-      // Upload images if new files were added
+      // Get image URLs from uploaded files
+      // Note: Files are auto-uploaded by FileUploader component when selected
       let coverImageUrl = formData.coverImage;
       let coverImageMobileUrl = formData.coverImageMobile;
 
+      // Use URL from uploaded file if available
       if (coverImageFiles.length > 0 && coverImageFiles[0].url) {
         coverImageUrl = coverImageFiles[0].url;
-      } else if (coverImageFiles.length > 0) {
-        // Upload new desktop image
-        const desktopUrls = await uploadEventImage([coverImageFiles[0].file], 'desktop');
-        coverImageUrl = desktopUrls[0];
       }
 
       if (coverImageMobileFiles.length > 0 && coverImageMobileFiles[0].url) {
         coverImageMobileUrl = coverImageMobileFiles[0].url;
-      } else if (coverImageMobileFiles.length > 0) {
-        // Upload new mobile image
-        const mobileUrls = await uploadEventImage([coverImageMobileFiles[0].file], 'mobile');
-        coverImageMobileUrl = mobileUrls[0];
+      }
+
+      // Check if we have a cover image (either from form or uploaded)
+      if (!coverImageUrl && coverImageFiles.length === 0) {
+        throw new Error('Please upload a desktop cover image');
       }
 
       const eventData = {
@@ -668,8 +667,8 @@ export default function ManageEvents() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <FileUploader
-                          accept="image/*"
-                          maxSize={5 * 1024 * 1024} // 5MB
+                          accept="image/jpeg,image/png,image/webp,image/gif,image/tiff"
+                          maxSize={10 * 1024 * 1024} // 10MB
                           maxFiles={1}
                           multiple={false}
                           onUpload={(files) => uploadEventImage(files, 'desktop')}
@@ -677,7 +676,7 @@ export default function ManageEvents() {
                           onRemove={() => setCoverImageFiles([])}
                           disabled={uploading}
                           label="Desktop Cover Image"
-                          description="Recommended: 1200 × 900 px (4:3 ratio), max 5MB"
+                          description="Supported: JPEG, PNG, WebP, GIF, TIFF. Recommended: 1200 × 900 px (4:3 ratio), max 10MB"
                         />
                         {formData.coverImage && !coverImageFiles.length && (
                           <div className="mt-2">
@@ -696,8 +695,8 @@ export default function ManageEvents() {
 
                       <div>
                         <FileUploader
-                          accept="image/*"
-                          maxSize={5 * 1024 * 1024} // 5MB
+                          accept="image/jpeg,image/png,image/webp,image/gif,image/tiff"
+                          maxSize={10 * 1024 * 1024} // 10MB
                           maxFiles={1}
                           multiple={false}
                           onUpload={(files) => uploadEventImage(files, 'mobile')}
@@ -705,7 +704,7 @@ export default function ManageEvents() {
                           onRemove={() => setCoverImageMobileFiles([])}
                           disabled={uploading}
                           label="Mobile Cover Image (Optional)"
-                          description="Recommended: 800 × 1200 px (2:3 ratio), max 5MB"
+                          description="Supported: JPEG, PNG, WebP, GIF, TIFF. Recommended: 800 × 1200 px (2:3 ratio), max 10MB"
                         />
                         {formData.coverImageMobile && !coverImageMobileFiles.length && (
                           <div className="mt-2">

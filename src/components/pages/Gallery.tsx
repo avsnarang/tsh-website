@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import NextImage from 'next/image';
 import Container from '@/components/ui/Container';
 import { Calendar, ArrowRight, MapPin, Camera, Image, Search } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
@@ -288,9 +289,11 @@ export default function Gallery() {
                     {/* Content */}
                     <div className="relative">
                       <div className="h-64 overflow-hidden">
-                        <img
+                        <NextImage
                           src={getEventImage(event)}
                           alt={event.title}
+                          width={600}
+                          height={400}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                       </div>

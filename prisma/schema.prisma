@@ -9,6 +9,8 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  relationMode = "prisma"
 }
 
 // Note: auth.users is managed by Supabase Auth and is not included here
@@ -76,7 +78,8 @@ model SportsProgram {
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
 
-  @@index([schedules(ops: Raw("gin"))], map: "idx_sports_programs_schedules")
+  // Note: GIN index on JSONB field - managed manually in migrations
+  // @@index([schedules(ops: Raw("gin"))], map: "idx_sports_programs_schedules")
   @@map("sports_programs")
 }
 
@@ -154,9 +157,11 @@ model Event {
   location              String    @db.Text
   description           String    @db.Text
   coverImage            String    @map("cover_image") @db.Text
+  coverImageMobile      String?   @map("cover_image_mobile") @db.Text
   maxCapacity           Int?      @map("max_capacity")
   maxGuestsPerRsvp      Int       @default(4) @map("max_guests_per_rsvp")
   requiresAdmissionNumber Boolean @default(false) @map("requires_admission_number")
+  acceptingRsvps        Boolean   @default(true) @map("accepting_rsvps")
   createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt             DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
 
@@ -271,7 +276,7 @@ model LatestUpdate {
 
 model Testimonial {
   id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  sourceType      TestimonialSourceType @map("source_type") @db.Text
+  sourceType      TestimonialSourceType @map("source_type")
   authorName      String           @map("author_name") @db.Text
   studentName     String?          @map("student_name") @db.Text
   class           String?          @db.Text

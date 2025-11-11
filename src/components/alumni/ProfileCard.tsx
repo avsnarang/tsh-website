@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { User, Mail, Phone, MapPin, LinkedinIcon, LogOut, Camera, Instagram, Facebook } from 'lucide-react';
 import type { Profile } from '../../types/alumni';
@@ -66,9 +67,11 @@ export function ProfileCard({ profile, onUploadClick, uploading, onSignOut }: Pr
         <div className="relative w-32 h-32 mx-auto mb-6">
           <div className="w-full h-full rounded-full ring-4 ring-white shadow-xl overflow-hidden relative">
             {profile.profile_picture_url ? (
-              <img
+              <Image
                 src={profile.profile_picture_url}
                 alt={profile.full_name}
+                width={200}
+                height={200}
                 className="w-full h-full object-cover"
               />
             ) : (

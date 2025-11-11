@@ -51,9 +51,35 @@ export default function FileUploader({
     if (maxSize && file.size > maxSize) {
       return `File size exceeds ${Math.round(maxSize / 1024 / 1024)}MB limit`;
     }
-    if (accept && !accept.includes(file.type.split('/')[0])) {
-      return 'Invalid file type';
+
+    // Check for HEIC/HEIF files (common from iPhones) which Sharp may not support well
+    const fileName = file.name.toLowerCase();
+    const unsupportedExtensions = ['.heic', '.heif'];
+    if (unsupportedExtensions.some(ext => fileName.endsWith(ext))) {
+      return 'HEIC/HEIF format not supported. Please convert to JPEG, PNG, or WebP first.';
     }
+
+    // Validate file type against accept attribute
+    if (accept) {
+      // Parse accept attribute (can be comma-separated MIME types or wildcards)
+      const acceptedTypes = accept.split(',').map(t => t.trim());
+      const fileType = file.type;
+
+      // Check if file type matches any accepted type
+      const isAccepted = acceptedTypes.some(acceptedType => {
+        if (acceptedType.endsWith('/*')) {
+          // Wildcard match (e.g., "image/*")
+          return fileType.startsWith(acceptedType.replace('/*', '/'));
+        }
+        // Exact match
+        return fileType === acceptedType;
+      });
+
+      if (!isAccepted) {
+        return `File type ${fileType || 'unknown'} not supported. Please use JPEG, PNG, WebP, GIF, or TIFF.`;
+      }
+    }
+
     return null;
   };
 
