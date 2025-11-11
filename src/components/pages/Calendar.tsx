@@ -9,7 +9,19 @@ import TextReveal from '@/components/animations/TextReveal';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
-import { fetchCalendarEvents, CalendarEvent } from '@/lib/googleCalendar';
+interface CalendarEvent {
+  id: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  description: string | null | undefined;
+  location: string | null | undefined;
+  event_type: string;
+  branch: string;
+  session: string;
+  google_event_id?: string;
+  synced_with_google?: boolean;
+}
 
 type ViewType = 'month' | 'schedule';
 type Session = '2025-26' | '2026-27' | '2027-28';
@@ -40,24 +52,43 @@ export default function Calendar() {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Calculate time range (1 year before and after current date)
         const timeMin = new Date();
         timeMin.setFullYear(timeMin.getFullYear() - 1);
         const timeMax = new Date();
         timeMax.setFullYear(timeMax.getFullYear() + 1);
 
-        const fetchedEvents = await fetchCalendarEvents(
-          timeMin,
-          timeMax,
-          {
-            eventType: selectedEventType,
-            branch: selectedBranch,
-            session: selectedSession
-          }
-        );
+        // Build query parameters
+        const params = new URLSearchParams({
+          timeMin: timeMin.toISOString(),
+          timeMax: timeMax.toISOString(),
+        });
 
-        setEvents(fetchedEvents);
+        if (selectedEventType && selectedEventType !== 'All Events') {
+          params.append('eventType', selectedEventType);
+        }
+        if (selectedBranch && selectedBranch !== 'All Campuses') {
+          params.append('branch', selectedBranch);
+        }
+        if (selectedSession) {
+          params.append('session', selectedSession);
+        }
+
+        // Fetch from API route
+        const response = await fetch(`/api/calendar-events?${params.toString()}`);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch calendar events');
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+          setEvents(result.data);
+        } else {
+          throw new Error(result.message || 'Failed to fetch calendar events');
+        }
       } catch (err) {
         setError('Failed to load calendar events. Please try again later.');
         console.error('Calendar error:', err);
