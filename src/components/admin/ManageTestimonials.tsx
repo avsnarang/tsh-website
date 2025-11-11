@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
 import { ArrowLeft, User, Eye, EyeOff, AlertTriangle, Plus, X } from 'lucide-react';
@@ -18,7 +21,7 @@ interface Testimonial {
 }
 
 export default function ManageTestimonials() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user } = useAuth();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,11 +40,11 @@ export default function ManageTestimonials() {
 
   useEffect(() => {
     if (!user) {
-      navigate('/admin/login');
+      router.push('/admin/login');
       return;
     }
     fetchTestimonials();
-  }, [user, navigate]);
+  }, [user, router]);
 
   const fetchTestimonials = async () => {
     try {
@@ -133,7 +136,7 @@ export default function ManageTestimonials() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between gap-4 mb-8">
             <Link
-              to="/admin/dashboard"
+              href="/admin/dashboard"
               className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />

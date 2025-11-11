@@ -1,5 +1,8 @@
+'use client';
+
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Compass } from 'lucide-react';
 import type { CampusActivity } from '../../types/components';
 
@@ -90,9 +93,11 @@ export default function CampusLife() {
             >
               {/* Image Container */}
               <div className="relative h-48 overflow-hidden">
-                <img
+                <Image
                   src={activity.image}
                   alt={activity.title}
+                  width={400}
+                  height={192}
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 />
               </div>
@@ -108,7 +113,7 @@ export default function CampusLife() {
                     {activity.description}
                   </p>
                   <Link
-                    to={activity.link}
+                    href={activity.link}
                     className="inline-flex items-center text-sm text-orange hover:text-orange-600 transition-colors group/link"
                   >
                     <span className="mr-2">Explore More</span>

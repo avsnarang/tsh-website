@@ -1,5 +1,7 @@
+'use client';
+
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { supabase } from '../../lib/supabase';
 import Container from '../ui/Container';
 import { Plus, Pencil, X, ArrowUp, ArrowDown, ArrowLeft, Video, AlertTriangle, Trash2 } from 'lucide-react';
@@ -11,6 +13,7 @@ interface YouTubeVideo {
   id: string;
   title: string;
   description: string | null;
+  url?: string;
   embed_code: string;
   position: number;
   is_visible: boolean;
@@ -25,6 +28,7 @@ export default function ManageYouTubeVideos() {
 
   const [formData, setFormData] = useState({
     title: '',
+    url: '',
     description: '',
     embed_code: '',
     is_visible: true
@@ -88,58 +92,71 @@ export default function ManageYouTubeVideos() {
 
     if (newIndex < 0 || newIndex >= videos.length) return;
 
-    // Create array of all positions that need to be updated
-    const updates = videos.map((v, index) => {
-      if (index === currentIndex) return { id: v.id, position: newIndex };
-      if (index === newIndex) return { id: v.id, position: currentIndex };
-      return { id: v.id, position: index };
-    });
+    const currentVideo = videos[currentIndex];
+    const swapVideo = videos[newIndex];
 
     try {
-      // Update all positions in a single batch
-      const { error } = await supabase
+      // Swap positions using individual update calls
+      const { error: error1 } = await supabase
         .from('youtube_videos')
-        .upsert(updates.map(u => ({
-          id: u.id,
-          position: u.position
-        })));
+        .update({ position: swapVideo.position })
+        .eq('id', currentVideo.id);
 
-      if (error) throw error;
+      if (error1) throw error1;
+
+      const { error: error2 } = await supabase
+        .from('youtube_videos')
+        .update({ position: currentVideo.position })
+        .eq('id', swapVideo.id);
+
+      if (error2) throw error2;
+
       await fetchVideos();
     } catch (error) {
       setError('Failed to update positions');
+      console.error('Error updating positions:', error);
     }
   };
 
   const handlePositionChange = async (video: YouTubeVideo, newPosition: number) => {
     try {
+      // Validate new position
+      if (newPosition < 0 || newPosition >= videos.length) return;
+
       const oldPosition = video.position;
-      const updates = videos.map(v => {
-        if (v.id === video.id) {
-          return { id: v.id, position: newPosition };
-        } else if (
-          (oldPosition < newPosition && v.position <= newPosition && v.position > oldPosition) ||
-          (oldPosition > newPosition && v.position >= newPosition && v.position < oldPosition)
-        ) {
-          return {
-            id: v.id,
-            position: oldPosition < newPosition ? v.position - 1 : v.position + 1
-          };
+      
+      // If position didn't change, no update needed
+      if (oldPosition === newPosition) return;
+
+      // Create a new array with the video moved to the new position
+      const updatedVideos = [...videos];
+      const videoIndex = updatedVideos.findIndex(v => v.id === video.id);
+      const [movedVideo] = updatedVideos.splice(videoIndex, 1);
+      updatedVideos.splice(newPosition, 0, movedVideo);
+
+      // Update all videos that changed position using individual update calls
+      const updatePromises = updatedVideos.map((v, index) => {
+        const oldVideo = videos.find(original => original.id === v.id);
+        if (oldVideo && oldVideo.position !== index) {
+          return supabase
+            .from('youtube_videos')
+            .update({ position: index })
+            .eq('id', v.id);
         }
-        return { id: v.id, position: v.position };
+        return Promise.resolve({ error: null });
       });
 
-      const { error } = await supabase
-        .from('youtube_videos')
-        .upsert(updates.map(u => ({
-          id: u.id,
-          position: u.position
-        })));
+      const results = await Promise.all(updatePromises);
+      const errors = results.filter(r => r.error);
 
-      if (error) throw error;
+      if (errors.length > 0) {
+        throw errors[0].error;
+      }
+
       await fetchVideos();
     } catch (error) {
       setError('Failed to update position');
+      console.error('Error updating position:', error);
     }
   };
 
@@ -154,26 +171,36 @@ export default function ManageYouTubeVideos() {
 
       if (error) throw error;
       
-      // Update positions of remaining videos
+      // Update positions of remaining videos using individual updates
       const remainingVideos = videos.filter(v => v.id !== video.id);
-      const updates = remainingVideos.map((v, index) => ({
-        id: v.id,
-        position: index
-      }));
-
-      await supabase
+      const updatePromises = remainingVideos.map((v, index) => {
+        if (v.position !== index) {
+          return supabase
         .from('youtube_videos')
-        .upsert(updates);
+            .update({ position: index })
+            .eq('id', v.id);
+        }
+        return Promise.resolve({ error: null });
+      });
+
+      const results = await Promise.all(updatePromises);
+      const errors = results.filter(r => r.error);
+      
+      if (errors.length > 0) {
+        throw errors[0].error;
+      }
 
       await fetchVideos();
     } catch (error) {
       setError('Failed to delete video');
+      console.error('Error deleting video:', error);
     }
   };
 
   const resetForm = () => {
     setFormData({
       title: '',
+      url: '',
       description: '',
       embed_code: '',
       is_visible: true
@@ -199,7 +226,7 @@ export default function ManageYouTubeVideos() {
             <div className="text-center mb-12">
               <div className="flex items-center justify-between gap-4 mb-8">
                 <Link
-                  to="/admin/dashboard"
+                  href="/admin/dashboard"
                   className="flex items-center gap-2 text-green hover:text-green-dark transition-colors"
                 >
                   <ArrowLeft className="h-5 w-5" />
@@ -271,31 +298,31 @@ export default function ManageYouTubeVideos() {
                   key={video.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white p-6 rounded-2xl shadow-lg h-fit"
+                  className="bg-white p-6 rounded-2xl shadow-lg h-fit overflow-hidden flex flex-col"
                 >
-                  <div className="flex justify-between items-start gap-3 mb-4">
-                    <div className="flex items-start gap-3 flex-1">
+                  <div className="flex justify-between items-start gap-3 mb-4 min-w-0">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
                       <select
-                        value={video.position}
+                        value={index}
                         onChange={(e) => handlePositionChange(video, parseInt(e.target.value))}
-                        className="w-14 p-1.5 border rounded-lg bg-neutral-light text-sm"
+                        className="w-14 p-1.5 border rounded-lg bg-neutral-light text-sm shrink-0"
                       >
                         {videos.map((_, i) => (
                           <option key={i} value={i}>{i + 1}</option>
                         ))}
                       </select>
-                      <div className="flex-1 min-w-0"> {/* prevent text overflow */}
-                        <h3 className="text-base font-semibold text-neutral-dark mb-1 truncate">
+                      <div className="flex-1 min-w-0 overflow-hidden">
+                        <h3 className="text-base font-semibold text-neutral-dark mb-1 truncate" title={video.title}>
                           {video.title}
                         </h3>
                         {video.description && (
-                          <p className="text-sm text-neutral-dark/70 line-clamp-2">
+                          <p className="text-sm text-neutral-dark/70 line-clamp-2 break-words" title={video.description}>
                             {video.description}
                           </p>
                         )}
                       </div>
                     </div>
-                    <div className="flex gap-1 shrink-0"> {/* prevent buttons from shrinking */}
+                    <div className="flex gap-1 shrink-0 flex-shrink-0">
                       <button
                         onClick={() => handleMove(video, 'up')}
                         disabled={index === 0}
@@ -317,6 +344,7 @@ export default function ManageYouTubeVideos() {
                           setEditingVideo(video);
                           setFormData({
                             title: video.title,
+                            url: video.url || '',
                             description: video.description || '',
                             embed_code: video.embed_code,
                             is_visible: video.is_visible
@@ -337,9 +365,12 @@ export default function ManageYouTubeVideos() {
                       </button>
                     </div>
                   </div>
-                  <div className="aspect-video rounded-xl overflow-hidden bg-neutral-light" 
+                  <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-neutral-light">
+                    <div 
+                      className="absolute inset-0 w-full h-full overflow-hidden [&_iframe]:absolute [&_iframe]:inset-0 [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:max-w-full [&_iframe]:max-h-full [&_iframe]:border-0"
                     dangerouslySetInnerHTML={{ __html: video.embed_code }} 
                   />
+                  </div>
                 </motion.div>
               ))}
             </div>

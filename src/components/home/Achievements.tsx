@@ -1,3 +1,5 @@
+'use client';
+
 import { motion } from 'framer-motion';
 import { Award, Users, BookOpen, Trophy, LucideIcon } from 'lucide-react';
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
 import { User } from 'lucide-react';
@@ -110,9 +111,11 @@ export default function Testimonials() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
                     {testimonial.profile_picture_url ? (
-                      <img
+                      <Image
                         src={testimonial.profile_picture_url}
                         alt={testimonial.full_name}
+                        width={100}
+                        height={100}
                         className="w-full h-full object-cover"
                       />
                     ) : (

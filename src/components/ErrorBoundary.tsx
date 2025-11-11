@@ -1,5 +1,7 @@
+'use client';
+
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 interface Props {
   children?: ReactNode;
@@ -33,7 +35,7 @@ export default class ErrorBoundary extends Component<Props, State> {
               Something went wrong
             </p>
             <Link
-              to="/admin/dashboard"
+              href="/admin/dashboard"
               className="inline-flex items-center gap-2 px-6 py-2 bg-primary text-neutral-light rounded-lg hover:bg-primary-dark transition-colors"
             >
               Return to Dashboard

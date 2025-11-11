@@ -1,10 +1,11 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
 import { Lock } from 'lucide-react';
 import Button from '../ui/Button';
-import { useSEO } from '../../lib/seo';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function AdminSetup() {
@@ -13,17 +14,13 @@ export default function AdminSetup() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const { signUp } = useAuth();
 
-  useSEO({
-    title: "Admin Setup | The Scholars' Home",
-    description: "Create administrator account for The Scholars' Home website management."
-  });
 
   useEffect(() => {
     checkExistingSetup();
-  }, [navigate]);
+  }, [router]);
 
   const checkExistingSetup = async () => {
     try {
@@ -36,7 +33,7 @@ export default function AdminSetup() {
       
       // Add null check for count
       if (count && count > 0) {
-        navigate('/admin/login');
+        router.push('/admin/login');
       }
     } catch (err) {
       console.error('Error checking admin setup:', err);
@@ -58,7 +55,7 @@ export default function AdminSetup() {
 
       // Remove the 'admin' argument as signUp expects only email and password
       await signUp(email, password);
-      navigate('/admin/dashboard');
+      router.push('/admin/dashboard');
     } catch (err: any) {
       console.error('Setup error:', err);
       setError(err.message || 'Failed to create admin account');

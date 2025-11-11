@@ -1,5 +1,8 @@
+'use client';
+
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabase';
 import { Plus, Edit, Trash, ArrowLeft, Trophy } from 'lucide-react';
 import SportEditModal from './SportEditModal';
@@ -50,20 +53,20 @@ export default function ManageSports() {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const { user, userRole, sessionState } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // Check auth status and redirect if necessary
   useEffect(() => {
     if (sessionState === 'invalid' || !user) {
-      navigate(ALUMNI_ROUTES.LOGIN);
+      router.push(ALUMNI_ROUTES.LOGIN);
       return;
     }
     
     if (userRole !== 'admin') {
-      navigate('/admin/dashboard');
+      router.push('/admin/dashboard');
       return;
     }
-  }, [user, userRole, sessionState, navigate]);
+  }, [user, userRole, sessionState, router]);
 
   useEffect(() => {
     if (userRole === 'admin' && sessionState === 'valid') {
@@ -191,7 +194,7 @@ export default function ManageSports() {
             <div className="text-center mb-12">
               <div className="flex items-center justify-between gap-4 mb-8">
                 <Link
-                  to="/admin/dashboard"
+                  href="/admin/dashboard"
                   className="flex items-center gap-2 text-green hover:text-green-dark transition-colors"
                 >
                   <ArrowLeft className="h-5 w-5" />

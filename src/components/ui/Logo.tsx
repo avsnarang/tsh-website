@@ -1,4 +1,7 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
+import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface LogoProps {
@@ -14,10 +17,12 @@ export default function Logo({ variant = 'default', className = '' }: LogoProps)
   // For footer, always use white text
   if (variant === 'footer') {
     return (
-      <Link to="/" className={`flex items-center gap-3 ${className}`}>
-        <img 
+      <Link href="/" className={`flex items-center gap-3 ${className}`}>
+        <Image
           src="https://images.tsh.edu.in/mobile_logo.png"
           alt="The Scholars' Home"
+          width={48}
+          height={48}
           className="h-12 w-auto"
         />
         <div className="text-neutral-light">
@@ -29,27 +34,39 @@ export default function Logo({ variant = 'default', className = '' }: LogoProps)
   }
 
   return (
-    <Link to="/" className={`flex items-center gap-3 ${className}`}>
+    <Link href="/" className={`flex items-center gap-3 ${className}`}>
       <div className="relative h-12 w-12">
         {/* Light variant (white logo) */}
-        <motion.img 
-          src="https://images.tsh.edu.in/logo/mobile_logo.png"
-          alt="The Scholars' Home"
-          className="absolute inset-0 h-full w-auto"
-          style={{ 
+        <motion.div
+          className="absolute inset-0"
+          style={{
             opacity: variant === 'light' ? 1 : opacity,
           }}
-        />
+        >
+          <Image
+            src="https://images.tsh.edu.in/logo/mobile_logo.png"
+            alt="The Scholars' Home"
+            width={48}
+            height={48}
+            className="h-full w-auto"
+          />
+        </motion.div>
 
         {/* Dark variant (orange logo) */}
-        <motion.img 
-          src="https://images.tsh.edu.in/logo/mobile_logo.png"
-          alt="The Scholars' Home"
-          className="absolute inset-0 h-full w-auto"
-          style={{ 
+        <motion.div
+          className="absolute inset-0"
+          style={{
             opacity: variant === 'light' ? 0 : reverseOpacity,
           }}
-        />
+        >
+          <Image
+            src="https://images.tsh.edu.in/logo/mobile_logo.png"
+            alt="The Scholars' Home"
+            width={48}
+            height={48}
+            className="h-full w-auto"
+          />
+        </motion.div>
       </div>
       <div className="relative">
         {/* Light variant (white text) */}

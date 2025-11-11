@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Container from '../ui/Container';
 import { Phone, Mail, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react';
@@ -116,7 +118,7 @@ export default function Footer() {
                   whileHover="hover"
                 >
                   <Link 
-                    to={link.to}
+                    href={link.to}
                     className="text-neutral-light/80 hover:text-neutral-light transition-colors block"
                   >
                     <motion.span variants={linkHover} className="inline-block">
@@ -163,7 +165,7 @@ export default function Footer() {
                   whileHover="hover"
                 >
                   <Link 
-                    to={campus.path}
+                    href={campus.path}
                     className="text-neutral-light hover:text-neutral-light/80 transition-colors font-semibold block"
                   >
                     <motion.span variants={linkHover} className="inline-block">
@@ -227,13 +229,13 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex gap-6">
               <Link 
-                to="/privacy"
+                href="/privacy"
                 className="text-neutral-light/60 hover:text-neutral-light transition-colors text-sm"
               >
                 Privacy Policy
               </Link>
               <Link 
-                to="/terms"
+                href="/terms"
                 className="text-neutral-light/60 hover:text-neutral-light transition-colors text-sm"
               >
                 Terms of Service

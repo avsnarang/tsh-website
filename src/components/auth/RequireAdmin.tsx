@@ -1,5 +1,7 @@
-import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+'use client';
+
+import React, { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { ALUMNI_ROUTES } from '../../config/routes';
 
@@ -9,7 +11,24 @@ interface RequireAdminProps {
 
 export default function RequireAdmin({ children }: RequireAdminProps) {
   const { user, userRole, loading } = useAuth();
-  const location = useLocation();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.push(`${ALUMNI_ROUTES.LOGIN}?redirect=${encodeURIComponent(pathname || '/admin')}`);
+        return;
+      }
+      if (userRole !== 'admin') {
+        if (userRole === 'alumni') {
+          router.push(ALUMNI_ROUTES.PROFILE);
+        } else {
+          router.push(`${ALUMNI_ROUTES.LOGIN}?redirect=${encodeURIComponent(pathname || '/admin')}`);
+        }
+      }
+    }
+  }, [user, userRole, loading, pathname, router]);
 
   if (loading) {
     return (
@@ -19,20 +38,8 @@ export default function RequireAdmin({ children }: RequireAdminProps) {
     );
   }
 
-  // If user is not logged in
-  if (!user) {
-    return <Navigate to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
-  }
-
-  // If user is not an admin
-  if (userRole !== 'admin') {
-    // If user is an alumni, redirect to alumni profile
-    if (userRole === 'alumni') {
-      return <Navigate to={ALUMNI_ROUTES.PROFILE} replace />;
-    }
-    
-    // Otherwise, redirect to login
-    return <Navigate to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
+  if (!user || userRole !== 'admin') {
+    return null;
   }
 
   return <>{children}</>;

@@ -1,11 +1,12 @@
+'use client';
+
 import Container from '../ui/Container';
 import { Star, ArrowRight } from 'lucide-react';
 import ScrollReveal from '../animations/ScrollReveal';
 import TextReveal from '../animations/TextReveal';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Button from '../ui/Button';
 import HorizontalTimeline from './HorizontalTimeline';
-import { useSEO } from '../../lib/seo';
 import { motion } from 'framer-motion';
 import BreadcrumbNav from '../navigation/BreadcrumbNav';
 
@@ -43,11 +44,6 @@ const timelineEvents = [
 ];
 
 export default function About() {
-  useSEO({
-    title: "Our Story | The Scholars' Home",
-    description: "Discover the journey of The Scholars' Home since 2003. Learn about our legacy of educational excellence and commitment to nurturing future leaders."
-  });
-
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section */}
@@ -143,7 +139,7 @@ export default function About() {
                       </p>
                     </TextReveal>
                     <TextReveal delay={0.3}>
-                      <Link to="/about/vision">
+                      <Link href="/about/vision">
                         <Button
                           variant="cta"
                           className="flex items-center gap-2 group hover:bg-orange-light/90"

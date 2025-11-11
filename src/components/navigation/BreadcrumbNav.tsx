@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { HomeIcon } from 'lucide-react';
 import {
   Breadcrumb,
@@ -47,7 +50,7 @@ const routeLabels: Record<string, string> = {
 };
 
 export default function BreadcrumbNav() {
-  const location = useLocation();
+  const pathname = usePathname();
   const [dynamicLabel, setDynamicLabel] = useState<string>('');
 
   useEffect(() => {
@@ -62,9 +65,9 @@ export default function BreadcrumbNav() {
     };
   }, []);
 
-  if (location.pathname === '/') return null;
+  if (!pathname || pathname === '/') return null;
 
-  const segments = location.pathname.split('/').filter(Boolean);
+  const segments = pathname.split('/').filter(Boolean);
 
   return (
     <div className="mb-6 -mt-12 pl-4">
@@ -72,14 +75,14 @@ export default function BreadcrumbNav() {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/">
+              <Link href="/">
                 <HomeIcon size={16} aria-hidden="true" />
                 <span className="sr-only">Home</span>
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
 
-          {segments.map((segment, index) => {
+          {segments.map((segment: string, index: number) => {
             const path = `/${segments.slice(0, index + 1).join('/')}`;
             const isLast = index === segments.length - 1;
             
@@ -97,7 +100,7 @@ export default function BreadcrumbNav() {
                     <BreadcrumbPage>{label}</BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink asChild>
-                      <Link to={path}>{label}</Link>
+                      <Link href={path}>{label}</Link>
                     </BreadcrumbLink>
                   )}
                 </BreadcrumbItem>

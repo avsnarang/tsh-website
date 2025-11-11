@@ -1,4 +1,7 @@
+'use client';
+
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { User, ArrowRight, X, MessageSquareQuote } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Container from '../ui/Container';
@@ -94,9 +97,11 @@ export default function LeaderMessages({ messages, isLoading }: LeaderMessagesPr
                       className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-br from-green-light to-primary flex-shrink-0 shadow-lg"
                     >
                       {message.photo_url ? (
-                        <img
+                        <Image
                           src={message.photo_url}
                           alt={message.name}
+                          width={400}
+                          height={300}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -152,9 +157,11 @@ export default function LeaderMessages({ messages, isLoading }: LeaderMessagesPr
                   <div className="flex items-start gap-5">
                     <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-br from-green-light to-primary flex-shrink-0">
                       {selectedMessage.photo_url ? (
-                        <img
+                        <Image
                           src={selectedMessage.photo_url}
                           alt={selectedMessage.name}
+                          width={400}
+                          height={300}
                           className="w-full h-full object-cover"
                         />
                       ) : (

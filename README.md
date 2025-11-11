@@ -53,11 +53,36 @@ Required dependencies:
 
 ## Environment Setup
 
-1. Create a `.env` file in the root directory with your Supabase credentials:
+1. Create a `.env.local` file in the root directory with your environment variables:
+
 ```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+# Supabase Configuration (Client-side - accessible in browser)
+# Required: These variables must be prefixed with NEXT_PUBLIC_ for client-side access
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Supabase Configuration (Server-side - NOT exposed to browser)
+# Required for admin operations
+SUPABASE_SERVICE_KEY=your_supabase_service_role_key
+
+# Notion API Configuration (for sports interest form)
+NOTION_TOKEN=your_notion_integration_token
+NOTION_SPORTS_DATABASE_ID=your_notion_database_id
+
+# Google Calendar API (optional)
+GOOGLE_SERVICE_ACCOUNT_EMAIL=your_service_account_email
+GOOGLE_PRIVATE_KEY=your_private_key_with_escaped_newlines
+NEXT_PUBLIC_GOOGLE_CALENDAR_ID=your_google_calendar_id
+
+# PostHog Analytics (optional)
+NEXT_PUBLIC_POSTHOG_KEY=your_posthog_key
+NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
 ```
+
+**Important Notes:**
+- Use `.env.local` (not `.env`) for local development - it's automatically ignored by git
+- Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser
+- Server-side variables (without prefix) are only available in API routes and server components
 
 2. Set up Supabase:
    - Create a new Supabase project

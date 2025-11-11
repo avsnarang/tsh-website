@@ -1,54 +1,59 @@
-import { supabase } from '../lib/supabase';
-import Home from '../pages/Home';
-import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
+import { createServerSupabaseClient } from '@/lib/supabase-server';
+import HomeClient from './home-client';
+import { LeadershipMessage } from '@/types/leadership';
+import type { Metadata } from 'next';
 
-// Replace Next.js metadata with React Helmet
-function PageMetadata() {
-  return (
-    <Helmet>
-      <title>The Scholars' Home | Excellence in Education Since 2003</title>
-      <meta 
-        name="description" 
-        content="Join The Scholars' Home for world-class education and holistic development. CBSE-affiliated school offering comprehensive education from pre-primary to senior secondary levels."
-      />
-    </Helmet>
-  );
+export const metadata: Metadata = {
+  title: "The Scholars' Home | Excellence in Education Since 2003",
+  description: "Join The Scholars' Home for world-class education and holistic development. CBSE-affiliated school offering comprehensive education from pre-primary to senior secondary levels.",
+};
+
+async function getHomePageData() {
+  const supabase = await createServerSupabaseClient();
+
+  try {
+    const [messagesResponse, testimonialsResponse] = await Promise.all([
+      supabase
+        .from('leadership_messages')
+        .select('*')
+        .order('order', { ascending: true }),
+      supabase
+        .from('featured_testimonials')
+        .select(`
+          alumni_profiles (
+            id, full_name, occupation, company, profile_picture_url, testimonial
+          )
+        `)
+        .eq('is_visible', true)
+        .limit(6)
+    ]);
+
+    const transformedMessages: LeadershipMessage[] = (messagesResponse.data || []).map(message => ({
+      id: message.id,
+      name: message.name,
+      role: message.role,
+      photo_url: message.photo_url,
+      preview: message.preview,
+      fullMessage: message.full_message,
+      display_locations: message.display_locations
+    }));
+
+    return {
+      messages: transformedMessages,
+      testimonials: testimonialsResponse.data || []
+    };
+  } catch (error) {
+    console.error('Error fetching home page data:', error);
+    return {
+      messages: [],
+      testimonials: []
+    };
+  }
 }
 
-async function getInitialData() {
-  const { data: messages } = await supabase
-    .from('leadership_messages')
-    .select('*')
-    .eq('display_locations', ['homepage'])
-    .order('order');
+export default async function HomePage() {
+  const data = await getHomePageData();
 
-  const { data: latestUpdate } = await supabase
-    .from('latest_updates')
-    .select('content')
-    .eq('is_active', true)
-    .single();
-
-  return {
-    messages: messages || [],
-    latestUpdate: latestUpdate?.content || ''
-  };
+  return <HomeClient messages={data.messages} />;
 }
 
-export default function HomePage() {
-  const [initialData, setInitialData] = useState<{
-    messages: any[];
-    latestUpdate: string;
-  }>({ messages: [], latestUpdate: '' });
-
-  useEffect(() => {
-    getInitialData().then(setInitialData);
-  }, []);
-
-  return (
-    <>
-      <PageMetadata />
-      <Home messages={initialData.messages} latestUpdate={initialData.latestUpdate} />
-    </>
-  );
-}

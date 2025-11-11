@@ -1,15 +1,14 @@
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import posthog from 'posthog-js';
 
 // Create a flag to track initialization status
 let isInitialized = false;
 
 // Initialize PostHog
-// Initialize PostHog
 export const initPostHog = () => {
-  const posthogKey = import.meta.env.VITE_POSTHOG_KEY;
-  const posthogHost = import.meta.env.VITE_POSTHOG_HOST;
+  if (typeof window === 'undefined') return;
+  
+  const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+  const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
   if (posthogKey && posthogHost) {
     if (isInitialized) return;
@@ -22,15 +21,13 @@ export const initPostHog = () => {
         distinctID: 'anonymous',
       },
       loaded: (posthog) => {
-        if (import.meta.env.DEV) {
+        if (process.env.NODE_ENV === 'development') {
           // Disable capturing in development
           posthog.opt_out_capturing();
         }
         isInitialized = true;
         // Attach to window for debugging
-        if (typeof window !== 'undefined') {
-          window.posthog = posthog;
-        }
+        window.posthog = posthog;
       }
     });
 
@@ -43,36 +40,6 @@ export const initPostHog = () => {
       }
     });
   }
-};
-
-// Custom hook for page views
-export const usePageTracking = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!isInitialized) return;
-
-    // Track page view duration
-    const startTime = Date.now();
-
-    // Capture pageview with PostHog
-    posthog.capture('$pageview', {
-      current_url: window.location.href,
-      page_path: location.pathname + location.search,
-      referrer: document.referrer
-    });
-
-    // Cleanup function to track page leave
-    return () => {
-      if (!isInitialized) return;
-
-      const duration = Date.now() - startTime;
-      posthog.capture('$pageleave', {
-        $session_duration: duration,
-        page_path: location.pathname + location.search
-      });
-    };
-  }, [location]);
 };
 
 // Event tracking helper with enhanced type safety
@@ -162,4 +129,35 @@ export const trackSearch = (query: string, resultsCount: number) => {
     results_count: resultsCount,
     non_interaction: false
   });
+};
+
+// Generic button click tracking - supports both object and individual parameters
+export const trackButtonClick = (
+  buttonNameOrProps: string | Record<string, any>,
+  location?: string,
+  additionalProps?: Record<string, any>
+) => {
+  if (!isInitialized) return;
+
+  // Support both calling styles: object parameter or individual parameters
+  if (typeof buttonNameOrProps === 'object') {
+    trackEvent('button_click', {
+      button_name: buttonNameOrProps.buttonName,
+      button_id: buttonNameOrProps.buttonId,
+      page: buttonNameOrProps.page,
+      section: buttonNameOrProps.section,
+      button_type: buttonNameOrProps.buttonType,
+      action: buttonNameOrProps.action,
+      destination: buttonNameOrProps.destination,
+      ...buttonNameOrProps.metadata,
+      non_interaction: false
+    });
+  } else {
+    trackEvent('button_click', {
+      button_name: buttonNameOrProps,
+      page_location: location,
+      ...additionalProps,
+      non_interaction: false
+    });
+  }
 };

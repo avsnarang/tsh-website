@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
 import {
@@ -10,6 +12,7 @@ import Button from '../ui/Button';
 import ScrollReveal from '../animations/ScrollReveal';
 import TextReveal from '../animations/TextReveal';
 import { motion } from 'framer-motion';
+import FileUploader, { UploadedFile } from '../ui/FileUploader';
 
 interface Event {
   id: string;
@@ -19,6 +22,7 @@ interface Event {
   location: string;
   description: string;
   cover_image: string;
+  cover_image_mobile?: string;
   max_capacity?: number;
   max_guests_per_rsvp: number;
   requires_admission_number: boolean;
@@ -40,6 +44,7 @@ interface FormData {
   time: string;
   location: string;
   coverImage: string;
+  coverImageMobile: string;
   maxCapacity?: number;
   maxGuestsPerRsvp: number;
   requiresAdmissionNumber: boolean;
@@ -60,10 +65,14 @@ export default function ManageEvents() {
     time: '',
     location: '',
     coverImage: '',
+    coverImageMobile: '',
     maxCapacity: undefined,
-    maxGuestsPerRsvp: 4,
-    requiresAdmissionNumber: true
+    maxGuestsPerRsvp: 1,
+    requiresAdmissionNumber: false
   });
+  const [coverImageFiles, setCoverImageFiles] = useState<UploadedFile[]>([]);
+  const [coverImageMobileFiles, setCoverImageMobileFiles] = useState<UploadedFile[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchEvents();
@@ -157,10 +166,126 @@ export default function ManageEvents() {
     }
   };
 
+  const uploadEventImage = async (files: File[], type: 'desktop' | 'mobile'): Promise<string[]> => {
+    const urls: string[] = [];
+    
+    // Initialize file state with uploading status
+    const uploadingFiles: UploadedFile[] = files.map(file => ({
+      file,
+      preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined,
+      progress: 0,
+      status: 'uploading'
+    }));
+
+    if (type === 'desktop') {
+      setCoverImageFiles(uploadingFiles);
+    } else {
+      setCoverImageMobileFiles(uploadingFiles);
+    }
+    
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const uploadFormData = new FormData();
+        uploadFormData.append('image', file);
+        uploadFormData.append('type', type);
+
+        console.log('Uploading image to GCP...', { fileName: file.name, type, size: file.size });
+        
+        const response = await fetch('/api/upload-event-image', {
+          method: 'POST',
+          body: uploadFormData
+        });
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+          console.error('Upload failed:', error);
+          throw new Error(error.error || `Upload failed: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Upload successful:', { url: data.url, compressionRatio: data.compressionRatio });
+        urls.push(data.url);
+        
+        // Update the file state with the uploaded URL
+        if (type === 'desktop') {
+          setCoverImageFiles(prev => {
+            const updated = [...prev];
+            const fileIndex = updated.findIndex(f => f.file === file);
+            if (fileIndex !== -1) {
+              updated[fileIndex] = {
+                ...updated[fileIndex],
+                status: 'success',
+                progress: 100,
+                url: data.url
+              };
+            }
+            return updated;
+          });
+        } else {
+          setCoverImageMobileFiles(prev => {
+            const updated = [...prev];
+            const fileIndex = updated.findIndex(f => f.file === file);
+            if (fileIndex !== -1) {
+              updated[fileIndex] = {
+                ...updated[fileIndex],
+                status: 'success',
+                progress: 100,
+                url: data.url
+              };
+            }
+            return updated;
+          });
+        }
+      }
+    } catch (error) {
+      // Update files with error status
+      const errorMessage = error instanceof Error ? error.message : 'Upload failed';
+      
+      if (type === 'desktop') {
+        setCoverImageFiles(prev => prev.map(f => ({
+          ...f,
+          status: 'error' as const,
+          error: errorMessage
+        })));
+      } else {
+        setCoverImageMobileFiles(prev => prev.map(f => ({
+          ...f,
+          status: 'error' as const,
+          error: errorMessage
+        })));
+      }
+      
+      throw error;
+    }
+
+    return urls;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setError('');
+      setUploading(true);
+
+      // Get image URLs from uploaded files
+      // Note: Files are auto-uploaded by FileUploader component when selected
+      let coverImageUrl = formData.coverImage;
+      let coverImageMobileUrl = formData.coverImageMobile;
+
+      // Use URL from uploaded file if available
+      if (coverImageFiles.length > 0 && coverImageFiles[0].url) {
+        coverImageUrl = coverImageFiles[0].url;
+      }
+
+      if (coverImageMobileFiles.length > 0 && coverImageMobileFiles[0].url) {
+        coverImageMobileUrl = coverImageMobileFiles[0].url;
+      }
+
+      // Check if we have a cover image (either from form or uploaded)
+      if (!coverImageUrl && coverImageFiles.length === 0) {
+        throw new Error('Please upload a desktop cover image');
+      }
 
       const eventData = {
         title: formData.title,
@@ -168,7 +293,8 @@ export default function ManageEvents() {
         date: formData.date,
         time: formData.time,
         location: formData.location,
-        cover_image: formData.coverImage,
+        cover_image: coverImageUrl,
+        cover_image_mobile: coverImageMobileUrl || null,
         max_capacity: formData.maxCapacity,
         max_guests_per_rsvp: formData.maxGuestsPerRsvp,
         requires_admission_number: formData.requiresAdmissionNumber,
@@ -198,7 +324,9 @@ export default function ManageEvents() {
       await fetchEvents();
     } catch (error) {
       console.error('Error saving event:', error);
-      setError('Failed to save event');
+      setError(error instanceof Error ? error.message : 'Failed to save event');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -231,10 +359,13 @@ export default function ManageEvents() {
       time: '',
       location: '',
       coverImage: '',
+      coverImageMobile: '',
       maxCapacity: undefined,
       maxGuestsPerRsvp: 4,
       requiresAdmissionNumber: true
     });
+    setCoverImageFiles([]);
+    setCoverImageMobileFiles([]);
   };
 
   useEffect(() => {
@@ -282,7 +413,7 @@ export default function ManageEvents() {
             <div className="text-center mb-12">
               <div className="flex items-center justify-between gap-4 mb-8">
                 <Link
-                  to="/admin/dashboard"
+                  href="/admin/dashboard"
                   className="flex items-center gap-2 text-green hover:text-green-dark transition-colors"
                 >
                   <ArrowLeft className="h-5 w-5" />
@@ -399,10 +530,14 @@ export default function ManageEvents() {
                                 time: event.time,
                                 location: event.location,
                                 coverImage: event.cover_image,
+                                coverImageMobile: event.cover_image_mobile || '',
                                 maxCapacity: event.max_capacity,
                                 maxGuestsPerRsvp: event.max_guests_per_rsvp,
                                 requiresAdmissionNumber: event.requires_admission_number
                               });
+                              // Reset file uploads when editing
+                              setCoverImageFiles([]);
+                              setCoverImageMobileFiles([]);
                               setShowEventForm(true);
                             }}
                             className="p-2 text-neutral-dark/70 hover:text-green rounded-lg transition-colors"
@@ -529,15 +664,62 @@ export default function ManageEvents() {
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-neutral-dark mb-2">Cover Image URL</label>
-                      <input
-                        type="url"
-                        value={formData.coverImage}
-                        onChange={(e) => setFormData(prev => ({ ...prev, coverImage: e.target.value }))}
-                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                        required
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <FileUploader
+                          accept="image/jpeg,image/png,image/webp,image/gif,image/tiff"
+                          maxSize={10 * 1024 * 1024} // 10MB
+                          maxFiles={1}
+                          multiple={false}
+                          onUpload={(files) => uploadEventImage(files, 'desktop')}
+                          files={coverImageFiles}
+                          onRemove={() => setCoverImageFiles([])}
+                          disabled={uploading}
+                          label="Desktop Cover Image"
+                          description="Supported: JPEG, PNG, WebP, GIF, TIFF. Recommended: 1200 × 900 px (4:3 ratio), max 10MB"
+                        />
+                        {formData.coverImage && !coverImageFiles.length && (
+                          <div className="mt-2">
+                            <p className="text-xs text-neutral-dark/50 mb-1">Current image:</p>
+                            <a
+                              href={formData.coverImage}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-green hover:underline"
+                            >
+                              {formData.coverImage}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <FileUploader
+                          accept="image/jpeg,image/png,image/webp,image/gif,image/tiff"
+                          maxSize={10 * 1024 * 1024} // 10MB
+                          maxFiles={1}
+                          multiple={false}
+                          onUpload={(files) => uploadEventImage(files, 'mobile')}
+                          files={coverImageMobileFiles}
+                          onRemove={() => setCoverImageMobileFiles([])}
+                          disabled={uploading}
+                          label="Mobile Cover Image (Optional)"
+                          description="Supported: JPEG, PNG, WebP, GIF, TIFF. Recommended: 800 × 1200 px (2:3 ratio), max 10MB"
+                        />
+                        {formData.coverImageMobile && !coverImageMobileFiles.length && (
+                          <div className="mt-2">
+                            <p className="text-xs text-neutral-dark/50 mb-1">Current image:</p>
+                            <a
+                              href={formData.coverImageMobile}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-green hover:underline"
+                            >
+                              {formData.coverImageMobile}
+                            </a>
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -587,8 +769,9 @@ export default function ManageEvents() {
                         onClick={handleSubmit}
                         variant="edit"
                         className="px-6 py-2"
+                        disabled={uploading}
                       >
-                        {editingEvent ? 'Update Event' : 'Create Event'}
+                        {uploading ? 'Uploading...' : (editingEvent ? 'Update Event' : 'Create Event')}
                       </Button>
                     </div>
                   </form>

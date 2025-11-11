@@ -1,5 +1,7 @@
-import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+'use client';
+
+import React, { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { ALUMNI_ROUTES } from '../../config/routes';
 
@@ -15,7 +17,8 @@ export default function ProtectedRoute({
   requiredRole = null 
 }: ProtectedRouteProps) {
   const { user, userRole, loading } = useAuth();
-  const location = useLocation();
+  const pathname = usePathname();
+  const router = useRouter();
 
   if (loading) {
     return (
@@ -25,39 +28,43 @@ export default function ProtectedRoute({
     );
   }
 
-  // For auth pages (login/register), redirect to profile if already logged in
-  if (!requireAuth && user) {
-    // If we're on the login page and the user is an admin, don't auto-redirect
-    const isLoginPage = location.pathname.includes('/login');
-    if (isLoginPage && userRole === 'admin') {
-      console.log('Admin on login page - not auto-redirecting');
-      return <>{children}</>;
+  useEffect(() => {
+    // For auth pages (login/register), redirect to profile if already logged in
+    if (!requireAuth && user) {
+      const isLoginPage = pathname?.includes('/login');
+      if (isLoginPage && userRole === 'admin') {
+        console.log('Admin on login page - not auto-redirecting');
+        return;
+      }
+      
+      // Otherwise redirect based on role
+      if (userRole === 'admin') {
+        router.push('/admin/dashboard');
+        return;
+      }
+      router.push(ALUMNI_ROUTES.PROFILE);
+      return;
     }
-    
-    // Otherwise redirect based on role
-    if (userRole === 'admin') {
-      return <Navigate to="/admin/dashboard" replace />;
-    }
-    return <Navigate to={ALUMNI_ROUTES.PROFILE} replace />;
-  }
 
-  // For protected pages, redirect to login if not logged in
-  if (requireAuth && !user) {
-    return <Navigate to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
-  }
-
-  // If specific role is required, check if user has that role
-  if (requireAuth && requiredRole && userRole !== requiredRole) {
-    // If user is logged in but doesn't have the required role
-    if (userRole === 'admin') {
-      return <Navigate to="/admin/dashboard" replace />;
-    } else if (userRole === 'alumni') {
-      return <Navigate to={ALUMNI_ROUTES.PROFILE} replace />;
-    } else {
-      // If no valid role, log them out and send to login
-      return <Navigate to={ALUMNI_ROUTES.LOGIN} state={{ from: location }} replace />;
+    // For protected pages, redirect to login if not logged in
+    if (requireAuth && !user && !loading) {
+      router.push(`${ALUMNI_ROUTES.LOGIN}?redirect=${encodeURIComponent(pathname || '/')}`);
+      return;
     }
-  }
+
+    // If specific role is required, check if user has that role
+    if (requireAuth && requiredRole && userRole !== requiredRole && !loading) {
+      // If user is logged in but doesn't have the required role
+      if (userRole === 'admin') {
+        router.push('/admin/dashboard');
+      } else if (userRole === 'alumni') {
+        router.push(ALUMNI_ROUTES.PROFILE);
+      } else {
+        // If no valid role, send to login
+        router.push(`${ALUMNI_ROUTES.LOGIN}?redirect=${encodeURIComponent(pathname || '/')}`);
+      }
+    }
+  }, [user, userRole, loading, requireAuth, requiredRole, pathname, router]);
 
   return <>{children}</>;
 }

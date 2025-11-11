@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Next.js
+.next/
+out/
+build/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +27,37 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables
+.env
+.env*.local
+.env.local
+.env.production
+.env.development
+
+# Database backups and dumps
+backups/
+database-backups/
+**/database-backups/
+*.sql
+*.dump
+*.backup
+
+# Service account keys and credentials
+*-service-account.json
+credentials.json
+service-account-key.json
+gcp-key.json
+
+# Prisma
+/generated/prisma
+*.db
+*.db-journal
+
+# TypeScript
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Temporary files
+*.tmp
+*.temp

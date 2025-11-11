@@ -1,5 +1,7 @@
+'use client';
+
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import { seoConfig } from '../config/seoConfig';
 
 interface SEOProps {
@@ -12,7 +14,7 @@ interface SEOProps {
 }
 
 export function useSEO({ pageKey, ...customProps }: SEOProps) {
-  const location = useLocation();
+  const pathname = usePathname();
   
   // Get default config from seoConfig if pageKey is provided
   const defaultConfig = pageKey ? seoConfig[pageKey] : null;
@@ -21,7 +23,7 @@ export function useSEO({ pageKey, ...customProps }: SEOProps) {
   const {
     title = defaultConfig?.title ?? '',
     description = defaultConfig?.description ?? '',
-    url = defaultConfig?.url ?? `https://tsh.edu.in${location.pathname}`,
+    url = defaultConfig?.url ?? `https://tsh.edu.in${pathname || ''}`,
     image = defaultConfig?.image ?? '/og-image.jpg',
     schema = defaultConfig?.schema
   } = customProps;

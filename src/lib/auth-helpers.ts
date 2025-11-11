@@ -8,6 +8,8 @@
  * @returns {string[]} Array of keys that were removed
  */
 export const clearSupabaseStorage = (onlyAdminSessions = false): string[] => {
+  if (typeof window === 'undefined') return [];
+  
   const keysToRemove: string[] = [];
   
   for (let i = 0; i < localStorage.length; i++) {
@@ -48,6 +50,8 @@ export const clearSupabaseStorage = (onlyAdminSessions = false): string[] => {
  * @returns {boolean} True if sessions exist
  */
 export const hasSupabaseSessions = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key && (key.startsWith('sb-') || key.includes('supabase'))) {

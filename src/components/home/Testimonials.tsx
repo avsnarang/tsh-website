@@ -1,4 +1,7 @@
+'use client';
+
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
@@ -98,9 +101,11 @@ export default function Testimonials() {
               </blockquote>
               <div className="flex items-center">
                 {testimonials[currentIndex].profile_picture_url ? (
-                  <img
+                  <Image
                     src={testimonials[currentIndex].profile_picture_url}
                     alt={testimonials[currentIndex].author_name}
+                    width={80}
+                    height={80}
                     className="w-16 h-16 rounded-xl object-cover mr-4"
                   />
                 ) : (
