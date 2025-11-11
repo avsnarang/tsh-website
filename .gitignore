@@ -29,6 +29,7 @@ build/
 *.sw?
 
 # Environment variables
+.env
 .env*.local
 
 /generated/prisma
