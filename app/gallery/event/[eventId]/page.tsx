@@ -1,4 +1,4 @@
-import EventGallery from '@/pages/EventGallery';
+import EventGallery from '@/components/pages/EventGallery';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

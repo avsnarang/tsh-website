@@ -1,4 +1,4 @@
-import Campuses from '@/pages/Campuses';
+import Campuses from '@/components/pages/Campuses';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

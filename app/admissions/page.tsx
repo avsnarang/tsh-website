@@ -1,4 +1,4 @@
-import Admissions from '@/pages/Admissions';
+import Admissions from '@/components/pages/Admissions';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

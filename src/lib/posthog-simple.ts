@@ -40,8 +40,8 @@ export function initPostHogSimple() {
     // Development settings
     loaded: (ph) => {
       console.log('[PostHog] Loaded successfully');
-      console.log('[PostHog] Token:', ph.get_config('token'));
-      console.log('[PostHog] Host:', ph.get_config('api_host'));
+      console.log('[PostHog] Token:', ph.config.token);
+      console.log('[PostHog] Host:', ph.config.api_host);
       console.log('[PostHog] Opted out?:', ph.has_opted_out_capturing());
 
       // Make globally available

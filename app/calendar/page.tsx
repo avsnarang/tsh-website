@@ -1,4 +1,4 @@
-import Calendar from '@/pages/Calendar';
+import Calendar from '@/components/pages/Calendar';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import PrePrimary from '@/pages/academics/PrePrimary';
+import PrePrimary from '@/components/pages/academics/PrePrimary';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

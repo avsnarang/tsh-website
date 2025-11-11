@@ -1,4 +1,4 @@
-import VisualArts from '@/pages/co-curricular/VisualArts';
+import VisualArts from '@/components/pages/co-curricular/VisualArts';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

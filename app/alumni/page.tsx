@@ -1,4 +1,4 @@
-import AlumniNetwork from '@/pages/alumni/AlumniNetwork';
+import AlumniNetwork from '@/components/pages/alumni/AlumniNetwork';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

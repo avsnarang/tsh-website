@@ -1,4 +1,4 @@
-import CoCurricular from '@/pages/CoCurricular';
+import CoCurricular from '@/components/pages/CoCurricular';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

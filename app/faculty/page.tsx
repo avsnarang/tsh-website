@@ -1,4 +1,4 @@
-import Faculty from '@/pages/Faculty';
+import Faculty from '@/components/pages/Faculty';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

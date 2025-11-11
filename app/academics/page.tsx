@@ -1,4 +1,4 @@
-import Academics from '@/pages/Academics';
+import Academics from '@/components/pages/Academics';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

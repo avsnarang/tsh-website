@@ -1,4 +1,4 @@
-import SportsAthletics from '@/pages/co-curricular/SportsAthletics';
+import SportsAthletics from '@/components/pages/co-curricular/SportsAthletics';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

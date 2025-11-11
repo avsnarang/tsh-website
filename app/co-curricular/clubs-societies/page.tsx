@@ -1,4 +1,4 @@
-import ClubsSocieties from '@/pages/co-curricular/ClubsSocieties';
+import ClubsSocieties from '@/components/pages/co-curricular/ClubsSocieties';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

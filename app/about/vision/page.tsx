@@ -1,4 +1,4 @@
-import Vision from '@/pages/about/Vision';
+import Vision from '@/components/pages/about/Vision';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

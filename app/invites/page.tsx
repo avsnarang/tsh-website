@@ -1,4 +1,4 @@
-import Invites from '@/pages/Invites';
+import Invites from '@/components/pages/Invites';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

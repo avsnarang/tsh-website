@@ -1,4 +1,4 @@
-import PerformingArts from '@/pages/co-curricular/PerformingArts';
+import PerformingArts from '@/components/pages/co-curricular/PerformingArts';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

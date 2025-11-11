@@ -1,4 +1,4 @@
-import Middle from '@/pages/academics/Middle';
+import Middle from '@/components/pages/academics/Middle';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

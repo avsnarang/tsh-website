@@ -130,3 +130,34 @@ export const trackSearch = (query: string, resultsCount: number) => {
     non_interaction: false
   });
 };
+
+// Generic button click tracking - supports both object and individual parameters
+export const trackButtonClick = (
+  buttonNameOrProps: string | Record<string, any>,
+  location?: string,
+  additionalProps?: Record<string, any>
+) => {
+  if (!isInitialized) return;
+
+  // Support both calling styles: object parameter or individual parameters
+  if (typeof buttonNameOrProps === 'object') {
+    trackEvent('button_click', {
+      button_name: buttonNameOrProps.buttonName,
+      button_id: buttonNameOrProps.buttonId,
+      page: buttonNameOrProps.page,
+      section: buttonNameOrProps.section,
+      button_type: buttonNameOrProps.buttonType,
+      action: buttonNameOrProps.action,
+      destination: buttonNameOrProps.destination,
+      ...buttonNameOrProps.metadata,
+      non_interaction: false
+    });
+  } else {
+    trackEvent('button_click', {
+      button_name: buttonNameOrProps,
+      page_location: location,
+      ...additionalProps,
+      non_interaction: false
+    });
+  }
+};

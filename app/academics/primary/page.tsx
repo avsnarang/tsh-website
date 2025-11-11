@@ -1,4 +1,4 @@
-import Primary from '@/pages/academics/Primary';
+import Primary from '@/components/pages/academics/Primary';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

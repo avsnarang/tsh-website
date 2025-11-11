@@ -1,4 +1,4 @@
-import YouTubeGallery from '@/pages/YouTubeGallery';
+import YouTubeGallery from '@/components/pages/YouTubeGallery';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

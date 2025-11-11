@@ -1,4 +1,4 @@
-import Scholarship from '@/pages/Scholarship';
+import Scholarship from '@/components/pages/Scholarship';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

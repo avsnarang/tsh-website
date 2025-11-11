@@ -1,4 +1,4 @@
-import Messages from '@/pages/about/Messages';
+import Messages from '@/components/pages/about/Messages';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import AlumniRegister from '@/pages/alumni/AlumniRegister';
+import AlumniRegister from '@/components/pages/alumni/AlumniRegister';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import SeniorSecondary from '@/pages/academics/SeniorSecondary';
+import SeniorSecondary from '@/components/pages/academics/SeniorSecondary';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
