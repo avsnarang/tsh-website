@@ -42,6 +42,7 @@ export default function Invites() {
           location,
           description,
           cover_image,
+          cover_image_mobile,
           max_capacity,
           max_guests_per_rsvp,
           requires_admission_number,
@@ -110,7 +111,7 @@ export default function Invites() {
             location: event.location,
             description: event.description,
             coverImage: event.cover_image,
-            coverImageMobile: event.cover_image, // Use cover_image as fallback until cover_image_mobile is added
+            coverImageMobile: event.cover_image_mobile || event.cover_image, // Use mobile image if available, otherwise fallback to desktop
             maxCapacity: event.max_capacity,
             maxGuestsPerRsvp: event.max_guests_per_rsvp,
             requiresAdmissionNumber: true,
@@ -251,7 +252,7 @@ export default function Invites() {
   };
 
   return (
-    <div className="min-h-screen md:h-screen overflow-hidden">
+    <div className="md:h-screen overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
@@ -266,7 +267,7 @@ export default function Invites() {
       </div>
 
       {/* Main Content */}
-      <div className="relative min-h-screen md:h-full flex flex-col md:flex-row">
+      <div className="relative md:h-full flex flex-col md:flex-row">
         {/* Left Column - Top on mobile, fixed sidebar on desktop */}
         <div className="w-full md:w-[30%] md:h-screen md:fixed md:left-0 md:top-0 flex items-center justify-center px-4 md:px-8 pt-32 md:pt-32 pb-4 md:pb-0 overflow-y-auto md:overflow-y-visible">
           <div className="max-w-md w-full">
@@ -352,20 +353,20 @@ export default function Invites() {
         </div>
 
         {/* Right Column - Full Screen Carousel */}
-        <div className="w-full md:w-[70%] md:ml-[30%] min-h-screen md:h-screen bg-transparent relative">
+        <div className="w-full md:w-[70%] md:ml-[30%] md:h-screen bg-transparent relative overflow-hidden">
               {loading ? (
-            <div className="flex items-center justify-center h-screen md:h-full">
+            <div className="flex items-center justify-center min-h-[400px] md:h-full">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green"></div>
             </div>
               ) : events.length === 0 ? (
-            <div className="flex items-center justify-center h-screen md:h-full">
+            <div className="flex items-center justify-center min-h-[400px] md:h-full">
               <div className="text-center text-neutral-dark/60">
                   <Star className="h-12 w-12 mx-auto mb-4 text-orange-light" />
                   <p className="text-lg">No upcoming events at this time.</p>
               </div>
                 </div>
               ) : (
-            <div className="absolute inset-0 pt-24 md:pt-48 pb-8 md:pb-20 px-4 md:px-8 flex items-center gap-2 md:gap-4">
+            <div className="h-full md:absolute md:inset-0 pt-4 pb-4 md:pt-48 md:pb-20 px-4 md:px-8 flex flex-col md:flex-row items-center md:items-center gap-3 md:gap-4">
               {/* Left Navigation Button - Hidden on mobile */}
               {events.length > 1 && (
                 <button
@@ -378,7 +379,7 @@ export default function Invites() {
               )}
 
               {/* Full Screen Card Container with Swipe Support */}
-              <div className="flex-1 h-full relative touch-pan-y">
+              <div className="flex-1 min-h-0 md:h-full relative touch-pan-y flex items-center justify-center w-full">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div
                     key={currentIndex}
@@ -402,7 +403,7 @@ export default function Invites() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -300 }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
-                    className="h-full w-full"
+                    className="w-full h-full"
                   >
                     <InviteCard
                       invite={events[currentIndex]}
@@ -411,25 +412,25 @@ export default function Invites() {
                     />
                   </motion.div>
                 </AnimatePresence>
-
-                {/* Card Indicator */}
-                {events.length > 1 && (
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-                    {events.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentIndex(index)}
-                        className={`h-2 rounded-full transition-all duration-300 ${
-                          index === currentIndex
-                            ? 'w-8 bg-green'
-                            : 'w-2 bg-white/50 hover:bg-white/70'
-                        }`}
-                        aria-label={`Go to event ${index + 1}`}
-                      />
-                    ))}
-                  </div>
-                )}
               </div>
+
+              {/* Card Indicator - Last element below card on mobile */}
+              {events.length > 1 && (
+                <div className="w-full md:absolute md:bottom-4 md:left-1/2 md:-translate-x-1/2 z-20 flex gap-2 justify-center md:w-auto">
+                  {events.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentIndex(index)}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        index === currentIndex
+                          ? 'w-8 bg-green'
+                          : 'w-2 bg-white/50 hover:bg-white/70'
+                      }`}
+                      aria-label={`Go to event ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
 
               {/* Right Navigation Button - Hidden on mobile */}
               {events.length > 1 && (

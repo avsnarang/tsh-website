@@ -19,47 +19,53 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
   const imageSrc = getImageSrc();
 
   if (isFullScreen) {
+    // Determine if we should use auto height on mobile (when mobile image exists)
+    const useMobileImageHeight = invite.coverImageMobile;
+
     return (
-      <div className="group relative h-full w-full overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-500">
-        <div className="absolute inset-0">
+      <div className={`group relative ${useMobileImageHeight ? 'h-auto md:h-full' : 'h-full'} w-full overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-500`}>
+        {/* Image container - relative when mobile image exists, absolute otherwise */}
+        <div className={`${useMobileImageHeight ? 'relative md:absolute md:inset-0' : 'absolute inset-0'}`}>
           {imageSrc ? (
             <>
-              {/* Desktop image */}
+              {/* Desktop image - always full height */}
               <img
                 src={invite.coverImage}
                 alt={invite.title}
                 className="hidden md:block h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
                 decoding="async"
+                draggable={false}
               />
-              {/* Mobile image */}
-              {invite.coverImageMobile && (
+              {/* Mobile image - natural height with aspect ratio */}
+              {invite.coverImageMobile ? (
                 <img
                   src={invite.coverImageMobile}
                   alt={invite.title}
-                  className="block md:hidden h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="block md:hidden w-full h-auto transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
                   decoding="async"
+                  draggable={false}
                 />
-              )}
-              {/* Fallback if no mobile image is provided */}
-              {!invite.coverImageMobile && (
+              ) : (
+                /* Fallback: stretch desktop image to fill container on mobile */
                 <img
                   src={invite.coverImage}
                   alt={invite.title}
-                  className="block md:hidden h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="block md:hidden w-full h-full min-h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
                   decoding="async"
+                  draggable={false}
                 />
               )}
             </>
           ) : (
             <div className="h-full w-full bg-gradient-to-br from-green-light/20 to-orange-light/20" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
+        <div className="absolute inset-x-0 bottom-0 p-8 md:p-12 pointer-events-auto">
           <div className="space-y-6 max-w-3xl">
             <div>
               <h3 className="text-3xl md:text-4xl font-display text-white mb-4 line-clamp-2">{invite.title}</h3>
@@ -121,6 +127,7 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
               decoding="async"
               width="400"
               height="500"
+              draggable={false}
             />
             {/* Mobile image */}
             {invite.coverImageMobile && (
@@ -132,6 +139,7 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
                 decoding="async"
                 width="400"
                 height="500"
+                draggable={false}
               />
             )}
             {/* Fallback if no mobile image is provided */}
@@ -144,6 +152,7 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
                 decoding="async"
                 width="400"
                 height="500"
+                draggable={false}
               />
             )}
           </>
