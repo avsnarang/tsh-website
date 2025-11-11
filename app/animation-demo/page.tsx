@@ -189,11 +189,8 @@ export default function AnimationDemoPage() {
                   mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{
-                  top: photo.position.top,
-                  bottom: photo.position.bottom,
-                  left: photo.position.left,
-                  right: photo.position.right,
-                  transform: photo.position.transform || 'none',
+                  ...photo.position,
+                  ...(!('transform' in photo.position) && { transform: 'none' }),
                   transitionDelay: `${photo.delay}s`,
                   animationName: mounted ? `float-${idx % 4}-${photo.rotation}` : 'none',
                   animationDuration: `${6 + (idx % 3)}s`,
