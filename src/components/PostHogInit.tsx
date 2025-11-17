@@ -9,9 +9,7 @@ export function PostHogInit() {
     // Only initialize if we have the key
     const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
     if (!posthogKey) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('[PostHog] NEXT_PUBLIC_POSTHOG_KEY is not set. Analytics will not be initialized.');
-      }
+      console.warn('[PostHog] NEXT_PUBLIC_POSTHOG_KEY is not set. Analytics will not be initialized.');
       return;
     }
 
@@ -19,8 +17,11 @@ export function PostHogInit() {
     import('posthog-js').then(({ default: posthog }) => {
       // Check if already initialized
       if (posthog.__loaded) {
+        console.log('[PostHog] Already initialized');
         return;
       }
+
+      console.log('[PostHog] Initializing...');
 
       // Initialize PostHog
       posthog.init(posthogKey, {
@@ -31,15 +32,27 @@ export function PostHogInit() {
         autocapture: true,
         disable_session_recording: true,
         disable_surveys: true,
-        debug: process.env.NODE_ENV === 'development',
+        debug: true, // Enable debug in production to troubleshoot
         loaded: (ph) => {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('[PostHog] Initialized successfully');
+          console.log('[PostHog] ✅ Initialized successfully');
+          console.log('[PostHog] API Host:', ph.config.api_host);
+          console.log('[PostHog] Token:', ph.config.token?.substring(0, 10) + '...');
+          
+          // Make PostHog globally available for debugging
+          if (typeof window !== 'undefined') {
+            (window as any).posthog = ph;
+            console.log('[PostHog] Available globally as window.posthog');
           }
+
+          // Test capture to verify it's working
+          ph.capture('$pageview', {
+            $current_url: window.location.href,
+          });
+          console.log('[PostHog] Test pageview event sent');
         },
       });
     }).catch((error) => {
-      console.error('[PostHog] Failed to load posthog-js:', error);
+      console.error('[PostHog] ❌ Failed to load posthog-js:', error);
     });
   }, [])
 
