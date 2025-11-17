@@ -1,5 +1,5 @@
 {
-  "buildCommand": "next build",
+  "buildCommand": "next build --webpack",
   "env": {
     "NEXT_PRIVATE_SKIP_TURBO": "1"
   },

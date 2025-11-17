@@ -25,6 +25,9 @@ const nextConfig: NextConfig = {
     return config;
   },
 
+  // Add empty turbopack config to silence the error when using webpack
+  turbopack: {},
+
   // Rewrites required to proxy PostHog ingestion only
   // Static assets are loaded directly from PostHog CDN to avoid SSL proxy issues
   async rewrites() {
