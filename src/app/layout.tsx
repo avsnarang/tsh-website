@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Montserrat, Lilita_One, Homemade_Apple, Caveat_Brush } from 'next/font/google';
 import '../styles/index.css';
-import '../styles/globals.css';
 import '../styles/calendar.css';
 import { Providers } from './providers';
 import { SpeedInsights } from "@vercel/speed-insights/next";

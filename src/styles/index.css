@@ -224,11 +224,19 @@
 @layer base {
   * {
     border-color: hsl(var(--border));
-    /* or alternatively */
-    border-color: hsl(var(--border));
   }
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+  }
+}
+
+/* Wave animation from globals.css */
+@keyframes wave {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 1000px 0;
   }
 }
