@@ -10,7 +10,6 @@ import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import posthog from 'posthog-js';
 
 export default function AlumniRegister() {
   const [fullName, setFullName] = useState('');
@@ -65,20 +64,6 @@ export default function AlumniRegister() {
       // Attempt registration
       await signUp(email, password, profileData);
 
-      // Identify user and track registration
-      posthog.identify(email, {
-        email: email,
-        full_name: fullName,
-        batch_year: year,
-        occupation: occupation,
-        current_location: currentLocation
-      });
-
-      posthog.capture('alumni_registered', {
-        batch_year: year,
-        occupation: occupation,
-        current_location: currentLocation
-      });
 
       // Redirect to profile page on success
       router.push(`${ALUMNI_ROUTES.PROFILE}?registered=true`);

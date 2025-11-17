@@ -3,7 +3,6 @@ import { supabase } from '../lib/supabase';
 import { queryClient } from '../lib/queryClient';
 import type { Profile } from '../types/alumni';
 import type { User } from '@supabase/supabase-js';
-import posthog from 'posthog-js';
 
 export function useProfileActions(user: User | null, profile: Profile | undefined) {
   const [saving, setSaving] = useState(false);
@@ -41,12 +40,6 @@ export function useProfileActions(user: User | null, profile: Profile | undefine
 
       if (updateError) throw updateError;
 
-      // Track profile update
-      posthog.capture('alumni_profile_updated', {
-        full_name: profile.full_name,
-        batch_year: profile.batch_year,
-        occupation: profile.occupation
-      });
 
       setSuccess('Profile updated successfully');
     } catch (err) {
@@ -87,11 +80,6 @@ export function useProfileActions(user: User | null, profile: Profile | undefine
         profile_picture_url: publicUrl
       });
 
-      // Track profile picture upload
-      posthog.capture('alumni_profile_picture_uploaded', {
-        file_size: file.size,
-        file_type: file.type
-      });
 
       setSuccess('Profile picture updated successfully');
     } catch (err) {
