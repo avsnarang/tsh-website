@@ -35,8 +35,8 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
         api_host: '/tsh-2024-data',
         ui_host: posthogHost,
         person_profiles: 'identified_only',
-        capture_pageview: false, // We'll handle pageviews manually for Next.js
-        capture_pageleave: true,
+        capture_pageview: true, // Enable automatic pageview for web analytics
+        capture_pageleave: true, // Enable pageleave for web analytics
         debug: process.env.NODE_ENV === 'development',
         loaded: (ph) => {
           console.log('[PostHog] ✅ Initialized successfully')
