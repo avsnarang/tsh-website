@@ -230,13 +230,3 @@
     color: hsl(var(--foreground));
   }
 }
-
-/* Wave animation from globals.css */
-@keyframes wave {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 1000px 0;
-  }
-}

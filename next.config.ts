@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import type { Configuration } from 'webpack';
 
 const nextConfig: NextConfig = {
   images: {
@@ -18,6 +19,11 @@ const nextConfig: NextConfig = {
     ],
   },
   transpilePackages: ['react-icons'],
+
+  // Force webpack usage instead of Turbopack
+  webpack: (config: Configuration, { isServer }) => {
+    return config;
+  },
 
   // Rewrites required to proxy PostHog ingestion only
   // Static assets are loaded directly from PostHog CDN to avoid SSL proxy issues
