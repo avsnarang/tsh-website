@@ -41,7 +41,11 @@ function PostHogPageViewInner() {
         
         // Force immediate send in development
         if (process.env.NODE_ENV === 'development') {
-          posthog.flush()
+          setTimeout(() => {
+            if (typeof (posthog as any).flush === 'function') {
+              (posthog as any).flush()
+            }
+          }, 100)
           console.log('[PostHog] Pageview tracked:', url)
           console.log('[PostHog] Flushed events. Check Network tab for /tsh-2024-data/ requests.')
         }
