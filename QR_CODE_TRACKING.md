@@ -5,7 +5,7 @@
 Use this link for your billboard QR code:
 
 ```
-https://tsh.edu.in/admissions?utm_source=billboard&utm_medium=qr_code&utm_campaign=admissions_2025&utm_content=billboard_qr
+https://tsh.edu.in/admissions?utm_source=billboard&utm_medium=qr_code&utm_campaign=admissions_2026&utm_content=billboard_qr
 ```
 
 ### Customizable Parameters
@@ -14,12 +14,12 @@ You can customize the UTM parameters for different billboards or campaigns:
 
 - `utm_source=billboard` - Identifies the source as a billboard (required for tracking)
 - `utm_medium=qr_code` - Identifies the medium as QR code (required for tracking)
-- `utm_campaign=admissions_2025` - Campaign name (customize per campaign)
+- `utm_campaign=admissions_2026` - Campaign name (customize per campaign)
 - `utm_content=billboard_qr` - Content identifier (customize per billboard location)
 
 **Example for different billboard locations:**
-- Location A: `...&utm_campaign=admissions_2025&utm_content=location_a`
-- Location B: `...&utm_campaign=admissions_2025&utm_content=location_b`
+- Location A: `...&utm_campaign=admissions_2026&utm_content=location_a`
+- Location B: `...&utm_campaign=admissions_2026&utm_content=location_b`
 
 ## PostHog Events Tracked
 
