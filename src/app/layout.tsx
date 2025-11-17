@@ -8,9 +8,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import MetaPixel from '@/components/analytics/MetaPixel';
 import UTMTracker from '@/components/analytics/UTMTracker';
-import { PostHogProvider } from '@/components/PostHogProvider';
-import { PostHogPageView } from '@/components/PostHogPageView';
-import { Suspense } from 'react';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -99,14 +96,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.variable} ${lilitaOne.variable} ${homemadeApple.variable} ${caveatBrush.variable}`} suppressHydrationWarning>
       <body className="font-body">
-        <PostHogProvider>
-          <Suspense fallback={null}>
-            <PostHogPageView />
-          </Suspense>
-          <Providers>
-            {children}
-          </Providers>
-        </PostHogProvider>
+        <Providers>
+          {children}
+        </Providers>
         <SpeedInsights />
         <Analytics />
         <UTMTracker />
