@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Client } from '@notionhq/client';
 import { createAdminSupabaseClient } from '@/lib/supabase-server';
-import PostHogClient from '@/lib/posthog';
 
 interface SportsInterestData {
   sportName: string;
@@ -75,19 +74,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('API Error:', error);
-
-    // Track API error with server-side PostHog
-    const posthog = PostHogClient();
-    posthog.capture({
-      distinctId: 'server',
-      event: 'api_error_occurred',
-      properties: {
-        api_endpoint: '/api/submit-sports-interest',
-        error_message: error instanceof Error ? error.message : 'Unknown error',
-        error_type: error instanceof Error ? error.name : typeof error
-      }
-    });
-    await posthog.shutdown();
 
     return NextResponse.json(
       {

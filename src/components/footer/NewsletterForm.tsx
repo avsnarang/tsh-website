@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import posthog from 'posthog-js';
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState('');
@@ -8,10 +7,6 @@ export default function NewsletterForm() {
     e.preventDefault();
 
     // Handle newsletter signup
-    posthog.capture('newsletter_subscribed', {
-      email: email,
-      location: 'footer'
-    });
 
     setEmail('');
   };

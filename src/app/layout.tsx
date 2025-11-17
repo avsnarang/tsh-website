@@ -6,8 +6,6 @@ import { Providers } from './providers';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import MetaPixel from '@/components/analytics/MetaPixel';
-import UTMTracker from '@/components/analytics/UTMTracker';
-import { PostHogInit } from '@/components/PostHogInit';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -96,13 +94,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.variable} ${lilitaOne.variable} ${homemadeApple.variable} ${caveatBrush.variable}`} suppressHydrationWarning>
       <body className="font-body">
-        <PostHogInit />
         <Providers>
           {children}
         </Providers>
         <SpeedInsights />
         <Analytics />
-        <UTMTracker />
         {process.env.NEXT_PUBLIC_META_PIXEL_ID && (
           <MetaPixel pixelId={process.env.NEXT_PUBLIC_META_PIXEL_ID} />
         )}
