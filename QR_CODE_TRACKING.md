@@ -85,11 +85,11 @@ Filter: is_qr_code_visit = true
 
 ## How It Works
 
-1. **UTM Parameter Capture**: When a user scans the QR code, UTM parameters are captured from the URL
-2. **Local Storage**: UTM parameters are stored in localStorage for 30 days for attribution
-3. **Page View Tracking**: On page load, the system detects QR code visits and tracks them
-4. **Button Click Attribution**: When users click "Apply Now", the system includes UTM parameters to attribute the click to the QR code source
-5. **Conversion Tracking**: Special conversion events are fired for QR code visitors who click "Apply Now"
+1. **UTM Parameter Capture**: PostHog automatically captures UTM parameters from the URL and includes them in all events
+2. **QR Code Visit Detection**: When a user scans the QR code, the system detects `utm_source=billboard` and `utm_medium=qr_code` and fires a `qr_code_billboard_visit` event
+3. **Page View Tracking**: All page views are automatically tracked by PostHog with UTM parameters included
+4. **Button Click Attribution**: When users click "Apply Now", the system captures the event with UTM parameters to attribute the click to the QR code source
+5. **Conversion Tracking**: Special `qr_code_billboard_conversion` events are fired for QR code visitors who click "Apply Now"
 
 ## Testing
 

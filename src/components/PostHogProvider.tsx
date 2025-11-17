@@ -37,6 +37,8 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
         person_profiles: 'identified_only',
         capture_pageview: true, // Enable automatic pageview for web analytics
         capture_pageleave: true, // Enable pageleave for web analytics
+        // PostHog automatically captures UTM parameters from URL
+        // They will be available in event properties as $utm_source, $utm_medium, etc.
         // Important: For web analytics to work, the website URL in PostHog must match
         // Go to PostHog Settings → Website URL and add your domain
         // For localhost testing, add: http://localhost:3001

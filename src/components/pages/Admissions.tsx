@@ -7,6 +7,8 @@ import { Users, BookOpen, Building2, ArrowRight, CheckCircle2, Calendar } from '
 import Container from '@/components/ui/Container';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
+import { usePostHog } from 'posthog-js/react';
+import { useSearchParams } from 'next/navigation';
 
 interface Campus {
   name: string;
@@ -85,6 +87,37 @@ const ADMISSION_STEPS = [
 ];
 
 export default function Admissions() {
+  const searchParams = useSearchParams();
+  const posthog = usePostHog();
+
+  // Track QR code billboard visits
+  useEffect(() => {
+    if (!posthog || !searchParams) return;
+
+    const utmSource = searchParams.get('utm_source');
+    const utmMedium = searchParams.get('utm_medium');
+    const utmCampaign = searchParams.get('utm_campaign');
+    const utmContent = searchParams.get('utm_content');
+
+    // Check if this is a QR code billboard visit
+    const isQRCodeVisit = utmSource === 'billboard' && utmMedium === 'qr_code';
+
+    if (isQRCodeVisit) {
+      // Track QR code billboard visit
+      posthog.capture('qr_code_billboard_visit', {
+        utm_source: utmSource,
+        utm_medium: utmMedium,
+        utm_campaign: utmCampaign,
+        utm_content: utmContent,
+        page: 'admissions',
+        timestamp: new Date().toISOString(),
+      });
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[PostHog] QR code billboard visit tracked:', { utmCampaign, utmContent });
+      }
+    }
+  }, [posthog, searchParams]);
 
   return (
     <>
@@ -182,6 +215,45 @@ export default function Admissions() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center justify-center gap-2 w-full bg-green text-white py-3 rounded-xl hover:bg-green-dark transition-colors"
                         whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          if (!posthog) return;
+                          
+                          const utmSource = searchParams?.get('utm_source');
+                          const utmMedium = searchParams?.get('utm_medium');
+                          const utmCampaign = searchParams?.get('utm_campaign');
+                          const utmContent = searchParams?.get('utm_content');
+                          const isQRCodeVisit = utmSource === 'billboard' && utmMedium === 'qr_code';
+
+                          // Track Apply Now button click
+                          posthog.capture('admission_cta_clicked', {
+                            campus_name: campus.name,
+                            campus_location: campus.location,
+                            registration_link: campus.registrationLink,
+                            button_location: 'campus_card',
+                            page: 'admissions',
+                            utm_source: utmSource,
+                            utm_medium: utmMedium,
+                            utm_campaign: utmCampaign,
+                            utm_content: utmContent,
+                            is_qr_code_visit: isQRCodeVisit,
+                            click_timestamp: new Date().toISOString(),
+                          });
+
+                          // Track QR code conversion if applicable
+                          if (isQRCodeVisit) {
+                            posthog.capture('qr_code_billboard_conversion', {
+                              event_type: 'apply_button_clicked',
+                              campus_name: campus.name,
+                              utm_campaign: utmCampaign,
+                              utm_content: utmContent,
+                              conversion_timestamp: new Date().toISOString(),
+                            });
+
+                            if (process.env.NODE_ENV === 'development') {
+                              console.log('[PostHog] QR code billboard conversion tracked:', { campus: campus.name, utmCampaign });
+                            }
+                          }
+                        }}
                       >
                         Apply Now
                         <ArrowRight className="h-5 w-5" />
