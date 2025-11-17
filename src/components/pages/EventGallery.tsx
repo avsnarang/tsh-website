@@ -8,6 +8,7 @@ import Container from '@/components/ui/Container';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import Masonry from 'react-masonry-css';
+import posthog from 'posthog-js';
 
 interface GalleryImage {
   id: string;
@@ -112,6 +113,15 @@ export default function EventGallery() {
       };
 
       setEvent(completeEventData);
+
+      // Capture event view
+      posthog.capture('gallery_event_viewed', {
+        event_id: id,
+        event_title: eventData.title,
+        event_campus: eventData.campus,
+        event_date: eventData.date,
+        image_count: imagesData?.length || 0,
+      });
     } catch (err) {
       console.error('Error fetching event:', err);
       setError('Failed to load event details');

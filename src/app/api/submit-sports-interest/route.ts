@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Client } from '@notionhq/client';
 import { createAdminSupabaseClient } from '@/lib/supabase-server';
+import { getPostHogClient } from '@/lib/posthog-server';
 
 interface SportsInterestData {
   sportName: string;
@@ -16,6 +17,8 @@ const notion = new Client({
 });
 
 export async function POST(request: NextRequest) {
+  const posthog = getPostHogClient();
+
   try {
     const data: SportsInterestData = await request.json();
     const supabase = createAdminSupabaseClient();
@@ -28,6 +31,17 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (studentError || !student) {
+      posthog.capture({
+        distinctId: data.admissionNumber,
+        event: 'api_error_occurred',
+        properties: {
+          error_type: 'student_not_found',
+          admission_number: data.admissionNumber,
+          sport_name: data.sportName,
+        },
+      });
+      await posthog.shutdown();
+
       return NextResponse.json(
         {
           success: false,
@@ -67,6 +81,19 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    // Capture successful sports interest submission
+    posthog.capture({
+      distinctId: data.admissionNumber,
+      event: 'sports_interest_submitted',
+      properties: {
+        sport_name: data.sportName,
+        sport_id: data.sportId,
+        student_class: data.class,
+        has_consent: data.hasConsent,
+      },
+    });
+    await posthog.shutdown();
+
     return NextResponse.json({
       success: true,
       message: 'Successfully submitted',
@@ -74,6 +101,17 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('API Error:', error);
+
+    // Capture API error
+    posthog.capture({
+      distinctId: 'unknown',
+      event: 'api_error_occurred',
+      properties: {
+        error_type: 'submission_failed',
+        error_message: error instanceof Error ? error.message : 'Unknown error',
+      },
+    });
+    await posthog.shutdown();
 
     return NextResponse.json(
       {

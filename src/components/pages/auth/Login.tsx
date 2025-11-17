@@ -11,6 +11,7 @@ import { supabase } from '@/lib/supabase';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
 import { motion } from 'framer-motion';
+import posthog from 'posthog-js';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -199,6 +200,15 @@ export default function Login() {
         timeoutRef.current = null;
       }
 
+      // Identify user and capture successful login
+      posthog.identify(email, {
+        email,
+      });
+
+      posthog.capture('alumni_logged_in', {
+        email,
+      });
+
     } catch (err: any) {
       console.error('Login error:', err);
       sessionStorage.removeItem('login_in_progress');
@@ -207,6 +217,12 @@ export default function Login() {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
       }
+
+      // Capture failed login event
+      posthog.capture('alumni_login_failed', {
+        email,
+        error_message: err.message,
+      });
 
       if (err.message?.includes('Invalid login credentials')) {
         setError('Invalid email or password. Please try again.');

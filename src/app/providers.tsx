@@ -6,6 +6,8 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { AlumniAuthProvider } from '@/contexts/AlumniAuthContext';
 import { MessagesProvider } from '@/contexts/MessagesContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { PHProvider } from '@/components/PostHogProvider';
+import { PostHogPageView } from '@/components/PostHogPageView';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -19,15 +21,18 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <AlumniAuthProvider>
-            <MessagesProvider>
-              {children}
-            </MessagesProvider>
-          </AlumniAuthProvider>
-        </AuthProvider>
-      </QueryClientProvider>
+      <PHProvider>
+        <PostHogPageView />
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <AlumniAuthProvider>
+              <MessagesProvider>
+                {children}
+              </MessagesProvider>
+            </AlumniAuthProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </PHProvider>
     </ErrorBoundary>
   );
 }

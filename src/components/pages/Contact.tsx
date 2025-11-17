@@ -5,6 +5,7 @@ import { MapPin, Phone, Mail, Clock, Send, Users, Star, Award, ArrowRight } from
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
 import Button from '@/components/ui/Button';
+import posthog from 'posthog-js';
 
 const contactInfo = [
   {
@@ -92,12 +93,17 @@ export default function Contact() {
                 </TextReveal>
                 <form className="space-y-6" onSubmit={(e) => {
                   e.preventDefault();
+                  const formData = new FormData(e.currentTarget);
+                  posthog.capture('contact_form_submitted', {
+                    subject: formData.get('subject'),
+                  });
                 }}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="block text-neutral-dark font-medium">Name</label>
                       <input
                         type="text"
+                        name="name"
                         className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                         placeholder="Your name"
                       />
@@ -106,6 +112,7 @@ export default function Contact() {
                       <label className="block text-neutral-dark font-medium">Email</label>
                       <input
                         type="email"
+                        name="email"
                         className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                         placeholder="Your email"
                       />
@@ -115,6 +122,7 @@ export default function Contact() {
                     <label className="block text-neutral-dark font-medium">Subject</label>
                     <input
                       type="text"
+                      name="subject"
                       className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                       placeholder="Subject"
                     />

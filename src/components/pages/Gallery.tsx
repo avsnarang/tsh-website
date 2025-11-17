@@ -10,6 +10,7 @@ import ScrollReveal from '@/components/animations/ScrollReveal';
 import { motion } from 'framer-motion';
 import GalleryCardSkeleton from '@/components/gallery/GalleryCardSkeleton';
 import NotionDropdown from '@/components/ui/NotionDropdown';
+import posthog from 'posthog-js';
 
 interface GalleryImage {
   id: string;
@@ -43,6 +44,16 @@ export default function Gallery() {
   const router = useRouter();
 
   const handleEventClick = (eventId: string) => {
+    const event = events.find(e => e.id === eventId);
+    posthog.capture('gallery_event_clicked', {
+      event_id: eventId,
+      event_title: event?.title,
+      from_filters: {
+        year: selectedYear,
+        campus: selectedCampus,
+        search_query: searchQuery,
+      },
+    });
     router.push(`/gallery/event/${eventId}`);
   };
 
@@ -212,7 +223,14 @@ export default function Gallery() {
                     <div className="relative z-[30] flex justify-center">
                       <NotionDropdown
                         value={selectedYear.toString()}
-                        onChange={(value) => setSelectedYear(value === 'all' ? 'all' : Number(value))}
+                        onChange={(value) => {
+                          const newValue = value === 'all' ? 'all' : Number(value);
+                          setSelectedYear(newValue);
+                          posthog.capture('gallery_filtered', {
+                            filter_type: 'year',
+                            filter_value: newValue,
+                          });
+                        }}
                         options={yearOptions}
                         placeholder="Select Year"
                         searchable={false}
@@ -224,7 +242,13 @@ export default function Gallery() {
                     <div className="relative z-[20] flex justify-center">
                       <NotionDropdown
                         value={selectedCampus}
-                        onChange={(value) => setSelectedCampus(value)}
+                        onChange={(value) => {
+                          setSelectedCampus(value);
+                          posthog.capture('gallery_filtered', {
+                            filter_type: 'campus',
+                            filter_value: value,
+                          });
+                        }}
                         options={campusOptions}
                         placeholder="Select Campus"
                         searchable={false}
