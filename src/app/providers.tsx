@@ -22,6 +22,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary>
       <PHProvider>
+        <Suspense fallback={null}>
+          <PostHogPageView />
+        </Suspense>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <AlumniAuthProvider>

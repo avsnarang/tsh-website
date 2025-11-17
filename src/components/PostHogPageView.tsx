@@ -35,19 +35,13 @@ function PostHogPageViewInner() {
       }
       
       try {
+        // Use PostHog's pageview method which properly formats the event for web analytics
         posthog.capture('$pageview', {
           $current_url: url,
         })
         
-        // Force immediate send in development
         if (process.env.NODE_ENV === 'development') {
-          setTimeout(() => {
-            if (typeof (posthog as any).flush === 'function') {
-              (posthog as any).flush()
-            }
-          }, 100)
           console.log('[PostHog] Pageview tracked:', url)
-          console.log('[PostHog] Flushed events. Check Network tab for /tsh-2024-data/ requests.')
         }
       } catch (error) {
         console.error('[PostHog] Error tracking pageview:', error)
