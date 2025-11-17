@@ -56,19 +56,10 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
             }
           }
           
-          // Verify API key matches
+          // Verify API key
           if (process.env.NODE_ENV === 'development') {
-            const expectedKey = 'phc_MphkjUPmhwO2KY5L3e7vB49lrWUwbfEajWVvoRzoOiS'
             console.log('[PostHog] API Key (first 20 chars):', posthogKey?.substring(0, 20) + '...')
-            console.log('[PostHog] Expected key (first 20 chars):', expectedKey.substring(0, 20) + '...')
-            if (posthogKey !== expectedKey) {
-              console.error('[PostHog] ❌ API KEY MISMATCH!')
-              console.error('[PostHog] Your .env.local has:', posthogKey?.substring(0, 20) + '...')
-              console.error('[PostHog] Expected:', expectedKey.substring(0, 20) + '...')
-              console.error('[PostHog] Update your .env.local file with: NEXT_PUBLIC_POSTHOG_KEY=' + expectedKey)
-            } else {
-              console.log('[PostHog] ✅ API Key matches!')
-            }
+            console.log('[PostHog] Make sure this matches your PostHog project API key')
             
             // Test that requests are being made
             console.log('[PostHog] Sending test event...')
