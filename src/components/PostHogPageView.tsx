@@ -11,7 +11,16 @@ export function PostHogPageView() {
 
   useEffect(() => {
     // Track pageviews when route changes
-    if (pathname && posthog) {
+    if (!pathname) return;
+    
+    if (!posthog) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn('[PostHog] PostHog not initialized, skipping pageview');
+      }
+      return;
+    }
+
+    try {
       let url = window.origin + pathname
       if (searchParams && searchParams.toString()) {
         url = url + `?${searchParams.toString()}`
@@ -19,7 +28,13 @@ export function PostHogPageView() {
 
       posthog.capture('$pageview', {
         $current_url: url
-      })
+      });
+
+      if (process.env.NODE_ENV === "development") {
+        console.log('[PostHog] Pageview tracked:', url);
+      }
+    } catch (error) {
+      console.error('[PostHog] Error tracking pageview:', error);
     }
   }, [pathname, searchParams, posthog])
 

@@ -27,6 +27,11 @@ const nextConfig: NextConfig = {
         source: '/ingest/:path*',
         destination: 'https://us.i.posthog.com/:path*',
       },
+      // Also proxy the decide endpoint if needed (though we disable it)
+      {
+        source: '/decide/:path*',
+        destination: 'https://us.i.posthog.com/decide/:path*',
+      },
     ];
   },
 
