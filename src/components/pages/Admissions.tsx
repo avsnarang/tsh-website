@@ -8,8 +8,6 @@ import Container from '@/components/ui/Container';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
 import posthog from 'posthog-js';
-import { useSearchParams } from 'next/navigation';
-import { getStoredUTMParams } from '@/hooks/useUTMTracking';
 
 interface Campus {
   name: string;
@@ -88,46 +86,24 @@ const ADMISSION_STEPS = [
 ];
 
 export default function Admissions() {
-  const searchParams = useSearchParams();
-  
-  // Track admissions page view with UTM parameters and QR code detection
+  // Track admissions page view (top of funnel)
   useEffect(() => {
-    // Get UTM parameters from URL or stored params
-    const utmSource = searchParams?.get('utm_source') || getStoredUTMParams()?.utm_source;
-    const utmMedium = searchParams?.get('utm_medium') || getStoredUTMParams()?.utm_medium;
-    const utmCampaign = searchParams?.get('utm_campaign') || getStoredUTMParams()?.utm_campaign;
-    const utmContent = searchParams?.get('utm_content') || getStoredUTMParams()?.utm_content;
-    
-    // Check if this is a QR code billboard visit
-    const isQRCodeVisit = utmSource === 'billboard' && utmMedium === 'qr_code';
-    
-    // Track page view with enhanced metadata
-    try {
-      posthog.capture('admissions_page_viewed', {
-        page: 'admissions',
-        utm_source: utmSource,
-        utm_medium: utmMedium,
-        utm_campaign: utmCampaign,
-        utm_content: utmContent,
-        is_qr_code_visit: isQRCodeVisit,
-        referrer: document.referrer || 'direct',
-        landing_timestamp: new Date().toISOString(),
-      });
+    // Wait for PostHog to be initialized
+    if (typeof window !== 'undefined' && posthog.__loaded) {
+      posthog.capture('admissions_page_viewed');
+    } else {
+      // If PostHog isn't loaded yet, wait a bit and try again
+      const checkPostHog = setInterval(() => {
+        if (posthog.__loaded) {
+          posthog.capture('admissions_page_viewed');
+          clearInterval(checkPostHog);
+        }
+      }, 100);
       
-      // Track QR code billboard visits specifically
-      if (isQRCodeVisit) {
-        posthog.capture('qr_code_billboard_visit', {
-          page: 'admissions',
-          utm_campaign: utmCampaign,
-          utm_content: utmContent,
-          referrer: document.referrer || 'direct',
-          timestamp: new Date().toISOString(),
-        });
-      }
-    } catch (error) {
-      console.error('[PostHog] Error tracking admissions page view:', error);
+      // Clear interval after 5 seconds to avoid infinite loop
+      setTimeout(() => clearInterval(checkPostHog), 5000);
     }
-  }, [searchParams]);
+  }, []);
 
   return (
     <>
@@ -226,35 +202,15 @@ export default function Admissions() {
                         className="inline-flex items-center justify-center gap-2 w-full bg-green text-white py-3 rounded-xl hover:bg-green-dark transition-colors"
                         whileTap={{ scale: 0.98 }}
                         onClick={() => {
-                          // Get UTM parameters for attribution
-                          const utmParams = getStoredUTMParams();
-                          const utmSource = searchParams?.get('utm_source') || utmParams?.utm_source;
-                          const utmMedium = searchParams?.get('utm_medium') || utmParams?.utm_medium;
-                          const utmCampaign = searchParams?.get('utm_campaign') || utmParams?.utm_campaign;
-                          const isQRCodeVisit = utmSource === 'billboard' && utmMedium === 'qr_code';
-                          
-                          // Track individual campus apply button click with UTM attribution
+                          // Track individual campus apply button click
                           try {
-                            posthog.capture('admission_cta_clicked', {
-                              campus_name: campus.name,
-                              campus_location: campus.location,
-                              registration_link: campus.registrationLink,
-                              button_location: 'campus_card',
-                              page: 'admissions',
-                              utm_source: utmSource,
-                              utm_medium: utmMedium,
-                              utm_campaign: utmCampaign,
-                              is_qr_code_visit: isQRCodeVisit,
-                              click_timestamp: new Date().toISOString(),
-                            });
-                            
-                            // Track QR code billboard conversions specifically
-                            if (isQRCodeVisit) {
-                              posthog.capture('qr_code_billboard_conversion', {
-                                event_type: 'apply_button_clicked',
+                            if (posthog.__loaded) {
+                              posthog.capture('admission_cta_clicked', {
                                 campus_name: campus.name,
-                                utm_campaign: utmCampaign,
-                                conversion_timestamp: new Date().toISOString(),
+                                campus_location: campus.location,
+                                registration_link: campus.registrationLink,
+                                button_location: 'campus_card',
+                                page: 'admissions',
                               });
                             }
                           } catch (error) {
