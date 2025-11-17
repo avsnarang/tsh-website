@@ -1,5 +1,6 @@
 import Admissions from '@/components/pages/Admissions';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Admissions',
@@ -7,6 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function AdmissionsPage() {
-  return <Admissions />;
+  return (
+    <Suspense fallback={null}>
+      <Admissions />
+    </Suspense>
+  );
 }
 
