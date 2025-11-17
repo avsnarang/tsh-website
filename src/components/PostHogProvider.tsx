@@ -43,6 +43,15 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
           console.log('[PostHog] API Host:', ph.config.api_host)
           console.log('[PostHog] UI Host:', ph.config.ui_host)
           
+          // Check if running on localhost
+          if (typeof window !== 'undefined') {
+            const hostname = window.location.hostname
+            if (hostname === 'localhost' || hostname === '127.0.0.1') {
+              console.warn('[PostHog] ⚠️ Running on localhost. Make sure your PostHog project website URL is set to accept localhost or all domains.')
+              console.warn('[PostHog] Go to: Project Settings → Website URL and add http://localhost:3001 or set to accept all domains')
+            }
+          }
+          
           // Test that requests are being made
           if (process.env.NODE_ENV === 'development') {
             console.log('[PostHog] Sending test event...')
