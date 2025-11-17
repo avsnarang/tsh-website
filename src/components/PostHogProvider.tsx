@@ -37,6 +37,10 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
         person_profiles: 'identified_only',
         capture_pageview: true, // Enable automatic pageview for web analytics
         capture_pageleave: true, // Enable pageleave for web analytics
+        // Important: For web analytics to work, the website URL in PostHog must match
+        // Go to PostHog Settings → Website URL and add your domain
+        // For localhost testing, add: http://localhost:3001
+        // For production, add: https://tsh.edu.in
         debug: process.env.NODE_ENV === 'development',
         loaded: (ph) => {
           console.log('[PostHog] ✅ Initialized successfully')
