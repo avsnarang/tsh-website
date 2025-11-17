@@ -39,8 +39,11 @@ function PostHogPageViewInner() {
           $current_url: url,
         })
         
+        // Force immediate send in development
         if (process.env.NODE_ENV === 'development') {
+          posthog.flush()
           console.log('[PostHog] Pageview tracked:', url)
+          console.log('[PostHog] Flushed events. Check Network tab for /tsh-2024-data/ requests.')
         }
       } catch (error) {
         console.error('[PostHog] Error tracking pageview:', error)

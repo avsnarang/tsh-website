@@ -38,10 +38,19 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
         capture_pageview: false, // We'll handle pageviews manually for Next.js
         capture_pageleave: true,
         debug: process.env.NODE_ENV === 'development',
+        // Force immediate sending in development
+        batch_size: 1, // Send events immediately instead of batching
         loaded: (ph) => {
           console.log('[PostHog] ✅ Initialized successfully')
           console.log('[PostHog] API Host:', ph.config.api_host)
           console.log('[PostHog] UI Host:', ph.config.ui_host)
+          
+          // Test that requests are being made
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[PostHog] Sending test event...')
+            ph.capture('test_event', { test: true })
+            console.log('[PostHog] Test event sent. Check Network tab for /tsh-2024-data/ requests.')
+          }
         },
       })
     } catch (error) {
