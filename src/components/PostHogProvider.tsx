@@ -11,12 +11,15 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
         api_host: "/ingest",
         ui_host: "https://us.posthog.com",
-        defaults: '2025-05-24',
-        capture_exceptions: true, // This enables capturing exceptions using Error Tracking
+        person_profiles: 'identified_only',
+        capture_pageview: false, // Disable automatic pageview capture - we'll handle it manually
+        capture_pageleave: true,
+        autocapture: true,
         debug: process.env.NODE_ENV === "development",
-        // Disable automatic capture during build
-        autocapture: typeof window !== 'undefined',
-        capture_pageview: typeof window !== 'undefined',
+        // Disable advanced features that require additional scripts to avoid proxy SSL issues
+        disable_session_recording: true,
+        disable_surveys: true,
+        advanced_disable_decide: false,
       })
     }
   }, [])

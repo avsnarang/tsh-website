@@ -19,13 +19,10 @@ const nextConfig: NextConfig = {
   },
   transpilePackages: ['react-icons'],
 
-  // Rewrites required to proxy PostHog ingestion and static assets
+  // Rewrites required to proxy PostHog ingestion only
+  // Static assets are loaded directly from PostHog CDN to avoid SSL proxy issues
   async rewrites() {
     return [
-      {
-        source: '/ingest/static/:path*',
-        destination: 'https://us-assets.i.posthog.com/static/:path*',
-      },
       {
         source: '/ingest/:path*',
         destination: 'https://us.i.posthog.com/:path*',

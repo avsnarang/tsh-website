@@ -8,7 +8,6 @@ import { MessagesProvider } from '@/contexts/MessagesContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import { PostHogProvider } from '@/components/PostHogProvider';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -20,17 +19,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <ErrorBoundary>
-      <PostHogProvider>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <AlumniAuthProvider>
-              <MessagesProvider>
-                {children}
-              </MessagesProvider>
-            </AlumniAuthProvider>
-          </AuthProvider>
-        </QueryClientProvider>
-      </PostHogProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <AlumniAuthProvider>
+            <MessagesProvider>
+              {children}
+            </MessagesProvider>
+          </AlumniAuthProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 }
