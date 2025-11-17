@@ -56,17 +56,31 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
             }
           }
           
-          // Test that requests are being made
+          // Verify API key matches
           if (process.env.NODE_ENV === 'development') {
+            console.log('[PostHog] API Key (first 10 chars):', posthogKey?.substring(0, 10) + '...')
+            console.log('[PostHog] Make sure this matches your PostHog project API key')
+            
+            // Test that requests are being made
             console.log('[PostHog] Sending test event...')
             ph.capture('test_event', { test: true })
-            // Force send immediately
+            
+            // Also send a pageview manually to test
             setTimeout(() => {
+              ph.capture('$pageview', {
+                $current_url: window.location.href,
+              })
+              console.log('[PostHog] Sent $pageview event manually')
+              
+              // Force send immediately
               if (typeof (ph as any).flush === 'function') {
                 (ph as any).flush()
+                console.log('[PostHog] Flushed events')
               }
-            }, 100)
-            console.log('[PostHog] Test event sent. Check Network tab for /tsh-2024-data/ requests.')
+            }, 500)
+            
+            console.log('[PostHog] Test events sent. Check Network tab for /tsh-2024-data/ requests.')
+            console.log('[PostHog] Then check PostHog Activity → Events (not Live) to see if events appear')
           }
         },
       })
