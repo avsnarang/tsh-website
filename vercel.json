@@ -3,6 +3,16 @@
   "env": {
     "NEXT_PRIVATE_SKIP_TURBO": "1"
   },
+  "rewrites": [
+    {
+      "source": "/tsh-2024-data/static/(.*)",
+      "destination": "https://us-assets.i.posthog.com/static/$1"
+    },
+    {
+      "source": "/tsh-2024-data/(.*)",
+      "destination": "https://us.i.posthog.com/$1"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

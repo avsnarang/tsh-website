@@ -27,15 +27,16 @@ const nextConfig: NextConfig = {
   // Add empty turbopack config to silence the error when using webpack
   turbopack: {},
 
-  // PostHog reverse proxy
+  // PostHog reverse proxy - using non-obvious path to avoid blocking
+  // Using a unique path instead of generic /ingest, /analytics, etc.
   async rewrites() {
     return [
       {
-        source: '/ingest/static/:path*',
+        source: '/tsh-2024-data/static/:path*',
         destination: 'https://us-assets.i.posthog.com/static/:path*',
       },
       {
-        source: '/ingest/:path*',
+        source: '/tsh-2024-data/:path*',
         destination: 'https://us.i.posthog.com/:path*',
       },
     ];

@@ -12,7 +12,7 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
       
       if (posthogKey && !posthog.__loaded) {
         posthog.init(posthogKey, {
-          api_host: '/ingest',
+          api_host: '/tsh-2024-data',
           ui_host: posthogHost,
           person_profiles: 'identified_only',
           capture_pageview: false, // We'll handle pageviews manually for Next.js
