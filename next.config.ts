@@ -26,25 +26,6 @@ const nextConfig: NextConfig = {
 
   // Add empty turbopack config to silence the error when using webpack
   turbopack: {},
-
-  // Rewrites required to proxy PostHog ingestion only
-  // Static assets are loaded directly from PostHog CDN to avoid SSL proxy issues
-  async rewrites() {
-    return [
-      {
-        source: '/ingest/:path*',
-        destination: 'https://us.i.posthog.com/:path*',
-      },
-      // Also proxy the decide endpoint if needed (though we disable it)
-      {
-        source: '/decide/:path*',
-        destination: 'https://us.i.posthog.com/decide/:path*',
-      },
-    ];
-  },
-
-  // This is required to support PostHog trailing slash API requests
-  skipTrailingSlashRedirect: true,
 };
 
 export default nextConfig;
