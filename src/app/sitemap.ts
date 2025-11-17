@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { createClient } from '@supabase/supabase-js';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://tsh.edu.in';
@@ -39,8 +39,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Fetch dynamic routes (gallery events, sports, etc.)
+  // Use a simple client without cookies for static generation
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.warn('Missing Supabase environment variables, returning static routes only');
+      return staticRoutes;
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: false,
+      },
+    });
     
     const [eventsRes, sportsRes] = await Promise.all([
       supabase.from('gallery_events').select('id, updated_at').eq('is_visible', true),
