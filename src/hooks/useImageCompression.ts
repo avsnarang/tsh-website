@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import posthog from 'posthog-js';
 
 interface CompressOptions {
   maxSizeMB?: number;
@@ -86,6 +87,16 @@ export function useImageCompression() {
       return compressedFile;
     } catch (error) {
       console.error('Image compression failed:', error);
+
+      // Track compression failure with error details
+      posthog.captureException(error as Error);
+      posthog.capture('image_compression_failed', {
+        file_name: file.name,
+        file_size: file.size,
+        file_type: file.type,
+        error_message: error instanceof Error ? error.message : String(error)
+      });
+
       return file; // Return original file if compression fails
     } finally {
       setIsCompressing(false);

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../lib/supabase';
 import { submitSportsInterest } from '../../lib/notion';
 import { X, Loader2, CheckCircle2, ArrowRight, User, GraduationCap } from 'lucide-react';
+import posthog from 'posthog-js';
 
 interface FormStep {
   id: string;
@@ -23,7 +24,7 @@ const FORM_STEPS: FormStep[] = [
   }
 ];
 
-export default function InterestForm({ sportId, sportName, onClose }: { 
+export default function InterestForm({ sportId, sportName, onClose }: {
   sportId: string;
   sportName: string;
   onClose: () => void;
@@ -40,6 +41,14 @@ export default function InterestForm({ sportId, sportName, onClose }: {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState('');
+
+  // Track form opened event
+  useState(() => {
+    posthog.capture('sports_interest_form_opened', {
+      sport_id: sportId,
+      sport_name: sportName
+    });
+  });
 
   const verifyAdmissionNumber = async () => {
     if (!formData.admissionNumber.trim()) {
@@ -68,6 +77,14 @@ export default function InterestForm({ sportId, sportName, onClose }: {
         class: data.class
       }));
       setVerified(true);
+
+      // Track successful verification
+      posthog.capture('student_verified', {
+        sport_id: sportId,
+        sport_name: sportName,
+        student_class: data.class
+      });
+
       return true;
     } catch (error) {
       setError('An error occurred while verifying. Please try again.');
@@ -107,6 +124,14 @@ export default function InterestForm({ sportId, sportName, onClose }: {
         studentName: formData.studentName,
         class: formData.class,
         hasConsent: formData.hasConsent
+      });
+
+      // Track successful submission
+      posthog.capture('sports_interest_submitted', {
+        sport_id: sportId,
+        sport_name: sportName,
+        student_class: formData.class,
+        has_consent: formData.hasConsent
       });
 
       setSuccess('Successfully registered for ' + sportName);

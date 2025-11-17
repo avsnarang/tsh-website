@@ -1,0 +1,72 @@
+[
+  {
+    "event_name": "newsletter_subscribed",
+    "event_description": "User subscribes to newsletter from footer",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/components/footer/NewsletterForm.tsx"
+  },
+  {
+    "event_name": "sports_interest_submitted",
+    "event_description": "Student submits sports interest form successfully",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/components/sports/InterestForm.tsx"
+  },
+  {
+    "event_name": "sports_interest_form_opened",
+    "event_description": "Student opens sports interest registration form (top of funnel)",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/components/sports/InterestForm.tsx"
+  },
+  {
+    "event_name": "student_verified",
+    "event_description": "Student admission number successfully verified in sports form",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/components/sports/InterestForm.tsx"
+  },
+  {
+    "event_name": "alumni_registered",
+    "event_description": "Alumni completes registration successfully",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/components/pages/alumni/AlumniRegister.tsx"
+  },
+  {
+    "event_name": "alumni_logged_in",
+    "event_description": "Alumni logs in successfully",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/components/pages/auth/Login.tsx"
+  },
+  {
+    "event_name": "alumni_login_failed",
+    "event_description": "Alumni login attempt failed (churn indicator)",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/components/pages/auth/Login.tsx"
+  },
+  {
+    "event_name": "alumni_profile_updated",
+    "event_description": "Alumni updates their profile information",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/hooks/useProfileActions.ts"
+  },
+  {
+    "event_name": "alumni_profile_picture_uploaded",
+    "event_description": "Alumni uploads or updates profile picture",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/hooks/useProfileActions.ts"
+  },
+  {
+    "event_name": "contact_form_submitted",
+    "event_description": "User submits contact form inquiry",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/components/pages/Contact.tsx"
+  },
+  {
+    "event_name": "campus_contact_clicked",
+    "event_description": "User clicks phone/email link for campus contact",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/components/pages/Contact.tsx"
+  },
+  {
+    "event_name": "admissions_page_viewed",
+    "event_description": "User views admissions page (top of admissions funnel)",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/app/admissions/page.tsx"
+  },
+  {
+    "event_name": "image_compression_failed",
+    "event_description": "Image compression error occurred (error tracking)",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/hooks/useImageCompression.ts"
+  },
+  {
+    "event_name": "api_error_occurred",
+    "event_description": "API error occurred in sports interest submission (error tracking)",
+    "file_path": "/Users/avsnarang/Developer/tsh-website/src/app/api/submit-sports-interest/route.ts"
+  }
+]

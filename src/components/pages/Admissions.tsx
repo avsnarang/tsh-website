@@ -1,12 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Users, BookOpen, Building2, ArrowRight, CheckCircle2, Calendar } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
+import posthog from 'posthog-js';
 
 interface Campus {
   name: string;
@@ -85,6 +86,10 @@ const ADMISSION_STEPS = [
 ];
 
 export default function Admissions() {
+  // Track admissions page view (top of funnel)
+  useEffect(() => {
+    posthog.capture('admissions_page_viewed');
+  }, []);
 
   return (
     <>
@@ -182,6 +187,20 @@ export default function Admissions() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center justify-center gap-2 w-full bg-green text-white py-3 rounded-xl hover:bg-green-dark transition-colors"
                         whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          // Track individual campus apply button click
+                          try {
+                            posthog.capture('admission_cta_clicked', {
+                              campus_name: campus.name,
+                              campus_location: campus.location,
+                              registration_link: campus.registrationLink,
+                              button_location: 'campus_card',
+                              page: 'admissions',
+                            });
+                          } catch (error) {
+                            console.error('[PostHog] Error tracking admission CTA click:', error);
+                          }
+                        }}
                       >
                         Apply Now
                         <ArrowRight className="h-5 w-5" />

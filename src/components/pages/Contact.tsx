@@ -5,6 +5,7 @@ import { MapPin, Phone, Mail, Clock, Send, Users, Star, Award, ArrowRight } from
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
 import Button from '@/components/ui/Button';
+import posthog from 'posthog-js';
 
 const contactInfo = [
   {
@@ -90,7 +91,12 @@ export default function Contact() {
                 <TextReveal>
                   <h3 className="text-2xl text-neutral-dark mb-8">Send us a message</h3>
                 </TextReveal>
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={(e) => {
+                  e.preventDefault();
+                  posthog.capture('contact_form_submitted', {
+                    source: 'contact_page'
+                  });
+                }}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="block text-neutral-dark font-medium">Name</label>
@@ -204,6 +210,13 @@ export default function Contact() {
                       <a
                         href={`tel:${campus.phone.replace(/\s/g, '')}`}
                         className="text-neutral-dark/80 hover:text-primary transition-colors"
+                        onClick={() => {
+                          posthog.capture('campus_contact_clicked', {
+                            campus: campus.campus,
+                            contact_type: 'phone',
+                            phone: campus.phone
+                          });
+                        }}
                       >
                         {campus.phone}
                       </a>
@@ -213,6 +226,13 @@ export default function Contact() {
                       <a
                         href={`mailto:${campus.email}`}
                         className="text-neutral-dark/80 hover:text-primary transition-colors"
+                        onClick={() => {
+                          posthog.capture('campus_contact_clicked', {
+                            campus: campus.campus,
+                            contact_type: 'email',
+                            email: campus.email
+                          });
+                        }}
                       >
                         {campus.email}
                       </a>
