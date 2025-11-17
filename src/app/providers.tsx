@@ -9,7 +9,7 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { PHProvider } from '@/components/PostHogProvider';
 import { PostHogPageView } from '@/components/PostHogPageView';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -22,7 +22,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary>
       <PHProvider>
-        <PostHogPageView />
+        <Suspense fallback={null}>
+          <PostHogPageView />
+        </Suspense>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <AlumniAuthProvider>
