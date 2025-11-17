@@ -1,5 +1,4 @@
 import type { NextConfig } from 'next';
-import type { Configuration } from 'webpack';
 
 const nextConfig: NextConfig = {
   images: {
@@ -21,7 +20,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ['react-icons'],
 
   // Force webpack usage instead of Turbopack
-  webpack: (config: Configuration, { isServer }) => {
+  webpack: (config, { isServer }) => {
     return config;
   },
 
