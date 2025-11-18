@@ -90,7 +90,7 @@ export default function Admissions() {
   const searchParams = useSearchParams();
   const posthog = usePostHog();
 
-  // Track QR code billboard visits
+  // Track QR code visits (billboard and pamphlet)
   useEffect(() => {
     if (!posthog || !searchParams) return;
 
@@ -100,9 +100,12 @@ export default function Admissions() {
     const utmContent = searchParams.get('utm_content');
 
     // Check if this is a QR code billboard visit
-    const isQRCodeVisit = utmSource === 'billboard' && utmMedium === 'qr_code';
+    const isQRCodeBillboardVisit = utmSource === 'billboard' && utmMedium === 'qr_code';
+    
+    // Check if this is a QR code pamphlet visit
+    const isQRCodePamphletVisit = utmSource === 'pamphlet' && utmMedium === 'qr_code';
 
-    if (isQRCodeVisit) {
+    if (isQRCodeBillboardVisit) {
       // Track QR code billboard visit
       posthog.capture('qr_code_billboard_visit', {
         utm_source: utmSource,
@@ -115,6 +118,22 @@ export default function Admissions() {
 
       if (process.env.NODE_ENV === 'development') {
         console.log('[PostHog] QR code billboard visit tracked:', { utmCampaign, utmContent });
+      }
+    }
+
+    if (isQRCodePamphletVisit) {
+      // Track QR code pamphlet visit
+      posthog.capture('qr_code_pamphlet_visit', {
+        utm_source: utmSource,
+        utm_medium: utmMedium,
+        utm_campaign: utmCampaign,
+        utm_content: utmContent,
+        page: 'admissions',
+        timestamp: new Date().toISOString(),
+      });
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[PostHog] QR code pamphlet visit tracked:', { utmCampaign, utmContent });
       }
     }
   }, [posthog, searchParams]);
@@ -222,7 +241,9 @@ export default function Admissions() {
                           const utmMedium = searchParams?.get('utm_medium');
                           const utmCampaign = searchParams?.get('utm_campaign');
                           const utmContent = searchParams?.get('utm_content');
-                          const isQRCodeVisit = utmSource === 'billboard' && utmMedium === 'qr_code';
+                          const isQRCodeBillboardVisit = utmSource === 'billboard' && utmMedium === 'qr_code';
+                          const isQRCodePamphletVisit = utmSource === 'pamphlet' && utmMedium === 'qr_code';
+                          const isQRCodeVisit = isQRCodeBillboardVisit || isQRCodePamphletVisit;
 
                           // Track Apply Now button click
                           posthog.capture('admission_cta_clicked', {
@@ -239,8 +260,8 @@ export default function Admissions() {
                             click_timestamp: new Date().toISOString(),
                           });
 
-                          // Track QR code conversion if applicable
-                          if (isQRCodeVisit) {
+                          // Track QR code billboard conversion if applicable
+                          if (isQRCodeBillboardVisit) {
                             posthog.capture('qr_code_billboard_conversion', {
                               event_type: 'apply_button_clicked',
                               campus_name: campus.name,
@@ -251,6 +272,21 @@ export default function Admissions() {
 
                             if (process.env.NODE_ENV === 'development') {
                               console.log('[PostHog] QR code billboard conversion tracked:', { campus: campus.name, utmCampaign });
+                            }
+                          }
+
+                          // Track QR code pamphlet conversion if applicable
+                          if (isQRCodePamphletVisit) {
+                            posthog.capture('qr_code_pamphlet_conversion', {
+                              event_type: 'apply_button_clicked',
+                              campus_name: campus.name,
+                              utm_campaign: utmCampaign,
+                              utm_content: utmContent,
+                              conversion_timestamp: new Date().toISOString(),
+                            });
+
+                            if (process.env.NODE_ENV === 'development') {
+                              console.log('[PostHog] QR code pamphlet conversion tracked:', { campus: campus.name, utmCampaign });
                             }
                           }
                         }}
