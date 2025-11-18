@@ -9,6 +9,7 @@ import ScrollReveal from '@/components/animations/ScrollReveal';
 import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
 import { usePostHog } from 'posthog-js/react';
 import { useSearchParams } from 'next/navigation';
+import { trackMetaEvent, trackMetaLead } from '@/components/analytics/MetaPixel';
 
 interface Campus {
   name: string;
@@ -90,7 +91,7 @@ export default function Admissions() {
   const searchParams = useSearchParams();
   const posthog = usePostHog();
 
-  // Track QR code visits (billboard and pamphlet)
+  // Track QR code visits (billboard, pamphlet) and Meta campaigns
   useEffect(() => {
     if (!posthog || !searchParams) return;
 
@@ -104,6 +105,9 @@ export default function Admissions() {
     
     // Check if this is a QR code pamphlet visit
     const isQRCodePamphletVisit = utmSource === 'pamphlet' && utmMedium === 'qr_code';
+
+    // Check if this is a Meta campaign visit
+    const isMetaCampaignVisit = utmSource === 'meta' || utmSource === 'facebook';
 
     if (isQRCodeBillboardVisit) {
       // Track QR code billboard visit
@@ -134,6 +138,34 @@ export default function Admissions() {
 
       if (process.env.NODE_ENV === 'development') {
         console.log('[PostHog] QR code pamphlet visit tracked:', { utmCampaign, utmContent });
+      }
+    }
+
+    if (isMetaCampaignVisit) {
+      // Track Meta campaign visit in PostHog
+      posthog.capture('meta_campaign_visit', {
+        utm_source: utmSource,
+        utm_medium: utmMedium,
+        utm_campaign: utmCampaign,
+        utm_content: utmContent,
+        page: 'admissions',
+        timestamp: new Date().toISOString(),
+      });
+
+      // Track Meta Pixel ViewContent event
+      trackMetaEvent('ViewContent', {
+        content_name: 'Admissions Page',
+        content_category: 'Admissions',
+        content_ids: ['admissions_2026'],
+        value: 0,
+        currency: 'INR',
+        campaign: utmCampaign,
+        content: utmContent,
+      });
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[PostHog] Meta campaign visit tracked:', { utmCampaign, utmContent });
+        console.log('[Meta Pixel] ViewContent event tracked');
       }
     }
   }, [posthog, searchParams]);
@@ -243,6 +275,7 @@ export default function Admissions() {
                           const utmContent = searchParams?.get('utm_content');
                           const isQRCodeBillboardVisit = utmSource === 'billboard' && utmMedium === 'qr_code';
                           const isQRCodePamphletVisit = utmSource === 'pamphlet' && utmMedium === 'qr_code';
+                          const isMetaCampaignVisit = utmSource === 'meta' || utmSource === 'facebook';
                           const isQRCodeVisit = isQRCodeBillboardVisit || isQRCodePamphletVisit;
 
                           // Track Apply Now button click
@@ -257,6 +290,7 @@ export default function Admissions() {
                             utm_campaign: utmCampaign,
                             utm_content: utmContent,
                             is_qr_code_visit: isQRCodeVisit,
+                            is_meta_campaign: isMetaCampaignVisit,
                             click_timestamp: new Date().toISOString(),
                           });
 
@@ -287,6 +321,35 @@ export default function Admissions() {
 
                             if (process.env.NODE_ENV === 'development') {
                               console.log('[PostHog] QR code pamphlet conversion tracked:', { campus: campus.name, utmCampaign });
+                            }
+                          }
+
+                          // Track Meta campaign conversion if applicable
+                          if (isMetaCampaignVisit) {
+                            // Track PostHog conversion
+                            posthog.capture('meta_campaign_conversion', {
+                              event_type: 'apply_button_clicked',
+                              campus_name: campus.name,
+                              utm_campaign: utmCampaign,
+                              utm_content: utmContent,
+                              conversion_timestamp: new Date().toISOString(),
+                            });
+
+                            // Track Meta Pixel Lead event
+                            trackMetaLead({
+                              content_name: `Admissions - ${campus.name}`,
+                              content_category: 'Admissions',
+                              content_ids: [`campus_${campus.name.toLowerCase().replace(/\s+/g, '_')}`],
+                              value: 0,
+                              currency: 'INR',
+                              campaign: utmCampaign,
+                              content: utmContent,
+                              campus: campus.name,
+                            });
+
+                            if (process.env.NODE_ENV === 'development') {
+                              console.log('[PostHog] Meta campaign conversion tracked:', { campus: campus.name, utmCampaign });
+                              console.log('[Meta Pixel] Lead event tracked');
                             }
                           }
                         }}
