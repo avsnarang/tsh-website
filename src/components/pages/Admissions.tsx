@@ -32,7 +32,7 @@ const CAMPUSES: Campus[] = [
     email: 'info@ps.tsh.edu.in',
     features: ['CBSE Affiliated', 'Classes Pre-Nursery to XII', 'Science, Commerce, Arts for Classes XI & XII', 'Safe Environment'],
     classSize: '28',
-    registrationLink: 'https://scholarise.tsh.edu.in/register/cmbdk8dd9000w7ip2rpxsd5rr/cmbdk90xz000x7ip2ido648y3'
+    registrationLink: 'https://scholarise.tsh.edu.in/register/cmbdk8dd9000w7ip2rpxsd5rr/cmi3gw27t14k5s6015cgibjhr'
   },
   {
     name: 'TSH, Juniors',
@@ -43,7 +43,7 @@ const CAMPUSES: Campus[] = [
     email: 'info@jun.tsh.edu.in',
     features: ['Pre-Nursery to I', 'Play-based Learning', 'Individual Attention', 'Safe Environment'],
     classSize: '24',
-    registrationLink: 'https://scholarise.tsh.edu.in/register/cmbg6oyl600067itdktqdvegv/cmbdk90xz000x7ip2ido648y3'
+    registrationLink: 'https://scholarise.tsh.edu.in/register/cmbg6oyl600067itdktqdvegv/cmi3gw27t14k5s6015cgibjhr'
   },
   {
     name: 'TSH, Majra',
@@ -54,7 +54,7 @@ const CAMPUSES: Campus[] = [
     email: 'info@majra.tsh.edu.in',
     features: ['Classes Pre-Nursery to VI', 'Smart Classrooms', 'Sports Facilities', 'Safe Environment'],
     classSize: '28',
-    registrationLink: 'https://scholarise.tsh.edu.in/register/cmel0o6rn0032s601j18hudcg/cmbdk90xz000x7ip2ido648y3'
+    registrationLink: 'https://scholarise.tsh.edu.in/register/cmel0o6rn0032s601j18hudcg/cmi3gw27t14k5s6015cgibjhr'
   }
 ];
 
