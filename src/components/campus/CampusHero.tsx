@@ -33,7 +33,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
         }} />
       </div>
 
-      <Container>
+      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
           <div className="relative z-10">

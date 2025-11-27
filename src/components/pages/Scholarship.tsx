@@ -111,7 +111,7 @@ export default function Scholarship() {
           }} />
         </div>
         
-        <Container className="relative z-20">
+        <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
           <nav className="mb-12">
             <BreadcrumbNav />
           </nav>

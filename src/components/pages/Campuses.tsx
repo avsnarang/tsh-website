@@ -9,7 +9,7 @@ import Button from '@/components/ui/Button';
 export default function Campuses() {
   return (
     <div className="pt-32 pb-24">
-      <Container>
+      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
         <div className="max-w-4xl mx-auto text-center mb-16">
           <h1 className="text-5xl text-neutral-dark mb-6">Our Campuses</h1>
           <p className="text-xl text-primary">Three Unique Environments, One Vision</p>

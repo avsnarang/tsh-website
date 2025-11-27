@@ -116,7 +116,7 @@ export default function Faculty() {
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-neutral-light to-transparent" />
         </div>
 
-        <Container className="relative z-20">
+        <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
           <nav className="pt-8 -mb-8">
             <BreadcrumbNav />
           </nav>

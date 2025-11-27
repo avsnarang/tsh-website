@@ -100,7 +100,7 @@ export default function YouTubeGallery() {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-light/20 rounded-full filter blur-3xl" />
       </div>
 
-      <Container className="relative z-10 pt-16">
+      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8 pt-16">
         <ScrollReveal>
           <div className="text-center mb-16">
             <motion.div

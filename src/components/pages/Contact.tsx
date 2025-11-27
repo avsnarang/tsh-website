@@ -51,7 +51,7 @@ export default function Contact() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full -translate-x-48 -translate-y-48 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange/10 rounded-full translate-x-24 translate-y-24 blur-3xl" />
         
-        <Container className="relative">
+        <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
           <ScrollReveal>
             <div className="text-center mb-16">
               <TextReveal>

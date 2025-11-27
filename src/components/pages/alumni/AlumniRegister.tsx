@@ -126,7 +126,7 @@ export default function AlumniRegister() {
         </div>
       </div>
 
-      <Container className="relative">
+      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
         <ScrollReveal>
           <div className="text-center mb-12">
             <motion.div

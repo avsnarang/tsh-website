@@ -192,15 +192,15 @@ export default function Admissions() {
           }} />
         </div>
 
-        <Container className="relative z-20">
+        <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
           <BreadcrumbNav />
           <ScrollReveal>
             <div className="text-center mb-20">
               <span className="inline-block px-6 py-2 bg-green-light/20 text-green rounded-full text-sm font-medium mb-6">
-                Admissions Open 2025-26
+                Admissions Open 2026-27
               </span>
               <h1 className="text-5xl md:text-6xl font-display text-neutral-dark mb-8">
-                Shape Your <span className="text-green">Future</span> With Us
+                Shape your child's<span className="text-green">Future</span> with us
               </h1>
               <p className="text-neutral-dark/70 text-xl max-w-2xl mx-auto">
                 Join a legacy of excellence at The Scholars' Home, where every student's potential is nurtured and transformed into achievement.

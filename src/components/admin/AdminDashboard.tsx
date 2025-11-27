@@ -104,7 +104,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="relative pt-32 pb-24">
-        <Container>
+        <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
           <div className="max-w-6xl mx-auto">
             <motion.div
               className="flex-1 text-center mb-16"

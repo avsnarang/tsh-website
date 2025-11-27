@@ -265,7 +265,7 @@ export default function AdminGallery() {
   };
 
   return (
-    <Container className="min-h-screen pt-32 pb-24">
+    <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8 min-h-screen pt-32 pb-24">
       {/* Decorative Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />

@@ -55,7 +55,7 @@ export default function AlumniSuccess() {
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
       </div>
 
-      <Container className="relative">
+      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

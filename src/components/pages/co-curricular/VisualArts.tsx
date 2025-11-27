@@ -7,7 +7,7 @@ export default function VisualArts() {
 
   return (
     <div className="pt-32 pb-24">
-      <Container>
+      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
         <div className="max-w-4xl mx-auto text-center mb-16">
           <h1 className="text-5xl text-neutral-dark mb-6">Visual Arts</h1>
           <p className="text-xl text-primary">Unleashing Creative Expression</p>

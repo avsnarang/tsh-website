@@ -132,7 +132,7 @@ export default function SportsAthletics() {
         </div>
       </div>
 
-      <Container className="relative py-12">
+      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8 py-12">
         <ScrollReveal>
           <div className="text-center mb-16">
             <motion.div

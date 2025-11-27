@@ -85,7 +85,7 @@ export default function Directory() {
         </div>
       </div>
 
-      <Container className="relative">
+      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
