@@ -40,7 +40,7 @@ export default function Hero() {
       </div>
 
       {/* Main Content */}
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-8 sm:gap-12 lg:gap-16">
           {/* Left Column - Main Content */}
           <motion.div

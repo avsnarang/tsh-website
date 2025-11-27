@@ -172,7 +172,7 @@ export default function Admissions() {
 
   return (
     <>
-      <section className="relative py-40">
+      <section className="relative py-40 overflow-hidden">
         {/* Top fade-in gradient */}
         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white via-white to-transparent z-10" />
 
@@ -200,7 +200,7 @@ export default function Admissions() {
                 Admissions Open 2026-27
               </span>
               <h1 className="text-5xl md:text-6xl font-display text-neutral-dark mb-8">
-                Shape your child's<span className="text-green">Future</span> with us
+                Shape your child's <span className="text-green">Future</span> with us
               </h1>
               <p className="text-neutral-dark/70 text-xl max-w-2xl mx-auto">
                 Join a legacy of excellence at The Scholars' Home, where every student's potential is nurtured and transformed into achievement.
@@ -208,12 +208,12 @@ export default function Admissions() {
             </div>
           </ScrollReveal>
 
-          <div className="grid lg:grid-cols-3 gap-10">
+          <div className="grid lg:grid-cols-3 gap-10 px-2 sm:px-0">
             {CAMPUSES.map((campus, index) => (
-              <ScrollReveal key={campus.name} delay={index * 0.1}>
+              <ScrollReveal key={campus.name} delay={index * 0.1} className="w-full max-w-full overflow-hidden">
                 <motion.div
                   whileHover={{ y: -12, scale: 1.02 }}
-                  className="relative group h-full"
+                  className="relative group h-full overflow-hidden rounded-3xl"
                 >
                   {/* Card background effects */}
                   <div className="absolute inset-0 bg-gradient-to-br from-green-light/10 via-primary-light/5 to-transparent rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
