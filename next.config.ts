@@ -30,7 +30,6 @@ const nextConfig: NextConfig = {
   
   // Enable experimental optimizations
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['lucide-react', 'framer-motion', '@tanstack/react-query'],
   },
 

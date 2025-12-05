@@ -5,13 +5,7 @@ import '../styles/calendar.css';
 import { Providers } from './providers';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
-import dynamic from 'next/dynamic';
-
-// Lazy load MetaPixel - not critical for initial render
-const MetaPixel = dynamic(() => import('@/components/analytics/MetaPixel'), {
-  ssr: false,
-  loading: () => null,
-});
+import MetaPixel from '@/components/analytics/MetaPixel';
 
 // Preload critical fonts with optimal settings
 const montserrat = Montserrat({
