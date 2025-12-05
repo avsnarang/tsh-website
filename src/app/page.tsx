@@ -3,9 +3,8 @@ import HomeClient from './home-client';
 import { LeadershipMessage } from '@/types/leadership';
 import type { Metadata } from 'next';
 
-// Enable static generation with revalidation for faster loads
+// Cache the page data for faster subsequent loads
 export const revalidate = 3600; // Revalidate every hour
-export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: "The Scholars' Home | Excellence in Education Since 2003",

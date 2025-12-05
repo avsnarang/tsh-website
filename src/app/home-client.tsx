@@ -1,34 +1,13 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import Hero from '@/components/home/Hero';
+import Features from '@/components/home/Features';
+import MissionVision from '@/components/home/MissionVision';
+import LeaderMessages from '@/components/home/LeaderMessages';
+import Achievements from '@/components/home/Achievements';
+import CampusLife from '@/components/home/CampusLife';
+import Testimonials from '@/components/testimonials/Testimonials';
 import { LeadershipMessage } from '@/types/leadership';
-
-// Dynamically import below-the-fold components with NO loading state for instant feel
-const Features = dynamic(() => import('@/components/home/Features'), { 
-  ssr: true,
-  loading: () => null 
-});
-const MissionVision = dynamic(() => import('@/components/home/MissionVision'), { 
-  ssr: true,
-  loading: () => null 
-});
-const LeaderMessages = dynamic(() => import('@/components/home/LeaderMessages'), { 
-  ssr: true,
-  loading: () => null 
-});
-const Achievements = dynamic(() => import('@/components/home/Achievements'), { 
-  ssr: true,
-  loading: () => null 
-});
-const CampusLife = dynamic(() => import('@/components/home/CampusLife'), { 
-  ssr: true,
-  loading: () => null 
-});
-const Testimonials = dynamic(() => import('@/components/testimonials/Testimonials'), { 
-  ssr: true,
-  loading: () => null 
-});
 
 interface HomeClientProps {
   messages: LeadershipMessage[];
@@ -37,9 +16,7 @@ interface HomeClientProps {
 export default function HomeClient({ messages }: HomeClientProps) {
   return (
     <>
-      {/* Hero renders immediately - no animation delay */}
       <Hero />
-      {/* Below-fold content loads progressively but renders instantly when ready */}
       <Features />
       <LeaderMessages 
         messages={messages} 
