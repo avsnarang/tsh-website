@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -157,10 +157,12 @@ function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps)
   );
 }
 
-export default function Navbar() {
+// Memoize the Navbar to prevent unnecessary re-renders
+function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [updates, setUpdates] = useState<Array<{ content: string; link?: string }>>([]);
   const [currentUpdateIndex, setCurrentUpdateIndex] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
   const { scrollY } = useScroll();
   
   const backgroundColor = useTransform(
@@ -191,9 +193,20 @@ export default function Navbar() {
     (value) => value > 50 ? 'none' : 'auto'
   );
 
+  // Defer non-critical updates fetch to after initial render
   useEffect(() => {
-    fetchUpdates();
+    setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    // Only fetch updates after component has mounted (not blocking initial render)
+    if (isMounted) {
+      const timer = setTimeout(() => {
+        fetchUpdates();
+      }, 100); // Small delay to not block initial paint
+      return () => clearTimeout(timer);
+    }
+  }, [isMounted]);
 
   useEffect(() => {
     if (updates.length > 0) {
@@ -207,7 +220,7 @@ export default function Navbar() {
     }
   }, [updates]);
 
-  const fetchUpdates = async () => {
+  const fetchUpdates = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('latest_updates')
@@ -220,7 +233,7 @@ export default function Navbar() {
     } catch (error) {
       console.error('Error fetching updates:', error);
     }
-  };
+  }, []);
 
   const navItems: NavItemType[] = [
     {
@@ -544,3 +557,5 @@ export default function Navbar() {
     </>
   );
 }
+
+export default memo(Navbar);

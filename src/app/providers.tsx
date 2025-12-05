@@ -9,15 +9,20 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { PHProvider } from '@/components/PostHogProvider';
 import { PostHogPageView } from '@/components/PostHogPageView';
 import { usePathname } from 'next/navigation';
-import { useEffect, Suspense } from 'react';
+import { useEffect, Suspense, useMemo } from 'react';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Scroll to top on route change
-    window.scrollTo(0, 0);
+    // Scroll to top on route change - use requestAnimationFrame for smoother experience
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+    });
   }, [pathname]);
+
+  // Memoize the query client to prevent recreating on each render
+  const client = useMemo(() => queryClient, []);
 
   return (
     <ErrorBoundary>
@@ -25,7 +30,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <Suspense fallback={null}>
           <PostHogPageView />
         </Suspense>
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={client}>
           <AuthProvider>
             <AlumniAuthProvider>
               <MessagesProvider>

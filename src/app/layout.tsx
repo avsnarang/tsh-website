@@ -5,12 +5,21 @@ import '../styles/calendar.css';
 import { Providers } from './providers';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
-import MetaPixel from '@/components/analytics/MetaPixel';
+import dynamic from 'next/dynamic';
 
+// Lazy load MetaPixel - not critical for initial render
+const MetaPixel = dynamic(() => import('@/components/analytics/MetaPixel'), {
+  ssr: false,
+  loading: () => null,
+});
+
+// Preload critical fonts with optimal settings
 const montserrat = Montserrat({
   subsets: ['latin'],
   variable: '--font-montserrat',
   display: 'swap',
+  preload: true,
+  fallback: ['system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
 });
 
 const lilitaOne = Lilita_One({
@@ -18,20 +27,27 @@ const lilitaOne = Lilita_One({
   subsets: ['latin'],
   variable: '--font-lilita',
   display: 'swap',
+  preload: true,
+  fallback: ['cursive'],
 });
 
+// These fonts are less critical - can load after
 const homemadeApple = Homemade_Apple({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-homemade-apple',
-  display: 'swap',
+  display: 'optional', // Falls back immediately if not loaded
+  preload: false,
+  fallback: ['cursive'],
 });
 
 const caveatBrush = Caveat_Brush({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-caveat-brush',
-  display: 'swap',
+  display: 'optional', // Falls back immediately if not loaded
+  preload: false,
+  fallback: ['cursive'],
 });
 
 export const viewport: Viewport = {
@@ -93,6 +109,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${montserrat.variable} ${lilitaOne.variable} ${homemadeApple.variable} ${caveatBrush.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Preconnect to critical domains for faster resource loading */}
+        <link rel="preconnect" href="https://images.tsh.edu.in" />
+        <link rel="dns-prefetch" href="https://images.tsh.edu.in" />
+        {/* Preload hero image for instant display */}
+        <link 
+          rel="preload" 
+          href="https://images.tsh.edu.in/homepage/hero.jpeg" 
+          as="image"
+          type="image/jpeg"
+        />
+      </head>
       <body className="font-body">
         <Providers>
           {children}

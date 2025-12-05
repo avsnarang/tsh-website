@@ -1,8 +1,6 @@
+// Minimal loading state - returns null for instant perceived performance
+// The page content will stream in via React Server Components
 export default function Loading() {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
-    </div>
-  );
+  return null;
 }
 
