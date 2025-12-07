@@ -479,7 +479,7 @@ function Navbar() {
 
           {/* Breadcrumbs - shown below navbar */}
           {!isMenuOpen && (
-            <div className="absolute left-0 right-0 top-[80px] z-10 px-4 sm:px-6 lg:px-8">
+            <div className="absolute left-0 right-0 top-[100px] z-10 px-4 sm:px-6 lg:px-8">
               <BreadcrumbNav />
             </div>
           )}
