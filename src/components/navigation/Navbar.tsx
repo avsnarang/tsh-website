@@ -481,7 +481,7 @@ function Navbar() {
           {/* Breadcrumbs - shown below navbar with frosted glass effect */}
           {!isMenuOpen && (
             <div className="absolute left-0 right-0 top-[80px] z-10 px-8 mt-16 sm:mt-2 md:mt-4 
-              lg:mt-8 sm:px-12 lg:px-16">
+              lg:mt-8 sm:px-12 lg:px-16 flex justify-center sm:justify-start">
               <BreadcrumbNav />
             </div>
           )}
