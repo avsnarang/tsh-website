@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, ArrowRight, X, Quote } from 'lucide-react';
+import { User, ArrowRight, X, Quote, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
@@ -71,87 +71,102 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
   };
 
   return (
-    <div className="py-24 bg-gradient-to-b from-primary-light/5 to-white">
-      <Container>
+    <section className="relative py-24 overflow-hidden bg-white">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-green-light/10 translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-orange-light/10 -translate-x-1/2 translate-y-1/2" />
+      </div>
+
+      <Container className="relative z-10">
         <ScrollReveal>
-          <div className="text-center mb-16 relative">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 bg-primary/5 rounded-full -translate-y-12" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-16 bg-primary/10 rounded-full -translate-y-8" />
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full mb-6"
+            >
+              <MessageSquare className="h-4 w-4" />
+              <span className="font-semibold text-sm">Leadership Messages</span>
+            </motion.div>
             
-            <div className="relative">
-              <TextReveal>
-                <h2 className="text-4xl text-neutral-dark mb-4">Words from Our Leaders</h2>
-              </TextReveal>
-              <TextReveal delay={0.2}>
-                <p className="text-xl text-primary font-body max-w-2xl mx-auto">
-                  Insights and guidance from {formatCampusName(campusName)} campus leadership
-                </p>
-              </TextReveal>
-            </div>
+            <TextReveal>
+              <h2 className="font-display text-4xl md:text-5xl text-neutral-dark mb-6">
+                Words from Our <span className="text-green">Leaders</span>
+              </h2>
+            </TextReveal>
+            
+            <TextReveal delay={0.2}>
+              <p className="text-xl text-neutral-dark/70 font-body max-w-2xl mx-auto">
+                Insights and guidance from {formatCampusName(campusName)} campus leadership
+              </p>
+            </TextReveal>
           </div>
         </ScrollReveal>
 
-        <div className="space-y-12">
+        {/* Horizontal Card Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {messages.map((leader, index) => (
-            <ScrollReveal
-              key={leader.id}
-              delay={index * 0.1}
-              direction={index % 2 === 0 ? 'left' : 'right'}
-            >
-              <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-x-32 -translate-y-32 group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full translate-x-32 translate-y-32 group-hover:scale-110 transition-transform duration-500" />
+            <ScrollReveal key={leader.id} delay={index * 0.1}>
+              <motion.div
+                whileHover={{ y: -8, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="relative group h-full"
+              >
+                {/* Card glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-br from-green-light/40 to-orange-light/40 rounded-3xl opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500" />
                 
-                <div className="relative p-8">
-                  <Quote className="absolute top-4 right-4 h-8 w-8 text-primary/10" />
+                <div className="relative bg-white rounded-3xl p-8 shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full flex flex-col border border-neutral-100 group-hover:border-green-light/30">
+                  {/* Quote Icon */}
+                  <Quote className="absolute top-6 right-6 h-8 w-8 text-green-light/30 group-hover:text-green-light/50 transition-colors duration-300" />
                   
-                  <div className="flex flex-col lg:flex-row gap-8">
-                    <div className="lg:w-1/3 flex flex-col items-center text-center">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                        className="w-48 h-48 bg-primary-light/20 rounded-full flex items-center justify-center mb-4 overflow-hidden"
-                      >
-                        {leader.photo_url ? (
-                          <img
-                            src={leader.photo_url}
-                            alt={leader.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <User className="h-24 w-24 text-primary" />
-                        )}
-                      </motion.div>
-                      <TextReveal delay={0.1}>
-                        <h3 className="text-xl text-neutral-dark font-semibold">{leader.name}</h3>
-                      </TextReveal>
-                      <TextReveal delay={0.15}>
-                        <p className="text-primary">{leader.role}</p>
-                      </TextReveal>
-                    </div>
-                    <div className="lg:w-2/3">
-                      <TextReveal delay={0.2}>
-                        <div className="prose prose-lg text-neutral-dark/80 mb-6">
-                          <p>{leader.preview}</p>
+                  {/* Profile Section */}
+                  <div className="flex flex-col items-center text-center mb-6">
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                      className="w-28 h-28 rounded-full overflow-hidden mb-4 ring-4 ring-green-light/20 group-hover:ring-green-light/40 transition-all duration-300"
+                    >
+                      {leader.photo_url ? (
+                        <img
+                          src={leader.photo_url}
+                          alt={leader.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-green-light to-green flex items-center justify-center">
+                          <User className="h-12 w-12 text-white" />
                         </div>
-                      </TextReveal>
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Button
-                          onClick={() => setSelectedMessage(leader)}
-                          variant="primary"
-                          className="flex items-center gap-2 group-hover:gap-3 transition-all"
-                        >
-                          Read Full Message
-                          <ArrowRight className="h-4 w-4" />
-                        </Button>
-                      </motion.div>
-                    </div>
+                      )}
+                    </motion.div>
+                    
+                    <h3 className="text-xl font-display text-neutral-dark group-hover:text-green transition-colors duration-300">
+                      {leader.name}
+                    </h3>
+                    <p className="text-green font-medium text-sm">{leader.role}</p>
+                  </div>
+
+                  {/* Preview Text */}
+                  <div className="flex-grow mb-6">
+                    <p className="text-neutral-dark/70 font-body text-center line-clamp-4 leading-relaxed">
+                      "{leader.preview}"
+                    </p>
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="text-center mt-auto">
+                    <Button
+                      onClick={() => setSelectedMessage(leader)}
+                      variant="outline2"
+                      className="group/btn inline-flex items-center gap-2 px-6 py-2 text-sm"
+                    >
+                      Read Full Message
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                    </Button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </ScrollReveal>
           ))}
         </div>
@@ -159,41 +174,62 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
 
       {/* Message Modal */}
       {selectedMessage && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
+        <div 
+          className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          onClick={() => setSelectedMessage(null)}
+        >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden relative"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="sticky top-0 bg-white p-6 border-b border-neutral-dark/10 flex items-center justify-between">
-              <div>
-                <TextReveal>
-                  <h2 className="text-2xl font-semibold text-neutral-dark">{selectedMessage.name}</h2>
-                </TextReveal>
-                <TextReveal delay={0.1}>
-                  <p className="text-primary">{selectedMessage.role}</p>
-                </TextReveal>
-              </div>
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-gradient-to-r from-green to-green-dark p-6 text-white">
               <button
                 onClick={() => setSelectedMessage(null)}
-                className="p-2 hover:bg-neutral-dark/10 rounded-full transition-colors"
+                className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-full transition-colors"
               >
-                <X className="h-6 w-6 text-neutral-dark" />
+                <X className="h-6 w-6" />
               </button>
+              
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden ring-2 ring-white/30">
+                  {selectedMessage.photo_url ? (
+                    <img
+                      src={selectedMessage.photo_url}
+                      alt={selectedMessage.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-white/20 flex items-center justify-center">
+                      <User className="h-8 w-8 text-white" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <h2 className="text-2xl font-display">{selectedMessage.name}</h2>
+                  <p className="text-white/80">{selectedMessage.role}</p>
+                </div>
+              </div>
             </div>
-            <div className="p-6">
+
+            {/* Modal Content */}
+            <div className="p-8 overflow-y-auto max-h-[calc(90vh-120px)]">
+              <Quote className="h-10 w-10 text-green-light/30 mb-4" />
               <div className="prose prose-lg max-w-none">
                 {selectedMessage.fullMessage.split('\n\n').map((paragraph, index) => (
-                  <TextReveal key={index} delay={0.2 + index * 0.1}>
-                    <p className="text-neutral-dark/80 mb-4">{paragraph}</p>
-                  </TextReveal>
+                  <p key={index} className="text-neutral-dark/80 mb-4 leading-relaxed">
+                    {paragraph}
+                  </p>
                 ))}
               </div>
             </div>
           </motion.div>
         </div>
       )}
-    </div>
+    </section>
   );
 }
