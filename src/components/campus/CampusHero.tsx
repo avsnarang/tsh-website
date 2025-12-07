@@ -67,7 +67,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
             {/* Title */}
             <ScrollReveal delay={0.1}>
               <TextReveal>
-                <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight">
+                <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white mb-6 leading-tight whitespace-nowrap">
                   {info.name}
                 </h1>
               </TextReveal>
@@ -131,9 +131,9 @@ export default function CampusHero({ info }: CampusHeroProps) {
                 </Link>
                 
                 <Link href="/contact">
-                  <Button variant="outline2" className="group text-lg px-8 py-4 bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white hover:text-green-dark">
+                  <Button variant="outline2" className="group text-lg px-8 py-4 bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white hover:text-green-dark inline-flex items-center gap-2">
                     Schedule a Visit
-                    <MapPin className="w-5 h-5 ml-2" />
+                    <MapPin className="w-5 h-5" />
                   </Button>
                 </Link>
               </motion.div>
