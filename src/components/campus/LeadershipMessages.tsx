@@ -70,6 +70,37 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
       .join(' ');
   };
 
+  // Reorder messages so the first (most important) is in the center
+  // Order: 2, 1, 3 (left, center, right) - center gets prominence
+  const reorderForDisplay = (msgs: LeadershipMessage[]): LeadershipMessage[] => {
+    if (msgs.length <= 1) return msgs;
+    if (msgs.length === 2) return [msgs[1], msgs[0]]; // Second on left, first on right
+    
+    // For 3+ messages: put first in center, second on left, third on right, then continue
+    const reordered: LeadershipMessage[] = [];
+    const first = msgs[0]; // Will go to center
+    const rest = msgs.slice(1);
+    
+    // Alternate: left side gets even indices (0, 2, 4...), right side gets odd (1, 3, 5...)
+    const leftSide: LeadershipMessage[] = [];
+    const rightSide: LeadershipMessage[] = [];
+    
+    rest.forEach((msg, idx) => {
+      if (idx % 2 === 0) {
+        leftSide.push(msg);
+      } else {
+        rightSide.push(msg);
+      }
+    });
+    
+    // Build final order: left items, center (first), right items
+    reordered.push(...leftSide, first, ...rightSide);
+    
+    return reordered;
+  };
+
+  const displayMessages = reorderForDisplay(messages);
+
   return (
     <section className="relative py-24 overflow-hidden bg-white">
       {/* Decorative Background Elements */}
@@ -107,7 +138,7 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
 
         {/* Horizontal Card Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {messages.map((leader, index) => (
+          {displayMessages.map((leader, index) => (
             <ScrollReveal key={leader.id} delay={index * 0.1}>
               <motion.div
                 whileHover={{ y: -8, scale: 1.02 }}
