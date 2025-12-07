@@ -70,36 +70,21 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
       .join(' ');
   };
 
-  // Reorder messages so the first (most important) is in the center
-  // Order: 2, 1, 3 (left, center, right) - center gets prominence
-  const reorderForDisplay = (msgs: LeadershipMessage[]): LeadershipMessage[] => {
-    if (msgs.length <= 1) return msgs;
-    if (msgs.length === 2) return [msgs[1], msgs[0]]; // Second on left, first on right
-    
-    // For 3+ messages: put first in center, second on left, third on right, then continue
-    const reordered: LeadershipMessage[] = [];
-    const first = msgs[0]; // Will go to center
-    const rest = msgs.slice(1);
-    
-    // Alternate: left side gets even indices (0, 2, 4...), right side gets odd (1, 3, 5...)
-    const leftSide: LeadershipMessage[] = [];
-    const rightSide: LeadershipMessage[] = [];
-    
-    rest.forEach((msg, idx) => {
-      if (idx % 2 === 0) {
-        leftSide.push(msg);
-      } else {
-        rightSide.push(msg);
-      }
-    });
-    
-    // Build final order: left items, center (first), right items
-    reordered.push(...leftSide, first, ...rightSide);
-    
-    return reordered;
+  // Get CSS order class for desktop reordering (2, 1, 3)
+  // Mobile stays in natural order (1, 2, 3)
+  const getOrderClass = (index: number): string => {
+    if (messages.length < 3) return '';
+    // On lg+: index 0 -> order 2 (center), index 1 -> order 1 (left), index 2 -> order 3 (right)
+    if (index === 0) return 'lg:order-2';
+    if (index === 1) return 'lg:order-1';
+    if (index === 2) return 'lg:order-3';
+    return '';
   };
 
-  const displayMessages = reorderForDisplay(messages);
+  // Check if this is the prominent/center card (first message)
+  const isProminent = (index: number): boolean => {
+    return index === 0 && messages.length >= 3;
+  };
 
   return (
     <section className="relative py-24 overflow-hidden bg-white">
@@ -136,28 +121,48 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
           </div>
         </ScrollReveal>
 
-        {/* Horizontal Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayMessages.map((leader, index) => (
-            <ScrollReveal key={leader.id} delay={index * 0.1}>
+        {/* Horizontal Card Grid - Items reorder on lg screens */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:items-end">
+          {messages.map((leader, index) => (
+            <ScrollReveal 
+              key={leader.id} 
+              delay={index * 0.1}
+              className={getOrderClass(index)}
+            >
               <motion.div
                 whileHover={{ y: -8, scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="relative group h-full"
+                className={`relative group h-full ${isProminent(index) ? 'lg:scale-105 lg:z-10' : ''}`}
               >
-                {/* Card glow effect */}
-                <div className="absolute -inset-0.5 bg-gradient-to-br from-green-light/40 to-orange-light/40 rounded-3xl opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500" />
+                {/* Card glow effect - stronger for prominent card */}
+                <div className={`absolute -inset-0.5 bg-gradient-to-br rounded-3xl opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500 ${
+                  isProminent(index) 
+                    ? 'from-green/50 to-orange/50 lg:opacity-30' 
+                    : 'from-green-light/40 to-orange-light/40'
+                }`} />
                 
-                <div className="relative bg-white rounded-3xl p-8 shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full flex flex-col border border-neutral-100 group-hover:border-green-light/30">
+                <div className={`relative rounded-3xl shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full flex flex-col border ${
+                  isProminent(index)
+                    ? 'bg-gradient-to-br from-green to-green-dark text-white p-10 border-green lg:shadow-xl'
+                    : 'bg-white p-8 border-neutral-100 group-hover:border-green-light/30'
+                }`}>
                   {/* Quote Icon */}
-                  <Quote className="absolute top-6 right-6 h-8 w-8 text-green-light/30 group-hover:text-green-light/50 transition-colors duration-300" />
+                  <Quote className={`absolute top-6 right-6 h-8 w-8 transition-colors duration-300 ${
+                    isProminent(index)
+                      ? 'text-white/20 group-hover:text-white/30'
+                      : 'text-green-light/30 group-hover:text-green-light/50'
+                  }`} />
                   
                   {/* Profile Section */}
                   <div className="flex flex-col items-center text-center mb-6">
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       transition={{ type: "spring", stiffness: 300 }}
-                      className="w-28 h-28 rounded-full overflow-hidden mb-4 ring-4 ring-green-light/20 group-hover:ring-green-light/40 transition-all duration-300"
+                      className={`rounded-full overflow-hidden mb-4 transition-all duration-300 ${
+                        isProminent(index)
+                          ? 'w-32 h-32 lg:w-36 lg:h-36 ring-4 ring-white/30 group-hover:ring-white/50'
+                          : 'w-28 h-28 ring-4 ring-green-light/20 group-hover:ring-green-light/40'
+                      }`}
                     >
                       {leader.photo_url ? (
                         <img
@@ -166,21 +171,37 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-green-light to-green flex items-center justify-center">
-                          <User className="h-12 w-12 text-white" />
+                        <div className={`w-full h-full flex items-center justify-center ${
+                          isProminent(index)
+                            ? 'bg-white/20'
+                            : 'bg-gradient-to-br from-green-light to-green'
+                        }`}>
+                          <User className={`${isProminent(index) ? 'h-16 w-16' : 'h-12 w-12'} text-white`} />
                         </div>
                       )}
                     </motion.div>
                     
-                    <h3 className="text-xl font-display text-neutral-dark group-hover:text-green transition-colors duration-300">
+                    <h3 className={`font-display transition-colors duration-300 ${
+                      isProminent(index)
+                        ? 'text-2xl lg:text-2xl text-white'
+                        : 'text-xl text-neutral-dark group-hover:text-green'
+                    }`}>
                       {leader.name}
                     </h3>
-                    <p className="text-green font-medium text-sm">{leader.role}</p>
+                    <p className={`font-medium text-sm ${
+                      isProminent(index) ? 'text-orange-light' : 'text-green'
+                    }`}>
+                      {leader.role}
+                    </p>
                   </div>
 
                   {/* Preview Text */}
                   <div className="flex-grow mb-6">
-                    <p className="text-neutral-dark/70 font-body text-center line-clamp-4 leading-relaxed">
+                    <p className={`font-body text-center leading-relaxed ${
+                      isProminent(index)
+                        ? 'text-white/90 line-clamp-5'
+                        : 'text-neutral-dark/70 line-clamp-4'
+                    }`}>
                       "{leader.preview}"
                     </p>
                   </div>
@@ -189,8 +210,10 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
                   <div className="text-center mt-auto">
                     <Button
                       onClick={() => setSelectedMessage(leader)}
-                      variant="outline2"
-                      className="group/btn inline-flex items-center gap-2 px-6 py-2 text-sm"
+                      variant={isProminent(index) ? 'cta' : 'outline2'}
+                      className={`group/btn inline-flex items-center gap-2 px-6 py-2 text-sm ${
+                        isProminent(index) ? 'bg-white text-green hover:bg-orange-light hover:text-neutral-dark' : ''
+                      }`}
                     >
                       Read Full Message
                       <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
