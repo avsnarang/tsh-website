@@ -30,10 +30,10 @@ export default function CampusHero({ info }: CampusHeroProps) {
         <div className="absolute -bottom-32 right-1/4 w-[400px] h-[400px] rounded-full bg-green-light/20" />
       </div>
 
-      <Container className="relative z-10 pt-32 pb-20">
+      <Container className="relative z-10 pt-40 pb-24">
         <BreadcrumbNav />
         
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mt-8">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mt-6">
           {/* Left Content */}
           <ScrollReveal direction="left">
             <div className="relative z-10">
