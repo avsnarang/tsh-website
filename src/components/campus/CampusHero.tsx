@@ -48,8 +48,8 @@ export default function CampusHero({ info }: CampusHeroProps) {
       }} />
 
       {/* Main content */}
-      <Container className="relative z-10 flex-1 flex items-center py-8 md:py-12 px-6 md:px-12 lg:px-16">
-        <div className="w-full max-w-7xl mx-auto">
+      <Container className="relative z-10 flex-1 flex items-center py-8 md:py-12 px-6 md:px-6 lg:px-8">
+        <div className="w-full px-12 mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left column - Text content */}
             <div className="text-center lg:text-left order-2 lg:order-1">
@@ -70,11 +70,15 @@ export default function CampusHero({ info }: CampusHeroProps) {
               <ScrollReveal delay={0.1}>
                 <TextReveal>
                   <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-neutral-dark mb-6 leading-[1.1]">
-                    {info.name.split(' ').map((word, i) => (
-                      <span key={i} className="inline-block">
-                        {i === info.name.split(' ').length - 1 ? (
-                          <span className="relative">
-                            <span className="text-green">{word}</span>
+                    {(() => {
+                      const words = info.name.split(' ');
+                      const lastWord = words[words.length - 1];
+                      const restOfName = words.slice(0, -1).join(' ');
+                      return (
+                        <>
+                          {restOfName}{' '}
+                          <span className="relative inline-block">
+                            <span className="text-green">{lastWord}</span>
                             <motion.span
                               initial={{ scaleX: 0 }}
                               animate={{ scaleX: 1 }}
@@ -82,11 +86,9 @@ export default function CampusHero({ info }: CampusHeroProps) {
                               className="absolute -bottom-2 left-0 right-0 h-1 bg-orange origin-left rounded-full"
                             />
                           </span>
-                        ) : (
-                          <span>{word} </span>
-                        )}
-                      </span>
-                    ))}
+                        </>
+                      );
+                    })()}
                   </h1>
                 </TextReveal>
               </ScrollReveal>
