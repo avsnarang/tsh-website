@@ -478,21 +478,12 @@ function Navbar() {
             </div>
           )}
 
-          {/* Breadcrumbs - shown below navbar */}
-          {!isMenuOpen && (() => {
-            // Determine breadcrumb variant based on route
-            // Pages with dark hero backgrounds need light breadcrumbs
-            const darkBackgroundRoutes = ['/campus'];
-            const needsLightVariant = darkBackgroundRoutes.some(route => 
-              pathname?.startsWith(route)
-            );
-            
-            return (
-              <div className="absolute left-0 right-0 top-[80px] z-10 px-8 mt-16 sm:mt-2 md:mt-4 lg:mt-8 sm:px-12 lg:px-16">
-                <BreadcrumbNav variant={needsLightVariant ? 'light' : 'default'} />
-              </div>
-            );
-          })()}
+          {/* Breadcrumbs - shown below navbar, always light since navbar has colored background */}
+          {!isMenuOpen && (
+            <div className="absolute left-0 right-0 top-[80px] z-10 px-8 mt-16 sm:mt-2 md:mt-4 lg:mt-8 sm:px-12 lg:px-16">
+              <BreadcrumbNav variant="light" />
+            </div>
+          )}
         </Container>
       </nav>
 
