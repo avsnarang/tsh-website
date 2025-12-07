@@ -48,9 +48,9 @@ export default function CampusHero({ info }: CampusHeroProps) {
       }} />
 
       {/* Main content */}
-      <Container className="relative z-10 flex-1 flex items-center py-8 md:py-12">
-        <div className="w-full">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <Container className="relative z-10 flex-1 flex items-center py-8 md:py-12 px-6 md:px-12 lg:px-16">
+        <div className="w-full max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left column - Text content */}
             <div className="text-center lg:text-left order-2 lg:order-1">
               {/* Badge */}
