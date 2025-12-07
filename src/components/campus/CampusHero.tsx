@@ -43,7 +43,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
       </div>
 
       {/* Breadcrumb at top - account for navbar + announcement bar */}
-      <Container className="relative z-10 pt-28 sm:pt-32 md:pt-36">
+      <Container className="relative z-10 pt-40 sm:pt-32 md:pt-38">
         <BreadcrumbNav variant="light" />
       </Container>
 
@@ -141,21 +141,6 @@ export default function CampusHero({ info }: CampusHeroProps) {
           </div>
         </div>
       </Container>
-
-      {/* Scroll indicator - hidden on mobile */}
-      <motion.div 
-        className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-10"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <div className="w-5 h-8 md:w-6 md:h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-1.5 md:p-2">
-          <motion.div 
-            className="w-1 h-1 md:w-1.5 md:h-1.5 bg-white rounded-full"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-        </div>
-      </motion.div>
     </section>
   );
 }
