@@ -56,22 +56,11 @@ export default function CampusHome() {
       <CampusAchievements info={info} />
 
       {/* Contact Section */}
-      <section className="relative py-24 overflow-hidden">
-        {/* Deep green gradient */}
-        <div className="absolute inset-0" style={{
-          background: `linear-gradient(180deg, 
-            #ffcc80 0%,
-            #ff9800 15%,
-            #f57c00 30%,
-            #00501B 50%,
-            #003d14 75%,
-            #002a0e 100%)`
-        }} />
-        
+      <section className="relative py-24 overflow-hidden bg-green">
         {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 -right-32 w-[500px] h-[500px] rounded-full bg-orange/20 blur-3xl" />
-          <div className="absolute bottom-20 -left-20 w-[400px] h-[400px] rounded-full bg-green-light/10 blur-3xl" />
+          <div className="absolute top-0 -right-32 w-[400px] h-[400px] rounded-full bg-green-light/20" />
+          <div className="absolute bottom-20 -left-20 w-[300px] h-[300px] rounded-full bg-green-dark/30" />
         </div>
 
         <Container className="relative z-10">
@@ -81,7 +70,7 @@ export default function CampusHome() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur-sm text-white rounded-full mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 text-white rounded-full mb-6"
               >
                 <Send className="h-4 w-4" />
                 <span className="font-semibold text-sm">Get in Touch</span>
@@ -108,8 +97,8 @@ export default function CampusHome() {
                   whileHover={{ y: -4, scale: 1.02 }}
                   className="relative group"
                 >
-                  <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 text-center">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green to-green-dark flex items-center justify-center mb-4 mx-auto">
+                  <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 text-center">
+                    <div className="w-12 h-12 rounded-xl bg-green flex items-center justify-center mb-4 mx-auto">
                       <item.icon className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-lg font-display text-neutral-dark mb-2">{item.title}</h3>
@@ -129,7 +118,7 @@ export default function CampusHome() {
           <ScrollReveal delay={0.3}>
             <div className="text-center">
               <Link href="/contact">
-                <Button variant="cta" className="text-lg px-8 bg-white text-green hover:bg-orange-light hover:text-neutral-dark shadow-xl">
+                <Button variant="cta" className="text-lg px-8 bg-orange text-white hover:bg-orange-dark shadow-xl">
                   Send Us a Message
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>

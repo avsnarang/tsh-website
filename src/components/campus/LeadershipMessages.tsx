@@ -75,20 +75,11 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
   const isProminent = (index: number): boolean => index === 0 && messages.length >= 3;
 
   return (
-    <section className="relative py-24 overflow-hidden">
-      {/* Continuous gradient */}
-      <div className="absolute inset-0" style={{
-        background: `linear-gradient(180deg, 
-          #43a047 0%,
-          #388e3c 30%,
-          #2e7d32 60%,
-          #1b5e20 100%)`
-      }} />
-      
+    <section className="relative py-24 overflow-hidden bg-green-dark">
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-20 right-1/4 w-[400px] h-[400px] rounded-full bg-white/5 blur-3xl" />
-        <div className="absolute bottom-0 -left-20 w-[500px] h-[500px] rounded-full bg-orange/10 blur-3xl" />
+        <div className="absolute -top-20 right-1/4 w-[400px] h-[400px] rounded-full bg-green/30" />
+        <div className="absolute bottom-0 -left-20 w-[300px] h-[300px] rounded-full bg-orange-light/10" />
       </div>
 
       <Container className="relative z-10">
@@ -98,7 +89,7 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur-sm text-white rounded-full mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 text-white rounded-full mb-6"
             >
               <MessageSquare className="h-4 w-4" />
               <span className="font-semibold text-sm">Leadership Messages</span>
@@ -127,22 +118,22 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
               >
                 <div className={`relative rounded-3xl p-8 shadow-xl transition-all duration-300 h-full flex flex-col ${
                   isProminent(index)
-                    ? 'bg-gradient-to-br from-orange to-orange-dark text-white'
-                    : 'bg-white/95 backdrop-blur-sm'
+                    ? 'bg-orange text-white'
+                    : 'bg-white'
                 }`}>
                   <Quote className={`absolute top-6 right-6 h-8 w-8 ${
-                    isProminent(index) ? 'text-white/20' : 'text-green/10'
+                    isProminent(index) ? 'text-white/20' : 'text-green-light/30'
                   }`} />
                   
                   <div className="flex flex-col items-center text-center mb-6">
                     <div className={`w-24 h-24 rounded-full overflow-hidden mb-4 ring-4 ${
-                      isProminent(index) ? 'ring-white/30' : 'ring-green/20'
+                      isProminent(index) ? 'ring-white/30' : 'ring-green-light/30'
                     }`}>
                       {leader.photo_url ? (
                         <img src={leader.photo_url} alt={leader.name} className="w-full h-full object-cover" />
                       ) : (
                         <div className={`w-full h-full flex items-center justify-center ${
-                          isProminent(index) ? 'bg-white/20' : 'bg-gradient-to-br from-green to-green-dark'
+                          isProminent(index) ? 'bg-orange-dark' : 'bg-green'
                         }`}>
                           <User className="h-10 w-10 text-white" />
                         </div>
@@ -167,7 +158,7 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
                     <Button
                       onClick={() => setSelectedMessage(leader)}
                       variant={isProminent(index) ? 'cta' : 'outline2'}
-                      className={`text-sm ${isProminent(index) ? 'bg-white text-orange hover:bg-orange-light' : ''}`}
+                      className={`text-sm ${isProminent(index) ? 'bg-white text-orange hover:bg-orange-light hover:text-orange-dark' : ''}`}
                     >
                       Read More <ArrowRight className="h-4 w-4 ml-1" />
                     </Button>
@@ -181,14 +172,14 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
 
       {/* Modal */}
       {selectedMessage && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={() => setSelectedMessage(null)}>
+        <div className="fixed inset-0 bg-neutral-dark/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={() => setSelectedMessage(null)}>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-gradient-to-r from-green to-green-dark p-6 text-white">
+            <div className="bg-green p-6 text-white relative">
               <button onClick={() => setSelectedMessage(null)} className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-full">
                 <X className="h-6 w-6" />
               </button>
@@ -197,14 +188,14 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
                   {selectedMessage.photo_url ? (
                     <img src={selectedMessage.photo_url} alt={selectedMessage.name} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-white/20 flex items-center justify-center">
+                    <div className="w-full h-full bg-green-dark flex items-center justify-center">
                       <User className="h-8 w-8" />
                     </div>
                   )}
                 </div>
                 <div>
                   <h2 className="text-xl font-display">{selectedMessage.name}</h2>
-                  <p className="text-white/80">{selectedMessage.role}</p>
+                  <p className="text-green-light">{selectedMessage.role}</p>
                 </div>
               </div>
             </div>

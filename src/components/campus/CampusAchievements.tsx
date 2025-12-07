@@ -20,20 +20,11 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
   if (!info.achievements?.length) return null;
 
   return (
-    <section className="relative py-24 overflow-hidden">
-      {/* Gradient background - warm tones */}
-      <div className="absolute inset-0" style={{
-        background: `linear-gradient(180deg, 
-          #f5f5f0 0%,
-          #fff8e1 30%,
-          #ffe0b2 60%,
-          #ffcc80 100%)`
-      }} />
-      
+    <section className="relative py-24 overflow-hidden bg-orange-light">
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-20 left-1/4 w-[400px] h-[400px] rounded-full bg-orange/20 blur-3xl" />
-        <div className="absolute bottom-0 -right-20 w-[500px] h-[500px] rounded-full bg-green-light/15 blur-3xl" />
+        <div className="absolute -top-20 left-1/4 w-[350px] h-[350px] rounded-full bg-orange/20" />
+        <div className="absolute bottom-0 -right-20 w-[400px] h-[400px] rounded-full bg-green-light/20" />
       </div>
 
       <Container className="relative z-10">
@@ -43,7 +34,7 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-orange/10 text-orange-dark rounded-full mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-orange/20 text-orange-dark rounded-full mb-6"
             >
               <Trophy className="h-4 w-4" />
               <span className="font-semibold text-sm">Recognition and Excellence</span>
@@ -72,15 +63,15 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
                   whileHover={{ y: -8, scale: 1.02 }}
                   className="relative group h-full"
                 >
-                  <div className="relative bg-white rounded-3xl p-8 shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full">
+                  <div className="relative bg-white rounded-3xl p-8 shadow-lg group-hover:shadow-xl transition-all duration-300 h-full border border-orange/10">
                     {/* Year badge */}
                     <div className="absolute -top-3 right-6">
-                      <div className="px-4 py-1 bg-gradient-to-r from-orange to-orange-dark text-white text-sm font-semibold rounded-full shadow-md">
+                      <div className="px-4 py-1 bg-orange text-white text-sm font-semibold rounded-full shadow-md">
                         {achievement.year}
                       </div>
                     </div>
 
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-light to-orange flex items-center justify-center mb-6">
+                    <div className="w-14 h-14 rounded-2xl bg-orange flex items-center justify-center mb-6">
                       <AchievementIcon className="w-7 h-7 text-white" />
                     </div>
 

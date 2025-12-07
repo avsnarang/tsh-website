@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Building2, ArrowRight } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 import Container from '../ui/Container';
 import { CampusInfo } from '../../types/campus';
 import ScrollReveal from '../animations/ScrollReveal';
@@ -14,20 +14,11 @@ interface CampusFacilitiesProps {
 
 export default function CampusFacilities({ info }: CampusFacilitiesProps) {
   return (
-    <section className="relative py-24 overflow-hidden">
-      {/* Light cream/warm background for contrast */}
-      <div className="absolute inset-0" style={{
-        background: `linear-gradient(180deg, 
-          #1b5e20 0%,
-          #1b5e20 5%,
-          #f5f5f0 5%,
-          #f5f5f0 100%)`
-      }} />
-      
-      {/* Decorative accents */}
+    <section className="relative py-24 overflow-hidden bg-neutral-light">
+      {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 -right-32 w-[500px] h-[500px] rounded-full bg-green-light/10 blur-3xl" />
-        <div className="absolute bottom-20 -left-32 w-[400px] h-[400px] rounded-full bg-orange/10 blur-3xl" />
+        <div className="absolute top-20 -right-32 w-[400px] h-[400px] rounded-full bg-green-light/20" />
+        <div className="absolute bottom-20 -left-32 w-[300px] h-[300px] rounded-full bg-orange-light/30" />
       </div>
 
       <Container className="relative z-10">
@@ -37,7 +28,7 @@ export default function CampusFacilities({ info }: CampusFacilitiesProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-green/10 text-green rounded-full mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/30 text-green rounded-full mb-6"
             >
               <Building2 className="h-4 w-4" />
               <span className="font-semibold text-sm">World-Class Infrastructure</span>
@@ -64,15 +55,15 @@ export default function CampusFacilities({ info }: CampusFacilitiesProps) {
                 whileHover={{ y: -8 }}
                 className="relative group h-full"
               >
-                <div className="relative bg-white rounded-3xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
+                <div className="relative bg-white rounded-3xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-green-light/20">
                   {/* Image */}
                   <div className="relative h-48 overflow-hidden">
                     <OptimizedImage
                       src={facility.image}
                       alt={facility.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-dark/70 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-green-dark/70 via-transparent to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
                       <h3 className="text-xl font-display text-white">{facility.title}</h3>
                     </div>
@@ -86,7 +77,7 @@ export default function CampusFacilities({ info }: CampusFacilitiesProps) {
                   </div>
 
                   {/* Accent bar */}
-                  <div className="h-1 bg-gradient-to-r from-green via-green-light to-orange transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                  <div className="h-1 bg-gradient-to-r from-green to-orange transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </div>
               </motion.div>
             </ScrollReveal>

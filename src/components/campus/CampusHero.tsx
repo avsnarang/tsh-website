@@ -17,33 +17,17 @@ interface CampusHeroProps {
 
 const getStatIcon = (index: number) => {
   const icons = [Users, Building2, GraduationCap, MessageSquareQuote];
-  const Icon = icons[index % icons.length];
-  return Icon;
+  return icons[index % icons.length];
 };
 
 export default function CampusHero({ info }: CampusHeroProps) {
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      {/* Full gradient background */}
-      <div className="absolute inset-0" style={{
-        background: `linear-gradient(135deg, 
-          #f8fafc 0%, 
-          #f1f5f9 25%,
-          #e8f5e9 50%,
-          #c8e6c9 75%,
-          #a5d6a7 100%)`
-      }} />
-      
-      {/* Decorative elements */}
+    <section className="relative min-h-screen overflow-hidden bg-neutral-light">
+      {/* Decorative background elements using brand colors */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-orange-light/40 to-orange/20 blur-3xl" />
-        <div className="absolute top-1/2 -left-32 w-[400px] h-[400px] rounded-full bg-gradient-to-br from-green-light/50 to-green/20 blur-3xl" />
-        <div className="absolute -bottom-32 right-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-green-light/30 to-transparent blur-3xl" />
-        
-        {/* Subtle pattern */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }} />
+        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-green-light/30" />
+        <div className="absolute top-1/2 -left-32 w-[400px] h-[400px] rounded-full bg-orange-light/40" />
+        <div className="absolute -bottom-32 right-1/4 w-[400px] h-[400px] rounded-full bg-green-light/20" />
       </div>
 
       <Container className="relative z-10 pt-32 pb-20">
@@ -57,7 +41,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm text-green rounded-full mb-6 shadow-sm"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/30 text-green rounded-full mb-6"
               >
                 <Sparkles className="h-4 w-4" />
                 <span className="font-semibold text-sm">Welcome to Our Campus</span>
@@ -91,10 +75,10 @@ export default function CampusHero({ info }: CampusHeroProps) {
                     <motion.div
                       key={index}
                       whileHover={{ y: -4 }}
-                      className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-300"
+                      className="bg-white rounded-2xl p-4 shadow-md hover:shadow-lg transition-all duration-300 border border-green-light/20"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green to-green-dark flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-xl bg-green flex items-center justify-center">
                           <StatIcon className="w-5 h-5 text-white" />
                         </div>
                         <div>
@@ -126,7 +110,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
                 </Link>
                 
                 <Link href="/contact">
-                  <Button variant="outline2" className="group text-lg px-8 bg-white/80 backdrop-blur-sm">
+                  <Button variant="outline2" className="group text-lg px-8">
                     Schedule a Visit
                     <MapPin className="w-5 h-5 ml-2" />
                   </Button>
@@ -149,12 +133,12 @@ export default function CampusHero({ info }: CampusHeroProps) {
                   alt={`${info.name} Campus`}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-dark/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-green-dark/40 to-transparent" />
               </div>
               
               {/* Decorative frame */}
-              <div className="absolute -inset-4 border-2 border-green/20 rounded-[2rem] pointer-events-none" />
-              <div className="absolute -inset-8 border border-orange/10 rounded-[2.5rem] pointer-events-none" />
+              <div className="absolute -inset-4 border-2 border-green-light/40 rounded-[2rem] pointer-events-none" />
+              <div className="absolute -inset-8 border border-orange-light/30 rounded-[2.5rem] pointer-events-none" />
             </motion.div>
           </ScrollReveal>
         </div>
