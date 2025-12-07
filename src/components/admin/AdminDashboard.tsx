@@ -13,7 +13,8 @@ import {
   UserPlus,
   BookOpen,
   Trophy,
-  Video
+  Video,
+  MessageSquare
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
@@ -35,6 +36,13 @@ export default function AdminDashboard() {
       icon: Image,
       path: '/admin/gallery',
       color: 'from-orange-light to-orange'
+    },
+    {
+      title: 'Leadership Messages',
+      description: 'Manage messages from school leaders',
+      icon: MessageSquare,
+      path: '/admin/messages',
+      color: 'from-teal-light to-teal'
     },
     {
       title: 'Updates',
@@ -173,6 +181,7 @@ export default function AdminDashboard() {
                                           item.color === 'from-yellow-light to-yellow' ? 'linear-gradient(to bottom right, #FEF3C7, #D97706)' :
                                           item.color === 'from-indigo-light to-indigo' ? 'linear-gradient(to bottom right, #C7D2FE, #4F46E5)' :
                                           item.color === 'from-red-light to-red' ? 'linear-gradient(to bottom right, #FECACA, #DC2626)' :
+                                          item.color === 'from-teal-light to-teal' ? 'linear-gradient(to bottom right, #99F6E4, #0D9488)' :
                                           'linear-gradient(to bottom right, #A6D4B4, #00501B)'
                           }}
                         >
