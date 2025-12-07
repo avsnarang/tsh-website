@@ -2,8 +2,6 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
-import Container from '@/components/ui/Container';
 import { MapPin, Phone, Mail, Clock, Send, ArrowRight, Building2, PhoneCall } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import posthog from 'posthog-js';
@@ -52,7 +50,7 @@ export default function Contact() {
 
       {/* Main Content */}
       <div className="relative pt-36 sm:pt-40 lg:pt-44 pb-20">
-        <Container>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Page Header - Simple and Clean */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -256,7 +254,7 @@ export default function Contact() {
               </div>
             </motion.div>
           </div>
-        </Container>
+        </div>
       </div>
     </div>
   );
