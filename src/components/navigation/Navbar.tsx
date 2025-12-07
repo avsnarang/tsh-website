@@ -14,6 +14,7 @@ import {
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import Logo from '../ui/Logo';
+import BreadcrumbNav from './BreadcrumbNav';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { supabase } from '../../lib/supabase';
 
@@ -473,6 +474,13 @@ function Navbar() {
                   </Link>
                 </motion.div>
               </Container>
+            </div>
+          )}
+
+          {/* Breadcrumbs - shown below navbar */}
+          {!isMenuOpen && (
+            <div className="absolute left-0 right-0 top-[80px] z-10 px-4 sm:px-6 lg:px-8">
+              <BreadcrumbNav />
             </div>
           )}
         </Container>

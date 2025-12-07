@@ -7,7 +7,6 @@ import Button from '../ui/Button';
 import { CampusInfo } from '../../types/campus';
 import OptimizedImage from '../OptimizedImage';
 import Link from 'next/link';
-import BreadcrumbNav from '../navigation/BreadcrumbNav';
 import ScrollReveal from '../animations/ScrollReveal';
 import TextReveal from '../animations/TextReveal';
 
@@ -23,7 +22,8 @@ const getStatIcon = (index: number) => {
 export default function CampusHero({ info }: CampusHeroProps) {
   return (
     <section className="relative min-h-screen flex flex-col overflow-hidden">
-      {/* Background Image with Overlay */}
+      
+      {/* Background Image with Overlay */ }
       <div className="absolute inset-0">
         <OptimizedImage
           src={info.heroImage || info.facilities[0]?.image || "https://images.unsplash.com/photo-1523050854058-8df90110c9f1"}
@@ -42,13 +42,8 @@ export default function CampusHero({ info }: CampusHeroProps) {
         <div className="absolute bottom-20 left-10 w-[250px] h-[250px] rounded-full bg-orange/10 blur-3xl" />
       </div>
 
-      {/* Breadcrumb at top - account for navbar + announcement bar */}
-      <div className="relative z-10 pt-40 sm:pt-32 md:pt-36 px-4 sm:px-6 lg:px-8">
-        <BreadcrumbNav variant="light" />
-      </div>
-
       {/* Main content - centered vertically */}
-      <Container className="relative z-10 flex-1 flex items-center py-4 sm:py-6 md:py-12 px-4 md:px-6">
+      <Container className="relative z-10 flex-1 flex items-center py-4 sm:py-6 md:py-12 px-4 md:px-6 pt-32 sm:pt-36 md:pt-40">
         <div className="w-full">
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
