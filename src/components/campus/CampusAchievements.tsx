@@ -17,31 +17,23 @@ const getAchievementIcon = (index: number) => {
 };
 
 export default function CampusAchievements({ info }: CampusAchievementsProps) {
-  // If there are no achievements, don't render the section
-  if (!info.achievements?.length) {
-    return null;
-  }
+  if (!info.achievements?.length) return null;
 
   return (
     <section className="relative py-24 overflow-hidden">
-      {/* Top transition gradient for seamless flow from Facilities */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-green to-transparent z-[2]" />
-
-      {/* Green Background with decorative elements */}
-      <div className="absolute inset-0 bg-green">
-        {/* Decorative circles */}
-        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-green-light/20" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-orange-light/20" />
-        
-        {/* Decorative pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="h-full w-full"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
-        </div>
+      {/* Gradient background - warm tones */}
+      <div className="absolute inset-0" style={{
+        background: `linear-gradient(180deg, 
+          #f5f5f0 0%,
+          #fff8e1 30%,
+          #ffe0b2 60%,
+          #ffcc80 100%)`
+      }} />
+      
+      {/* Decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-20 left-1/4 w-[400px] h-[400px] rounded-full bg-orange/20 blur-3xl" />
+        <div className="absolute bottom-0 -right-20 w-[500px] h-[500px] rounded-full bg-green-light/15 blur-3xl" />
       </div>
 
       <Container className="relative z-10">
@@ -51,20 +43,20 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded-full mb-6 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-orange/10 text-orange-dark rounded-full mb-6"
             >
               <Trophy className="h-4 w-4" />
-              <span className="font-semibold text-sm">Recognition & Excellence</span>
+              <span className="font-semibold text-sm">Recognition and Excellence</span>
             </motion.div>
             
             <TextReveal>
-              <h2 className="font-display text-4xl md:text-5xl text-white mb-6">
-                Our <span className="text-orange-light">Achievements</span>
+              <h2 className="font-display text-4xl md:text-5xl text-neutral-dark mb-6">
+                Our <span className="text-orange">Achievements</span>
               </h2>
             </TextReveal>
             
             <TextReveal delay={0.2}>
-              <p className="text-xl text-white/80 font-body max-w-2xl mx-auto">
+              <p className="text-xl text-neutral-dark/70 font-body max-w-2xl mx-auto">
                 Recognition that reflects our commitment to excellence
               </p>
             </TextReveal>
@@ -78,35 +70,26 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
               <ScrollReveal key={index} delay={index * 0.1}>
                 <motion.div
                   whileHover={{ y: -8, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
                   className="relative group h-full"
                 >
-                  {/* Glow effect */}
-                  <div className="absolute -inset-0.5 bg-gradient-to-br from-white/30 to-orange-light/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500" />
-                  
-                  <div className="relative bg-white rounded-3xl p-8 shadow-xl group-hover:shadow-2xl transition-all duration-300 h-full">
-                    {/* Year Badge */}
+                  <div className="relative bg-white rounded-3xl p-8 shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full">
+                    {/* Year badge */}
                     <div className="absolute -top-3 right-6">
-                      <div className="px-4 py-1 bg-gradient-to-r from-orange to-orange-dark text-white text-sm font-semibold rounded-full shadow-lg">
+                      <div className="px-4 py-1 bg-gradient-to-r from-orange to-orange-dark text-white text-sm font-semibold rounded-full shadow-md">
                         {achievement.year}
                       </div>
                     </div>
 
-                    {/* Icon */}
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-light/20 to-green-light/5 flex items-center justify-center mb-6 group-hover:from-green group-hover:to-green-dark transition-all duration-300">
-                      <AchievementIcon className="w-8 h-8 text-green group-hover:text-white transition-colors duration-300" />
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-light to-orange flex items-center justify-center mb-6">
+                      <AchievementIcon className="w-7 h-7 text-white" />
                     </div>
 
-                    {/* Content */}
-                    <h3 className="text-2xl font-display text-neutral-dark mb-4 group-hover:text-green transition-colors duration-300">
+                    <h3 className="text-xl font-display text-neutral-dark mb-3">
                       {achievement.title}
                     </h3>
-                    <p className="text-neutral-dark/70 font-body leading-relaxed">
+                    <p className="text-neutral-dark/70 font-body text-sm leading-relaxed">
                       {achievement.description}
                     </p>
-
-                    {/* Decorative corner accent */}
-                    <div className="absolute bottom-4 right-4 w-16 h-16 rounded-full bg-gradient-to-br from-green-light/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                 </motion.div>
               </ScrollReveal>

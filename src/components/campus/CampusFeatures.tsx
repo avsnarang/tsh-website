@@ -18,14 +18,22 @@ const getFeatureIcon = (index: number) => {
 
 export default function CampusFeatures({ info }: CampusFeaturesProps) {
   return (
-    <section className="relative py-24 bg-white overflow-hidden">
-      {/* Top transition gradient for seamless flow from Hero */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white to-transparent z-[1]" />
+    <section className="relative py-24 overflow-hidden">
+      {/* Continuous gradient background */}
+      <div className="absolute inset-0" style={{
+        background: `linear-gradient(180deg, 
+          #a5d6a7 0%,
+          #81c784 20%,
+          #66bb6a 50%,
+          #4caf50 80%,
+          #43a047 100%)`
+      }} />
       
-      {/* Decorative Background Elements */}
+      {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-green-light/10 translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-orange-light/10 -translate-x-1/2 translate-y-1/2" />
+        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute top-1/2 -right-32 w-[400px] h-[400px] rounded-full bg-green-light/20 blur-3xl" />
+        <div className="absolute -bottom-32 left-1/3 w-[600px] h-[300px] rounded-full bg-orange/10 blur-3xl" />
       </div>
 
       <Container className="relative z-10">
@@ -35,20 +43,20 @@ export default function CampusFeatures({ info }: CampusFeaturesProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-full mb-6"
             >
               <Sparkles className="h-4 w-4" />
               <span className="font-semibold text-sm">Why Choose Us</span>
             </motion.div>
             
             <TextReveal>
-              <h2 className="font-display text-4xl md:text-5xl text-neutral-dark mb-6">
-                What Makes Us <span className="text-green">Unique</span>
+              <h2 className="font-display text-4xl md:text-5xl text-white mb-6">
+                What Makes Us <span className="text-orange-light">Unique</span>
               </h2>
             </TextReveal>
             
             <TextReveal delay={0.2}>
-              <p className="text-xl text-neutral-dark/70 font-body max-w-2xl mx-auto">
+              <p className="text-xl text-white/80 font-body max-w-2xl mx-auto">
                 Discover what sets us apart and how we nurture excellence in every student
               </p>
             </TextReveal>
@@ -65,25 +73,19 @@ export default function CampusFeatures({ info }: CampusFeaturesProps) {
                   transition={{ type: "spring", stiffness: 300 }}
                   className="relative group h-full"
                 >
-                  {/* Card glow effect */}
-                  <div className="absolute -inset-0.5 bg-gradient-to-br from-green-light/40 to-orange-light/40 rounded-3xl opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500" />
+                  <div className="absolute -inset-0.5 bg-gradient-to-br from-white/40 to-orange-light/40 rounded-3xl opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500" />
                   
-                  <div className="relative bg-white rounded-3xl p-8 shadow-lg group-hover:shadow-xl transition-all duration-300 h-full border border-neutral-100 group-hover:border-green-light/30">
-                    {/* Icon Container */}
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-light/20 to-green-light/5 flex items-center justify-center mb-6 group-hover:from-green group-hover:to-green-dark transition-all duration-300">
-                      <FeatureIcon className="w-8 h-8 text-green group-hover:text-white transition-colors duration-300" />
+                  <div className="relative bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl group-hover:shadow-2xl transition-all duration-300 h-full">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green to-green-dark flex items-center justify-center mb-6">
+                      <FeatureIcon className="w-7 h-7 text-white" />
                     </div>
 
-                    {/* Content */}
-                    <h3 className="text-2xl font-display text-neutral-dark mb-4 group-hover:text-green transition-colors duration-300">
+                    <h3 className="text-xl font-display text-neutral-dark mb-3">
                       {feature.title}
                     </h3>
                     <p className="text-neutral-dark/70 font-body leading-relaxed">
                       {feature.description}
                     </p>
-
-                    {/* Decorative corner accent */}
-                    <div className="absolute top-4 right-4 w-12 h-12 rounded-full bg-gradient-to-br from-orange-light/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                 </motion.div>
               </ScrollReveal>
@@ -91,11 +93,6 @@ export default function CampusFeatures({ info }: CampusFeaturesProps) {
           })}
         </div>
       </Container>
-
-      {/* Bottom fade for seamless transition to Leadership Messages section */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 z-[1]" style={{
-        background: `linear-gradient(to top, #f8fafc 0%, rgba(248, 250, 252, 0.8) 30%, rgba(255, 255, 255, 0.4) 60%, transparent 100%)`
-      }} />
     </section>
   );
 }
