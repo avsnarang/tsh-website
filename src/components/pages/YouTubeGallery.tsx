@@ -60,7 +60,7 @@ export default function YouTubeGallery() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-neutral-light pt-44 sm:pt-48 pb-24">
+    <div className="relative min-h-screen bg-neutral-light pt-52 sm:pt-56 pb-24">
       {/* SVG Background Pattern */}
       <div className="absolute inset-0 z-0">
         {/* Top pattern */}

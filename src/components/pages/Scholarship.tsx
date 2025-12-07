@@ -102,7 +102,7 @@ export default function Scholarship() {
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section */}
-      <div className="relative pt-44 sm:pt-48 pb-24 overflow-hidden">
+      <div className="relative pt-52 sm:pt-56 pb-24 overflow-hidden">
         {/* Decorative Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Top right decorative circle */}

@@ -108,7 +108,7 @@ export default function AlumniRegister() {
   `;
 
   return (
-    <div className="min-h-screen bg-neutral-light/30 pt-44 sm:pt-48 pb-24">
+    <div className="min-h-screen bg-neutral-light/30 pt-52 sm:pt-56 pb-24">
       {/* Decorative Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* Top right decorative circle */}

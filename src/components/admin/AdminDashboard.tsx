@@ -111,7 +111,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="relative pt-44 sm:pt-48 pb-24">
+      <div className="relative pt-52 sm:pt-56 pb-24">
         <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
           <div className="max-w-6xl mx-auto">
             <motion.div

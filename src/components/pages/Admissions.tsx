@@ -171,7 +171,7 @@ export default function Admissions() {
 
   return (
     <>
-      <section className="relative pt-44 sm:pt-48 pb-40 overflow-hidden">
+      <section className="relative pt-52 sm:pt-56 pb-40 overflow-hidden">
         {/* Top fade-in gradient */}
         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white via-white to-transparent z-10" />
 

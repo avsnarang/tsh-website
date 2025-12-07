@@ -209,7 +209,7 @@ export default function ManageYouTubeVideos() {
   };
 
   return (
-    <div className="relative min-h-screen bg-neutral-light pt-44 sm:pt-48 pb-24">
+    <div className="relative min-h-screen bg-neutral-light pt-52 sm:pt-56 pb-24">
       {/* Decorative Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div
