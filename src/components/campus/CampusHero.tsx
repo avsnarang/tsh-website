@@ -69,26 +69,17 @@ export default function CampusHero({ info }: CampusHeroProps) {
               {/* Title */}
               <ScrollReveal delay={0.1}>
                 <TextReveal>
-                  <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-neutral-dark mb-6 leading-[1.1]">
-                    {(() => {
-                      const words = info.name.split(' ');
-                      const lastWord = words[words.length - 1];
-                      const restOfName = words.slice(0, -1).join(' ');
-                      return (
-                        <>
-                          {restOfName}{' '}
-                          <span className="relative inline-block">
-                            <span className="text-green">{lastWord}</span>
-                            <motion.span
-                              initial={{ scaleX: 0 }}
-                              animate={{ scaleX: 1 }}
-                              transition={{ duration: 0.8, delay: 1 }}
-                              className="absolute -bottom-2 left-0 right-0 h-1 bg-orange origin-left rounded-full"
-                            />
-                          </span>
-                        </>
-                      );
-                    })()}
+                  <h1 className="font-display text-neutral-dark mb-6 leading-[1.1]">
+                    <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl">The Scholars' Home</span>
+                    <span className="relative inline-block text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-2">
+                      <span className="text-green">{info.name.replace("The Scholars' Home, ", "").replace("The Scholars' Home ", "")}</span>
+                      <motion.span
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: 0.8, delay: 1 }}
+                        className="absolute -bottom-1 left-0 right-0 h-1 bg-orange origin-left rounded-full"
+                      />
+                    </span>
                   </h1>
                 </TextReveal>
               </ScrollReveal>
