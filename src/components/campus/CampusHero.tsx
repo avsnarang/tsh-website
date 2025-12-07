@@ -43,8 +43,10 @@ export default function CampusHero({ info }: CampusHeroProps) {
       </div>
 
       {/* Breadcrumb at top - account for navbar + announcement bar */}
-      <Container className="relative z-10 pt-40 sm:pt-32 md:pt-38">
-        <BreadcrumbNav variant="light" />
+      <Container className="relative z-10 pt-40 sm:pt-32 md:pt-38 text-left">
+        <div className="text-left">
+          <BreadcrumbNav variant="light" />
+        </div>
       </Container>
 
       {/* Main content - centered vertically */}
