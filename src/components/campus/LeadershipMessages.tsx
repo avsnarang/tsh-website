@@ -33,10 +33,24 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
       const { data, error } = await supabase
         .from('leadership_messages')
         .select('*')
-        .eq('campus', campusName);
+        .order('order');
 
       if (error) throw error;
-      setMessages(data || []);
+
+      // Filter messages based on display_locations
+      // Show messages that have 'all' in display_locations OR the specific campus name
+      const filteredMessages = (data || [])
+        .filter(message => {
+          const locations = message.display_locations || [];
+          return locations.includes('all') || locations.includes(campusName);
+        })
+        .map(message => ({
+          ...message,
+          // Map snake_case to camelCase for fullMessage
+          fullMessage: message.full_message || ''
+        }));
+
+      setMessages(filteredMessages);
     } catch (error) {
       console.error('Error fetching messages:', error);
     } finally {
@@ -47,6 +61,14 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
   if (loading || messages.length === 0) {
     return null;
   }
+
+  // Format campus name for display (e.g., "paonta-sahib" -> "Paonta Sahib")
+  const formatCampusName = (name: string) => {
+    return name
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   return (
     <div className="py-24 bg-gradient-to-b from-primary-light/5 to-white">
@@ -62,7 +84,7 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
               </TextReveal>
               <TextReveal delay={0.2}>
                 <p className="text-xl text-primary font-body max-w-2xl mx-auto">
-                  Insights and guidance from {campusName} campus leadership
+                  Insights and guidance from {formatCampusName(campusName)} campus leadership
                 </p>
               </TextReveal>
             </div>
