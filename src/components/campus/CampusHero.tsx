@@ -30,25 +30,25 @@ export default function CampusHero({ info }: CampusHeroProps) {
           alt={`${info.name} Campus`}
           className="w-full h-full object-cover"
         />
-        {/* Dark gradient overlay - lighter to show more of the image */}
+        {/* Dark gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-green-dark/80 via-green-dark/60 to-green-dark/40" />
         {/* Bottom gradient for transition */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-green/80 to-transparent" />
       </div>
 
-      {/* Decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Decorative elements - hidden on mobile */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block">
         <div className="absolute top-20 right-10 w-[300px] h-[300px] rounded-full bg-green-light/10 blur-3xl" />
         <div className="absolute bottom-20 left-10 w-[250px] h-[250px] rounded-full bg-orange/10 blur-3xl" />
       </div>
 
       {/* Breadcrumb at top */}
-      <Container className="relative z-10 pt-32">
+      <Container className="relative z-10 pt-24 md:pt-32">
         <BreadcrumbNav variant="light" />
       </Container>
 
       {/* Main content - centered vertically */}
-      <Container className="relative z-10 flex-1 flex items-center py-12">
+      <Container className="relative z-10 flex-1 flex items-center py-6 md:py-12 px-4 md:px-6">
         <div className="w-full">
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
@@ -57,17 +57,17 @@ export default function CampusHero({ info }: CampusHeroProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 backdrop-blur-sm text-white rounded-full mb-8 border border-white/20"
+                className="inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 bg-white/10 backdrop-blur-sm text-white rounded-full mb-4 md:mb-8 border border-white/20"
               >
-                <Sparkles className="h-4 w-4 text-orange-light" />
-                <span className="font-medium text-sm">Welcome to Our Campus</span>
+                <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-orange-light" />
+                <span className="font-medium text-xs md:text-sm">Welcome to Our Campus</span>
               </motion.div>
             </ScrollReveal>
 
             {/* Title */}
             <ScrollReveal delay={0.1}>
               <TextReveal>
-                <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white mb-6 leading-tight whitespace-nowrap">
+                <h1 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl text-white mb-4 md:mb-6 leading-tight">
                   {info.name}
                 </h1>
               </TextReveal>
@@ -76,19 +76,19 @@ export default function CampusHero({ info }: CampusHeroProps) {
             {/* Description */}
             <ScrollReveal delay={0.2}>
               <TextReveal delay={0.1}>
-                <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-12 font-body leading-relaxed">
+                <p className="text-sm sm:text-base md:text-xl lg:text-2xl text-white/80 max-w-2xl mx-auto mb-6 md:mb-10 font-body leading-relaxed px-2">
                   {info.description}
                 </p>
               </TextReveal>
             </ScrollReveal>
 
-            {/* Stats Row */}
+            {/* Stats Grid */}
             <ScrollReveal delay={0.3}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex flex-wrap justify-center gap-6 md:gap-10 mb-12"
+                className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:justify-center md:gap-6 lg:gap-8 mb-6 md:mb-10"
               >
                 {info.stats.map((stat, index) => {
                   const StatIcon = getStatIcon(index);
@@ -96,16 +96,16 @@ export default function CampusHero({ info }: CampusHeroProps) {
                     <motion.div
                       key={index}
                       whileHover={{ scale: 1.05 }}
-                      className="flex items-center gap-3 px-5 py-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/10"
+                      className="flex items-center gap-2 md:gap-3 px-3 py-2 md:px-5 md:py-3 bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl border border-white/10"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-orange flex items-center justify-center">
-                        <StatIcon className="w-5 h-5 text-white" />
+                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-orange flex items-center justify-center flex-shrink-0">
+                        <StatIcon className="w-4 h-4 md:w-5 md:h-5 text-white" />
                       </div>
                       <div className="text-left">
-                        <div className="text-2xl font-display text-white">
+                        <div className="text-lg md:text-2xl font-display text-white">
                           {stat.value}
                         </div>
-                        <div className="text-xs text-white/60">
+                        <div className="text-[10px] md:text-xs text-white/60 leading-tight">
                           {stat.label}
                         </div>
                       </div>
@@ -121,19 +121,19 @@ export default function CampusHero({ info }: CampusHeroProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex flex-wrap justify-center gap-4"
+                className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4"
               >
                 <Link href="/admissions">
-                  <Button variant="cta" className="group text-lg px-8 py-4 bg-orange hover:bg-orange-dark shadow-lg shadow-orange/30">
+                  <Button variant="cta" className="group text-base md:text-lg px-6 md:px-8 py-3 md:py-4 bg-orange hover:bg-orange-dark shadow-lg shadow-orange/30 w-full sm:w-auto">
                     Apply Now
-                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
                 
                 <Link href="/contact">
-                  <Button variant="outline2" className="group text-lg px-8 py-4 bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white hover:text-green-dark inline-flex items-center gap-2">
+                  <Button variant="outline2" className="group text-base md:text-lg px-6 md:px-8 py-3 md:py-4 bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white hover:text-green-dark inline-flex items-center justify-center gap-2 w-full sm:w-auto">
                     Schedule a Visit
-                    <MapPin className="w-5 h-5" />
+                    <MapPin className="w-4 h-4 md:w-5 md:h-5" />
                   </Button>
                 </Link>
               </motion.div>
@@ -142,16 +142,16 @@ export default function CampusHero({ info }: CampusHeroProps) {
         </div>
       </Container>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator - hidden on mobile */}
       <motion.div 
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-10"
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2">
+        <div className="w-5 h-8 md:w-6 md:h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-1.5 md:p-2">
           <motion.div 
-            className="w-1.5 h-1.5 bg-white rounded-full"
-            animate={{ y: [0, 12, 0] }}
+            className="w-1 h-1 md:w-1.5 md:h-1.5 bg-white rounded-full"
+            animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
         </div>
