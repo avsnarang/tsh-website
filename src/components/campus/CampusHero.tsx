@@ -23,7 +23,7 @@ const getStatIcon = (index: number) => {
 
 export default function CampusHero({ info }: CampusHeroProps) {
   return (
-    <section className="relative pt-40 pb-24 overflow-hidden bg-neutral-light">
+    <section className="relative min-h-screen overflow-hidden bg-neutral-light flex items-center">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Top right decorative circle */}
@@ -39,7 +39,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
         />
       </div>
 
-      <Container className="relative z-10">
+      <Container className="relative z-10 py-24 mt-16">
         <BreadcrumbNav />
         
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mt-8">
