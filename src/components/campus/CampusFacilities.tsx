@@ -109,6 +109,9 @@ export default function CampusFacilities({ info }: CampusFacilitiesProps) {
           ))}
         </div>
       </Container>
+
+      {/* Bottom fade for seamless transition to Achievements (green) section */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-green via-green/60 to-transparent z-[1]" />
     </section>
   );
 }

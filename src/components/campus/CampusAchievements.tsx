@@ -24,6 +24,9 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
 
   return (
     <section className="relative py-24 overflow-hidden">
+      {/* Top transition gradient for seamless flow from Facilities */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-green to-transparent z-[2]" />
+
       {/* Green Background with decorative elements */}
       <div className="absolute inset-0 bg-green">
         {/* Decorative circles */}
