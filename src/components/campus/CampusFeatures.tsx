@@ -92,8 +92,10 @@ export default function CampusFeatures({ info }: CampusFeaturesProps) {
         </div>
       </Container>
 
-      {/* Bottom fade for seamless transition to next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/60 to-transparent z-[1]" />
+      {/* Bottom fade for seamless transition to Leadership Messages section */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 z-[1]" style={{
+        background: `linear-gradient(to top, #f8fafc 0%, rgba(248, 250, 252, 0.8) 30%, rgba(255, 255, 255, 0.4) 60%, transparent 100%)`
+      }} />
     </section>
   );
 }

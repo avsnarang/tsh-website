@@ -88,8 +88,10 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
 
   return (
     <section className="relative py-32 overflow-hidden">
-      {/* Top fade-in gradient */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white via-white to-transparent z-10" />
+      {/* Top fade-in gradient - blends from Features section */}
+      <div className="absolute top-0 left-0 right-0 h-32 z-10" style={{
+        background: `linear-gradient(to bottom, white 0%, rgba(248, 250, 252, 0.9) 50%, transparent 100%)`
+      }} />
 
       {/* Unique geometric background */}
       <div className="absolute inset-0 bg-[#f8fafc]">
