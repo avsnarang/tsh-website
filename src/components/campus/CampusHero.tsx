@@ -42,13 +42,13 @@ export default function CampusHero({ info }: CampusHeroProps) {
         <div className="absolute bottom-20 left-10 w-[250px] h-[250px] rounded-full bg-orange/10 blur-3xl" />
       </div>
 
-      {/* Breadcrumb at top */}
-      <Container className="relative z-10 pt-24 md:pt-32">
+      {/* Breadcrumb at top - account for navbar + announcement bar */}
+      <Container className="relative z-10 pt-28 sm:pt-32 md:pt-36">
         <BreadcrumbNav variant="light" />
       </Container>
 
       {/* Main content - centered vertically */}
-      <Container className="relative z-10 flex-1 flex items-center py-6 md:py-12 px-4 md:px-6">
+      <Container className="relative z-10 flex-1 flex items-center py-4 sm:py-6 md:py-12 px-4 md:px-6">
         <div className="w-full">
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
@@ -57,7 +57,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 bg-white/10 backdrop-blur-sm text-white rounded-full mb-4 md:mb-8 border border-white/20"
+                className="inline-flex items-center gap-2 px-3 py-1.5 md:px-5 md:py-2.5 bg-white/10 backdrop-blur-sm text-white rounded-full mb-3 md:mb-6 border border-white/20"
               >
                 <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-orange-light" />
                 <span className="font-medium text-xs md:text-sm">Welcome to Our Campus</span>
@@ -67,7 +67,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
             {/* Title */}
             <ScrollReveal delay={0.1}>
               <TextReveal>
-                <h1 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl text-white mb-4 md:mb-6 leading-tight">
+                <h1 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl text-white mb-2 md:mb-6 leading-tight">
                   {info.name}
                 </h1>
               </TextReveal>
@@ -76,7 +76,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
             {/* Description */}
             <ScrollReveal delay={0.2}>
               <TextReveal delay={0.1}>
-                <p className="text-sm sm:text-base md:text-xl lg:text-2xl text-white/80 max-w-2xl mx-auto mb-6 md:mb-10 font-body leading-relaxed px-2">
+                <p className="text-sm sm:text-base md:text-xl lg:text-2xl text-white/80 max-w-2xl mx-auto mb-4 md:mb-8 font-body leading-relaxed px-2">
                   {info.description}
                 </p>
               </TextReveal>
@@ -88,7 +88,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:justify-center md:gap-6 lg:gap-8 mb-6 md:mb-10"
+                className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-center md:gap-6 lg:gap-8 mb-4 md:mb-8"
               >
                 {info.stats.map((stat, index) => {
                   const StatIcon = getStatIcon(index);
