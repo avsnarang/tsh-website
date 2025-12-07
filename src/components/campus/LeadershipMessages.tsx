@@ -106,8 +106,8 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
         }} />
       </div>
 
-      {/* Bottom fade-out gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white to-transparent z-10" />
+      {/* Bottom fade - matches next section's background */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/80 to-transparent z-10" />
 
       <Container className="relative z-20">
         <ScrollReveal>

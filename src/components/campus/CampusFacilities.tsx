@@ -17,6 +17,8 @@ export default function CampusFacilities({ info }: CampusFacilitiesProps) {
     <section className="relative py-24 overflow-hidden">
       {/* Unique geometric background */}
       <div className="absolute inset-0 bg-[#f8fafc]">
+        {/* Top transition gradient for seamless flow from previous section */}
+        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#f8fafc] to-transparent z-[1]" />
         <div className="absolute inset-0" style={{
           backgroundImage: `radial-gradient(circle at 15% 50%, rgba(166, 212, 180, 0.3) 0%, transparent 40%),
                            radial-gradient(circle at 85% 30%, rgba(166, 212, 180, 0.3) 0%, transparent 40%),
