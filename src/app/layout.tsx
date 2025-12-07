@@ -53,7 +53,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://tsh.edu.in'),
+  metadataBase: new URL('https://www.tsh.edu.in'),
   title: {
     default: "The Scholars' Home | Excellence in Education Since 2003",
     template: "%s | The Scholars' Home"
@@ -64,13 +64,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://tsh.edu.in',
+    url: 'https://www.tsh.edu.in',
     siteName: "The Scholars' Home",
     title: "The Scholars' Home | Excellence in Education Since 2003",
     description: "Join The Scholars' Home for world-class education and holistic development.",
     images: [
       {
-        url: '/og-image.jpg',
+        url: 'https://www.tsh.edu.in/og-image.jpg',
         width: 1200,
         height: 630,
         alt: "The Scholars' Home",
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "The Scholars' Home | Excellence in Education Since 2003",
     description: "Join The Scholars' Home for world-class education and holistic development.",
-    images: ['/og-image.jpg'],
+    images: ['https://www.tsh.edu.in/og-image.jpg'],
   },
   robots: {
     index: true,
