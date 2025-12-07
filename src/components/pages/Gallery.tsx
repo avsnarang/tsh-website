@@ -160,7 +160,7 @@ export default function Gallery() {
 
   if (error) {
     return (
-      <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
+      <div className="min-h-screen pt-44 sm:pt-48 pb-24 bg-neutral-light">
         <Container>
           <div className="text-center text-red-600">{error}</div>
         </Container>

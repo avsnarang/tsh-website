@@ -102,7 +102,7 @@ export default function Scholarship() {
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section */}
-      <div className="relative pt-40 pb-24 overflow-hidden">
+      <div className="relative pt-44 sm:pt-48 pb-24 overflow-hidden">
         {/* Decorative Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Top right decorative circle */}
@@ -333,7 +333,7 @@ export default function Scholarship() {
                     <Link href="/contact">
                       <Button 
                         variant="outline"
-                        className="flex items-center gap-2 group border-white text-white hover:bg-white hover:text-green"
+                        className="flex items-center gap-2 group border-white text-green hover:bg-white hover:text-green"
                       >
                         Contact Us
                         <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />

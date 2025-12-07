@@ -46,7 +46,7 @@ export default function About() {
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section */}
-      <div className="relative pt-40 pb-20 overflow-hidden">
+      <div className="relative pt-44 sm:pt-48 pb-20 overflow-hidden">
         {/* Decorative Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Top right decorative circle */}

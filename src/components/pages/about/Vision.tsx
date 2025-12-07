@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 export default function Vision() {
 
   return (
-    <div className="min-h-screen pt-32 pb-24 bg-neutral-light">
+    <div className="min-h-screen pt-44 sm:pt-48 pb-24 bg-neutral-light">
       {/* Decorative Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* Top right decorative circle */}

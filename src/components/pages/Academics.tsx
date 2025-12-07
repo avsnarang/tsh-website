@@ -98,7 +98,7 @@ export default function Academics() {
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section */}
-      <div className="relative pt-32 pb-20 overflow-hidden">
+      <div className="relative pt-44 sm:pt-48 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-primary/5" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full -translate-x-48 -translate-y-48 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange/10 rounded-full translate-x-24 translate-y-24 blur-3xl" />

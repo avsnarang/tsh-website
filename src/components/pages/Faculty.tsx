@@ -97,7 +97,7 @@ export default function Faculty() {
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Hero Section with Background Pattern */}
-      <div className="relative pt-32 pb-20 overflow-hidden">
+      <div className="relative pt-44 sm:pt-48 pb-20 overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute inset-0 bg-[#f8fafc]">
           <div className="absolute inset-0" style={{

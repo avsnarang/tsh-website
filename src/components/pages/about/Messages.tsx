@@ -23,7 +23,7 @@ export default function Messages() {
   );
 
   return (
-    <div className="relative min-h-[90vh] bg-neutral-light">
+    <div className="relative min-h-[90vh] bg-neutral-light pt-44 sm:pt-48">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
