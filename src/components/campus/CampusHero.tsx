@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, MapPin, Users, Building2, GraduationCap, MessageSquareQuote, Sparkles } from 'lucide-react';
+import { ArrowRight, MapPin, Users, Building2, GraduationCap, Award, Sparkles } from 'lucide-react';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import { CampusInfo } from '../../types/campus';
@@ -16,133 +16,146 @@ interface CampusHeroProps {
 }
 
 const getStatIcon = (index: number) => {
-  const icons = [Users, Building2, GraduationCap, MessageSquareQuote];
+  const icons = [Users, Building2, GraduationCap, Award];
   return icons[index % icons.length];
 };
 
 export default function CampusHero({ info }: CampusHeroProps) {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-neutral-light">
-      {/* Decorative background elements using brand colors */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-green-light/30" />
-        <div className="absolute top-1/2 -left-32 w-[400px] h-[400px] rounded-full bg-orange-light/40" />
-        <div className="absolute -bottom-32 right-1/4 w-[400px] h-[400px] rounded-full bg-green-light/20" />
+    <section className="relative min-h-screen flex flex-col overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0">
+        <OptimizedImage
+          src={info.facilities[0]?.image || "https://images.unsplash.com/photo-1523050854058-8df90110c9f1"}
+          alt={`${info.name} Campus`}
+          className="w-full h-full object-cover"
+        />
+        {/* Dark gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-green-dark/95 via-green-dark/85 to-green-dark/70" />
+        {/* Bottom gradient for transition */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-green to-transparent" />
       </div>
 
-      <Container className="relative z-10 pt-40 pb-24">
-        <BreadcrumbNav />
-        
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mt-6">
-          {/* Left Content */}
-          <ScrollReveal direction="left">
-            <div className="relative z-10">
+      {/* Decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 right-10 w-[300px] h-[300px] rounded-full bg-green-light/10 blur-3xl" />
+        <div className="absolute bottom-20 left-10 w-[250px] h-[250px] rounded-full bg-orange/10 blur-3xl" />
+      </div>
+
+      {/* Breadcrumb at top */}
+      <Container className="relative z-10 pt-32">
+        <BreadcrumbNav variant="light" />
+      </Container>
+
+      {/* Main content - centered vertically */}
+      <Container className="relative z-10 flex-1 flex items-center py-12">
+        <div className="w-full">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Badge */}
+            <ScrollReveal>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/30 text-green rounded-full mb-6"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 backdrop-blur-sm text-white rounded-full mb-8 border border-white/20"
               >
-                <Sparkles className="h-4 w-4" />
-                <span className="font-semibold text-sm">Welcome to Our Campus</span>
+                <Sparkles className="h-4 w-4 text-orange-light" />
+                <span className="font-medium text-sm">Welcome to Our Campus</span>
               </motion.div>
-              
+            </ScrollReveal>
+
+            {/* Title */}
+            <ScrollReveal delay={0.1}>
               <TextReveal>
-                <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-neutral-dark mb-6 leading-tight">
-                  {info.name.split(',')[0]}
-                  {info.name.includes(',') && (
-                    <span className="text-green">{info.name.split(',').slice(1).join(',')}</span>
-                  )}
+                <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight">
+                  {info.name}
                 </h1>
               </TextReveal>
+            </ScrollReveal>
 
-              <TextReveal delay={0.2}>
-                <p className="text-xl text-neutral-dark/70 max-w-xl mb-8 font-body leading-relaxed">
+            {/* Description */}
+            <ScrollReveal delay={0.2}>
+              <TextReveal delay={0.1}>
+                <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-12 font-body leading-relaxed">
                   {info.description}
                 </p>
               </TextReveal>
+            </ScrollReveal>
 
-              {/* Stats Grid */}
+            {/* Stats Row */}
+            <ScrollReveal delay={0.3}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="grid grid-cols-2 gap-4 mb-8"
+                className="flex flex-wrap justify-center gap-6 md:gap-10 mb-12"
               >
                 {info.stats.map((stat, index) => {
                   const StatIcon = getStatIcon(index);
                   return (
                     <motion.div
                       key={index}
-                      whileHover={{ y: -4 }}
-                      className="bg-white rounded-2xl p-4 shadow-md hover:shadow-lg transition-all duration-300 border border-green-light/20"
+                      whileHover={{ scale: 1.05 }}
+                      className="flex items-center gap-3 px-5 py-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/10"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-green flex items-center justify-center">
-                          <StatIcon className="w-5 h-5 text-white" />
+                      <div className="w-10 h-10 rounded-xl bg-orange flex items-center justify-center">
+                        <StatIcon className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="text-left">
+                        <div className="text-2xl font-display text-white">
+                          {stat.value}
                         </div>
-                        <div>
-                          <div className="text-2xl font-display text-neutral-dark">
-                            {stat.value}
-                          </div>
-                          <div className="text-xs text-neutral-dark/60">
-                            {stat.label}
-                          </div>
+                        <div className="text-xs text-white/60">
+                          {stat.label}
                         </div>
                       </div>
                     </motion.div>
                   );
                 })}
               </motion.div>
+            </ScrollReveal>
 
-              {/* CTA Buttons */}
+            {/* CTA Buttons */}
+            <ScrollReveal delay={0.4}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex flex-wrap gap-4"
+                className="flex flex-wrap justify-center gap-4"
               >
                 <Link href="/admissions">
-                  <Button variant="cta" className="group text-lg px-8 shadow-lg">
+                  <Button variant="cta" className="group text-lg px-8 py-4 bg-orange hover:bg-orange-dark shadow-lg shadow-orange/30">
                     Apply Now
                     <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
                 
                 <Link href="/contact">
-                  <Button variant="outline2" className="group text-lg px-8">
+                  <Button variant="outline2" className="group text-lg px-8 py-4 bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white hover:text-green-dark">
                     Schedule a Visit
                     <MapPin className="w-5 h-5 ml-2" />
                   </Button>
                 </Link>
               </motion.div>
-            </div>
-          </ScrollReveal>
-
-          {/* Right Image Section */}
-          <ScrollReveal direction="right" delay={0.2}>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-              className="relative"
-            >
-              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-                <OptimizedImage
-                  src={info.facilities[0]?.image || "https://images.unsplash.com/photo-1523050854058-8df90110c9f1"}
-                  alt={`${info.name} Campus`}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-green-dark/40 to-transparent" />
-              </div>
-              
-              {/* Decorative frame */}
-              <div className="absolute -inset-4 border-2 border-green-light/40 rounded-[2rem] pointer-events-none" />
-              <div className="absolute -inset-8 border border-orange-light/30 rounded-[2.5rem] pointer-events-none" />
-            </motion.div>
-          </ScrollReveal>
+            </ScrollReveal>
+          </div>
         </div>
       </Container>
+
+      {/* Scroll indicator */}
+      <motion.div 
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2">
+          <motion.div 
+            className="w-1.5 h-1.5 bg-white rounded-full"
+            animate={{ y: [0, 12, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+        </div>
+      </motion.div>
     </section>
   );
 }
