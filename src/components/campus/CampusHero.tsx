@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, MapPin, Users, Building2, GraduationCap, Award, Sparkles, Play, ChevronDown } from 'lucide-react';
+import { ArrowRight, MapPin, Users, Building2, GraduationCap, Award, Sparkles, ChevronDown } from 'lucide-react';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import { CampusInfo } from '../../types/campus';
