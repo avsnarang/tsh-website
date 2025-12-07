@@ -30,10 +30,10 @@ export default function CampusHero({ info }: CampusHeroProps) {
           alt={`${info.name} Campus`}
           className="w-full h-full object-cover"
         />
-        {/* Dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-green-dark/95 via-green-dark/85 to-green-dark/70" />
+        {/* Dark gradient overlay - lighter to show more of the image */}
+        <div className="absolute inset-0 bg-gradient-to-r from-green-dark/80 via-green-dark/60 to-green-dark/40" />
         {/* Bottom gradient for transition */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-green to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-green/80 to-transparent" />
       </div>
 
       {/* Decorative elements */}
