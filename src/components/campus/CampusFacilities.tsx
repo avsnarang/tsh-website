@@ -14,16 +14,18 @@ interface CampusFacilitiesProps {
 
 export default function CampusFacilities({ info }: CampusFacilitiesProps) {
   return (
-    <section className="relative py-24 overflow-hidden">
-      {/* Flowing gradient background - continuation from previous section */}
-      <div className="absolute inset-0 bg-gradient-to-b from-neutral-light/50 via-neutral-light to-[#f5f0e8]" />
-      
+    <section className="relative py-24 overflow-hidden bg-white">
       {/* Soft decorative blurred circles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-green-light/30 blur-3xl" />
-        <div className="absolute top-1/2 -left-48 w-[400px] h-[400px] rounded-full bg-orange-light/25 blur-3xl" />
-        <div className="absolute -bottom-32 right-1/4 w-[350px] h-[350px] rounded-full bg-green-light/20 blur-3xl" />
+        <div className="absolute -top-32 -right-48 w-[500px] h-[500px] rounded-full bg-orange-light/15 blur-3xl" />
+        <div className="absolute bottom-0 -left-32 w-[400px] h-[400px] rounded-full bg-green-light/15 blur-3xl" />
       </div>
+      
+      {/* Subtle dot pattern */}
+      <div className="absolute inset-0 opacity-[0.015]" style={{
+        backgroundImage: `radial-gradient(circle, #166534 1px, transparent 1px)`,
+        backgroundSize: '24px 24px',
+      }} />
 
       <Container className="relative z-10">
         <ScrollReveal>
@@ -59,7 +61,10 @@ export default function CampusFacilities({ info }: CampusFacilitiesProps) {
                 whileHover={{ y: -8 }}
                 className="relative group h-full"
               >
-                <div className="relative bg-white rounded-3xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-green-light/20">
+                {/* Card glow effect on hover */}
+                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-br from-green-light/30 to-orange-light/30 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
+                
+                <div className="relative bg-white rounded-3xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full flex flex-col border border-neutral-200">
                   {/* Image */}
                   <div className="relative h-48 overflow-hidden">
                     <OptimizedImage
@@ -67,9 +72,9 @@ export default function CampusFacilities({ info }: CampusFacilitiesProps) {
                       alt={facility.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-green-dark/70 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-green-dark/80 via-green-dark/20 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
-                      <h3 className="text-xl font-display text-white">{facility.title}</h3>
+                      <h3 className="text-xl font-display text-white drop-shadow-lg">{facility.title}</h3>
                     </div>
                   </div>
 
@@ -81,16 +86,13 @@ export default function CampusFacilities({ info }: CampusFacilitiesProps) {
                   </div>
 
                   {/* Accent bar */}
-                  <div className="h-1 bg-gradient-to-r from-green to-orange transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                  <div className="h-1 bg-gradient-to-r from-green via-green-light to-orange transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </div>
               </motion.div>
             </ScrollReveal>
           ))}
         </div>
       </Container>
-      
-      {/* Bottom transition to next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#f5f0e8] to-transparent" />
     </section>
   );
 }

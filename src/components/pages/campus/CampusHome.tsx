@@ -55,77 +55,92 @@ export default function CampusHome() {
       <CampusFacilities info={info} />
       <CampusAchievements info={info} />
 
-      {/* Contact Section - seamlessly continues from achievements */}
-      <section className="relative py-24 overflow-hidden bg-green">
+      {/* Contact Section - unified white background with green accent area */}
+      <section className="relative py-24 overflow-hidden bg-white">
         {/* Soft decorative blurred circles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-green-light/20 blur-3xl" />
-          <div className="absolute top-1/2 -left-32 w-[400px] h-[400px] rounded-full bg-green-dark/30 blur-2xl" />
-          <div className="absolute -bottom-32 right-1/4 w-[350px] h-[350px] rounded-full bg-orange/10 blur-3xl" />
+          <div className="absolute -top-32 -right-48 w-[500px] h-[500px] rounded-full bg-green-light/15 blur-3xl" />
+          <div className="absolute bottom-0 -left-32 w-[400px] h-[400px] rounded-full bg-green-light/15 blur-3xl" />
         </div>
 
         <Container className="relative z-10">
-          <ScrollReveal>
-            <div className="text-center mb-16">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 text-white rounded-full mb-6"
-              >
-                <Send className="h-4 w-4" />
-                <span className="font-semibold text-sm">Get in Touch</span>
-              </motion.div>
+          {/* Green accent card */}
+          <div className="relative bg-gradient-to-br from-green to-green-dark rounded-3xl p-12 overflow-hidden">
+            {/* Decorative elements inside card */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute -top-24 -right-24 w-[300px] h-[300px] rounded-full bg-green-light/20 blur-2xl" />
+              <div className="absolute -bottom-24 -left-24 w-[250px] h-[250px] rounded-full bg-orange/15 blur-2xl" />
               
-              <TextReveal>
-                <h2 className="font-display text-4xl md:text-5xl text-white mb-6">
-                  Contact <span className="text-orange-light">Us</span>
-                </h2>
-              </TextReveal>
-              
-              <TextReveal delay={0.2}>
-                <p className="text-xl text-white/80 font-body max-w-2xl mx-auto">
-                  We would love to hear from you. Reach out for admissions and inquiries.
-                </p>
-              </TextReveal>
+              {/* Grid pattern */}
+              <div className="absolute inset-0 opacity-[0.03]" style={{
+                backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                                 linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                backgroundSize: '40px 40px'
+              }} />
             </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {contactItems.map((item, index) => (
-              <ScrollReveal key={index} delay={index * 0.1}>
+            
+            <ScrollReveal>
+              <div className="text-center mb-12 relative z-10">
                 <motion.div
-                  whileHover={{ y: -4, scale: 1.02 }}
-                  className="relative group"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 text-white rounded-full mb-6"
                 >
-                  <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 text-center border border-white/20">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-light to-green flex items-center justify-center mb-4 mx-auto transform group-hover:rotate-6 transition-transform duration-300">
-                      <item.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-lg font-display text-neutral-dark mb-2">{item.title}</h3>
-                    {item.href ? (
-                      <a href={item.href} className="text-neutral-dark/70 hover:text-green transition-colors text-sm">
-                        {item.content}
-                      </a>
-                    ) : (
-                      <p className="text-neutral-dark/70 text-sm">{item.content}</p>
-                    )}
-                  </div>
+                  <Send className="h-4 w-4" />
+                  <span className="font-semibold text-sm">Get in Touch</span>
                 </motion.div>
-              </ScrollReveal>
-            ))}
-          </div>
+                
+                <TextReveal>
+                  <h2 className="font-display text-4xl md:text-5xl text-white mb-6">
+                    Contact <span className="text-orange-light">Us</span>
+                  </h2>
+                </TextReveal>
+                
+                <TextReveal delay={0.2}>
+                  <p className="text-xl text-white/80 font-body max-w-2xl mx-auto">
+                    We would love to hear from you. Reach out for admissions and inquiries.
+                  </p>
+                </TextReveal>
+              </div>
+            </ScrollReveal>
 
-          <ScrollReveal delay={0.3}>
-            <div className="text-center">
-              <Link href="/contact">
-                <Button variant="cta" className="text-lg px-8 bg-orange text-white hover:bg-orange-dark shadow-xl shadow-orange/30">
-                  Send Us a Message
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 relative z-10">
+              {contactItems.map((item, index) => (
+                <ScrollReveal key={index} delay={index * 0.1}>
+                  <motion.div
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    className="relative group"
+                  >
+                    <div className="bg-white rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 text-center">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-light to-green flex items-center justify-center mb-4 mx-auto transform group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-green/20">
+                        <item.icon className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="text-lg font-display text-neutral-dark mb-2">{item.title}</h3>
+                      {item.href ? (
+                        <a href={item.href} className="text-neutral-dark/70 hover:text-green transition-colors text-sm">
+                          {item.content}
+                        </a>
+                      ) : (
+                        <p className="text-neutral-dark/70 text-sm">{item.content}</p>
+                      )}
+                    </div>
+                  </motion.div>
+                </ScrollReveal>
+              ))}
             </div>
-          </ScrollReveal>
+
+            <ScrollReveal delay={0.3}>
+              <div className="text-center relative z-10">
+                <Link href="/contact">
+                  <Button variant="cta" className="text-lg px-8 bg-orange text-white hover:bg-orange-dark shadow-2xl shadow-orange/40">
+                    Send Us a Message
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </ScrollReveal>
+          </div>
         </Container>
       </section>
     </div>

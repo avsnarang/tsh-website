@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { User, ArrowRight, X, Quote, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Container from '../ui/Container';
-import Button from '../ui/Button';
 import { supabase } from '../../lib/supabase';
 import { LeadershipMessage } from '../../types/leadership';
 import ScrollReveal from '../animations/ScrollReveal';
@@ -59,10 +58,6 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
     return null;
   }
 
-  const formatCampusName = (name: string) => {
-    return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-  };
-
   // Reorder: center gets first message
   const getOrderClass = (index: number): string => {
     if (messages.length < 3) return '';
@@ -75,33 +70,31 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
   const isProminent = (index: number): boolean => index === 0 && messages.length >= 3;
 
   return (
-    <section className="relative py-32 overflow-hidden">
-      {/* Top fade-in gradient */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white via-white to-transparent z-10" />
-      
-      {/* Unique geometric background - similar to homepage LeaderMessages */}
-      <div className="absolute inset-0 bg-[#f8fafc]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 2% 50%, rgba(166, 212, 180, 0.9) 0%, transparent 35%),
-                           radial-gradient(circle at 98% 20%, rgba(166, 212, 180, 0.9) 0%, transparent 35%),
-                           radial-gradient(circle at 50% 90%, rgba(255, 162, 86, 0.7) 0%, transparent 35%)`,
-        }} />
-        
-        {/* Animated wave pattern */}
-        <div className="absolute inset-0 opacity-[0.07]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='%23374151' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-          backgroundSize: '100px 20px',
-        }} />
+    <section className="relative py-24 overflow-hidden bg-white">
+      {/* Soft decorative blurred circles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 -left-48 w-[500px] h-[500px] rounded-full bg-green-light/15 blur-3xl" />
+        <div className="absolute bottom-0 -right-48 w-[600px] h-[600px] rounded-full bg-orange-light/15 blur-3xl" />
       </div>
+      
+      {/* Subtle wave pattern at edges */}
+      <div className="absolute inset-y-0 left-0 w-32 opacity-[0.04]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='%23166534' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+        backgroundSize: '100px 20px',
+      }} />
+      <div className="absolute inset-y-0 right-0 w-32 opacity-[0.04]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='%23166534' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+        backgroundSize: '100px 20px',
+      }} />
 
-      <Container className="relative z-20">
+      <Container className="relative z-10">
         <ScrollReveal>
           <div className="text-center mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/20 text-green rounded-full mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-green/10 text-green rounded-full mb-6"
             >
               <MessageSquare className="h-4 w-4" />
               <span className="font-semibold text-sm">Leadership Insights</span>
@@ -128,23 +121,24 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
                 whileHover={{ y: -12, scale: 1.02 }}
                 className={`relative group h-full ${isProminent(index) ? 'lg:scale-105 lg:z-10' : ''}`}
               >
-                {/* Card background effects */}
-                <div className="absolute inset-0 bg-gradient-to-br from-green-light/10 via-transparent to-transparent rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute -inset-0.5 bg-gradient-to-br from-green-light/30 to-orange-light/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500" />
+                {/* Card glow effect on hover */}
+                <div className={`absolute -inset-1 rounded-3xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 ${
+                  isProminent(index) ? 'bg-green/20' : 'bg-green-light/30'
+                }`} />
                 
-                <div className={`relative rounded-3xl p-8 shadow-xl transition-all duration-300 h-full flex flex-col ${
+                <div className={`relative rounded-3xl p-8 shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full flex flex-col border ${
                   isProminent(index)
-                    ? 'bg-green text-white'
-                    : 'bg-white'
+                    ? 'bg-green text-white border-green-dark/20'
+                    : 'bg-white border-neutral-200'
                 }`}>
                   <Quote className={`absolute top-6 right-6 h-10 w-10 ${
-                    isProminent(index) ? 'text-white/15' : 'text-green-light/20'
+                    isProminent(index) ? 'text-white/10' : 'text-green-light/15'
                   }`} />
                   
                   <div className="flex flex-col items-center text-center mb-6">
                     <motion.div
                       whileHover={{ scale: 1.1 }}
-                      className={`w-24 h-24 rounded-full overflow-hidden mb-4 ring-4 shadow-lg ${
+                      className={`w-24 h-24 rounded-full overflow-hidden mb-4 ring-4 shadow-xl ${
                         isProminent(index) ? 'ring-white/30' : 'ring-green-light/30'
                       }`}
                     >
@@ -231,9 +225,6 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
           </motion.div>
         </div>
       )}
-      
-      {/* Bottom decorative element */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-neutral-light/50 via-white to-transparent z-10" />
     </section>
   );
 }

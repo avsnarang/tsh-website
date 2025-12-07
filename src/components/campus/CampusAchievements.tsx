@@ -20,16 +20,16 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
   if (!info.achievements?.length) return null;
 
   return (
-    <section className="relative py-24 overflow-hidden">
-      {/* Flowing gradient background - continuation from previous section */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#f5f0e8] via-[#faf6f0] to-white" />
-      
+    <section className="relative py-24 overflow-hidden bg-white">
       {/* Soft decorative blurred circles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-32 left-1/4 w-[450px] h-[450px] rounded-full bg-orange-light/40 blur-3xl" />
-        <div className="absolute top-1/2 -right-24 w-[400px] h-[400px] rounded-full bg-green-light/25 blur-3xl" />
-        <div className="absolute -bottom-24 -left-24 w-[350px] h-[350px] rounded-full bg-orange-light/30 blur-3xl" />
+        <div className="absolute -top-48 left-1/4 w-[500px] h-[500px] rounded-full bg-orange-light/20 blur-3xl" />
+        <div className="absolute bottom-0 -right-32 w-[400px] h-[400px] rounded-full bg-orange-light/15 blur-3xl" />
       </div>
+      
+      {/* Decorative lines */}
+      <div className="absolute top-24 left-0 w-32 h-px bg-gradient-to-r from-transparent via-orange-light/50 to-transparent" />
+      <div className="absolute top-24 right-0 w-32 h-px bg-gradient-to-r from-transparent via-orange-light/50 to-transparent" />
 
       <Container className="relative z-10">
         <ScrollReveal>
@@ -67,18 +67,21 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
                   whileHover={{ y: -8, scale: 1.02 }}
                   className="relative group h-full"
                 >
-                  <div className="relative bg-white rounded-3xl p-8 shadow-lg group-hover:shadow-xl transition-all duration-300 h-full border border-orange-light/30">
-                    <div className="absolute inset-0 bg-gradient-to-br from-orange-light/10 to-transparent rounded-3xl" />
+                  {/* Card glow effect on hover */}
+                  <div className="absolute -inset-1 rounded-3xl bg-gradient-to-br from-orange-light/40 to-orange/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
+                  
+                  <div className="relative bg-white rounded-3xl p-8 shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full border border-neutral-200">
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-light/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
                     {/* Year badge */}
                     <div className="absolute -top-3 right-6">
-                      <div className="px-4 py-1 bg-gradient-to-r from-orange to-orange-dark text-white text-sm font-semibold rounded-full shadow-md">
+                      <div className="px-4 py-1 bg-gradient-to-r from-orange to-orange-dark text-white text-sm font-semibold rounded-full shadow-lg shadow-orange/30">
                         {achievement.year}
                       </div>
                     </div>
 
                     <div className="relative">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-light to-orange flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform duration-300">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-light to-orange flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-orange/20">
                         <AchievementIcon className="w-7 h-7 text-white" />
                       </div>
 
@@ -96,9 +99,6 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
           })}
         </div>
       </Container>
-      
-      {/* Bottom transition to contact section */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-green to-transparent" />
     </section>
   );
 }
