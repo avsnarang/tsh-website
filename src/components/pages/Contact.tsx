@@ -14,7 +14,7 @@ const contactInfo = [
     address: "Jamniwala Road, Badripur, Paonta Sahib, H.P.",
     phone: "+91 8628800056",
     email: "info@ps.tsh.edu.in",
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=2066&q=80",
+    image: "https://images.tsh.edu.in/campus/paonta-sahib.jpg",
     mapsUrl: "https://maps.app.goo.gl/usUPzCSDEV8S2bpm7"
   },
   {
@@ -22,7 +22,7 @@ const contactInfo = [
     address: "Near Degree College, Devinagar, Paonta Sahib, H.P.",
     phone: "+91 98057 35656",
     email: "info@jun.tsh.edu.in",
-    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2022&q=80",
+    image: "https://images.tsh.edu.in/campus/juniors.jpg",
     mapsUrl: "https://maps.app.goo.gl/r8ndRFhkiR5YoX9R9"
   },
   {
@@ -30,7 +30,7 @@ const contactInfo = [
     address: "Near SBI Majra, Majra, Paonta Sahib, H.P.",
     phone: "+91 96927 00056",
     email: "info@majra.tsh.edu.in",
-    image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1970&q=80",
+    image: "https://images.tsh.edu.in/campus/majra.jpg",
     mapsUrl: "https://maps.app.goo.gl/juYs3pcXLWUm8UzE9"
   }
 ];
