@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.tsh.edu.in',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
     // Aggressive image optimization
     minimumCacheTTL: 31536000, // 1 year cache
