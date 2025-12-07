@@ -478,10 +478,10 @@ function Navbar() {
             </div>
           )}
 
-          {/* Breadcrumbs - shown below navbar, always light since navbar has colored background */}
+          {/* Breadcrumbs - shown below navbar with frosted glass effect */}
           {!isMenuOpen && (
-            <div className="absolute left-0 right-0 top-[80px] z-10 px-8 mt-16 sm:mt-2 md:mt-4 lg:mt-8 sm:px-12 lg:px-16">
-              <BreadcrumbNav variant="light" />
+            <div className="absolute left-0 right-0 top-[80px] z-10 px-4 sm:px-6 lg:px-8 mt-12 sm:mt-2 md:mt-4">
+              <BreadcrumbNav />
             </div>
           )}
         </Container>

@@ -49,11 +49,7 @@ const routeLabels: Record<string, string> = {
   teachers: 'Teachers',
 };
 
-interface BreadcrumbNavProps {
-  variant?: 'default' | 'light';
-}
-
-export default function BreadcrumbNav({ variant = 'default' }: BreadcrumbNavProps) {
+export default function BreadcrumbNav() {
   const pathname = usePathname();
   const [dynamicLabel, setDynamicLabel] = useState<string>('');
 
@@ -73,16 +69,14 @@ export default function BreadcrumbNav({ variant = 'default' }: BreadcrumbNavProp
 
   const segments = pathname.split('/').filter(Boolean);
 
-  const isLight = variant === 'light';
-
   return (
-    <div className={`mb-2 md:mb-4 ${isLight ? '' : '-mt-12'} text-left ${isLight ? '[&_a]:text-white/70 [&_a:hover]:text-white [&_svg]:text-white/50 [&_span]:text-white' : ''}`}>
+    <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 dark:bg-neutral-dark/80 backdrop-blur-md shadow-sm border border-neutral-dark/10">
       <Breadcrumb>
-        <BreadcrumbList>
+        <BreadcrumbList className="text-neutral-dark dark:text-white">
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/">
-                <HomeIcon size={16} aria-hidden="true" />
+              <Link href="/" className="text-neutral-dark/70 hover:text-neutral-dark dark:text-white/70 dark:hover:text-white transition-colors">
+                <HomeIcon size={14} aria-hidden="true" />
                 <span className="sr-only">Home</span>
               </Link>
             </BreadcrumbLink>
@@ -100,13 +94,13 @@ export default function BreadcrumbNav({ variant = 'default' }: BreadcrumbNavProp
 
             return (
               <React.Fragment key={path}>
-                <BreadcrumbSeparator />
+                <BreadcrumbSeparator className="text-neutral-dark/40 dark:text-white/40" />
                 <BreadcrumbItem>
                   {isLast ? (
-                    <BreadcrumbPage>{label}</BreadcrumbPage>
+                    <BreadcrumbPage className="text-neutral-dark dark:text-white font-medium">{label}</BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink asChild>
-                      <Link href={path}>{label}</Link>
+                      <Link href={path} className="text-neutral-dark/70 hover:text-neutral-dark dark:text-white/70 dark:hover:text-white transition-colors">{label}</Link>
                     </BreadcrumbLink>
                   )}
                 </BreadcrumbItem>
