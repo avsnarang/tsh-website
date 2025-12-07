@@ -76,7 +76,7 @@ export default function BreadcrumbNav({ variant = 'default' }: BreadcrumbNavProp
   const isLight = variant === 'light';
 
   return (
-    <div className={`mb-6 ${isLight ? '' : '-mt-12'} pl-4 ${isLight ? '[&_a]:text-white/70 [&_a:hover]:text-white [&_svg]:text-white/50 [&_span]:text-white' : ''}`}
+    <div className={`mb-6 ${isLight ? '' : '-mt-12'} pl-4 ${isLight ? '[&_a]:text-white/70 [&_a:hover]:text-white [&_svg]:text-white/50 [&_span]:text-white' : ''}`}>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

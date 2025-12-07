@@ -26,7 +26,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <OptimizedImage
-          src={info.facilities[0]?.image || "https://images.unsplash.com/photo-1523050854058-8df90110c9f1"}
+          src={info.heroImage || info.facilities[0]?.image || "https://images.unsplash.com/photo-1523050854058-8df90110c9f1"}
           alt={`${info.name} Campus`}
           className="w-full h-full object-cover"
         />

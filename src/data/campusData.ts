@@ -5,6 +5,7 @@ export const campusInfo: { [key: string]: CampusInfo } = {
     name: "The Scholars' Home, Paonta Sahib",
     tagline: "Excellence in Education Since 2004",
     description: "Our flagship campus offers comprehensive education from primary to senior secondary levels with state-of-the-art facilities.",
+    heroImage: "https://storage.googleapis.com/tsh-website/campus/paonta-sahib.jpg",
     registrationUrl: "https://learn.tsh.edu.in/#/erp/the_scholars_home_registration_form_cbse",
     features: [
       {
@@ -66,6 +67,7 @@ export const campusInfo: { [key: string]: CampusInfo } = {
     name: "The Scholars' Home, Juniors",
     tagline: "Nurturing Young Minds",
     description: "A specialized campus dedicated to early childhood education and primary schooling in a nurturing environment.",
+    heroImage: "https://storage.googleapis.com/tsh-website/campus/juniors.jpg",
     registrationUrl: "https://learn.tsh.edu.in/#/erp/the_scholars_home_registration_form_juniors",
     features: [
       {
@@ -109,6 +111,7 @@ export const campusInfo: { [key: string]: CampusInfo } = {
     name: "The Scholars' Home, Majra",
     tagline: "Tradition Meets Innovation",
     description: "A perfect blend of traditional values and modern education methodologies for comprehensive student development.",
+    heroImage: "https://images.tsh.edu.in/tsh-website/campus/majra.jpg",
     registrationUrl: "https://learn.tsh.edu.in/#/erp/the_scholars_home_registration_form_majra",
     features: [
       {

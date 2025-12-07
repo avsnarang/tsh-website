@@ -2,6 +2,7 @@ export interface CampusInfo {
   name: string;
   tagline: string;
   description: string;
+  heroImage?: string;
   registrationUrl: string;
   features: {
     title: string;
