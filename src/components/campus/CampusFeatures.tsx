@@ -19,6 +19,9 @@ const getFeatureIcon = (index: number) => {
 export default function CampusFeatures({ info }: CampusFeaturesProps) {
   return (
     <section className="relative py-24 bg-white overflow-hidden">
+      {/* Top transition gradient for seamless flow from Hero */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white to-transparent z-[1]" />
+      
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-green-light/10 translate-x-1/2 -translate-y-1/2" />
@@ -88,6 +91,9 @@ export default function CampusFeatures({ info }: CampusFeaturesProps) {
           })}
         </div>
       </Container>
+
+      {/* Bottom fade for seamless transition to next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/60 to-transparent z-[1]" />
     </section>
   );
 }

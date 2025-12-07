@@ -39,6 +39,9 @@ export default function CampusHero({ info }: CampusHeroProps) {
         />
       </div>
 
+      {/* Bottom fade for seamless transition to next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent z-10 pointer-events-none" />
+
       <Container className="relative z-10 py-24 mt-16">
         <BreadcrumbNav />
         
