@@ -83,6 +83,13 @@ export const metadata: Metadata = {
     description: "Join The Scholars' Home for world-class education and holistic development.",
     images: ['https://www.tsh.edu.in/og-image.jpg'],
   },
+  // Note: Add NEXT_PUBLIC_FB_APP_ID to your environment variables
+  // Get your App ID from: https://developers.facebook.com/apps/
+  ...(process.env.NEXT_PUBLIC_FB_APP_ID && {
+    facebook: {
+      appId: process.env.NEXT_PUBLIC_FB_APP_ID,
+    },
+  }),
   robots: {
     index: true,
     follow: true,
