@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
-import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
 import { motion } from 'framer-motion';
 
 const scholarships = [
@@ -112,9 +111,6 @@ export default function Scholarship() {
         </div>
         
         <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
-          <nav className="mb-12">
-            <BreadcrumbNav />
-          </nav>
           
           <ScrollReveal>
             <div className="text-center mb-16">

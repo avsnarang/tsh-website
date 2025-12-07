@@ -15,7 +15,6 @@ import Container from '@/components/ui/Container';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import type { Teacher } from '@/types/teacher';
 import { seoConfig } from '@/config/seoConfig';
-import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
 
 const CLASS_LEVELS = {
   ALL: 'all',
@@ -117,9 +116,6 @@ export default function Faculty() {
         </div>
 
         <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
-          <nav className="pt-8 -mb-8">
-            <BreadcrumbNav />
-          </nav>
           <ScrollReveal>
             <div className="text-center mb-8">
               <span className="inline-block px-6 py-2 bg-green-light/20 text-green rounded-full text-sm font-medium mb-6">

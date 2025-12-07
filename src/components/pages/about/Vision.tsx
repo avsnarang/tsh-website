@@ -5,7 +5,6 @@ import { Target, Compass, Star, Award } from 'lucide-react';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
 import { motion } from 'framer-motion';
-import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
 
 export default function Vision() {
 
@@ -29,9 +28,6 @@ export default function Vision() {
       </div>
 
       <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
-        <nav className="pt-8 -mb-8">
-          <BreadcrumbNav />
-        </nav>
         <ScrollReveal>
           <div className="text-center mb-16">
             <motion.div

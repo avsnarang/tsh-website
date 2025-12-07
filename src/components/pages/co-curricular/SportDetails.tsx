@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Container from '@/components/ui/Container';
 import { Trophy, Medal, Clock, User, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
-import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
+import BreadcrumbNav from '@/components/navigation/BreadcrumbNav'; // Keep for setDynamicLabel
 
 interface Sport {
   id: string;
@@ -184,7 +184,6 @@ export default function SportDetails() {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8 py-48">
-        <BreadcrumbNav />
 
         {/* Image Slideshow */}
         <div className="relative h-[500px] rounded-2xl overflow-hidden mb-8">

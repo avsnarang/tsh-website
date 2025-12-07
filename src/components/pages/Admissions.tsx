@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { Users, BookOpen, Building2, ArrowRight, CheckCircle2, Calendar } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import ScrollReveal from '@/components/animations/ScrollReveal';
-import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
 import { usePostHog } from 'posthog-js/react';
 import { useSearchParams } from 'next/navigation';
 import { trackMetaEvent, trackMetaLead } from '@/components/analytics/MetaPixel';
@@ -193,7 +192,6 @@ export default function Admissions() {
         </div>
 
         <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
-          <BreadcrumbNav />
           <ScrollReveal>
             <div className="text-center mb-20">
               <span className="inline-block px-6 py-2 bg-green-light/20 text-green rounded-full text-sm font-medium mb-6">

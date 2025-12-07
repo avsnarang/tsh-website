@@ -8,7 +8,6 @@ import Link from 'next/link';
 import Button from '../ui/Button';
 import HorizontalTimeline from './HorizontalTimeline';
 import { motion } from 'framer-motion';
-import BreadcrumbNav from '../navigation/BreadcrumbNav';
 
 const timelineEvents = [
   {
@@ -66,7 +65,6 @@ export default function About() {
         </div>
 
         <Container className="relative">
-          <BreadcrumbNav />
           <ScrollReveal>
             <div className="text-center mb-16">
               <motion.div
