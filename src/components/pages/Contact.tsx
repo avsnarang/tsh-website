@@ -1,8 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Clock, Send, ArrowRight, Building2, PhoneCall } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, ArrowRight, Building2, PhoneCall, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import posthog from 'posthog-js';
 
@@ -33,7 +34,78 @@ const contactInfo = [
   }
 ];
 
+interface FormState {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+}
+
+type SubmitStatus = 'idle' | 'loading' | 'success' | 'error';
+
 export default function Contact() {
+  const [formData, setFormData] = useState<FormState>({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+  const [status, setStatus] = useState<SubmitStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('loading');
+    setErrorMessage('');
+
+    // Track form submission attempt
+    posthog.capture('contact_form_submitted', {
+      has_phone: !!formData.phone,
+    });
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setStatus('success');
+        setFormData({ name: '', email: '', phone: '', message: '' });
+        
+        // Track successful submission
+        posthog.capture('contact_form_success');
+      } else {
+        setStatus('error');
+        setErrorMessage(result.message || 'Something went wrong. Please try again.');
+        
+        // Track failed submission
+        posthog.capture('contact_form_error', { error: result.message });
+      }
+    } catch (error) {
+      setStatus('error');
+      setErrorMessage('Network error. Please check your connection and try again.');
+      
+      // Track network error
+      posthog.capture('contact_form_network_error');
+    }
+  };
+
+  const resetForm = () => {
+    setStatus('idle');
+    setErrorMessage('');
+  };
+
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Decorative Background - Consistent with site */}
@@ -126,57 +198,122 @@ export default function Contact() {
                 <h2 className="text-xl font-display text-neutral-dark">Send a Message</h2>
               </div>
               
-              <form className="space-y-4" onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.currentTarget);
-                posthog.capture('contact_form_submitted', {
-                  subject: formData.get('subject'),
-                });
-              }}>
-                <div className="space-y-1.5">
-                  <label className="block text-neutral-dark text-sm font-medium">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm"
-                    placeholder="Your name"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="block text-neutral-dark text-sm font-medium">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm"
-                    placeholder="Your email"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="block text-neutral-dark text-sm font-medium">Phone</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm"
-                    placeholder="Your phone number"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="block text-neutral-dark text-sm font-medium">Message</label>
-                  <textarea
-                    name="message"
-                    className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 h-28 resize-none transition-all text-sm"
-                    placeholder="How can we help?"
-                  ></textarea>
-                </div>
-                <Button
-                  type="submit"
-                  variant="cta"
-                  className="w-full flex items-center justify-center gap-2 group"
-                >
-                  Send Message
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </form>
+              <AnimatePresence mode="wait">
+                {status === 'success' ? (
+                  <motion.div
+                    key="success"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="text-center py-8"
+                  >
+                    <div className="w-16 h-16 bg-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="h-8 w-8 text-green" />
+                    </div>
+                    <h3 className="text-xl font-display text-neutral-dark mb-2">Message Sent!</h3>
+                    <p className="text-neutral-dark/70 text-sm mb-6">
+                      Thank you for reaching out. We'll get back to you within 24 hours.
+                    </p>
+                    <button
+                      onClick={resetForm}
+                      className="text-green hover:text-green-dark font-medium text-sm transition-colors"
+                    >
+                      Send another message
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.form 
+                    key="form"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-4" 
+                    onSubmit={handleSubmit}
+                  >
+                    {status === 'error' && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-start gap-3 p-3 bg-red-50 border border-red-100 rounded-xl"
+                      >
+                        <AlertCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm text-red-700">{errorMessage}</p>
+                        </div>
+                      </motion.div>
+                    )}
+                    
+                    <div className="space-y-1.5">
+                      <label className="block text-neutral-dark text-sm font-medium">Name <span className="text-red-500">*</span></label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        disabled={status === 'loading'}
+                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        placeholder="Your name"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="block text-neutral-dark text-sm font-medium">Email <span className="text-red-500">*</span></label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        disabled={status === 'loading'}
+                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        placeholder="Your email"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="block text-neutral-dark text-sm font-medium">Phone</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        disabled={status === 'loading'}
+                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        placeholder="Your phone number"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="block text-neutral-dark text-sm font-medium">Message <span className="text-red-500">*</span></label>
+                      <textarea
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        required
+                        disabled={status === 'loading'}
+                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 h-28 resize-none transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        placeholder="How can we help?"
+                      ></textarea>
+                    </div>
+                    <Button
+                      type="submit"
+                      variant="cta"
+                      disabled={status === 'loading'}
+                      className="w-full flex items-center justify-center gap-2 group disabled:opacity-70"
+                    >
+                      {status === 'loading' ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          Send Message
+                          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </>
+                      )}
+                    </Button>
+                  </motion.form>
+                )}
+              </AnimatePresence>
             </motion.div>
 
             {/* Campus Cards */}
