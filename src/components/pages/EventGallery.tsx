@@ -8,7 +8,7 @@ import Container from '@/components/ui/Container';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import Masonry from 'react-masonry-css';
-import posthog from 'posthog-js';
+import { usePostHog } from 'posthog-js/react';
 
 interface GalleryImage {
   id: string;
@@ -26,6 +26,7 @@ interface GalleryEvent {
 }
 
 export default function EventGallery() {
+  const posthog = usePostHog();
   const params = useParams();
   const eventId = params?.eventId as string | undefined;
   const [event, setEvent] = useState<GalleryEvent | null>(null);
@@ -115,7 +116,7 @@ export default function EventGallery() {
       setEvent(completeEventData);
 
       // Capture event view
-      posthog.capture('gallery_event_viewed', {
+      posthog?.capture('gallery_event_viewed', {
         event_id: id,
         event_title: eventData.title,
         event_campus: eventData.campus,

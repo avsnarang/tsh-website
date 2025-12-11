@@ -1,41 +1,66 @@
 import { MetadataRoute } from 'next';
 import { createClient } from '@supabase/supabase-js';
 
+// Priority and change frequency configuration for different route types
+const routeConfig: Record<string, { priority: number; changeFrequency: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never' }> = {
+  // Homepage - highest priority
+  '': { priority: 1.0, changeFrequency: 'daily' },
+
+  // Core landing pages - high priority
+  '/about': { priority: 0.9, changeFrequency: 'monthly' },
+  '/admissions': { priority: 0.95, changeFrequency: 'weekly' },
+  '/contact': { priority: 0.9, changeFrequency: 'monthly' },
+  '/campuses': { priority: 0.9, changeFrequency: 'monthly' },
+  '/academics': { priority: 0.9, changeFrequency: 'monthly' },
+  '/scholarship': { priority: 0.9, changeFrequency: 'monthly' },
+
+  // Campus pages - high priority (important for local SEO)
+  '/campus/paonta-sahib': { priority: 0.9, changeFrequency: 'monthly' },
+  '/campus/juniors': { priority: 0.9, changeFrequency: 'monthly' },
+  '/campus/majra': { priority: 0.9, changeFrequency: 'monthly' },
+
+  // About sub-pages
+  '/about/vision': { priority: 0.8, changeFrequency: 'monthly' },
+  '/about/messages': { priority: 0.8, changeFrequency: 'monthly' },
+
+  // Academics pages
+  '/academics/pre-primary': { priority: 0.85, changeFrequency: 'monthly' },
+  '/academics/primary': { priority: 0.85, changeFrequency: 'monthly' },
+  '/academics/middle': { priority: 0.85, changeFrequency: 'monthly' },
+  '/academics/secondary': { priority: 0.85, changeFrequency: 'monthly' },
+  '/academics/senior-secondary': { priority: 0.85, changeFrequency: 'monthly' },
+
+  // Co-curricular pages
+  '/co-curricular': { priority: 0.8, changeFrequency: 'monthly' },
+  '/co-curricular/performing-arts': { priority: 0.75, changeFrequency: 'monthly' },
+  '/co-curricular/sports-athletics': { priority: 0.75, changeFrequency: 'monthly' },
+  '/co-curricular/visual-arts': { priority: 0.75, changeFrequency: 'monthly' },
+  '/co-curricular/clubs-societies': { priority: 0.75, changeFrequency: 'monthly' },
+
+  // Alumni and community pages
+  '/alumni': { priority: 0.7, changeFrequency: 'monthly' },
+  '/alumni/register': { priority: 0.7, changeFrequency: 'monthly' },
+  '/alumni/success': { priority: 0.7, changeFrequency: 'weekly' },
+
+  // Gallery and media
+  '/gallery': { priority: 0.75, changeFrequency: 'weekly' },
+  '/video-gallery': { priority: 0.7, changeFrequency: 'weekly' },
+
+  // Other pages
+  '/faculty': { priority: 0.8, changeFrequency: 'monthly' },
+  '/calendar': { priority: 0.7, changeFrequency: 'weekly' },
+};
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://tsh.edu.in';
-  
-  // Static routes
-  const staticRoutes = [
-    '',
-    '/about',
-    '/about/vision',
-    '/about/messages',
-    '/academics',
-    '/academics/pre-primary',
-    '/academics/primary',
-    '/academics/middle',
-    '/academics/secondary',
-    '/academics/senior-secondary',
-    '/admissions',
-    '/campuses',
-    '/contact',
-    '/faculty',
-    '/scholarship',
-    '/calendar',
-    '/co-curricular',
-    '/co-curricular/performing-arts',
-    '/co-curricular/sports-athletics',
-    '/co-curricular/visual-arts',
-    '/co-curricular/clubs-societies',
-    '/alumni',
-    '/alumni/register',
-    '/gallery',
-    '/video-gallery',
-  ].map(route => ({
+  const currentDate = new Date();
+
+  // Static routes with proper configuration
+  const staticRoutes = Object.entries(routeConfig).map(([route, config]) => ({
     url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1 : 0.8,
+    lastModified: currentDate,
+    changeFrequency: config.changeFrequency,
+    priority: config.priority,
   }));
 
   // Fetch dynamic routes (gallery events, sports, etc.)

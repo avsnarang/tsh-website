@@ -10,7 +10,7 @@ import ScrollReveal from '@/components/animations/ScrollReveal';
 import { motion } from 'framer-motion';
 import GalleryCardSkeleton from '@/components/gallery/GalleryCardSkeleton';
 import NotionDropdown from '@/components/ui/NotionDropdown';
-import posthog from 'posthog-js';
+import { usePostHog } from 'posthog-js/react';
 
 interface GalleryImage {
   id: string;
@@ -34,6 +34,7 @@ interface EventsByYear {
 }
 
 export default function Gallery() {
+  const posthog = usePostHog();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
@@ -45,7 +46,7 @@ export default function Gallery() {
 
   const handleEventClick = (eventId: string) => {
     const event = events.find(e => e.id === eventId);
-    posthog.capture('gallery_event_clicked', {
+    posthog?.capture('gallery_event_clicked', {
       event_id: eventId,
       event_title: event?.title,
       from_filters: {
@@ -226,7 +227,7 @@ export default function Gallery() {
                         onChange={(value) => {
                           const newValue = value === 'all' ? 'all' : Number(value);
                           setSelectedYear(newValue);
-                          posthog.capture('gallery_filtered', {
+                          posthog?.capture('gallery_filtered', {
                             filter_type: 'year',
                             filter_value: newValue,
                           });
@@ -244,7 +245,7 @@ export default function Gallery() {
                         value={selectedCampus}
                         onChange={(value) => {
                           setSelectedCampus(value);
-                          posthog.capture('gallery_filtered', {
+                          posthog?.capture('gallery_filtered', {
                             filter_type: 'campus',
                             filter_value: value,
                           });

@@ -10,9 +10,10 @@ import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import posthog from 'posthog-js';
+import { usePostHog } from 'posthog-js/react';
 
 export default function AlumniRegister() {
+  const posthog = usePostHog();
   const [fullName, setFullName] = useState('');
   const [batchYear, setBatchYear] = useState(new Date().getFullYear().toString());
   const [occupation, setOccupation] = useState('');
@@ -66,7 +67,7 @@ export default function AlumniRegister() {
       await signUp(email, password, profileData);
 
       // Identify user and capture registration event
-      posthog.identify(email, {
+      posthog?.identify(email, {
         email,
         full_name: fullName,
         batch_year: year,
@@ -74,7 +75,7 @@ export default function AlumniRegister() {
         current_location: currentLocation,
       });
 
-      posthog.capture('alumni_registered', {
+      posthog?.capture('alumni_registered', {
         batch_year: year,
         occupation,
         current_location: currentLocation,

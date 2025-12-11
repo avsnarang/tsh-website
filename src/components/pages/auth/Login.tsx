@@ -11,9 +11,10 @@ import { supabase } from '@/lib/supabase';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
 import { motion } from 'framer-motion';
-import posthog from 'posthog-js';
+import { usePostHog } from 'posthog-js/react';
 
 export default function Login() {
+  const posthog = usePostHog();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -201,11 +202,11 @@ export default function Login() {
       }
 
       // Identify user and capture successful login
-      posthog.identify(email, {
+      posthog?.identify(email, {
         email,
       });
 
-      posthog.capture('alumni_logged_in', {
+      posthog?.capture('alumni_logged_in', {
         email,
       });
 
@@ -219,7 +220,7 @@ export default function Login() {
       }
 
       // Capture failed login event
-      posthog.capture('alumni_login_failed', {
+      posthog?.capture('alumni_login_failed', {
         email,
         error_message: err.message,
       });

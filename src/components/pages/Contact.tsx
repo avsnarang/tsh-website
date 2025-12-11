@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { MapPin, Phone, Mail, Clock, Send, ArrowRight, Building2, PhoneCall, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import posthog from 'posthog-js';
+import { usePostHog } from 'posthog-js/react';
 
 const contactInfo = [
   {
@@ -44,6 +44,7 @@ interface FormState {
 type SubmitStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export default function Contact() {
+  const posthog = usePostHog();
   const [formData, setFormData] = useState<FormState>({
     name: '',
     email: '',
@@ -64,7 +65,7 @@ export default function Contact() {
     setErrorMessage('');
 
     // Track form submission attempt
-    posthog.capture('contact_form_submitted', {
+    posthog?.capture('contact_form_submitted', {
       has_phone: !!formData.phone,
     });
 
@@ -84,20 +85,20 @@ export default function Contact() {
         setFormData({ name: '', email: '', phone: '', message: '' });
         
         // Track successful submission
-        posthog.capture('contact_form_success');
+        posthog?.capture('contact_form_success');
       } else {
         setStatus('error');
         setErrorMessage(result.message || 'Something went wrong. Please try again.');
         
         // Track failed submission
-        posthog.capture('contact_form_error', { error: result.message });
+        posthog?.capture('contact_form_error', { error: result.message });
       }
     } catch (error) {
       setStatus('error');
       setErrorMessage('Network error. Please check your connection and try again.');
       
       // Track network error
-      posthog.capture('contact_form_network_error');
+      posthog?.capture('contact_form_network_error');
     }
   };
 
