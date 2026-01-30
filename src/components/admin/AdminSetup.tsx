@@ -65,7 +65,7 @@ export default function AdminSetup() {
   };
 
   return (
-    <div className="pt-32 pb-24">
+    <div className="pb-24">
       <Container>
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">

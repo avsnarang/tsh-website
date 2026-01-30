@@ -23,9 +23,9 @@ export default function Messages() {
   );
 
   return (
-    <div className="relative min-h-[90vh] bg-neutral-light pt-52 sm:pt-56">
-      {/* Decorative Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
+    <div className="relative min-h-[90vh] bg-neutral-light">
+      {/* Decorative Background Elements - fixed to cover full viewport */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
         <div className="absolute inset-0 opacity-5">
@@ -39,7 +39,7 @@ export default function Messages() {
       </div>
 
       {/* Main Content */}
-      <div className="relative container mx-auto px-4 py-20">
+      <div className="relative container mx-auto px-4 pb-20">
         <motion.div
           className="flex-1 text-center mb-16"
           initial={{ opacity: 0, y: -30 }}
@@ -48,7 +48,7 @@ export default function Messages() {
         >
           {/* Section Tag */}
           <motion.div
-            className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-8 mt-16"
+            className="inline-flex items-center px-4 py-3 rounded-full bg-green-light/20 text-green mb-8"
             {...fadeIn}
           >
             <span className="text-sm font-semibold">LEADERSHIP INSIGHTS</span>
@@ -107,7 +107,7 @@ export default function Messages() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-neutral-dark/90 backdrop-blur-xl flex items-center justify-center p-4 z-50"
+            className="fixed inset-0 bg-neutral-dark/90 backdrop-blur-xl flex items-center justify-center p-4 z-[100]"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}

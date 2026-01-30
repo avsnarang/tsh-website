@@ -70,7 +70,7 @@ export default function Directory() {
   }, [alumniProfiles, searchQuery, selectedBatch]);
 
   return (
-    <div className="min-h-screen pt-52 sm:pt-56 pb-24 bg-neutral-light">
+    <div className="min-h-screen pb-24 bg-neutral-light">
       {/* Decorative Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
@@ -85,7 +85,7 @@ export default function Directory() {
         </div>
       </div>
 
-      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
+      <Container className="relative z-20">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

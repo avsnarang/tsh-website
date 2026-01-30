@@ -22,6 +22,7 @@ const routeConfig: Record<string, { priority: number; changeFrequency: 'always' 
   // About sub-pages
   '/about/vision': { priority: 0.8, changeFrequency: 'monthly' },
   '/about/messages': { priority: 0.8, changeFrequency: 'monthly' },
+  '/about/paonta-sahib': { priority: 0.85, changeFrequency: 'monthly' },
 
   // Academics pages
   '/academics/pre-primary': { priority: 0.85, changeFrequency: 'monthly' },
@@ -49,6 +50,9 @@ const routeConfig: Record<string, { priority: number; changeFrequency: 'always' 
   // Other pages
   '/faculty': { priority: 0.8, changeFrequency: 'monthly' },
   '/calendar': { priority: 0.7, changeFrequency: 'weekly' },
+
+  // Blog
+  '/blog': { priority: 0.9, changeFrequency: 'daily' },
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -80,9 +84,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     });
     
-    const [eventsRes, sportsRes] = await Promise.all([
+    const [eventsRes, sportsRes, blogRes] = await Promise.all([
       supabase.from('gallery_events').select('id, updated_at').eq('is_visible', true),
-      supabase.from('sports').select('id, updated_at')
+      supabase.from('sports').select('id, updated_at'),
+      supabase.from('blog_posts').select('slug, updated_at, published_at').eq('is_published', true)
     ]);
 
     const eventRoutes = (eventsRes.data || []).map(event => ({
@@ -99,7 +104,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-    return [...staticRoutes, ...eventRoutes, ...sportRoutes];
+    const blogRoutes = (blogRes.data || []).map(post => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.updated_at || post.published_at),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }));
+
+    return [...staticRoutes, ...eventRoutes, ...sportRoutes, ...blogRoutes];
   } catch (error) {
     console.error('Error generating sitemap:', error);
     return staticRoutes;

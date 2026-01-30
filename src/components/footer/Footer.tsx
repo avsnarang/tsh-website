@@ -6,9 +6,9 @@ import Container from '../ui/Container';
 import { Phone, Mail, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
+  initial: { opacity: 1, y: 12 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 }
+  transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }
 };
 
 const staggerChildren = {
@@ -31,12 +31,11 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-gradient-to-br from-[#A65A20] to-[#7A4217] pt-16 pb-8 overflow-hidden">
+    <footer className="relative z-20 bg-gradient-to-br from-[#A65A20] to-[#7A4217] pt-16 pb-8 overflow-hidden">
       {/* Background Text - Hidden on Mobile */}
-      <motion.div 
-        initial={{ opacity: 0 }}
+      <motion.div
+        initial={{ opacity: 0.15 }}
         animate={{ opacity: 0.15 }}
-        transition={{ duration: 1 }}
         className="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block"
       >
         <div className="absolute bottom-0 w-full text-[12vw] font-display text-white/15 text-center">
@@ -55,10 +54,11 @@ export default function Footer() {
         >
           {/* School Info */}
           <motion.div variants={fadeInUp} className="flex flex-col items-center lg:items-start space-y-6">
-            <motion.h3 
-              initial={{ opacity: 0, x: -20 }}
+            <motion.h3
+              initial={{ opacity: 1, x: -10 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
               className="text-2xl text-neutral-light font-display"
             >
               The Scholars' Home
@@ -219,11 +219,11 @@ export default function Footer() {
         </motion.div>
 
         {/* Bottom Bar */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+        <motion.div
+          initial={{ opacity: 1, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.4, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
           className="pt-8 border-t border-neutral-light/10"
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">

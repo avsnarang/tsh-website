@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import MetaPixel from '@/components/analytics/MetaPixel';
 import { homePageSchemaGraph } from '@/lib/schemas/organizationSchema';
 import { geoOptimizedHomeSchema } from '@/lib/schemas/geoSchemas';
+import { bestSchoolFAQSchema, landmarkSchema } from '@/lib/schemas/localLandmarkSchema';
 
 // Preload critical fonts with optimal settings
 const montserrat = Montserrat({
@@ -60,22 +61,33 @@ export const metadata: Metadata = {
     default: "The Scholars' Home | Best CBSE School in Paonta Sahib, Himachal Pradesh",
     template: "%s | The Scholars' Home"
   },
-  description: "The Scholars' Home is a premier CBSE-affiliated school in Paonta Sahib, Himachal Pradesh. Offering excellence in education from pre-primary to senior secondary since 2003. Admissions open for 2024-25.",
+  description: "The Scholars' Home is a premier CBSE-affiliated school in Paonta Sahib, Himachal Pradesh. Offering excellence in education from pre-primary to senior secondary since 2003. Admissions open for 2025-26.",
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
+      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+  },
   keywords: [
-    'CBSE school Paonta Sahib',
+    'best school in Paonta Sahib',
+    'best CBSE school Paonta Sahib',
     'best school in Himachal Pradesh',
+    'top school Paonta Sahib',
     'The Scholars Home',
-    'TSH school',
+    'TSH Paonta Sahib',
+    'CBSE school Paonta Sahib',
     'CBSE affiliated school',
-    'pre-primary school Paonta Sahib',
-    'primary school Himachal Pradesh',
-    'secondary school CBSE',
-    'senior secondary school',
-    'holistic education India',
-    'school admissions 2024',
+    'English medium school Paonta Sahib',
+    'schools in Paonta Sahib',
+    'school admissions 2025',
+    'school admissions 2026',
     'quality education Himachal',
-    'co-curricular activities school',
-    'sports school India'
+    'Paonta Sahib education',
   ],
   authors: [{ name: "The Scholars' Home", url: 'https://tsh.edu.in' }],
   creator: "The Scholars' Home",
@@ -183,6 +195,20 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(geoOptimizedHomeSchema),
+          }}
+        />
+        {/* Best School FAQ schema for ranking queries */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(bestSchoolFAQSchema),
+          }}
+        />
+        {/* Landmark schema for AI Overviews about Paonta Sahib */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(landmarkSchema),
           }}
         />
       </head>

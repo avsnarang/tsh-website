@@ -63,10 +63,10 @@ export default function CampusLife() {
         {/* Section Header */}
         <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-light/30 text-orange rounded-full mb-4">
             <Compass className="h-4 w-4" />
@@ -85,10 +85,10 @@ export default function CampusLife() {
           {activities.map((activity, index) => (
             <motion.div
               key={activity.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
               className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
             >
               {/* Image Container */}
@@ -128,10 +128,10 @@ export default function CampusLife() {
         {/* Additional Features */}
         <motion.div
           className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <div className="bg-green-50/50 backdrop-blur-sm rounded-2xl p-6 border border-green-100">
             <h4 className="text-xl font-display text-green-600 mb-2">Modern Infrastructure</h4>

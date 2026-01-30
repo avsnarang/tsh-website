@@ -8,6 +8,8 @@ export const VALID_TABLES = {
   ADMIN_USERS: 'admin_users',
   AUTH_USER_ROLES: 'auth_user_roles',
   ALUMNI_PROFILES: 'alumni_profiles',
+  BLOG_CATEGORIES: 'blog_categories',
+  BLOG_POSTS: 'blog_posts',
   EVENTS: 'events',
   EVENT_RSVPS: 'event_rsvps',
   FEATURED_TESTIMONIALS: 'featured_testimonials',

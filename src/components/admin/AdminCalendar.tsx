@@ -135,7 +135,7 @@ export default function AdminCalendar() {
 
   return (
     <div className="min-h-screen bg-neutral-light">
-      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8 py-8">
+      <Container className="relative z-20 pb-8">
         {/* Header Section */}
         <div className="mb-8">
           <Link 

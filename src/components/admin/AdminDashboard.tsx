@@ -3,18 +3,19 @@
 import Link from 'next/link';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
-import { 
-  Settings, 
-  LogOut, 
-  Calendar, 
-  Image, 
-  Bell, 
+import {
+  Settings,
+  LogOut,
+  Calendar,
+  Image,
+  Bell,
   School,
   UserPlus,
   BookOpen,
   Trophy,
   Video,
-  MessageSquare
+  MessageSquare,
+  FileText
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
@@ -92,13 +93,20 @@ export default function AdminDashboard() {
       icon: Video,
       path: '/admin/youtube',
       color: 'from-red-light to-red'
+    },
+    {
+      title: 'Blog',
+      description: 'Manage blog posts and categories',
+      icon: FileText,
+      path: '/admin/blog',
+      color: 'from-emerald-light to-emerald'
     }
   ];
 
   return (
     <div className="relative min-h-screen bg-neutral-light">
-      {/* Decorative Background */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Decorative Background - fixed to cover full viewport */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
         <div className="absolute inset-0 opacity-5">
@@ -111,8 +119,8 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="relative pt-52 sm:pt-56 pb-24">
-        <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
+      <div className="relative pb-24">
+        <Container className="relative z-20">
           <div className="max-w-6xl mx-auto">
             <motion.div
               className="flex-1 text-center mb-16"

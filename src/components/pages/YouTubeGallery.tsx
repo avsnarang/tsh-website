@@ -60,9 +60,9 @@ export default function YouTubeGallery() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-neutral-light pt-52 sm:pt-56 pb-24">
-      {/* SVG Background Pattern */}
-      <div className="absolute inset-0 z-0">
+    <div className="relative min-h-screen bg-neutral-light pb-24">
+      {/* SVG Background Pattern - fixed to cover full viewport */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
         {/* Top pattern */}
         <div className="absolute top-0 left-0 right-0 h-1/2">
           <svg className="w-full h-full opacity-[0.07]" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
@@ -100,7 +100,7 @@ export default function YouTubeGallery() {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-light/20 rounded-full filter blur-3xl" />
       </div>
 
-      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8 pt-16">
+      <Container className="relative z-20">
         <ScrollReveal>
           <div className="text-center mb-16">
             <motion.div

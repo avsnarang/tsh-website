@@ -247,7 +247,7 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
 
       {/* Modal */}
       {selectedMessage && (
-        <div className="fixed inset-0 bg-neutral-dark/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={() => setSelectedMessage(null)}>
+        <div className="fixed inset-0 bg-neutral-dark/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100]" onClick={() => setSelectedMessage(null)}>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

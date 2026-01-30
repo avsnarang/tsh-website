@@ -61,12 +61,12 @@ export default function Features() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 relative">
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <h2 className="text-4xl md:text-5xl text-neutral-dark font-display mb-4">
             Why Choose <span className="text-green">The Scholars' Home</span>?
@@ -84,10 +84,10 @@ export default function Features() {
               <motion.div
                 key={feature.title}
                 className="group relative bg-white rounded-2xl p-8 hover:shadow-xl transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-green-light/5 to-transparent rounded-2xl" />
                 <div className="relative flex flex-col items-center text-center">

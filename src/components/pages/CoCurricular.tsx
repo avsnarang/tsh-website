@@ -78,13 +78,17 @@ export default function CoCurricular() {
 
   return (
     <div className="min-h-screen bg-neutral-light">
-      {/* Hero Section */}
-      <div className="relative pt-52 sm:pt-56 pb-20 overflow-hidden">
+      {/* Decorative Background Elements - fixed to cover full viewport */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-primary/5" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full -translate-x-48 -translate-y-48 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange/10 rounded-full translate-x-24 translate-y-24 blur-3xl" />
+      </div>
+
+      {/* Hero Section */}
+      <div className="relative pb-20 overflow-hidden">
         
-        <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
+        <Container className="relative z-20">
           <ScrollReveal>
             <div className="text-center mb-16 relative">
               <TextReveal>

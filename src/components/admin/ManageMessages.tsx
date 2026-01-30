@@ -213,6 +213,7 @@ export default function ManageMessages() {
   }
 
   return (
+    <>
     <div className="relative min-h-screen bg-neutral-light">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -228,7 +229,7 @@ export default function ManageMessages() {
         </div>
       </div>
 
-      <div className="relative pt-32 pb-24">
+      <div className="relative pb-24">
         <Container>
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between gap-4 mb-12">
@@ -363,16 +364,17 @@ export default function ManageMessages() {
           </div>
         </Container>
       </div>
+    </div>
 
-      {/* Create/Edit Message Modal */}
-      <AnimatePresence>
-        {showForm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-          >
+    {/* Create/Edit Message Modal */}
+    <AnimatePresence>
+      {showForm && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-sm flex items-center justify-center p-4 z-[100]"
+        >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -503,7 +505,7 @@ export default function ManageMessages() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+            className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-sm flex items-center justify-center p-4 z-[100]"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -536,6 +538,6 @@ export default function ManageMessages() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }

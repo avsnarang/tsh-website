@@ -10,7 +10,7 @@ export const organizationSchema = {
   "url": "https://tsh.edu.in",
   "logo": {
     "@type": "ImageObject",
-    "url": "https://tsh.edu.in/logo.png",
+    "url": "https://tsh.edu.in/favicon.png",
     "width": 512,
     "height": 512
   },

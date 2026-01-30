@@ -161,7 +161,7 @@ export default function Gallery() {
 
   if (error) {
     return (
-      <div className="min-h-screen pt-52 sm:pt-56 pb-24 bg-neutral-light">
+      <div className="min-h-screen pb-24 bg-neutral-light">
         <Container>
           <div className="text-center text-red-600">{error}</div>
         </Container>
@@ -186,7 +186,7 @@ export default function Gallery() {
       </div>
 
       {/* Main Content */}
-      <div className="min-h-screen pt-52 sm:pt-56 flex flex-col lg:flex-row">
+      <div className="min-h-screen flex flex-col lg:flex-row">
         {/* Left Column - Now centers all content vertically */}
         <div className="w-full lg:w-[30%] lg:h-screen lg:fixed lg:left-0 lg:top-0 lg:flex lg:items-center px-4 lg:px-8">
           <div className="w-full px-4 lg:px-8 pt-4 lg:pt-0">

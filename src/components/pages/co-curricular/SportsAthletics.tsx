@@ -117,7 +117,7 @@ export default function SportsAthletics() {
   );
 
   return (
-    <div className="min-h-screen pt-52 sm:pt-56 pb-24 bg-neutral-light">
+    <div className="min-h-screen pb-24 bg-neutral-light">
       {/* Decorative Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />
@@ -132,7 +132,7 @@ export default function SportsAthletics() {
         </div>
       </div>
 
-      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8 py-12">
+      <Container className="relative z-20 pb-12">
         <ScrollReveal>
           <div className="text-center mb-16">
             <motion.div
@@ -261,11 +261,13 @@ export default function SportsAthletics() {
                 <h2 className="font-display text-3xl mb-6">Our Facilities</h2>
                 <ul className="space-y-4">
                   {[
-                    "Olympic-size swimming pool",
-                    "Indoor basketball court",
-                    "Football ground with synthetic turf",
-                    "Modern fitness center",
-                    "Indoor sports complex"
+                    "Kabaddi Ground/Indoor Stadium",
+                    "Basketball court",
+                    "Football ground",
+                    "Badminton Courts",
+                    "Volleyball Court",
+                    "Table Tennis Court",
+                    "Yoga/Meditation Hall"
                   ].map((facility, index) => (
                     <li key={index} className="flex items-center gap-3">
                       <Check className="w-5 h-5 text-green-light" />

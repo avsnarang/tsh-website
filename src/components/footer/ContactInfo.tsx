@@ -55,7 +55,7 @@ export default function ContactInfo() {
 
       {/* Branch Details Modal */}
       {selectedBranch && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-[100]">
           <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
             <div className="flex justify-between items-start mb-6">
               <h3 className="text-2xl font-semibold text-neutral-dark">{selectedBranch.name}</h3>

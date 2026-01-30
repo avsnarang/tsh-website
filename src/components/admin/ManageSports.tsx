@@ -173,7 +173,7 @@ export default function ManageSports() {
   }
 
   return (
-    <div className="relative min-h-screen bg-neutral-light pt-32 pb-24">
+    <div className="relative min-h-screen bg-neutral-light pb-24">
       {/* Decorative Background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-orange-light/30" />

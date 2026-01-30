@@ -25,7 +25,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col overflow-hidden bg-white pt-24 md:pt-28">
+    <section className="relative min-h-screen flex flex-col overflow-hidden bg-white">
       {/* Soft decorative blurred circles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div 

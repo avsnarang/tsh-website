@@ -9,6 +9,7 @@ import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import Masonry from 'react-masonry-css';
 import { usePostHog } from 'posthog-js/react';
+import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
 
 interface GalleryImage {
   id: string;
@@ -66,6 +67,17 @@ export default function EventGallery() {
       fetchEvent(eventId);
     }
   }, [eventId]);
+
+  // Update breadcrumb label when event title is loaded
+  useEffect(() => {
+    if (event?.title) {
+      BreadcrumbNav.setDynamicLabel(event.title);
+    }
+    return () => {
+      // Reset the label when component unmounts
+      BreadcrumbNav.setDynamicLabel('');
+    };
+  }, [event?.title]);
 
   const fetchEvent = async (id: string) => {
     try {
@@ -194,8 +206,8 @@ export default function EventGallery() {
           // Event Content
           <>
             {/* Header Section */}
-            <div className="pt-52 sm:pt-56 pb-12 relative z-10">
-              <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
+            <div className="pb-12 relative z-10">
+              <Container className="relative z-20">
                 <div className="max-w-7xl mx-auto"> {/* Changed from max-w-3xl to max-w-4xl */}
                   <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
                     {/* Decorative Elements */}

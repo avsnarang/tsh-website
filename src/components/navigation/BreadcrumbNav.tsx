@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { HomeIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -37,6 +38,7 @@ const routeLabels: Record<string, string> = {
   profile: 'Profile',
   register: 'Register',
   gallery: 'Gallery',
+  event: 'Event',
   faculty: 'Faculty',
   admissions: 'Admissions',
   contact: 'Contact',
@@ -70,7 +72,15 @@ export default function BreadcrumbNav() {
   const segments = pathname.split('/').filter(Boolean);
 
   return (
-    <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 dark:bg-neutral-dark/80 backdrop-blur-md shadow-sm border border-neutral-dark/10">
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.3,
+        ease: [0.25, 0.1, 0.25, 1]
+      }}
+      className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 dark:bg-neutral-dark/80 backdrop-blur-md shadow-sm border border-neutral-dark/10"
+    >
       <Breadcrumb>
         <BreadcrumbList className="text-neutral-dark dark:text-white">
           <BreadcrumbItem>
@@ -109,7 +119,7 @@ export default function BreadcrumbNav() {
           })}
         </BreadcrumbList>
       </Breadcrumb>
-    </div>
+    </motion.div>
   );
 }
 

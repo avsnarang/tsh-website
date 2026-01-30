@@ -209,9 +209,9 @@ export default function ManageYouTubeVideos() {
   };
 
   return (
-    <div className="relative min-h-screen bg-neutral-light pt-52 sm:pt-56 pb-24">
-      {/* Decorative Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
+    <div className="relative min-h-screen bg-neutral-light pb-24">
+      {/* Decorative Background Pattern - fixed to cover full viewport */}
+      <div className="fixed inset-0 opacity-5 pointer-events-none">
         <div
           className="h-full w-full"
           style={{
@@ -381,7 +381,7 @@ export default function ManageYouTubeVideos() {
       {/* Create/Edit Form Modal */}
       <AnimatePresence>
         {showForm && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}

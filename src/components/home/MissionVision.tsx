@@ -25,9 +25,9 @@ export default function MissionVision() {
         {/* Section Header */}
         <motion.div
           className="text-center mb-20"
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 1, y: 15 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 1, y: 15 }}
+          transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/30 text-green rounded-full mb-4">
             <Star className="h-4 w-4" />
@@ -42,9 +42,9 @@ export default function MissionVision() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Mission Card */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ opacity: 1, x: -20 }}
+            animate={inView ? { opacity: 1, x: 0 } : { opacity: 1, x: -20 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
             className="group"
           >
             <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 h-full min-h-[320px]">
@@ -70,9 +70,9 @@ export default function MissionVision() {
 
           {/* Vision Card */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            initial={{ opacity: 1, x: 20 }}
+            animate={inView ? { opacity: 1, x: 0 } : { opacity: 1, x: 20 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
             className="group"
           >
             <div className="relative bg-green rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 h-full min-h-[320px]">

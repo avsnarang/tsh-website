@@ -34,8 +34,21 @@ const nextConfig: NextConfig = {
   
   // Enable experimental optimizations
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion', '@tanstack/react-query'],
+    optimizePackageImports: [
+      'lucide-react',
+      'framer-motion',
+      '@tanstack/react-query',
+      '@supabase/supabase-js',
+      'posthog-js',
+      '@fullcalendar/react',
+      '@fullcalendar/daygrid',
+      '@fullcalendar/list',
+      '@fullcalendar/interaction',
+    ],
   },
+
+  // Prevent server-only packages from being bundled on client
+  serverExternalPackages: ['googleapis', '@google-cloud/storage', 'sharp', 'prisma', '@prisma/client'],
 
   // Force webpack usage instead of Turbopack
   webpack: (config, { isServer }) => {

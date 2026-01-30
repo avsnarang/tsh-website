@@ -1,90 +1,24 @@
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Container from '../ui/Container';
-import { supabase } from '../../lib/supabase';
 import { User } from 'lucide-react';
 import ScrollReveal from '../animations/ScrollReveal';
 
 interface AlumniTestimonial {
   id: string;
   full_name: string;
-  batch_year: number;
+  batch_year?: number;
   occupation: string;
   company: string;
   profile_picture_url?: string;
   testimonial: string;
 }
 
-interface FeaturedTestimonialResponse {
-  alumni_profiles: AlumniTestimonial[];  // Change this to an array
+interface TestimonialsProps {
+  testimonials?: AlumniTestimonial[];
 }
 
-export default function Testimonials() {
-  const [testimonials, setTestimonials] = useState<AlumniTestimonial[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const { data: featuredData, error: featuredError } = await supabase
-          .from('featured_testimonials')
-          .select(`
-            alumni_profiles (
-              id,
-              full_name,
-              batch_year,
-              occupation,
-              company,
-              profile_picture_url,
-              testimonial
-            )
-          `)
-          .eq('is_visible', true)
-          .limit(3);
-
-        if (featuredError) throw featuredError;
-
-        const testimonials = ((featuredData as unknown as FeaturedTestimonialResponse[]) || [])
-          .flatMap(item => item.alumni_profiles)
-          .filter((profile): profile is AlumniTestimonial => {
-            return profile !== null && 
-              'id' in profile &&
-              'full_name' in profile &&
-              'batch_year' in profile &&
-              'occupation' in profile &&
-              'company' in profile &&
-              'testimonial' in profile;
-          });
-
-        if (testimonials.length === 0) {
-          // If no featured testimonials, fetch from alumni_profiles directly
-          const { data: profilesData, error: profilesError } = await supabase
-            .from('alumni_profiles')
-            .select('id, full_name, batch_year, occupation, company, profile_picture_url, testimonial')
-            .eq('is_public', true)
-            .eq('show_testimonial', true)
-            .not('testimonial', 'is', null)
-            .order('batch_year', { ascending: false })
-            .limit(3);
-
-          if (profilesError) throw profilesError;
-          setTestimonials(profilesData as AlumniTestimonial[]);
-        } else {
-          setTestimonials(testimonials);
-        }
-      } catch (err) {
-        console.error('Error fetching testimonials:', err);
-        setError('Failed to load testimonials');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTestimonials();
-  }, []);
-
-  if (loading || error || testimonials.length === 0) {
+export default function Testimonials({ testimonials = [] }: TestimonialsProps) {
+  if (testimonials.length === 0) {
     return null;
   }
 
@@ -101,7 +35,7 @@ export default function Testimonials() {
         </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
+          {testimonials.slice(0, 3).map((testimonial, index) => (
             <ScrollReveal
               key={testimonial.id}
               delay={index * 0.1}
@@ -132,9 +66,11 @@ export default function Testimonials() {
                       {testimonial.occupation}
                       {testimonial.company && ` at ${testimonial.company}`}
                     </p>
-                    <p className="text-primary/80 text-sm">
-                      Batch of {testimonial.batch_year}
-                    </p>
+                    {testimonial.batch_year && (
+                      <p className="text-primary/80 text-sm">
+                        Batch of {testimonial.batch_year}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <blockquote className="text-neutral-dark/80 italic">

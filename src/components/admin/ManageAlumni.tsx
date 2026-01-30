@@ -116,7 +116,7 @@ const ManageAlumni: FC = () => {
         </div>
       </div>
 
-      <div className="relative pt-32 pb-24">
+      <div className="relative pb-24">
         <Container>
           <div className="max-w-6xl mx-auto">
             <motion.div
@@ -261,7 +261,7 @@ const ManageAlumni: FC = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

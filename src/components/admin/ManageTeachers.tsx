@@ -348,7 +348,7 @@ export default function ManageTeachers() {
   );
 
   return (
-    <div className="relative min-h-screen bg-neutral-light pt-32 pb-24">
+    <div className="relative min-h-screen bg-neutral-light pb-24">
       {/* Decorative Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div
@@ -566,7 +566,7 @@ export default function ManageTeachers() {
       {/* Add/Edit Form Modal */}
       <AnimatePresence>
         {(showAddForm || editingTeacher) && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -743,7 +743,7 @@ export default function ManageTeachers() {
       {/* Delete Confirmation Modal */}
       <AnimatePresence>
         {showDeleteConfirm && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}

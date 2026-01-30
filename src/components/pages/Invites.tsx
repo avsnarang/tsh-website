@@ -253,8 +253,8 @@ export default function Invites() {
 
   return (
     <div className="md:h-screen overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Background decorative elements - fixed to cover full viewport */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-green-light/30" />
         <div className="absolute inset-0 opacity-5">
           <div

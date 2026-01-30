@@ -94,7 +94,7 @@ export default function SportDetails() {
 
 
   const renderSkeleton = () => (
-    <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8 py-40">
+    <Container className="relative z-20 py-12">
       <div className="space-y-8">
         {/* Breadcrumb skeleton */}
         <div className="flex items-center gap-2">
@@ -183,7 +183,7 @@ export default function SportDetails() {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8 py-48">
+      <Container className="relative z-20 py-12">
 
         {/* Image Slideshow */}
         <div className="relative h-[500px] rounded-2xl overflow-hidden mb-8">

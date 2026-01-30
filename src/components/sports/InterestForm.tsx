@@ -126,7 +126,7 @@ export default function InterestForm({ sportId, sportName, onClose }: {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[100]">
       <div className="bg-white rounded-xl w-full max-w-lg shadow-xl">
         {/* Header */}
         <div className="p-6 border-b border-neutral-200 bg-green-50">

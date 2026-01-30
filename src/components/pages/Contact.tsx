@@ -122,7 +122,7 @@ export default function Contact() {
       </div>
 
       {/* Main Content */}
-      <div className="relative pt-52 sm:pt-56 pb-20">
+      <div className="relative pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Page Header - Simple and Clean */}
           <motion.div

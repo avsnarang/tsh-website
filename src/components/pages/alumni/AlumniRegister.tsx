@@ -109,7 +109,7 @@ export default function AlumniRegister() {
   `;
 
   return (
-    <div className="min-h-screen bg-neutral-light/30 pt-52 sm:pt-56 pb-24">
+    <div className="min-h-screen bg-neutral-light/30 pb-24">
       {/* Decorative Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* Top right decorative circle */}
@@ -127,7 +127,7 @@ export default function AlumniRegister() {
         </div>
       </div>
 
-      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
+      <Container className="relative z-20">
         <ScrollReveal>
           <div className="text-center mb-12">
             <motion.div

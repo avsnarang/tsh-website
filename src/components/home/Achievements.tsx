@@ -54,10 +54,10 @@ export default function Achievements() {
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-light/30 text-green rounded-full mb-4">
             <Trophy className="h-4 w-4" />
@@ -79,10 +79,10 @@ export default function Achievements() {
               <motion.div
                 key={achievement.title}
                 className="group"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
               >
                 <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                   <div className="absolute inset-0 bg-gradient-to-br from-green-light/20 to-transparent rounded-2xl" />

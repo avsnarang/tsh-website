@@ -3,7 +3,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Our Campuses',
-  description: 'Explore The Scholars\' Home campuses with world-class facilities and infrastructure.',
+  description: 'Discover The Scholars\' Home campuses in Paonta Sahib, Juniors, and Majra. Modern facilities, smart classrooms, sports complexes, and science labs across Himachal Pradesh.',
+  keywords: ['TSH campuses', 'school campuses Himachal Pradesh', 'Paonta Sahib school', 'best school facilities'],
 };
 
 export default function CampusesPage() {

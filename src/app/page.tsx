@@ -7,8 +7,21 @@ import type { Metadata } from 'next';
 export const revalidate = 3600; // Revalidate every hour
 
 export const metadata: Metadata = {
-  title: "The Scholars' Home | Excellence in Education Since 2003",
-  description: "Join The Scholars' Home for world-class education and holistic development. CBSE-affiliated school offering comprehensive education from pre-primary to senior secondary levels.",
+  title: "The Scholars' Home | Best CBSE School in Paonta Sahib, Himachal Pradesh",
+  description: "The Scholars' Home is the best school in Paonta Sahib offering CBSE education from Nursery to Class 12. Award-winning academics, 28-acre campus, smart classrooms, and 20+ years of excellence.",
+  keywords: [
+    'best school in Paonta Sahib',
+    'best CBSE school Himachal Pradesh',
+    'top school in Paonta Sahib',
+    'The Scholars Home',
+    'TSH Paonta Sahib',
+    'CBSE school Paonta Sahib',
+    'best English medium school Paonta Sahib',
+    'schools near me',
+  ],
+  alternates: {
+    canonical: 'https://tsh.edu.in',
+  },
 };
 
 async function getHomePageData() {
@@ -57,6 +70,6 @@ async function getHomePageData() {
 export default async function HomePage() {
   const data = await getHomePageData();
 
-  return <HomeClient messages={data.messages} />;
+  return <HomeClient messages={data.messages} testimonials={data.testimonials} />;
 }
 

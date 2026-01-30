@@ -17,7 +17,7 @@ export default function AlumniDetailModal({ alumni, onClose }: AlumniDetailModal
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-neutral-dark/90 backdrop-blur-md flex items-center justify-center p-4 z-50"
+        className="fixed inset-0 bg-neutral-dark/90 backdrop-blur-md flex items-center justify-center p-4 z-[100]"
         onClick={onClose}
       >
         <motion.div

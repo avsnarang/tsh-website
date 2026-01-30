@@ -131,7 +131,7 @@ export default function ManageTestimonials() {
   };
 
   return (
-    <div className="pt-32 pb-24">
+    <div className="pb-24">
       <Container>
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between gap-4 mb-8">
@@ -255,7 +255,7 @@ export default function ManageTestimonials() {
 
       {/* Create Testimonial Modal */}
       {showCreateForm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-[100]">
           <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold text-neutral-dark">Create Testimonial</h2>
@@ -364,7 +364,7 @@ export default function ManageTestimonials() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-[100]">
           <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
             <div className="flex items-center gap-4 text-red-500 mb-6">
               <AlertTriangle className="h-8 w-8" />

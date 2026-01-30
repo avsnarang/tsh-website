@@ -274,7 +274,7 @@ export default function ManageStudents() {
         </div>
       </div>
 
-      <div className="relative pt-32 pb-24">
+      <div className="relative pb-24">
         <Container>
           <div className="max-w-[90rem] mx-auto">
             <motion.div
@@ -464,7 +464,7 @@ export default function ManageStudents() {
 
             {/* Add/Edit Modal */}
             {(showAddForm || editingStudent) && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
                 <div className="bg-white rounded-lg p-6 w-full max-w-md">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-semibold">
@@ -547,7 +547,7 @@ export default function ManageStudents() {
 
             {/* Delete Confirmation Modal */}
             {showDeleteConfirm && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
                 <div className="bg-white rounded-lg p-6 w-full max-w-md">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-semibold">Confirm Delete</h3>

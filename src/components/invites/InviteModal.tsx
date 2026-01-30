@@ -92,7 +92,7 @@ export default function InviteModal({ invite, onClose, onRSVP }: InviteModalProp
   };
 
   return (
-    <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-[100]">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-2xl w-full max-h-[90vh] flex flex-col">
         {/* Event Header */}
         <div className="relative h-48 overflow-hidden shrink-0">

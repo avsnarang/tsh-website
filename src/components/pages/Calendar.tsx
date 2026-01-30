@@ -102,9 +102,9 @@ export default function Calendar() {
 
 
   return (
-    <div className="min-h-screen bg-neutral-light pt-52 sm:pt-56 pb-24">
+    <div className="min-h-screen bg-neutral-light pb-24">
       {/* Header Section */}
-      <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
+      <Container className="relative z-20">
         <ScrollReveal>
           <div className="text-center mb-16">
             <motion.div

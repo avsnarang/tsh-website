@@ -171,7 +171,7 @@ export default function Admissions() {
 
   return (
     <>
-      <section className="relative pt-52 sm:pt-56 pb-40 overflow-hidden">
+      <section className="relative pb-40 overflow-hidden">
         {/* Top fade-in gradient */}
         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white via-white to-transparent z-10" />
 
@@ -191,7 +191,7 @@ export default function Admissions() {
           }} />
         </div>
 
-        <Container className="relative z-20 mt-10 lg:mt-4 md:mt-6 sm:mt-8">
+        <Container className="relative z-20">
           <ScrollReveal>
             <div className="text-center mb-20">
               <span className="inline-block px-6 py-2 bg-green-light/20 text-green rounded-full text-sm font-medium mb-6">

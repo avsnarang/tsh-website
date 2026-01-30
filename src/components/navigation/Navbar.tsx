@@ -3,12 +3,12 @@
 import { useState, useEffect, useRef, memo, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
+import {
   Menu, X, GraduationCap, ChevronDown,
-  Info, BookOpen, Building, Trophy, 
+  Info, BookOpen, Building, Trophy,
   Music, Palette, Users, Calendar,
   Heart, Star, Brain, Award,
-  Phone, Image, Video,
+  Phone, Image, Video, MoreHorizontal,
   LucideIcon
 } from 'lucide-react';
 import Container from '../ui/Container';
@@ -35,6 +35,8 @@ interface NavDropdownProps {
   groups: NavGroup[];
   textColor: any;
   isMenuOpen: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
+  isAnyDropdownOpen?: boolean;
 }
 
 interface NavItemType {
@@ -43,55 +45,85 @@ interface NavItemType {
   href?: string;
   icon?: LucideIcon;
   groups?: NavGroup[];
+  priority?: 'high' | 'low'; // high = always visible, low = hidden in "More" at smaller screens
 }
 
-function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps) {
+function NavDropdown({ label, groups, textColor, isMenuOpen, onOpenChange, isAnyDropdownOpen }: NavDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<NavItem | null>(null);
+  const [alignRight, setAlignRight] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Check if dropdown should align right to stay on screen
+  useEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect();
+      const dropdownWidth = 500;
+      const wouldOverflow = rect.left + dropdownWidth > window.innerWidth - 20;
+      setAlignRight(wouldOverflow);
+    }
+  }, [isOpen]);
 
   // Handle clicks outside the dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        onOpenChange?.(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [onOpenChange]);
+
+  const handleMouseEnter = () => {
+    // Clear any pending close timeout
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setIsOpen(true);
+    onOpenChange?.(true);
+  };
+
+  const handleMouseLeave = () => {
+    // Add delay before closing, but only if not switching to another dropdown
+    closeTimeoutRef.current = setTimeout(() => {
+      if (!dropdownRef.current?.matches(':hover')) {
+        setIsOpen(false);
+        setHoveredItem(null);
+        onOpenChange?.(false);
+      }
+    }, 150);
+  };
 
   return (
-    <div 
+    <div
       ref={dropdownRef}
       className="relative"
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => {
-        // Add delay before closing to allow movement to dropdown content
-        setTimeout(() => {
-          if (!dropdownRef.current?.matches(':hover')) {
-            setIsOpen(false);
-            setHoveredItem(null);
-          }
-        }, 100);
-      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <motion.div style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}>
-        <button 
-          className="flex items-center gap-1 px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
-          onClick={() => setIsOpen(!isOpen)} // Allow clicking to toggle on mobile
+        <button
+          className="flex items-center gap-1 px-2 2xl:px-4 py-2 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap text-sm 2xl:text-base"
+          onClick={() => {
+            setIsOpen(!isOpen);
+            onOpenChange?.(!isOpen);
+          }}
         >
           {label}
           <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
       </motion.div>
-      
+
       {isOpen && (
-        <div 
-          className={`absolute top-full -left-4 w-[600px] py-4 rounded-2xl shadow-xl transition-all duration-300 ${
+        <div
+          className={`absolute top-full w-[500px] py-4 rounded-2xl shadow-xl ${
             isMenuOpen ? 'bg-orange' : 'bg-white'
-          }`}
+          } ${alignRight ? 'right-0' : 'left-0'}`}
           style={{ transform: 'translateY(0.5rem)' }}
         >
           <div className="flex">
@@ -105,12 +137,12 @@ function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps)
                       const Icon = item.icon;
                       if (!item.href) return null;
                       return (
-                        <Link 
+                        <Link
                           key={item.href}
-                          href={item.href} 
+                          href={item.href}
                           className={`group px-4 py-2 flex items-center gap-3 transition-colors ${
-                            isMenuOpen 
-                              ? 'hover:bg-orange-dark text-neutral-light' 
+                            isMenuOpen
+                              ? 'hover:bg-orange-dark text-neutral-light'
                               : 'hover:bg-primary/5 text-neutral-dark'
                           }`}
                           onMouseEnter={() => setHoveredItem(item)}
@@ -125,17 +157,17 @@ function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps)
                 </div>
               ))}
             </div>
-            
+
             {/* Description Column */}
             <div className="w-1/2 p-4">
               {hoveredItem ? (
                 <motion.div
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.15 }}
                   className={`text-sm leading-relaxed ${
-                    isMenuOpen 
-                      ? 'text-neutral-light/90' 
+                    isMenuOpen
+                      ? 'text-neutral-light/90'
                       : 'text-neutral-dark/80'
                   }`}
                 >
@@ -143,8 +175,8 @@ function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps)
                 </motion.div>
               ) : (
                 <div className={`text-sm italic ${
-                  isMenuOpen 
-                    ? 'text-neutral-light/60' 
+                  isMenuOpen
+                    ? 'text-neutral-light/60'
                     : 'text-neutral-dark/60'
                 }`}>
                   Hover over a link to learn more
@@ -152,6 +184,99 @@ function NavDropdown({ label, groups, textColor, isMenuOpen }: NavDropdownProps)
               )}
             </div>
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// "More" menu for overflow items at intermediate screen sizes
+interface MoreMenuProps {
+  items: NavItemType[];
+  textColor: any;
+  isMenuOpen: boolean;
+}
+
+function MoreMenu({ items, textColor, isMenuOpen }: MoreMenuProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Flatten all links from the overflow items
+  const allLinks = items.flatMap(item =>
+    item.groups?.flatMap(group => group.items) || []
+  );
+
+  return (
+    <div
+      ref={dropdownRef}
+      className="relative"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => {
+        setTimeout(() => {
+          if (!dropdownRef.current?.matches(':hover')) {
+            setIsOpen(false);
+          }
+        }, 150);
+      }}
+    >
+      <motion.div style={{ color: isMenuOpen ? '#FFFFFF' : textColor }}>
+        <button
+          className="flex items-center gap-1 px-2 py-2 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap text-sm"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <MoreHorizontal className="h-5 w-5" />
+          <span className="sr-only">More</span>
+        </button>
+      </motion.div>
+
+      {isOpen && (
+        <div
+          className={`absolute top-full right-0 w-[280px] py-3 rounded-2xl shadow-xl ${
+            isMenuOpen ? 'bg-orange' : 'bg-white'
+          }`}
+          style={{ transform: 'translateY(0.5rem)' }}
+        >
+          {items.map((item) => (
+            <div key={item.label} className="mb-2 last:mb-0">
+              <div className={`px-4 py-1 text-xs font-semibold uppercase tracking-wide ${
+                isMenuOpen ? 'text-neutral-light/60' : 'text-primary/60'
+              }`}>
+                {item.label}
+              </div>
+              {item.groups?.map((group) => (
+                <div key={group.label}>
+                  {group.items.map((subItem) => {
+                    if (!subItem.href) return null;
+                    const Icon = subItem.icon;
+                    return (
+                      <Link
+                        key={subItem.href}
+                        href={subItem.href}
+                        className={`px-4 py-2 flex items-center gap-3 transition-colors ${
+                          isMenuOpen
+                            ? 'hover:bg-orange-dark text-neutral-light'
+                            : 'hover:bg-primary/5 text-neutral-dark'
+                        }`}
+                      >
+                        <Icon className={`h-4 w-4 ${isMenuOpen ? 'text-neutral-light' : 'text-primary'}`} />
+                        <span className="text-sm font-medium">{subItem.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       )}
     </div>
@@ -191,6 +316,18 @@ function Navbar() {
     ['translateY(0px)', 'translateY(-20px)']
   );
   const bannerPointerEvents = useTransform(
+    scrollY,
+    (value) => value > 50 ? 'none' : 'auto'
+  );
+
+  // Breadcrumb auto-hide transforms (same pattern as banner)
+  const breadcrumbOpacity = useTransform(scrollY, [0, 100], [1, 0]);
+  const breadcrumbTransform = useTransform(
+    scrollY,
+    [0, 100],
+    ['translateY(0px)', 'translateY(-20px)']
+  );
+  const breadcrumbPointerEvents = useTransform(
     scrollY,
     (value) => value > 50 ? 'none' : 'auto'
   );
@@ -241,6 +378,7 @@ function Navbar() {
     {
       type: 'dropdown',
       label: 'About',
+      priority: 'high',
       groups: [
         {
           label: 'Our Institution',
@@ -256,6 +394,7 @@ function Navbar() {
     {
       type: 'dropdown',
       label: 'Academics',
+      priority: 'high',
       groups: [
         {
           label: 'School Levels',
@@ -272,56 +411,57 @@ function Navbar() {
     {
       type: 'dropdown',
       label: 'Campus Life',
+      priority: 'low', // Hidden in "More" at smaller desktop sizes
       groups: [
         {
           label: 'Our Campuses',
           items: [
-            { 
-              icon: Building, 
-              label: 'Paonta Sahib', 
-              href: '/campus/paonta-sahib', 
-              description: '🏛️ Our flagship campus spanning 25 acres with state-of-the-art facilities including smart classrooms, advanced laboratories, and comprehensive sports infrastructure. Home to over 1,400 students pursuing excellence in education from pre-primary to senior secondary levels.' 
+            {
+              icon: Building,
+              label: 'Paonta Sahib',
+              href: '/campus/paonta-sahib',
+              description: 'Our flagship campus spanning 25 acres with state-of-the-art facilities including smart classrooms, advanced laboratories, and comprehensive sports infrastructure.'
             },
-            { 
-              icon: Heart, 
-              label: 'Juniors', 
-              href: '/campus/juniors', 
-              description: '🌟 A specialized campus dedicated to early years education, featuring child-friendly spaces, Montessori-equipped classrooms, and safe play areas. Our nurturing environment helps young learners aged 2-7 develop foundational skills through play-based learning.' 
+            {
+              icon: Heart,
+              label: 'Juniors',
+              href: '/campus/juniors',
+              description: 'A specialized campus dedicated to early years education, featuring child-friendly spaces, Montessori-equipped classrooms, and safe play areas.'
             },
-            { 
-              icon: Star, 
-              label: 'Majra', 
-              href: '/campus/majra', 
-              description: '🎯 Modern educational facilities blending traditional values with contemporary learning approaches. Features digital classrooms, performing arts center, and dedicated sports academy serving 1,500+ students with a focus on holistic development.' 
+            {
+              icon: Star,
+              label: 'Majra',
+              href: '/campus/majra',
+              description: 'Modern educational facilities blending traditional values with contemporary learning approaches. Features digital classrooms and dedicated sports academy.'
             }
           ]
         },
         {
           label: 'Activities & Programs',
           items: [
-            { 
-              icon: Music, 
-              label: 'Performing Arts', 
-              href: '/co-curricular/performing-arts', 
-              description: '🎭 Comprehensive performing arts program featuring music, dance, and theater. Professional training in classical and contemporary forms, regular performances, and state-of-the-art auditorium for showcasing talent.' 
+            {
+              icon: Music,
+              label: 'Performing Arts',
+              href: '/co-curricular/performing-arts',
+              description: 'Comprehensive performing arts program featuring music, dance, and theater with professional training.'
             },
-            { 
-              icon: Trophy, 
-              label: 'Sports', 
-              href: '/co-curricular/sports-athletics', 
-              description: '🏆 Excellence in sports with professional coaching across multiple disciplines. Features Olympic-size swimming pool, indoor sports complex, and specialized training programs for aspiring athletes.' 
+            {
+              icon: Trophy,
+              label: 'Sports',
+              href: '/co-curricular/sports-athletics',
+              description: 'Excellence in sports with professional coaching across multiple disciplines.'
             },
-            { 
-              icon: Palette, 
-              label: 'Visual Arts', 
-              href: '/co-curricular/visual-arts', 
-              description: '🎨 Creative expression through various art forms including painting, sculpture, and digital arts. Well-equipped studios, regular exhibitions, and expert guidance for nurturing artistic talents.' 
+            {
+              icon: Palette,
+              label: 'Visual Arts',
+              href: '/co-curricular/visual-arts',
+              description: 'Creative expression through various art forms including painting, sculpture, and digital arts.'
             },
-            { 
-              icon: Users, 
-              label: 'Clubs', 
-              href: '/co-curricular/clubs-societies', 
-              description: '👥 Diverse range of clubs and societies fostering leadership, innovation, and community service. From science and debate clubs to environmental initiatives and cultural societies.' 
+            {
+              icon: Users,
+              label: 'Clubs',
+              href: '/co-curricular/clubs-societies',
+              description: 'Diverse range of clubs and societies fostering leadership, innovation, and community service.'
             }
           ]
         }
@@ -330,33 +470,34 @@ function Navbar() {
     {
       type: 'dropdown',
       label: 'Community',
+      priority: 'low', // Hidden in "More" at smaller desktop sizes
       groups: [
         {
           label: 'Connect & Engage',
           items: [
-            { 
-              icon: Users, 
-              label: 'Alumni Network', 
-              href: '/alumni', 
-              description: 'Connect with our vibrant alumni community. Access the alumni directory, share your success story, and stay connected with your alma mater.' 
+            {
+              icon: Users,
+              label: 'Alumni Network',
+              href: '/alumni',
+              description: 'Connect with our vibrant alumni community. Access the alumni directory and share your success story.'
             },
-            { 
-              icon: Image, 
-              label: 'Photo Gallery', 
-              href: '/gallery', 
-              description: 'Explore our collection of memories through photos from various school events, celebrations, and achievements.' 
+            {
+              icon: Image,
+              label: 'Photo Gallery',
+              href: '/gallery',
+              description: 'Explore our collection of memories through photos from various school events and celebrations.'
             },
-            { 
-              icon: Video, 
-              label: 'Video Gallery', 
-              href: '/video-gallery', 
-              description: 'Watch our curated collection of videos showcasing school events, student performances, and educational content.' 
+            {
+              icon: Video,
+              label: 'Video Gallery',
+              href: '/video-gallery',
+              description: 'Watch our curated collection of videos showcasing school events and student performances.'
             },
-            { 
-              icon: Calendar, 
-              label: 'Events', 
-              href: '/invites', 
-              description: 'Stay updated with upcoming school events and activities. RSVP for functions and join our celebrations.' 
+            {
+              icon: Calendar,
+              label: 'Events',
+              href: '/invites',
+              description: 'Stay updated with upcoming school events and activities. RSVP for functions and join our celebrations.'
             }
           ]
         }
@@ -366,15 +507,21 @@ function Navbar() {
       type: 'link',
       label: 'Admissions',
       href: '/admissions',
-      icon: GraduationCap
+      icon: GraduationCap,
+      priority: 'high'
     },
     {
       type: 'link',
       label: 'Contact',
       href: '/contact',
-      icon: Phone
+      icon: Phone,
+      priority: 'high'
     }
   ];
+
+  // Split items by priority
+  const highPriorityItems = navItems.filter(item => item.priority === 'high');
+  const lowPriorityItems = navItems.filter(item => item.priority === 'low');
 
   return (
     <>
@@ -391,8 +538,9 @@ function Navbar() {
               <Logo variant={isMenuOpen ? "light" : "default"} />
             </motion.div>
 
-            <div className="hidden md:flex items-center space-x-4">
-              {navItems.map((item) =>
+            <div className="hidden lg:flex items-center space-x-1 2xl:space-x-2">
+              {/* High priority items - always visible */}
+              {highPriorityItems.map((item) =>
                 item.type === "dropdown" ? (
                   <NavDropdown
                     key={item.label}
@@ -409,7 +557,7 @@ function Navbar() {
                     >
                       <Link
                         href={item.href || '#'}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
+                        className="flex items-center gap-1.5 2xl:gap-2 px-2 2xl:px-3 py-2 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap text-sm 2xl:text-base"
                       >
                         <item.icon className="h-4 w-4" />
                         {item.label}
@@ -418,20 +566,47 @@ function Navbar() {
                   )
                 )
               )}
-              <Link href="/admissions" className="ml-2">
+
+              {/* Low priority items - only visible at 2xl (1536px) and above */}
+              {lowPriorityItems.map((item) =>
+                item.type === "dropdown" ? (
+                  <div key={item.label} className="hidden 2xl:block">
+                    <NavDropdown
+                      label={item.label}
+                      groups={item.groups || []}
+                      textColor={textColor}
+                      isMenuOpen={isMenuOpen}
+                    />
+                  </div>
+                ) : null
+              )}
+
+              {/* "More" menu - visible at lg-xl, hidden at 2xl */}
+              {lowPriorityItems.length > 0 && (
+                <div className="2xl:hidden">
+                  <MoreMenu
+                    items={lowPriorityItems}
+                    textColor={textColor}
+                    isMenuOpen={isMenuOpen}
+                  />
+                </div>
+              )}
+
+              <Link href="/admissions" className="ml-1 2xl:ml-2">
                 <Button
                   variant="cta-green"
-                  className="min-w-[140px] flex items-center justify-center gap-2"
+                  className="flex items-center justify-center gap-1.5 2xl:gap-2 text-sm 2xl:text-base px-3 2xl:px-4 whitespace-nowrap"
                 >
-                  <GraduationCap className="h-5 w-5" />
-                  Join Now
+                  <GraduationCap className="h-4 w-4 2xl:h-5 2xl:w-5" />
+                  <span className="2xl:hidden">Apply</span>
+                  <span className="hidden 2xl:inline">Join Now</span>
                 </Button>
               </Link>
             </div>
 
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 z-50"
+              className="lg:hidden p-2 z-50"
               style={{ color: isMenuOpen ? "#FFFFFF" : textColor.toString() }}
             >
               {isMenuOpen ? (
@@ -480,10 +655,17 @@ function Navbar() {
 
           {/* Breadcrumbs - shown below navbar with frosted glass effect */}
           {!isMenuOpen && (
-            <div className="absolute left-0 right-0 top-[80px] z-10 px-8 mt-16 sm:mt-2 md:mt-4 
-              lg:mt-8 sm:px-12 lg:px-16 flex justify-center sm:justify-start">
+            <motion.div
+              className="absolute left-0 right-0 top-[80px] z-10 px-8 mt-16 sm:mt-2 md:mt-4
+                lg:mt-8 sm:px-12 lg:px-16 flex justify-center sm:justify-start"
+              style={{
+                opacity: breadcrumbOpacity,
+                transform: breadcrumbTransform,
+                pointerEvents: breadcrumbPointerEvents
+              }}
+            >
               <BreadcrumbNav />
-            </div>
+            </motion.div>
           )}
         </Container>
       </nav>

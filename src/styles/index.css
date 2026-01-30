@@ -4,10 +4,37 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ultra-fast CSS animations for instant perceived performance */
+/* CSS Custom Properties for page layout spacing */
+/* These account for fixed navbar + notification banner + breadcrumbs */
+:root {
+  --page-top-spacing: 180px;  /* Mobile */
+  --navbar-height: 80px;
+  --banner-height: 50px;
+  --breadcrumb-height: 40px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --page-top-spacing: 140px;  /* sm */
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --page-top-spacing: 150px;  /* md */
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --page-top-spacing: 160px;  /* lg */
+  }
+}
+
+/* CSS animations - start visible to prevent blank flash */
 @keyframes fadeIn {
   from {
-    opacity: 0;
+    opacity: 0.85;
   }
   to {
     opacity: 1;
@@ -16,8 +43,20 @@
 
 @keyframes slideUp {
   from {
-    opacity: 0;
-    transform: translateY(10px);
+    opacity: 0.85;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero settle animation - starts visible, settles into place */
+@keyframes heroSettle {
+  from {
+    opacity: 0.9;
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
