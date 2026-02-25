@@ -13,39 +13,40 @@ const fadeIn = {
   transition: { duration: 0.5 }
 };
 
-interface MessagesProps {
-  messages: LeadershipMessage[];
-}
-
-export default function Messages({ messages: serverMessages }: MessagesProps) {
-  const [leadershipMessages, setLeadershipMessages] = useState<LeadershipMessage[]>(serverMessages);
+export default function Messages() {
+  const [leadershipMessages, setLeadershipMessages] = useState<LeadershipMessage[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
 
-  // Client-side fallback: if server returned no data, try fetching from browser
   useEffect(() => {
-    if (serverMessages.length > 0) return;
-
-    async function fetchClientSide() {
+    async function fetchMessages() {
       try {
         const { data, error } = await supabase
           .from('leadership_messages')
           .select('*')
-          .order('order', { ascending: true });
+          .order('order');
 
-        if (error || !data || data.length === 0) return;
+        if (error) {
+          console.error('Error fetching leadership messages:', error);
+          return;
+        }
 
-        setLeadershipMessages(data.map(msg => ({
+        const formatted = (data || []).map(msg => ({
           ...msg,
           fullMessage: msg.full_message || '',
-          display_locations: msg.display_locations || ['all'],
-        })));
-      } catch {
-        // Silent fail — server will work in production
+          display_locations: msg.display_locations || ['all']
+        }));
+
+        setLeadershipMessages(formatted);
+      } catch (err) {
+        console.error('Failed to fetch leadership messages:', err);
+      } finally {
+        setLoading(false);
       }
     }
 
-    fetchClientSide();
-  }, [serverMessages]);
+    fetchMessages();
+  }, []);
 
   return (
     <div className="relative min-h-[90vh] bg-neutral-light">
@@ -91,38 +92,74 @@ export default function Messages({ messages: serverMessages }: MessagesProps) {
           </p>
         </motion.div>
 
-        {/* Message cards */}
-        <div className="max-w-7xl mx-auto">
-          {/* First Row - Single Card Centered */}
-          <div className="flex justify-center mb-8">
-            {leadershipMessages.slice(0, 1).map((message) => (
-              <motion.div
-                key={message.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="relative group w-full max-w-2xl"
-              >
-                <MessageCard message={message} setSelectedMessage={setSelectedMessage} />
-              </motion.div>
-            ))}
+        {/* Loading state */}
+        {loading && (
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-center mb-8">
+              <div className="w-full max-w-2xl bg-white rounded-2xl p-8 shadow-xl animate-pulse">
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                  <div className="w-32 h-32 rounded-xl bg-neutral-200" />
+                  <div className="flex-1 space-y-3 w-full">
+                    <div className="h-6 w-48 bg-neutral-200 rounded" />
+                    <div className="h-4 w-32 bg-neutral-200 rounded" />
+                    <div className="h-4 w-full bg-neutral-200 rounded" />
+                    <div className="h-4 w-3/4 bg-neutral-200 rounded" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col md:flex-row justify-center gap-8">
+              {[1, 2].map((i) => (
+                <div key={i} className="w-full md:w-[calc(50%-1rem)] max-w-xl bg-white rounded-2xl p-8 shadow-xl animate-pulse">
+                  <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                    <div className="w-32 h-32 rounded-xl bg-neutral-200" />
+                    <div className="flex-1 space-y-3 w-full">
+                      <div className="h-6 w-48 bg-neutral-200 rounded" />
+                      <div className="h-4 w-32 bg-neutral-200 rounded" />
+                      <div className="h-4 w-full bg-neutral-200 rounded" />
+                      <div className="h-4 w-3/4 bg-neutral-200 rounded" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+        )}
 
-          {/* Second Row - Two Cards */}
-          <div className="flex flex-col md:flex-row justify-center gap-8">
-            {leadershipMessages.slice(1, 3).map((message, index) => (
-              <motion.div
-                key={message.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: (index + 1) * 0.1 }}
-                className="relative group w-full md:w-[calc(50%-1rem)] max-w-xl"
-              >
-                <MessageCard message={message} setSelectedMessage={setSelectedMessage} />
-              </motion.div>
-            ))}
+        {/* Message cards */}
+        {!loading && (
+          <div className="max-w-7xl mx-auto">
+            {/* First Row - Single Card Centered */}
+            <div className="flex justify-center mb-8">
+              {leadershipMessages.slice(0, 1).map((message) => (
+                <motion.div
+                  key={message.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="relative group w-full max-w-2xl"
+                >
+                  <MessageCard message={message} setSelectedMessage={setSelectedMessage} />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Second Row - Two Cards */}
+            <div className="flex flex-col md:flex-row justify-center gap-8">
+              {leadershipMessages.slice(1, 3).map((message, index) => (
+                <motion.div
+                  key={message.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: (index + 1) * 0.1 }}
+                  className="relative group w-full md:w-[calc(50%-1rem)] max-w-xl"
+                >
+                  <MessageCard message={message} setSelectedMessage={setSelectedMessage} />
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Modal */}
@@ -133,14 +170,12 @@ export default function Messages({ messages: serverMessages }: MessagesProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-neutral-dark/90 backdrop-blur-xl flex items-center justify-center p-4 z-[100]"
-            onClick={() => setSelectedMessage(null)}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="bg-white rounded-3xl overflow-hidden shadow-2xl w-full max-w-4xl"
-              onClick={(e) => e.stopPropagation()}
             >
               <div className="relative p-8 border-b border-neutral-200">
                 <div className="flex items-center gap-6">
