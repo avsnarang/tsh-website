@@ -78,7 +78,7 @@ export default function Features() {
               direction="up"
             >
               <div 
-                className={`text-center p-8 rounded-2xl backdrop-blur-sm ${
+                className={`text-center p-8 rounded-2xl backdrop-blur-xs ${
                   index % 2 === 0 
                     ? 'bg-primary-light/10'
                     : 'bg-primary-alt-light/10'

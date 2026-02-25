@@ -42,7 +42,7 @@ export default function LeaderMessages({ messages, isLoading }: LeaderMessagesPr
   return (
     <section className="relative py-40">
       {/* Top fade-in gradient - increased opacity */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white via-white to-transparent z-10" />
+      <div className="absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-white via-white to-transparent z-10" />
 
       {/* Unique geometric background - increased color intensities */}
       <div className="absolute inset-0 bg-[#f8fafc]">
@@ -83,8 +83,8 @@ export default function LeaderMessages({ messages, isLoading }: LeaderMessagesPr
                 className="relative group h-full"
               >
                 {/* Card background effects */}
-                <div className="absolute inset-0 bg-gradient-to-br from-green-light/10 via-primary-light/5 to-transparent rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute -inset-0.5 bg-gradient-to-br from-green-light/30 to-primary-light/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-linear-to-br from-green-light/10 via-primary-light/5 to-transparent rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute -inset-0.5 bg-linear-to-br from-green-light/30 to-primary-light/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-xs transition-opacity duration-500" />
                 
                 {/* Main card */}
                 <div className="relative bg-white rounded-3xl p-8 shadow-xl h-full flex flex-col">
@@ -94,7 +94,7 @@ export default function LeaderMessages({ messages, isLoading }: LeaderMessagesPr
                   <div className="flex items-center gap-5 mb-6">
                     <motion.div
                       whileHover={{ scale: 1.1 }}
-                      className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-br from-green-light to-primary flex-shrink-0 shadow-lg"
+                      className="w-20 h-20 rounded-2xl overflow-hidden bg-linear-to-br from-green-light to-primary shrink-0 shadow-lg"
                     >
                       {message.photo_url ? (
                         <Image
@@ -120,7 +120,7 @@ export default function LeaderMessages({ messages, isLoading }: LeaderMessagesPr
                     </div>
                   </div>
 
-                  <blockquote className="mb-8 flex-grow">
+                  <blockquote className="mb-8 grow">
                     <p className="text-neutral-dark/80 text-lg leading-relaxed line-clamp-6">
                       "{message.preview}"
                     </p>
@@ -144,7 +144,7 @@ export default function LeaderMessages({ messages, isLoading }: LeaderMessagesPr
       {/* Modal */}
       <AnimatePresence>
         {selectedMessage && (
-          <div className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
+          <div className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-xs flex items-center justify-center p-4 z-100">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -155,7 +155,7 @@ export default function LeaderMessages({ messages, isLoading }: LeaderMessagesPr
               <div className="sticky top-0 bg-white p-8 border-b border-neutral-200 z-10">
                 <div className="flex items-start justify-between gap-6">
                   <div className="flex items-start gap-5">
-                    <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-br from-green-light to-primary flex-shrink-0">
+                    <div className="w-20 h-20 rounded-2xl overflow-hidden bg-linear-to-br from-green-light to-primary shrink-0">
                       {selectedMessage.photo_url ? (
                         <Image
                           src={selectedMessage.photo_url}
@@ -202,7 +202,7 @@ export default function LeaderMessages({ messages, isLoading }: LeaderMessagesPr
       </AnimatePresence>
 
       {/* Bottom decorative element */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white to-transparent z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-white via-white to-transparent z-10" />
     </section>
   );
 }

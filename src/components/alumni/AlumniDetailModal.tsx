@@ -17,7 +17,7 @@ export default function AlumniDetailModal({ alumni, onClose }: AlumniDetailModal
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-neutral-dark/90 backdrop-blur-md flex items-center justify-center p-4 z-[100]"
+        className="fixed inset-0 bg-neutral-dark/90 backdrop-blur-md flex items-center justify-center p-4 z-100"
         onClick={onClose}
       >
         <motion.div
@@ -48,7 +48,7 @@ export default function AlumniDetailModal({ alumni, onClose }: AlumniDetailModal
           {/* Close Button - increased z-index */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/10 backdrop-blur-sm text-neutral-dark hover:bg-white/20 transition-colors"
+            className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/10 backdrop-blur-xs text-neutral-dark hover:bg-white/20 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -65,7 +65,7 @@ export default function AlumniDetailModal({ alumni, onClose }: AlumniDetailModal
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-green-light to-primary flex items-center justify-center">
+                  <div className="w-full h-full bg-linear-to-br from-green-light to-primary flex items-center justify-center">
                     <User className="h-12 w-12 text-white" />
                   </div>
                 )}

@@ -173,7 +173,7 @@ export default function Admissions() {
     <>
       <section className="relative pb-40 overflow-hidden">
         {/* Top fade-in gradient */}
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white via-white to-transparent z-10" />
+        <div className="absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-white via-white to-transparent z-10" />
 
         {/* Unique geometric background */}
         <div className="absolute inset-0 bg-[#f8fafc]">
@@ -214,8 +214,8 @@ export default function Admissions() {
                   className="relative group h-full overflow-hidden rounded-3xl"
                 >
                   {/* Card background effects */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-light/10 via-primary-light/5 to-transparent rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute -inset-0.5 bg-gradient-to-br from-green-light/30 to-primary-light/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-linear-to-br from-green-light/10 via-primary-light/5 to-transparent rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute -inset-0.5 bg-linear-to-br from-green-light/30 to-primary-light/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-xs transition-opacity duration-500" />
                   
                   {/* Main card */}
                   <div className="relative bg-white rounded-3xl overflow-hidden shadow-xl h-full flex flex-col">
@@ -228,22 +228,22 @@ export default function Admissions() {
                         height={192}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
                         <h3 className="text-2xl font-display text-white mb-1">{campus.name}</h3>
                       </div>
                     </div>
 
                     {/* Content Section */}
-                    <div className="p-8 flex flex-col flex-grow">
+                    <div className="p-8 flex flex-col grow">
                       <p className="text-neutral-dark/80 text-lg leading-relaxed mb-6">
                         {campus.description}
                       </p>
 
-                      <div className="space-y-3 mb-6 flex-grow">
+                      <div className="space-y-3 mb-6 grow">
                         {campus.features.map(feature => (
                           <div key={feature} className="flex items-center gap-3 text-neutral-dark/80">
-                            <CheckCircle2 className="h-5 w-5 text-green flex-shrink-0" />
+                            <CheckCircle2 className="h-5 w-5 text-green shrink-0" />
                             <span>{feature}</span>
                           </div>
                         ))}
@@ -364,7 +364,7 @@ export default function Admissions() {
         </Container>
 
         {/* Bottom decorative element */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white to-transparent z-10" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-white via-white to-transparent z-10" />
       </section>
 
       {/* Admission Steps Section */}

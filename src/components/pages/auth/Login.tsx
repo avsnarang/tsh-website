@@ -282,7 +282,7 @@ export default function Login() {
               {/* Enhanced Decorative Elements */}
               <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange/40 rounded-2xl" />
               <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green/40 rounded-2xl" />
-              <div className="absolute inset-0 bg-gradient-to-br from-green/5 via-transparent to-orange/5 rounded-2xl" />
+              <div className="absolute inset-0 bg-linear-to-br from-green/5 via-transparent to-orange/5 rounded-2xl" />
 
               {error && (
                 <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl border-2 border-red-100 flex items-center gap-2">
@@ -331,7 +331,7 @@ export default function Login() {
                 <motion.button
                   type="submit"
                   disabled={loading || authLoading}
-                  className="w-full bg-gradient-to-r from-green to-green-dark text-white py-4 px-6 rounded-xl 
+                  className="w-full bg-linear-to-r from-green to-green-dark text-white py-4 px-6 rounded-xl 
                     hover:from-green-dark hover:to-green 
                     transition-all duration-300 
                     disabled:opacity-50 

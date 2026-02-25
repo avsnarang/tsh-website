@@ -106,7 +106,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
                         transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                         className="flex items-center gap-3"
                       >
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-light to-green flex items-center justify-center shadow-lg shadow-green/20">
+                        <div className="w-10 h-10 rounded-xl bg-linear-to-br from-green-light to-green flex items-center justify-center shadow-lg shadow-green/20">
                           <StatIcon className="w-5 h-5 text-white" />
                         </div>
                         <div className="text-left">
@@ -153,7 +153,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.3 }}
-                    className="absolute -inset-4 bg-gradient-to-br from-green-light/30 via-green/20 to-orange-light/30 rounded-3xl blur-xl"
+                    className="absolute -inset-4 bg-linear-to-br from-green-light/30 via-green/20 to-orange-light/30 rounded-3xl blur-xl"
                   />
                   
                   {/* Green accent border */}
@@ -177,7 +177,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]"
+                    className="relative rounded-3xl overflow-hidden shadow-2xl aspect-4/3"
                   >
                     <OptimizedImage
                       src={info.heroImage || info.facilities[0]?.image || "https://images.unsplash.com/photo-1523050854058-8df90110c9f1"}
@@ -186,7 +186,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
                     />
                     
                     {/* Subtle gradient overlay on image */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-green-dark/30 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-green-dark/30 via-transparent to-transparent" />
                     
                     {/* Floating stat card on image */}
                     {info.stats[3] && (
@@ -197,7 +197,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
                         className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-xl"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange to-orange-dark flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-orange to-orange-dark flex items-center justify-center">
                             <Award className="w-5 h-5 text-white" />
                           </div>
                           <div>

@@ -43,7 +43,7 @@ export default function Testimonials({ testimonials = [] }: TestimonialsProps) {
             >
               <div className="bg-white p-8 rounded-2xl shadow-lg">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
+                  <div className="w-16 h-16 rounded-full overflow-hidden shrink-0">
                     {testimonial.profile_picture_url ? (
                       <Image
                         src={testimonial.profile_picture_url}

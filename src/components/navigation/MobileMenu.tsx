@@ -28,8 +28,8 @@ const menuVariants = {
     x: "100%",
     transition: {
       duration: 0.3,
-      ease: "easeInOut",
-      when: "afterChildren",
+      ease: "easeInOut" as const,
+      when: "afterChildren" as const,
       staggerChildren: 0.05,
       staggerDirection: -1
     }
@@ -39,8 +39,8 @@ const menuVariants = {
     x: 0,
     transition: {
       duration: 0.3,
-      ease: "easeInOut",
-      when: "beforeChildren",
+      ease: "easeInOut" as const,
+      when: "beforeChildren" as const,
       staggerChildren: 0.05,
       delayChildren: 0.1
     }

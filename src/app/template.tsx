@@ -71,12 +71,12 @@ export default function Template({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
 
       <Navbar />
-      <main className={`flex-grow relative z-10 ${isHomePage ? 'min-h-[100svh]' : ''}`}>
+      <main className={`grow relative z-10 ${isHomePage ? 'min-h-svh' : ''}`}>
         {/* Spacer to account for fixed navbar + notification banner + breadcrumbs */}
         {/* Uses CSS custom property --page-top-spacing defined in index.css */}
         {!isHomePage && (
           <div
-            className="pt-[var(--page-top-spacing)]"
+            className="pt-(--page-top-spacing)"
             aria-hidden="true"
           />
         )}

@@ -584,7 +584,7 @@ export default function ManageEvents() {
 
           {/* Event Form Modal */}
           {showEventForm && (
-            <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
+            <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-100 p-4">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -614,7 +614,7 @@ export default function ManageEvents() {
                         type="text"
                         value={formData.title}
                         onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                         required
                       />
                     </div>
@@ -624,7 +624,7 @@ export default function ManageEvents() {
                       <textarea
                         value={formData.description}
                         onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32"
+                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary h-32"
                         required
                       />
                     </div>
@@ -636,7 +636,7 @@ export default function ManageEvents() {
                           type="date"
                           value={formData.date}
                           onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                           required
                         />
                       </div>
@@ -647,7 +647,7 @@ export default function ManageEvents() {
                           type="time"
                           value={formData.time}
                           onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
-                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                           required
                         />
                       </div>
@@ -659,7 +659,7 @@ export default function ManageEvents() {
                         type="text"
                         value={formData.location}
                         onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                         required
                       />
                     </div>
@@ -732,7 +732,7 @@ export default function ManageEvents() {
                             ...prev, 
                             maxCapacity: e.target.value ? parseInt(e.target.value) : undefined
                           }))}
-                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                           min="1"
                         />
                       </div>
@@ -746,7 +746,7 @@ export default function ManageEvents() {
                             ...prev, 
                             maxGuestsPerRsvp: Math.max(1, parseInt(e.target.value) || 1)
                           }))}
-                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                           min="1"
                           required
                         />
@@ -782,7 +782,7 @@ export default function ManageEvents() {
 
           {/* Delete Confirmation Modal */}
           {showDeleteConfirm && (
-            <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
+            <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-100 p-4">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}

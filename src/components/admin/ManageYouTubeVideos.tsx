@@ -316,13 +316,13 @@ export default function ManageYouTubeVideos() {
                           {video.title}
                         </h3>
                         {video.description && (
-                          <p className="text-sm text-neutral-dark/70 line-clamp-2 break-words" title={video.description}>
+                          <p className="text-sm text-neutral-dark/70 line-clamp-2 wrap-break-word" title={video.description}>
                             {video.description}
                           </p>
                         )}
                       </div>
                     </div>
-                    <div className="flex gap-1 shrink-0 flex-shrink-0">
+                    <div className="flex gap-1 shrink-0 shrink-0">
                       <button
                         onClick={() => handleMove(video, 'up')}
                         disabled={index === 0}
@@ -381,7 +381,7 @@ export default function ManageYouTubeVideos() {
       {/* Create/Edit Form Modal */}
       <AnimatePresence>
         {showForm && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
+          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-100 p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}

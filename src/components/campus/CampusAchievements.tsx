@@ -28,8 +28,8 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
       </div>
       
       {/* Decorative lines */}
-      <div className="absolute top-24 left-0 w-32 h-px bg-gradient-to-r from-transparent via-orange-light/50 to-transparent" />
-      <div className="absolute top-24 right-0 w-32 h-px bg-gradient-to-r from-transparent via-orange-light/50 to-transparent" />
+      <div className="absolute top-24 left-0 w-32 h-px bg-linear-to-r from-transparent via-orange-light/50 to-transparent" />
+      <div className="absolute top-24 right-0 w-32 h-px bg-linear-to-r from-transparent via-orange-light/50 to-transparent" />
 
       <Container className="relative z-10">
         <ScrollReveal>
@@ -68,20 +68,20 @@ export default function CampusAchievements({ info }: CampusAchievementsProps) {
                   className="relative group h-full"
                 >
                   {/* Card glow effect on hover */}
-                  <div className="absolute -inset-1 rounded-3xl bg-gradient-to-br from-orange-light/40 to-orange/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
+                  <div className="absolute -inset-1 rounded-3xl bg-linear-to-br from-orange-light/40 to-orange/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
                   
                   <div className="relative bg-white rounded-3xl p-8 shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full border border-neutral-200">
-                    <div className="absolute inset-0 bg-gradient-to-br from-orange-light/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-linear-to-br from-orange-light/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
                     {/* Year badge */}
                     <div className="absolute -top-3 right-6">
-                      <div className="px-4 py-1 bg-gradient-to-r from-orange to-orange-dark text-white text-sm font-semibold rounded-full shadow-lg shadow-orange/30">
+                      <div className="px-4 py-1 bg-linear-to-r from-orange to-orange-dark text-white text-sm font-semibold rounded-full shadow-lg shadow-orange/30">
                         {achievement.year}
                       </div>
                     </div>
 
                     <div className="relative">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-light to-orange flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-orange/20">
+                      <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-orange-light to-orange flex items-center justify-center mb-6 transform group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-orange/20">
                         <AchievementIcon className="w-7 h-7 text-white" />
                       </div>
 

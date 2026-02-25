@@ -110,7 +110,7 @@ export default function Faculty() {
           backgroundSize: '100px 20px',
         }} />
         {/* Add fade out effect at the bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-neutral-light to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-neutral-light to-transparent" />
       </div>
 
       {/* Hero Section with Background Pattern */}
@@ -139,7 +139,7 @@ export default function Faculty() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="max-w-4xl mx-auto"
           >
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm p-6">
+            <div className="bg-white/80 backdrop-blur-xs rounded-xl shadow-xs p-6">
               <div className="space-y-4">
                 <div className="flex flex-col md:flex-row gap-4">
                   {/* Search Input */}
@@ -262,15 +262,15 @@ export default function Faculty() {
                   className="relative group h-full"
                 >
                   {/* Card background effects */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-light/10 via-primary-light/5 to-transparent rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute -inset-0.5 bg-gradient-to-br from-green-light/30 to-primary-light/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-linear-to-br from-green-light/10 via-primary-light/5 to-transparent rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute -inset-0.5 bg-linear-to-br from-green-light/30 to-primary-light/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-xs transition-opacity duration-500" />
                   
                   {/* Main card */}
                   <div className="relative bg-white rounded-3xl p-8 shadow-xl h-full flex flex-col">
                     <div className="flex items-center gap-5 mb-6">
                       <motion.div
                         whileHover={{ scale: 1.1 }}
-                        className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-br from-green-light to-primary flex-shrink-0 shadow-lg"
+                        className="w-20 h-20 rounded-2xl overflow-hidden bg-linear-to-br from-green-light to-primary shrink-0 shadow-lg"
                       >
                         {teacher.profile_picture_url ? (
                           <img

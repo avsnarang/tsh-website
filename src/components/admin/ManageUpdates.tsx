@@ -236,8 +236,8 @@ export default function ManageUpdates() {
                   >
                     <div className="p-8">
                       <div className="flex justify-between items-start gap-4">
-                        <div className="flex-grow">
-                          <p className="text-neutral-dark/80 whitespace-pre-wrap break-words">
+                        <div className="grow">
+                          <p className="text-neutral-dark/80 whitespace-pre-wrap wrap-break-word">
                             {update.content}
                           </p>
                           <div className="mt-4 flex items-center gap-4">
@@ -279,7 +279,7 @@ export default function ManageUpdates() {
 
       {/* Create/Edit Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-100 p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -314,7 +314,7 @@ export default function ManageUpdates() {
                   <textarea
                     value={formContent}
                     onChange={(e) => setFormContent(e.target.value)}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green h-32"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green h-32"
                     placeholder="Example: Admissions Open for 2025-26 • Annual Sports Day on March 15th"
                     required
                   />
@@ -331,7 +331,7 @@ export default function ManageUpdates() {
                     type="text"
                     value={formLink}
                     onChange={(e) => setFormLink(e.target.value)}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                     placeholder="Example: /admissions or https://external-link.com"
                   />
                 </div>

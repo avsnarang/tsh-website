@@ -50,7 +50,7 @@ export default function PrePrimary() {
         {/* Overview Section */}
         <ScrollReveal>
           <div className="relative bg-white rounded-2xl shadow-lg p-8 mb-12 overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-green-light/10 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,var(--tw-gradient-stops))] from-green-light/10 via-transparent to-transparent" />
             <div className="relative">
               <TextReveal>
                 <h2 className="text-3xl text-neutral-dark mb-6">Program Overview</h2>
@@ -75,9 +75,9 @@ export default function PrePrimary() {
                       whileHover={{ scale: 1.05 }}
                       className="bg-primary-light/10 p-6 rounded-xl text-center group relative overflow-hidden"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-br from-green-light/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-linear-to-br from-green-light/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="relative">
-                        <div className="w-12 h-12 bg-gradient-to-br from-green-light to-green rounded-full flex items-center justify-center mx-auto mb-3">
+                        <div className="w-12 h-12 bg-linear-to-br from-green-light to-green rounded-full flex items-center justify-center mx-auto mb-3">
                           <stat.icon className="h-6 w-6 text-white" />
                         </div>
                         <div className="text-neutral-dark font-semibold">{stat.title}</div>
@@ -146,7 +146,7 @@ export default function PrePrimary() {
                 whileHover={{ scale: 1.02 }}
                 className="relative bg-white rounded-2xl shadow-lg p-8 group overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-green-light/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-linear-to-br from-green-light/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative">
                   <TextReveal>
                     <h3 className="text-2xl text-neutral-dark mb-4">{level.grade}</h3>
@@ -163,7 +163,7 @@ export default function PrePrimary() {
                               whileHover={{ x: 10 }}
                               className="flex items-center gap-3"
                             >
-                              <div className="w-6 h-6 bg-gradient-to-br from-green-light to-green rounded-full flex items-center justify-center">
+                              <div className="w-6 h-6 bg-linear-to-br from-green-light to-green rounded-full flex items-center justify-center">
                                 <BookOpen className="h-3 w-3 text-white" />
                               </div>
                               <span className="text-neutral-dark/80">{item}</span>
@@ -196,7 +196,7 @@ export default function PrePrimary() {
         {/* Teaching Methodology */}
         <ScrollReveal>
           <div className="relative bg-green p-12 rounded-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-green-light/10 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,var(--tw-gradient-stops))] from-green-light/10 via-transparent to-transparent" />
             <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
             <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-orange-light rounded-2xl" />
             

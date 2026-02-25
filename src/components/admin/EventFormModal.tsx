@@ -47,7 +47,7 @@ export default function EventFormModal({
   setFormData
 }: EventFormModalProps) {
   return (
-    <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-[100]">
+    <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-100">
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-neutral-dark">
@@ -68,7 +68,7 @@ export default function EventFormModal({
               type="text"
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
               required
             />
           </div>
@@ -80,7 +80,7 @@ export default function EventFormModal({
                 type="date"
                 value={formData.date}
                 onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                 required
               />
             </div>
@@ -90,7 +90,7 @@ export default function EventFormModal({
                 type="time"
                 value={formData.time}
                 onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                 required
               />
             </div>
@@ -102,7 +102,7 @@ export default function EventFormModal({
               type="text"
               value={formData.location}
               onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
               required
             />
           </div>
@@ -112,7 +112,7 @@ export default function EventFormModal({
             <textarea
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32"
+              className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary h-32"
               required
             />
           </div>
@@ -123,7 +123,7 @@ export default function EventFormModal({
               type="url"
               value={formData.cover_image}
               onChange={(e) => setFormData(prev => ({ ...prev, cover_image: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
               required
             />
           </div>
@@ -135,7 +135,7 @@ export default function EventFormModal({
                 type="number"
                 value={formData.max_capacity}
                 onChange={(e) => setFormData(prev => ({ ...prev, max_capacity: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                 min="0"
               />
             </div>
@@ -145,7 +145,7 @@ export default function EventFormModal({
                 type="number"
                 value={formData.max_guests_per_rsvp}
                 onChange={(e) => setFormData(prev => ({ ...prev, max_guests_per_rsvp: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                 min="1"
                 required
               />

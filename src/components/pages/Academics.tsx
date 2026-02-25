@@ -177,13 +177,13 @@ export default function Academics() {
                   </div>
                   
                   <div className={`order-1 ${index % 2 === 0 ? 'lg:order-2' : 'lg:order-1'}`}>
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden group">
+                    <div className="relative aspect-4/3 rounded-2xl overflow-hidden group">
                       <img
                         src={program.image}
                         alt={program.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-neutral-dark/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div className="absolute inset-0 bg-linear-to-t from-neutral-dark/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                   </div>
                 </div>
@@ -195,7 +195,7 @@ export default function Academics() {
 
       {/* CTA Section */}
       <div className="py-24 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary-light/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,var(--tw-gradient-stops))] from-primary-light/10 via-transparent to-transparent" />
         
         <Container className="relative">
           <ScrollReveal>

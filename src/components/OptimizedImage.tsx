@@ -37,7 +37,7 @@ export default function OptimizedImage({
   return (
     <div className={`relative ${className}`} style={{ width, height }}>
       {/* Background placeholder while loading */}
-      <div className={`absolute inset-0 bg-gradient-to-br from-green-light/20 to-green/10 transition-opacity duration-300 ${loaded ? 'opacity-0' : 'opacity-100'}`} />
+      <div className={`absolute inset-0 bg-linear-to-br from-green-light/20 to-green/10 transition-opacity duration-300 ${loaded ? 'opacity-0' : 'opacity-100'}`} />
       
       <img
         src={currentSrc}

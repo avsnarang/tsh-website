@@ -371,7 +371,7 @@ export default function Invites() {
               {events.length > 1 && (
                 <button
                   onClick={goToPrevious}
-                  className="hidden md:flex shrink-0 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110 z-20"
+                  className="hidden md:flex shrink-0 p-4 rounded-full bg-white/90 backdrop-blur-xs shadow-lg hover:bg-white transition-all duration-200 hover:scale-110 z-20"
                   aria-label="Previous event"
                 >
                   <ChevronLeft className="h-6 w-6 text-neutral-dark" />
@@ -436,7 +436,7 @@ export default function Invites() {
               {events.length > 1 && (
                 <button
                   onClick={goToNext}
-                  className="hidden md:flex shrink-0 p-4 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-200 hover:scale-110 z-20"
+                  className="hidden md:flex shrink-0 p-4 rounded-full bg-white/90 backdrop-blur-xs shadow-lg hover:bg-white transition-all duration-200 hover:scale-110 z-20"
                   aria-label="Next event"
                 >
                   <ChevronRight className="h-6 w-6 text-neutral-dark" />

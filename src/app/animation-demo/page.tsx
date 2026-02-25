@@ -128,7 +128,7 @@ export default function AnimationDemoPage() {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-neutral-light via-[#faf9f6] to-neutral-light">
+    <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-neutral-light via-[#faf9f6] to-neutral-light">
       {/* Enhanced decorative background */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         {/* Animated gradient orbs */}
@@ -137,12 +137,12 @@ export default function AnimationDemoPage() {
         <div className="absolute bottom-24 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-green-light/15 blur-[180px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
         
         {/* Paper texture with subtle animation */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_rgba(255,255,255,0.5),_transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.5),transparent_50%)]" />
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLDAsMCwwLjAyKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20" />
       </div>
 
       {/* Connecting decorative lines */}
-      <div className="pointer-events-none absolute inset-0 z-[4]" aria-hidden>
+      <div className="pointer-events-none absolute inset-0 z-4" aria-hidden>
         <svg className="w-full h-full opacity-20">
           <defs>
             <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -185,7 +185,7 @@ export default function AnimationDemoPage() {
             return (
               <div
                 key={`${photo.src}-${idx}`}
-                className={`pointer-events-none absolute z-[5] hidden md:block ${sizes.w} ${sizes.h} ${sizes.lg} transition-all duration-1000 ${
+                className={`pointer-events-none absolute z-5 hidden md:block ${sizes.w} ${sizes.h} ${sizes.lg} transition-all duration-1000 ${
                   mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
                 style={{
@@ -233,7 +233,7 @@ export default function AnimationDemoPage() {
                     )}
                     {photo.decorations?.includes('tape-top-right') && (
                       <>
-                        <div className="absolute -top-2 -right-2 w-16 h-8 bg-white/90 opacity-80 shadow-xl rounded-sm rotate-[20deg] border border-neutral-DEFAULT/20 z-30" style={{
+                        <div className="absolute -top-2 -right-2 w-16 h-8 bg-white/90 opacity-80 shadow-xl rounded-sm rotate-20 border border-neutral-DEFAULT/20 z-30" style={{
                           backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px)'
                         }} />
                         <div className="absolute -top-1 -right-1 w-4 h-4 bg-white/70 rounded-full shadow-md z-30" />
@@ -241,7 +241,7 @@ export default function AnimationDemoPage() {
                     )}
                     {photo.decorations?.includes('tape-bottom-left') && (
                       <>
-                        <div className="absolute -bottom-2 -left-2 w-16 h-8 bg-white/90 opacity-80 shadow-xl rounded-sm rotate-[20deg] border border-neutral-DEFAULT/20 z-30" style={{
+                        <div className="absolute -bottom-2 -left-2 w-16 h-8 bg-white/90 opacity-80 shadow-xl rounded-sm rotate-20 border border-neutral-DEFAULT/20 z-30" style={{
                           backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px)'
                         }} />
                         <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-white/70 rounded-full shadow-md z-30" />
@@ -301,8 +301,8 @@ export default function AnimationDemoPage() {
                     )}
 
                     <div className="bg-white p-2.5 shadow-[inset_0_3px_6px_rgba(0,0,0,0.12)] relative z-0">
-                      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm">
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/8 via-transparent to-transparent z-10 pointer-events-none" />
+                      <div className="relative aspect-4/5 w-full overflow-hidden rounded-sm">
+                        <div className="absolute inset-0 bg-linear-to-t from-black/8 via-transparent to-transparent z-10 pointer-events-none" />
                         <Image
                           src={photo.src}
                           alt={photo.caption}
@@ -311,7 +311,7 @@ export default function AnimationDemoPage() {
                           className="h-full w-full object-cover"
                         />
                       </div>
-                      <div className="mt-2.5 px-3 py-2 text-center bg-gradient-to-r from-transparent via-neutral-DEFAULT/8 to-transparent rounded-sm">
+                      <div className="mt-2.5 px-3 py-2 text-center bg-linear-to-r from-transparent via-neutral-DEFAULT/8 to-transparent rounded-sm">
                         <p className="text-xs font-display text-neutral-DEFAULT font-bold" style={{ 
                           fontFamily: 'var(--font-display), cursive',
                           textShadow: '0 2px 4px rgba(0,0,0,0.15)',
@@ -332,7 +332,7 @@ export default function AnimationDemoPage() {
                         <div className="w-full h-full bg-white/98 rounded-full border-2 border-neutral-DEFAULT/30 shadow-[0_6px_12px_rgba(0,0,0,0.25)] flex items-center justify-center">
                           <div className="w-4 h-4 rounded-full bg-orange-DEFAULT shadow-inner" />
                         </div>
-                        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[12px] border-l-transparent border-r-transparent border-t-white/98 shadow-md" />
+                        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-12 border-l-transparent border-r-transparent border-t-white/98 shadow-md" />
                         <div className="absolute top-14 left-1/2 -translate-x-1/2 w-16 h-3 bg-black/15 blur-md rounded-full" />
                       </div>
                     )}
@@ -353,7 +353,7 @@ export default function AnimationDemoPage() {
                       </div>
                     )}
                     <div className="overflow-hidden rounded-lg relative z-0">
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/12 z-10 pointer-events-none" />
+                      <div className="absolute inset-0 bg-linear-to-br from-transparent via-transparent to-black/12 z-10 pointer-events-none" />
                       <Image
                         src={photo.src}
                         alt={photo.caption}
@@ -372,17 +372,17 @@ export default function AnimationDemoPage() {
                   <div className={`relative rounded-xl border-4 ${idx % 2 === 0 ? 'border-green-DEFAULT' : 'border-orange-DEFAULT'} bg-white p-3 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)]`}>
                     {photo.decorations?.includes('tape-all') && (
                       <>
-                        {['-top-3 -left-3 rotate-[-25deg]', '-top-3 -right-3 rotate-[25deg]', '-bottom-3 -left-3 rotate-[25deg]', '-bottom-3 -right-3 rotate-[-25deg]'].map((pos, i) => (
+                        {['-top-3 -left-3 rotate-[-25deg]', '-top-3 -right-3 rotate-25', '-bottom-3 -left-3 rotate-25', '-bottom-3 -right-3 rotate-[-25deg]'].map((pos, i) => (
                           <div key={i} className={`absolute ${pos} w-14 h-8 bg-white/85 opacity-90 shadow-lg rounded-sm border border-neutral-DEFAULT/20 z-30`} style={{
                             backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)'
                           }}>
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-transparent rounded-sm" />
+                            <div className="absolute inset-0 bg-linear-to-br from-white/60 to-transparent rounded-sm" />
                           </div>
                         ))}
                       </>
                     )}
                     <div className="overflow-hidden rounded-lg relative z-0">
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/12 z-10 pointer-events-none" />
+                      <div className="absolute inset-0 bg-linear-to-br from-transparent via-transparent to-black/12 z-10 pointer-events-none" />
                       <Image
                         src={photo.src}
                         alt={photo.caption}
@@ -423,7 +423,7 @@ export default function AnimationDemoPage() {
                       <rect x="0" y="0" width="100%" height="100%" fill={`url(#doodle-pattern-${idx})`} opacity="0.4" />
                     </svg>
                     <div className="overflow-hidden rounded-lg relative z-0">
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/12 z-10 pointer-events-none" />
+                      <div className="absolute inset-0 bg-linear-to-br from-transparent via-transparent to-black/12 z-10 pointer-events-none" />
                       <Image
                         src={photo.src}
                         alt={photo.caption}
@@ -469,7 +469,7 @@ export default function AnimationDemoPage() {
             return (
               <div
                 key={i}
-                className="pointer-events-none absolute z-[4] hidden xl:block animate-pulse"
+                className="pointer-events-none absolute z-4 hidden xl:block animate-pulse"
                 style={{
                   left: `${10 + i * 15}%`,
                   top: `${15 + (i % 3) * 30}%`,

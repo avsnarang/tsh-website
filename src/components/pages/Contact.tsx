@@ -148,9 +148,9 @@ export default function Contact() {
           >
             <a 
               href="tel:+918628800056"
-              className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all group"
+              className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-xs hover:shadow-md transition-all group"
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-green-light to-green rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-12 h-12 bg-linear-to-br from-green-light to-green rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                 <PhoneCall className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -161,9 +161,9 @@ export default function Contact() {
             
             <a 
               href="mailto:info@tsh.edu.in"
-              className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all group"
+              className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-xs hover:shadow-md transition-all group"
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-light to-orange rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-12 h-12 bg-linear-to-br from-orange-light to-orange rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                 <Mail className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -172,8 +172,8 @@ export default function Contact() {
               </div>
             </a>
             
-            <div className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-light to-green rounded-xl flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-xs">
+              <div className="w-12 h-12 bg-linear-to-br from-green-light to-green rounded-xl flex items-center justify-center shrink-0">
                 <Clock className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -190,7 +190,7 @@ export default function Contact() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="lg:col-span-1 bg-white rounded-2xl p-6 md:p-8 shadow-sm"
+              className="lg:col-span-1 bg-white rounded-2xl p-6 md:p-8 shadow-xs"
             >
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-green-light/20 rounded-lg flex items-center justify-center">
@@ -253,7 +253,7 @@ export default function Contact() {
                         onChange={handleChange}
                         required
                         disabled={status === 'loading'}
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-hidden focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="Your name"
                       />
                     </div>
@@ -266,7 +266,7 @@ export default function Contact() {
                         onChange={handleChange}
                         required
                         disabled={status === 'loading'}
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-hidden focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="Your email"
                       />
                     </div>
@@ -278,7 +278,7 @@ export default function Contact() {
                         value={formData.phone}
                         onChange={handleChange}
                         disabled={status === 'loading'}
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-hidden focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="Your phone number"
                       />
                     </div>
@@ -290,7 +290,7 @@ export default function Contact() {
                         onChange={handleChange}
                         required
                         disabled={status === 'loading'}
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 h-28 resize-none transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-hidden focus:ring-2 focus:ring-green/50 focus:border-green bg-neutral-light/30 h-28 resize-none transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="How can we help?"
                       ></textarea>
                     </div>
@@ -338,7 +338,7 @@ export default function Contact() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                    className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
+                    className="group bg-white rounded-2xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300"
                   >
                     {/* Image */}
                     <div className="relative h-32 overflow-hidden">
@@ -349,7 +349,7 @@ export default function Contact() {
                         height={128}
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-neutral-dark/80 to-transparent" />
+                      <div className="absolute inset-0 bg-linear-to-t from-neutral-dark/80 to-transparent" />
                       <h3 className="absolute bottom-3 left-4 text-lg font-display text-white">{campus.campus}</h3>
                     </div>
 

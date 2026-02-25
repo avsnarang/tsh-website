@@ -92,7 +92,7 @@ export default function AdminSetup() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                   required
                 />
               </div>
@@ -103,7 +103,7 @@ export default function AdminSetup() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                   required
                   minLength={8}
                 />
@@ -118,7 +118,7 @@ export default function AdminSetup() {
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                   required
                 />
               </div>

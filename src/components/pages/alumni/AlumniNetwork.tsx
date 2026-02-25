@@ -83,7 +83,7 @@ export default function AlumniNetwork() {
                 </div>
 
                 <h3 className="text-2xl font-display text-neutral-dark mb-4">Success Stories</h3>
-                <p className="text-neutral-dark/70 mb-6 min-h-[3rem]">
+                <p className="text-neutral-dark/70 mb-6 min-h-12">
                   {isLoadingStories 
                     ? 'Loading...' 
                     : `Read ${Array.isArray(successStories) ? successStories.length : 0} inspiring stories from fellow alumni`
@@ -116,7 +116,7 @@ export default function AlumniNetwork() {
                   </div>
 
                   <h3 className="text-2xl font-display text-neutral-dark mb-4">Login</h3>
-                  <p className="text-neutral-dark/70 mb-6 min-h-[3rem]">
+                  <p className="text-neutral-dark/70 mb-6 min-h-12">
                     Access your alumni profile and connect with fellow graduates
                   </p>
 
@@ -143,7 +143,7 @@ export default function AlumniNetwork() {
                   </div>
 
                   <h3 className="text-2xl font-display text-neutral-dark mb-4">Register</h3>
-                  <p className="text-neutral-dark/70 mb-6 min-h-[3rem]">
+                  <p className="text-neutral-dark/70 mb-6 min-h-12">
                     Create your alumni profile and join our growing community
                   </p>
 
@@ -172,7 +172,7 @@ export default function AlumniNetwork() {
                   </div>
 
                   <h3 className="text-2xl font-display text-neutral-dark mb-4">Your Profile</h3>
-                  <p className="text-neutral-dark/70 mb-6 min-h-[3rem]">
+                  <p className="text-neutral-dark/70 mb-6 min-h-12">
                     Manage your alumni profile and update your information
                   </p>
 
@@ -199,7 +199,7 @@ export default function AlumniNetwork() {
                   </div>
 
                   <h3 className="text-2xl font-display text-neutral-dark mb-4">Alumni Directory</h3>
-                  <p className="text-neutral-dark/70 mb-6 min-h-[3rem]">
+                  <p className="text-neutral-dark/70 mb-6 min-h-12">
                     {isLoadingProfiles 
                       ? 'Loading...' 
                       : `Connect with ${alumniProfiles?.length || 0} fellow alumni`

@@ -26,7 +26,7 @@ export default function Branches() {
                   alt={`${branch.name} ${branch.location}`}
                   className="w-full h-[400px] object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-neutral-dark to-transparent opacity-90 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-neutral-dark to-transparent opacity-90 transition-opacity duration-300"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-neutral-light">
                   <h3 className="text-2xl mb-2 truncate">{branch.location}</h3>
                   <p className="font-body mb-4 line-clamp-3">{branch.description}</p>

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 interface ContactFormData {
   name: string;
   email: string;
@@ -13,6 +11,7 @@ interface ContactFormData {
 export async function POST(request: NextRequest) {
   try {
     const data: ContactFormData = await request.json();
+    const apiKey = process.env.RESEND_API_KEY;
 
     // Validate required fields
     if (!data.name || !data.email || !data.message) {
@@ -30,6 +29,16 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    if (!apiKey) {
+      console.error('Missing RESEND_API_KEY in environment');
+      return NextResponse.json(
+        { success: false, message: 'Email service is not configured on this server.' },
+        { status: 503 }
+      );
+    }
+
+    const resend = new Resend(apiKey);
 
     // Send email using Resend
     const { error } = await resend.emails.send({
@@ -112,4 +121,3 @@ This email was sent from the contact form on tsh.edu.in
     );
   }
 }
-

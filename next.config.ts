@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
-  transpilePackages: ['react-icons'],
+  transpilePackages: ['react-icons', 'posthog-js'],
 
   // Performance optimizations
   poweredByHeader: false,
@@ -49,52 +49,6 @@ const nextConfig: NextConfig = {
 
   // Prevent server-only packages from being bundled on client
   serverExternalPackages: ['googleapis', '@google-cloud/storage', 'sharp', 'prisma', '@prisma/client'],
-
-  // Force webpack usage instead of Turbopack
-  webpack: (config, { isServer }) => {
-    // Optimize bundle size
-    if (!isServer) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            default: false,
-            vendors: false,
-            framework: {
-              name: 'framework',
-              chunks: 'all',
-              test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-sync-external-store)[\\/]/,
-              priority: 40,
-              enforce: true,
-            },
-            lib: {
-              test(module: { size: () => number; identifier: () => string }) {
-                return module.size() > 160000 && /node_modules/.test(module.identifier());
-              },
-              name(module: { identifier: () => string }) {
-                const hash = require('crypto').createHash('sha1');
-                hash.update(module.identifier());
-                return hash.digest('hex').substring(0, 8);
-              },
-              priority: 30,
-              minChunks: 1,
-              reuseExistingChunk: true,
-            },
-            commons: {
-              name: 'commons',
-              minChunks: 2,
-              priority: 20,
-            },
-          },
-        },
-      };
-    }
-    return config;
-  },
-
-  // Add empty turbopack config to silence the error when using webpack
-  turbopack: {},
 
   // HTTP Headers for caching
   async headers() {

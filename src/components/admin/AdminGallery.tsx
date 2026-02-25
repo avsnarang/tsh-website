@@ -452,7 +452,7 @@ export default function AdminGallery() {
 
         {/* Event Form Modal */}
         {showEventForm && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
+          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-100 p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -478,7 +478,7 @@ export default function AdminGallery() {
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                   required
                 />
               </div>
@@ -488,7 +488,7 @@ export default function AdminGallery() {
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary h-32"
                   required
                 />
               </div>
@@ -499,7 +499,7 @@ export default function AdminGallery() {
                   type="date"
                   value={formData.date}
                   onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                   required
                 />
               </div>
@@ -509,7 +509,7 @@ export default function AdminGallery() {
                 <select
                   value={formData.campus}
                   onChange={(e) => setFormData(prev => ({ ...prev, campus: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                   required
                 >
                   <option value="">Select Campus</option>
@@ -529,7 +529,7 @@ export default function AdminGallery() {
                     value={formData.primaryImageUrl}
                     onChange={(e) => setFormData(prev => ({ ...prev, primaryImageUrl: e.target.value }))}
                     placeholder="https://drive.google.com/uc?export=view&id=YOUR_FILE_ID"
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
@@ -565,7 +565,7 @@ export default function AdminGallery() {
                       value={bulkImageUrls}
                       onChange={(e) => setBulkImageUrls(e.target.value)}
                       placeholder="url1, url2, url3, ..."
-                      className="flex-1 px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="flex-1 px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                     />
                     <button
                       type="button"
@@ -654,7 +654,7 @@ export default function AdminGallery() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-100 p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

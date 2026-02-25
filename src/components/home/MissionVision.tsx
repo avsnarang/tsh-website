@@ -13,7 +13,7 @@ export default function MissionVision() {
   return (
     <section className="py-16 relative bg-white" ref={ref}>
       {/* Gradient transition from white to colored background - continuing from Hero-2 */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-neutral-light/50" />
+      <div className="absolute inset-0 bg-linear-to-b from-white via-white to-neutral-light/50" />
 
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -48,17 +48,17 @@ export default function MissionVision() {
             className="group"
           >
             <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 h-full min-h-[320px]">
-              <div className="absolute inset-0 bg-gradient-to-br from-green-light/20 to-transparent rounded-2xl" />
+              <div className="absolute inset-0 bg-linear-to-br from-green-light/20 to-transparent rounded-2xl" />
               <div className="absolute -top-4 -right-4 w-full h-full border-2 border-green rounded-2xl transform group-hover:scale-105 transition-transform duration-300" />
               
               <div className="relative h-full flex flex-col">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-green-light to-green rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-linear-to-br from-green-light to-green rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
                     <Compass className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-3xl font-display text-green">Our Mission</h3>
                 </div>
-                <p className="text-neutral-dark/70 leading-relaxed flex-grow">
+                <p className="text-neutral-dark/70 leading-relaxed grow">
                   To provide exceptional education that empowers students to become 
                   critical thinkers, innovative problem-solvers, and compassionate 
                   global citizens. We strive to create a nurturing environment that 
@@ -76,17 +76,17 @@ export default function MissionVision() {
             className="group"
           >
             <div className="relative bg-green rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 h-full min-h-[320px]">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl" />
+              <div className="absolute inset-0 bg-linear-to-br from-white/20 to-transparent rounded-2xl" />
               <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-orange rounded-2xl transform group-hover:scale-105 transition-transform duration-300" />
               
               <div className="relative h-full flex flex-col">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-light to-orange rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-linear-to-br from-orange-light to-orange rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
                     <Eye className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-3xl font-display text-white">Our Vision</h3>
                 </div>
-                <p className="text-white/90 leading-relaxed flex-grow">
+                <p className="text-white/90 leading-relaxed grow">
                   To be recognized as a leading educational institution that sets the 
                   standard for academic excellence and holistic development. We aim to 
                   shape future leaders who are equipped with the knowledge, skills, and 

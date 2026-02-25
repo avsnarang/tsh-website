@@ -31,7 +31,7 @@ export default function PaontaSahibPage() {
       <Navbar />
       <main className="min-h-screen bg-white">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-green-800 to-green-900 text-white pt-48 md:pt-36 pb-20">
+        <section className="relative bg-linear-to-br from-green-800 to-green-900 text-white pt-48 md:pt-36 pb-20">
           <div className="max-w-6xl mx-auto px-4">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               About Paonta Sahib

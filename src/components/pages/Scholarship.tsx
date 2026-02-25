@@ -163,7 +163,7 @@ export default function Scholarship() {
                     whileHover={{ y: -4, scale: 1.02 }}
                     className="text-center group"
                   >
-                    <div className="w-16 h-16 bg-gradient-to-br from-green-light to-green rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-16 h-16 bg-linear-to-br from-green-light to-green rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
                       <stat.icon className="h-8 w-8 text-white" />
                     </div>
                     <div className="text-3xl md:text-4xl font-display text-neutral-dark mb-1">{stat.value}</div>
@@ -196,7 +196,7 @@ export default function Scholarship() {
                       
                       <div className="relative">
                         <div className="flex items-center gap-4 mb-6">
-                          <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${scholarship.color === 'green' ? 'bg-gradient-to-br from-green-light to-green' : 'bg-gradient-to-br from-orange-light to-orange'}`}>
+                          <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${scholarship.color === 'green' ? 'bg-linear-to-br from-green-light to-green' : 'bg-linear-to-br from-orange-light to-orange'}`}>
                             <scholarship.icon className="h-7 w-7 text-white" />
                           </div>
                           <div>
@@ -211,7 +211,7 @@ export default function Scholarship() {
                             <div className="space-y-2">
                               {scholarship.criteria.map((criterion, idx) => (
                                 <div key={idx} className="flex items-start gap-2">
-                                  <CheckCircle2 className={`w-4 h-4 mt-0.5 flex-shrink-0 ${scholarship.color === 'green' ? 'text-green' : 'text-orange'}`} />
+                                  <CheckCircle2 className={`w-4 h-4 mt-0.5 shrink-0 ${scholarship.color === 'green' ? 'text-green' : 'text-orange'}`} />
                                   <span className="text-neutral-dark/70 text-sm">{criterion}</span>
                                 </div>
                               ))}
@@ -223,7 +223,7 @@ export default function Scholarship() {
                             <div className="space-y-2">
                               {scholarship.benefits.map((benefit, idx) => (
                                 <div key={idx} className="flex items-start gap-2">
-                                  <Star className={`w-4 h-4 mt-0.5 flex-shrink-0 ${scholarship.color === 'green' ? 'text-green' : 'text-orange'}`} />
+                                  <Star className={`w-4 h-4 mt-0.5 shrink-0 ${scholarship.color === 'green' ? 'text-green' : 'text-orange'}`} />
                                   <span className="text-neutral-dark/70 text-sm">{benefit}</span>
                                 </div>
                               ))}
@@ -251,15 +251,15 @@ export default function Scholarship() {
                       className="relative"
                     >
                       {/* Decorative frame */}
-                      <div className={`absolute -inset-4 ${scholarship.color === 'green' ? 'bg-gradient-to-br from-green-light/40 to-green/20' : 'bg-gradient-to-br from-orange-light/40 to-orange/20'} rounded-2xl blur-xl`} />
+                      <div className={`absolute -inset-4 ${scholarship.color === 'green' ? 'bg-linear-to-br from-green-light/40 to-green/20' : 'bg-linear-to-br from-orange-light/40 to-orange/20'} rounded-2xl blur-xl`} />
                       
-                      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
+                      <div className="relative aspect-4/3 rounded-2xl overflow-hidden shadow-2xl">
                         <img
                           src={scholarship.image}
                           alt={scholarship.title}
                           className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                         />
-                        <div className={`absolute inset-0 bg-gradient-to-t ${scholarship.color === 'green' ? 'from-green/40' : 'from-orange/40'} to-transparent`} />
+                        <div className={`absolute inset-0 bg-linear-to-t ${scholarship.color === 'green' ? 'from-green/40' : 'from-orange/40'} to-transparent`} />
                         
                         {/* Floating badge */}
                         <div className={`absolute top-4 right-4 px-4 py-2 rounded-full ${scholarship.color === 'green' ? 'bg-green' : 'bg-orange'} text-white text-sm font-semibold shadow-lg`}>
@@ -297,7 +297,7 @@ export default function Scholarship() {
             <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
             <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-orange-light rounded-2xl" />
             
-            <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-12">
+            <div className="relative bg-white/10 backdrop-blur-xs rounded-2xl p-12">
               <ScrollReveal>
                 <div className="text-center max-w-3xl mx-auto">
                   <motion.div

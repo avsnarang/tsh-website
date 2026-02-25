@@ -203,7 +203,7 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
                         <img src={leader.photo_url} alt={leader.name} className="w-full h-full object-cover" />
                       ) : (
                         <div className={`w-full h-full flex items-center justify-center ${
-                          isProminent(index) ? 'bg-green-dark' : 'bg-gradient-to-br from-green-light to-green'
+                          isProminent(index) ? 'bg-green-dark' : 'bg-linear-to-br from-green-light to-green'
                         }`}>
                           <User className="h-10 w-10 text-white" />
                         </div>
@@ -218,7 +218,7 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
                     </p>
                   </div>
 
-                  <p className={`font-body text-center text-sm leading-relaxed flex-grow mb-6 line-clamp-4 ${
+                  <p className={`font-body text-center text-sm leading-relaxed grow mb-6 line-clamp-4 ${
                     isProminent(index) ? 'text-white/90' : 'text-neutral-dark/70'
                   }`}>
                     "{leader.preview}"
@@ -247,14 +247,14 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
 
       {/* Modal */}
       {selectedMessage && (
-        <div className="fixed inset-0 bg-neutral-dark/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100]" onClick={() => setSelectedMessage(null)}>
+        <div className="fixed inset-0 bg-neutral-dark/60 backdrop-blur-xs flex items-center justify-center p-4 z-100" onClick={() => setSelectedMessage(null)}>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-gradient-to-r from-green to-green-dark p-6 text-white relative">
+            <div className="bg-linear-to-r from-green to-green-dark p-6 text-white relative">
               <button onClick={() => setSelectedMessage(null)} className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-full transition-colors">
                 <X className="h-6 w-6" />
               </button>

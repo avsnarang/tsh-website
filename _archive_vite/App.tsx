@@ -91,7 +91,7 @@ const RootLayout = () => {
       <ScrollToTop />
       <AuthInitializer />
       <Navbar />
-      <main className="flex-grow">
+      <main className="grow">
         <Outlet />
       </main>
       {!shouldHideFooter && <Footer />}

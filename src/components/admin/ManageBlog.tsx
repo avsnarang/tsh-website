@@ -493,14 +493,14 @@ export default function ManageBlog() {
                   placeholder="Search posts..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="px-4 py-2 pl-10 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green w-48"
+                  className="px-4 py-2 pl-10 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green w-48"
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-dark/50" />
               </div>
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                className="px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
               >
                 <option value="all">All Categories</option>
                 {categories.map((cat) => (
@@ -512,7 +512,7 @@ export default function ManageBlog() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as 'all' | 'published' | 'draft')}
-                className="px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                className="px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
               >
                 <option value="all">All Status</option>
                 <option value="published">Published</option>
@@ -575,7 +575,7 @@ export default function ManageBlog() {
                   >
                     <div className="p-6 flex flex-col md:flex-row gap-6">
                       {/* Thumbnail */}
-                      <div className="w-full md:w-48 h-32 flex-shrink-0 rounded-xl overflow-hidden bg-neutral-dark/5">
+                      <div className="w-full md:w-48 h-32 shrink-0 rounded-xl overflow-hidden bg-neutral-dark/5">
                         {post.featured_image ? (
                           <NextImage
                             src={post.featured_image}
@@ -592,7 +592,7 @@ export default function ManageBlog() {
                       </div>
 
                       {/* Content */}
-                      <div className="flex-grow">
+                      <div className="grow">
                         <div className="flex items-start justify-between gap-4">
                           <div>
                             <h3 className="text-xl font-display text-neutral-dark mb-2">
@@ -636,7 +636,7 @@ export default function ManageBlog() {
                           </div>
 
                           {/* Actions */}
-                          <div className="flex items-center gap-2 flex-shrink-0">
+                          <div className="flex items-center gap-2 shrink-0">
                             <button
                               onClick={() => handleEdit(post)}
                               className="p-2 text-neutral-dark/70 hover:text-green rounded-lg transition-colors"
@@ -685,7 +685,7 @@ export default function ManageBlog() {
       {/* Post Form Modal */}
       <AnimatePresence>
         {showForm && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-start justify-center z-[100] p-4 overflow-y-auto">
+          <div className="fixed inset-0 bg-neutral-dark/50 flex items-start justify-center z-100 p-4 overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -718,7 +718,7 @@ export default function ManageBlog() {
                       type="text"
                       value={formData.title}
                       onChange={(e) => handleTitleChange(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                      className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                       placeholder="Enter post title"
                       required
                     />
@@ -734,7 +734,7 @@ export default function ManageBlog() {
                       type="text"
                       value={formData.slug}
                       onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                      className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                       placeholder="url-friendly-slug"
                       required
                     />
@@ -747,7 +747,7 @@ export default function ManageBlog() {
                       <select
                         value={formData.category_id}
                         onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                        className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                        className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                       >
                         <option value="">Select category</option>
                         {categories.map((cat) => (
@@ -765,7 +765,7 @@ export default function ManageBlog() {
                         type="text"
                         value={formData.author}
                         onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                        className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                        className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                         placeholder="Author name"
                       />
                     </div>
@@ -780,7 +780,7 @@ export default function ManageBlog() {
                     <textarea
                       value={formData.excerpt}
                       onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green h-24"
+                      className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green h-24"
                       placeholder="Brief summary of the article..."
                     />
                   </div>
@@ -794,7 +794,7 @@ export default function ManageBlog() {
                     <textarea
                       value={formData.content}
                       onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green h-64 font-mono text-sm"
+                      className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green h-64 font-mono text-sm"
                       placeholder="<p>Write your article content here...</p>"
                       required
                     />
@@ -869,7 +869,7 @@ export default function ManageBlog() {
                             handleAddTag();
                           }
                         }}
-                        className="flex-grow px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                        className="grow px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                         placeholder="Add a tag"
                       />
                       <button
@@ -895,7 +895,7 @@ export default function ManageBlog() {
                           type="text"
                           value={formData.meta_title}
                           onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
-                          className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                          className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                           placeholder="SEO title (max 60 characters)"
                           maxLength={60}
                         />
@@ -908,7 +908,7 @@ export default function ManageBlog() {
                         <textarea
                           value={formData.meta_description}
                           onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
-                          className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green h-20"
+                          className="w-full px-4 py-3 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green h-20"
                           placeholder="SEO description (max 160 characters)"
                           maxLength={160}
                         />
@@ -966,7 +966,7 @@ export default function ManageBlog() {
       {/* Category Management Modal */}
       <AnimatePresence>
         {showCategoryForm && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
+          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-100 p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -1067,7 +1067,7 @@ export default function ManageBlog() {
                                 : generateSlug(e.target.value),
                             });
                           }}
-                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                           placeholder="Category name"
                           required
                         />
@@ -1080,7 +1080,7 @@ export default function ManageBlog() {
                           onChange={(e) =>
                             setCategoryFormData({ ...categoryFormData, slug: e.target.value })
                           }
-                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                          className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                           placeholder="url-slug"
                           required
                         />
@@ -1094,7 +1094,7 @@ export default function ManageBlog() {
                         onChange={(e) =>
                           setCategoryFormData({ ...categoryFormData, description: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                        className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                         placeholder="Brief description"
                       />
                     </div>
@@ -1115,7 +1115,7 @@ export default function ManageBlog() {
                           onChange={(e) =>
                             setCategoryFormData({ ...categoryFormData, color: e.target.value })
                           }
-                          className="flex-grow px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-green"
+                          className="grow px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-green"
                           placeholder="#00501B"
                         />
                       </div>

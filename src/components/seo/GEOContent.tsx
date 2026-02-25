@@ -195,7 +195,7 @@ export function StepGuide({ title, description, steps, className = '' }: StepGui
             itemType="https://schema.org/HowToStep"
             itemProp="step"
           >
-            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+            <span className="shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
               {index + 1}
             </span>
             <div>

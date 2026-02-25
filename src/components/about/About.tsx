@@ -165,7 +165,7 @@ export default function About() {
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                         className="text-center"
                       >
-                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-orange-light to-orange mb-3 mx-auto">
+                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-linear-to-br from-orange-light to-orange mb-3 mx-auto">
                           <span className="text-lg font-display text-neutral-light">
                             {index + 1}
                           </span>

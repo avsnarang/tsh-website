@@ -18,7 +18,7 @@ import type { DateSelectArg, EventClickArg } from "@fullcalendar/core";
 import { calendarApi } from '../../api/calendarApi';
 import EventModal from './EventModal';
 import { motion, AnimatePresence } from 'framer-motion';
-import "../../styles/calendar.css";
+
 
 interface CalendarEvent {
   id: string;
@@ -168,7 +168,7 @@ export default function AdminCalendar() {
             </div>
 
             <div className="flex items-center gap-3">
-              <Button variant="outline" onClick={handleSyncWithGoogle} disabled={loading}>
+              <Button variant="outline2" onClick={handleSyncWithGoogle} disabled={loading}>
                 <RotateCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                 <span>Sync with Google</span>
               </Button>
@@ -181,19 +181,19 @@ export default function AdminCalendar() {
         </div>
 
         {/* Toolbar */}
-        <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+        <div className="bg-white rounded-xl shadow-xs p-4 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <ButtonGroup>
                 <Button
-                  variant={view === 'calendar' ? 'primary' : 'outline'}
+                  variant={view === 'calendar' ? 'primary' : 'outline-solid'}
                   onClick={() => setView('calendar')}
                 >
                   <Grid className="h-4 w-4" />
                   <span>Grid View</span>
                 </Button>
                 <Button
-                  variant={view === 'list' ? 'primary' : 'outline'}
+                  variant={view === 'list' ? 'primary' : 'outline-solid'}
                   onClick={() => setView('list')}
                 >
                   <List className="h-4 w-4" />
@@ -243,7 +243,7 @@ export default function AdminCalendar() {
         </AnimatePresence>
 
         {/* Calendar */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white rounded-xl shadow-xs p-6">
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
             initialView={view === 'calendar' ? 'dayGridMonth' : 'listMonth'}

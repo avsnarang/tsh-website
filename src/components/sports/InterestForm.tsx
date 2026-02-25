@@ -126,7 +126,7 @@ export default function InterestForm({ sportId, sportName, onClose }: {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[100]">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-100">
       <div className="bg-white rounded-xl w-full max-w-lg shadow-xl">
         {/* Header */}
         <div className="p-6 border-b border-neutral-200 bg-green-50">
@@ -187,7 +187,7 @@ export default function InterestForm({ sportId, sportName, onClose }: {
                         }}
                         className={`w-full pl-10 pr-4 py-3 rounded-lg border ${
                           error ? 'border-red-400' : verified ? 'border-green-400' : 'border-neutral-200'
-                        } focus:outline-none focus:ring-2 ${
+                        } focus:outline-hidden focus:ring-2 ${
                           error ? 'focus:ring-red-100' : 'focus:ring-green-100'
                         }`}
                         placeholder="Enter your admission number"

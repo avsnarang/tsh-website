@@ -4,7 +4,7 @@
 const NewsTicker = ({ latestUpdate }: { latestUpdate: string }) => {
   return (
     latestUpdate && (
-      <div className="absolute bottom-0 left-0 right-0 bg-primary/90 backdrop-blur-sm py-3 text-neutral-light border-t border-neutral-light/10 overflow-hidden">
+      <div className="absolute bottom-0 left-0 right-0 bg-primary/90 backdrop-blur-xs py-3 text-neutral-light border-t border-neutral-light/10 overflow-hidden">
         <div className="container mx-auto">
           <div className="flex items-center gap-4">
             <span className="font-semibold shrink-0">Latest Updates:</span>

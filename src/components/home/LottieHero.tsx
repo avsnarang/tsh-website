@@ -26,7 +26,7 @@ export default function LottieHero() {
       <div className="text-center z-10 px-4 max-w-5xl mx-auto">
         {hasError ? (
           // Error state with instructions
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-2xl mx-auto border-2 border-orange/20">
+          <div className="bg-white/90 backdrop-blur-xs rounded-2xl shadow-2xl p-8 max-w-2xl mx-auto border-2 border-orange/20">
             <div className="text-6xl mb-4">📝</div>
             <h2 className="text-2xl font-bold text-neutral-dark mb-4">
               Lottie Animation Not Found

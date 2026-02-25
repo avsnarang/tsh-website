@@ -65,7 +65,7 @@ export default function CampusHome() {
 
         <Container className="relative z-10">
           {/* Green accent card */}
-          <div className="relative bg-gradient-to-br from-green to-green-dark rounded-3xl p-12 overflow-hidden">
+          <div className="relative bg-linear-to-br from-green to-green-dark rounded-3xl p-12 overflow-hidden">
             {/* Decorative elements inside card */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute -top-24 -right-24 w-[300px] h-[300px] rounded-full bg-green-light/20 blur-2xl" />
@@ -113,7 +113,7 @@ export default function CampusHome() {
                     className="relative group"
                   >
                     <div className="bg-white rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 text-center">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-light to-green flex items-center justify-center mb-4 mx-auto transform group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-green/20">
+                      <div className="w-12 h-12 rounded-xl bg-linear-to-br from-green-light to-green flex items-center justify-center mb-4 mx-auto transform group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-green/20">
                         <item.icon className="w-6 h-6 text-white" />
                       </div>
                       <h3 className="text-lg font-display text-neutral-dark mb-2">{item.title}</h3>

@@ -108,7 +108,7 @@ export default function SportDetails() {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Main content skeleton */}
           <div className="md:col-span-2 space-y-8">
-            <div className="bg-white rounded-xl p-8 shadow-sm">
+            <div className="bg-white rounded-xl p-8 shadow-xs">
               <div className="space-y-4">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-6 h-6 rounded bg-gray-200 animate-pulse" />
@@ -122,7 +122,7 @@ export default function SportDetails() {
 
           {/* Sidebar skeleton */}
           <div className="space-y-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
+            <div className="bg-white rounded-xl p-6 shadow-xs">
               <div className="space-y-4">
                 <div className="h-6 w-32 bg-gray-200 rounded animate-pulse" />
                 {[...Array(4)].map((_, i) => (
@@ -134,7 +134,7 @@ export default function SportDetails() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm">
+            <div className="bg-white rounded-xl p-6 shadow-xs">
               <div className="space-y-4">
                 <div className="h-6 w-40 bg-gray-200 rounded animate-pulse" />
                 {[...Array(3)].map((_, i) => (
@@ -192,19 +192,19 @@ export default function SportDetails() {
             alt={sport.name}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
           
           {/* Slideshow Controls */}
           <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4">
             <button
               onClick={prevImage}
-              className="p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+              className="p-2 rounded-full bg-white/20 backdrop-blur-xs text-white hover:bg-white/30"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button
               onClick={nextImage}
-              className="p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+              className="p-2 rounded-full bg-white/20 backdrop-blur-xs text-white hover:bg-white/30"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
@@ -219,7 +219,7 @@ export default function SportDetails() {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="md:col-span-2 space-y-8">
-            <div className="bg-white rounded-xl p-8 shadow-sm">
+            <div className="bg-white rounded-xl p-8 shadow-xs">
               <div className="flex items-center gap-3 mb-6">
                 <Trophy className="w-6 h-6 text-green" />
                 <h1 className="text-3xl font-bold">{sport.name}</h1>
@@ -238,7 +238,7 @@ export default function SportDetails() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Quick Info Card */}
-            <div className="bg-white rounded-xl p-6 shadow-sm">
+            <div className="bg-white rounded-xl p-6 shadow-xs">
               <h2 className="font-semibold text-xl mb-4">Program Details</h2>
               
               <div className="space-y-4">
@@ -275,7 +275,7 @@ export default function SportDetails() {
             </div>
 
             {/* Schedule Card */}
-            <div className="bg-white rounded-xl p-6 shadow-sm">
+            <div className="bg-white rounded-xl p-6 shadow-xs">
               <h2 className="font-semibold text-xl mb-4">Training Schedule</h2>
               <div className="space-y-4">
                 {sport.schedules.map((schedule, index) => (

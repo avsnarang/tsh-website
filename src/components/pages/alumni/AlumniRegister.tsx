@@ -156,7 +156,7 @@ export default function AlumniRegister() {
               {/* Enhanced Decorative Elements */}
               <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange/40 rounded-2xl" />
               <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green/40 rounded-2xl" />
-              <div className="absolute inset-0 bg-gradient-to-br from-green/5 via-transparent to-orange/5 rounded-2xl" />
+              <div className="absolute inset-0 bg-linear-to-br from-green/5 via-transparent to-orange/5 rounded-2xl" />
               
               {error && (
                 <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl border-2 border-red-100">
@@ -170,7 +170,7 @@ export default function AlumniRegister() {
                   <div className="space-y-6">
                     <TextReveal>
                       <div className="flex items-center gap-3 mb-8">
-                        <div className="w-12 h-12 bg-gradient-to-br from-green-light to-green rounded-full flex items-center justify-center">
+                        <div className="w-12 h-12 bg-linear-to-br from-green-light to-green rounded-full flex items-center justify-center">
                           <UserPlus className="h-6 w-6 text-white" />
                         </div>
                         <h2 className="text-2xl font-display text-neutral-dark">Personal Information</h2>
@@ -254,7 +254,7 @@ export default function AlumniRegister() {
                   <div className="space-y-6">
                     <TextReveal>
                       <div className="flex items-center gap-3 mb-8">
-                        <div className="w-12 h-12 bg-gradient-to-br from-orange-light to-orange rounded-full flex items-center justify-center">
+                        <div className="w-12 h-12 bg-linear-to-br from-orange-light to-orange rounded-full flex items-center justify-center">
                           <Lock className="h-6 w-6 text-white" />
                         </div>
                         <h2 className="text-2xl font-display text-neutral-dark">Account Information</h2>
@@ -301,7 +301,7 @@ export default function AlumniRegister() {
                         <motion.button
                           type="submit"
                           disabled={loading}
-                          className="w-full bg-gradient-to-r from-green to-green-dark text-white py-4 px-6 rounded-xl 
+                          className="w-full bg-linear-to-r from-green to-green-dark text-white py-4 px-6 rounded-xl 
                             hover:from-green-dark hover:to-green 
                             transition-all duration-300 
                             disabled:opacity-50 

@@ -36,7 +36,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.4,
-      ease: [0.22, 0.61, 0.36, 1],
+      ease: [0.22, 0.61, 0.36, 1] as const,
     },
   },
 };
@@ -53,7 +53,7 @@ const imageVariants = {
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: [0.22, 0.61, 0.36, 1],
+      ease: [0.22, 0.61, 0.36, 1] as const,
       delay: 0.15,
     },
   },
@@ -69,7 +69,7 @@ const statVariants = {
     y: 0,
     transition: {
       duration: 0.35,
-      ease: [0.22, 0.61, 0.36, 1],
+      ease: [0.22, 0.61, 0.36, 1] as const,
       delay: 0.35 + (i * 0.06),
     },
   }),
@@ -160,7 +160,7 @@ export default function Hero() {
                   animate="visible"
                   custom={index}
                 >
-                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-green-light to-green mb-2 sm:mb-3 mx-auto">
+                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-green-light to-green mb-2 sm:mb-3 mx-auto">
                     <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   <div className="text-xl sm:text-2xl font-display text-green">
@@ -183,7 +183,7 @@ export default function Hero() {
           >
             <div className="relative">
               {/* Main Image - Priority loaded */}
-              <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] sm:aspect-auto">
+              <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl aspect-4/3 sm:aspect-auto">
                 <Image
                   src="https://images.tsh.edu.in/homepage/hero.jpeg"
                   alt="Students at The Scholars' Home"

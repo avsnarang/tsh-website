@@ -92,7 +92,7 @@ export default function InviteModal({ invite, onClose, onRSVP }: InviteModalProp
   };
 
   return (
-    <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-[100]">
+    <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-100">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-2xl w-full max-h-[90vh] flex flex-col">
         {/* Event Header */}
         <div className="relative h-48 overflow-hidden shrink-0">
@@ -107,7 +107,7 @@ export default function InviteModal({ invite, onClose, onRSVP }: InviteModalProp
             alt={invite.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-dark/80 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-neutral-dark/80 to-transparent" />
           <div className="absolute bottom-4 left-4 right-4">
             <h2 className="text-2xl text-neutral-light mb-2 line-clamp-1">{invite.title}</h2>
             <div className="flex flex-wrap gap-4 text-neutral-light/90">
@@ -143,7 +143,7 @@ export default function InviteModal({ invite, onClose, onRSVP }: InviteModalProp
                   setExistingRsvp(null);
                 }}
                 placeholder="Enter student's admission number"
-                className={`flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 ${
+                className={`flex-1 px-4 py-2 rounded-lg border focus:outline-hidden focus:ring-2 ${
                   admissionError
                     ? 'border-red-400 focus:ring-red-200'
                     : verified

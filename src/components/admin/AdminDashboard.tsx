@@ -173,7 +173,7 @@ export default function AdminDashboard() {
                     className="group block relative"
                   >
                     <div 
-                      className="absolute -inset-0.5 bg-gradient-to-br opacity-0 group-hover:opacity-100 blur transition duration-500 rounded-2xl"
+                      className="absolute -inset-0.5 bg-linear-to-br opacity-0 group-hover:opacity-100 blur-sm transition duration-500 rounded-2xl"
                       style={{ background: `linear-gradient(to bottom right, ${item.color.replace('from-', '').replace('to-', '')})` }}
                     />
                     <div className="relative bg-white p-8 rounded-2xl shadow-lg">

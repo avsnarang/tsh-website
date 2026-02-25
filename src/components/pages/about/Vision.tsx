@@ -63,7 +63,7 @@ export default function Vision() {
               <div className="relative">
                 <TextReveal>
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-light to-green rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 bg-linear-to-br from-green-light to-green rounded-full flex items-center justify-center">
                       <Target className="h-6 w-6 text-white" />
                     </div>
                     <h2 className="text-3xl text-neutral-dark">Our Mission</h2>
@@ -89,7 +89,7 @@ export default function Vision() {
               <div className="relative">
                 <TextReveal>
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-light to-orange rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 bg-linear-to-br from-orange-light to-orange rounded-full flex items-center justify-center">
                       <Star className="h-6 w-6 text-white" />
                     </div>
                     <h2 className="text-3xl text-white">Our Vision</h2>
@@ -108,7 +108,7 @@ export default function Vision() {
         {/* Core Values */}
         <ScrollReveal>
           <div className="relative bg-white rounded-2xl shadow-lg p-12 mb-16 overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-green-light/10 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,var(--tw-gradient-stops))] from-green-light/10 via-transparent to-transparent" />
             
             <div className="text-center mb-12 relative">
               <TextReveal>
@@ -140,10 +140,10 @@ export default function Vision() {
                 }
               ].map((value, index) => (
                 <ScrollReveal key={index} delay={index * 0.1}>
-                  <div className="bg-neutral-light p-8 rounded-2xl shadow hover:shadow-xl transition-all duration-300 text-center group relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="bg-neutral-light p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 text-center group relative overflow-hidden">
+                    <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="relative">
-                      <div className="w-16 h-16 bg-gradient-to-br from-green-light to-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-16 h-16 bg-linear-to-br from-green-light to-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                         <value.icon className="h-8 w-8 text-white" />
                       </div>
                       <TextReveal delay={0.2}>
@@ -163,7 +163,7 @@ export default function Vision() {
         {/* Strategic Objectives */}
         <div className="relative bg-green p-12 rounded-2xl overflow-hidden">
           {/* Decorative Background */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-green-light/10 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,var(--tw-gradient-stops))] from-green-light/10 via-transparent to-transparent" />
           <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
           <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-orange-light rounded-2xl" />
           
@@ -191,7 +191,7 @@ export default function Vision() {
               }
             ].map((goal, index) => (
               <ScrollReveal key={index} delay={index * 0.1}>
-                <div className="bg-white p-8 rounded-xl shadow hover:shadow-xl transition-all duration-300 group">
+                <div className="bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 group">
                   <TextReveal delay={0.2}>
                     <h3 className="text-xl text-neutral-dark mb-3 group-hover:text-green transition-colors">{goal.title}</h3>
                   </TextReveal>

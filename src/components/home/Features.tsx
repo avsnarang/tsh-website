@@ -57,7 +57,7 @@ export default function Features() {
         </div>
         
         {/* Gradient fade-out for smooth transition */}
-        <div className="absolute top-[40%] left-0 right-0 h-[30%] bg-gradient-to-b from-transparent to-white" />
+        <div className="absolute top-[40%] left-0 right-0 h-[30%] bg-linear-to-b from-transparent to-white" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 relative">
@@ -89,9 +89,9 @@ export default function Features() {
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-green-light/5 to-transparent rounded-2xl" />
+                <div className="absolute inset-0 bg-linear-to-br from-green-light/5 to-transparent rounded-2xl" />
                 <div className="relative flex flex-col items-center text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-green-light to-green rounded-xl flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-linear-to-br from-green-light to-green rounded-xl flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300">
                     <IconComponent className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-display text-neutral-dark mb-3">{feature.title}</h3>
@@ -111,7 +111,7 @@ export default function Features() {
       </div>
 
       {/* Connecting element to next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-neutral-light/50 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-neutral-light/50 to-transparent" />
     </section>
   );
 }

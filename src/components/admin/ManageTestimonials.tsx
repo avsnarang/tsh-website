@@ -175,7 +175,7 @@ export default function ManageTestimonials() {
                   className="bg-white p-6 rounded-2xl shadow-lg"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
+                    <div className="w-16 h-16 rounded-full overflow-hidden shrink-0">
                       {testimonial.profile_picture_url ? (
                         <img
                           src={testimonial.profile_picture_url}
@@ -188,7 +188,7 @@ export default function ManageTestimonials() {
                         </div>
                       )}
                     </div>
-                    <div className="flex-grow">
+                    <div className="grow">
                       <div className="flex justify-between items-start">
                         <div>
                           <h3 className="text-xl text-neutral-dark font-semibold">
@@ -255,7 +255,7 @@ export default function ManageTestimonials() {
 
       {/* Create Testimonial Modal */}
       {showCreateForm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-[100]">
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-100">
           <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold text-neutral-dark">Create Testimonial</h2>
@@ -279,7 +279,7 @@ export default function ManageTestimonials() {
                     student_name: e.target.value === 'parent' ? '' : undefined,
                     class: ['parent', 'student'].includes(e.target.value) ? '' : undefined
                   }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                   required
                 >
                   <option value="parent">Parent</option>
@@ -294,7 +294,7 @@ export default function ManageTestimonials() {
                   type="text"
                   value={formData.author_name}
                   onChange={(e) => setFormData(prev => ({ ...prev, author_name: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                   required
                 />
               </div>
@@ -306,7 +306,7 @@ export default function ManageTestimonials() {
                     type="text"
                     value={formData.student_name || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, student_name: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
@@ -319,7 +319,7 @@ export default function ManageTestimonials() {
                     type="text"
                     value={formData.class || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, class: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
@@ -331,7 +331,7 @@ export default function ManageTestimonials() {
                   type="url"
                   value={formData.profile_picture_url || ''}
                   onChange={(e) => setFormData(prev => ({ ...prev, profile_picture_url: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                   placeholder="https://example.com/photo.jpg"
                 />
               </div>
@@ -341,7 +341,7 @@ export default function ManageTestimonials() {
                 <textarea
                   value={formData.content}
                   onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-32"
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary h-32"
                   required
                 />
               </div>
@@ -364,7 +364,7 @@ export default function ManageTestimonials() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-[100]">
+        <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center p-4 z-100">
           <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
             <div className="flex items-center gap-4 text-red-500 mb-6">
               <AlertTriangle className="h-8 w-8" />

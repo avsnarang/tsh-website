@@ -276,7 +276,7 @@ export default function ManageStudents() {
 
       <div className="relative pb-24">
         <Container>
-          <div className="max-w-[90rem] mx-auto">
+          <div className="max-w-360 mx-auto">
             <motion.div
               className="flex-1 text-center mb-16"
               initial={{ opacity: 0, y: -30 }}
@@ -322,7 +322,7 @@ export default function ManageStudents() {
                   placeholder="Search students..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green/20"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-hidden focus:ring-2 focus:ring-green/20"
                 />
               </div>
               <div className="flex items-center gap-2">
@@ -464,7 +464,7 @@ export default function ManageStudents() {
 
             {/* Add/Edit Modal */}
             {(showAddForm || editingStudent) && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-100">
                 <div className="bg-white rounded-lg p-6 w-full max-w-md">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-semibold">
@@ -493,7 +493,7 @@ export default function ManageStudents() {
                           : setNewStudent({...newStudent, admission_number: e.target.value})
                         }
                         disabled={!!editingStudent}
-                        className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        className="w-full p-2 border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
                     <div>
@@ -507,7 +507,7 @@ export default function ManageStudents() {
                           ? setEditingStudent({...editingStudent, full_name: e.target.value})
                           : setNewStudent({...newStudent, full_name: e.target.value})
                         }
-                        className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        className="w-full p-2 border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
                     <div>
@@ -521,7 +521,7 @@ export default function ManageStudents() {
                           ? setEditingStudent({...editingStudent, class: e.target.value})
                           : setNewStudent({...newStudent, class: e.target.value})
                         }
-                        className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        className="w-full p-2 border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
                   </div>
@@ -547,7 +547,7 @@ export default function ManageStudents() {
 
             {/* Delete Confirmation Modal */}
             {showDeleteConfirm && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-100">
                 <div className="bg-white rounded-lg p-6 w-full max-w-md">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-semibold">Confirm Delete</h3>

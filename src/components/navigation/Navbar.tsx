@@ -532,7 +532,7 @@ function Navbar() {
               backgroundColor: isMenuOpen ? "transparent" : backgroundColor,
               boxShadow: isMenuOpen ? "none" : boxShadow,
             }}
-            className="relative flex justify-between items-center rounded-full px-6 py-3 backdrop-blur-sm"
+            className="relative flex justify-between items-center rounded-full px-6 py-3 backdrop-blur-xs"
           >
             <motion.div style={{ color: isMenuOpen ? "#FFFFFF" : textColor }}>
               <Logo variant={isMenuOpen ? "light" : "default"} />

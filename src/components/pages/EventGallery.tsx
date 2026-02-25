@@ -283,7 +283,7 @@ export default function EventGallery() {
                               className="w-full h-auto"
                             />
                             {image.caption && (
-                              <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 backdrop-blur-sm 
+                              <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 backdrop-blur-xs 
                                 text-white p-4 text-sm" /* Added text-sm */
                               >
                                 {image.caption}

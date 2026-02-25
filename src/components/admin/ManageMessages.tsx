@@ -294,10 +294,10 @@ export default function ManageMessages() {
                     animate={{ opacity: 1, y: 0 }}
                     className="relative group"
                   >
-                    <div className="absolute -inset-0.5 bg-gradient-to-br from-green-light/30 to-orange-light/30 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-opacity duration-500" />
+                    <div className="absolute -inset-0.5 bg-linear-to-br from-green-light/30 to-orange-light/30 rounded-2xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500" />
                     <div className="relative bg-white p-8 rounded-2xl shadow-lg">
                       <div className="flex items-start gap-6">
-                        <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-green-light to-green">
+                        <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-linear-to-br from-green-light to-green">
                           {message.photo_url ? (
                             <img
                               src={message.photo_url}
@@ -310,7 +310,7 @@ export default function ManageMessages() {
                             </div>
                           )}
                         </div>
-                        <div className="flex-grow">
+                        <div className="grow">
                           <div className="flex justify-between items-start">
                             <div>
                               <h3 className="text-2xl font-display text-neutral-dark">
@@ -373,7 +373,7 @@ export default function ManageMessages() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-sm flex items-center justify-center p-4 z-[100]"
+          className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-xs flex items-center justify-center p-4 z-100"
         >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -404,7 +404,7 @@ export default function ManageMessages() {
                     type="text"
                     value={formData.role}
                     onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
@@ -415,7 +415,7 @@ export default function ManageMessages() {
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
@@ -449,7 +449,7 @@ export default function ManageMessages() {
                   <textarea
                     value={formData.preview}
                     onChange={(e) => setFormData(prev => ({ ...prev, preview: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-24"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary h-24"
                     required
                   />
                 </div>
@@ -459,7 +459,7 @@ export default function ManageMessages() {
                   <textarea
                     value={formData.full_message}
                     onChange={(e) => setFormData(prev => ({ ...prev, full_message: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary h-64"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary h-64"
                     required
                   />
                   <p className="text-sm text-neutral-dark/60 mt-1">
@@ -473,7 +473,7 @@ export default function ManageMessages() {
                     type="url"
                     value={formData.photo_url || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, photo_url: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
                     placeholder="https://example.com/photo.jpg"
                   />
                 </div>
@@ -505,7 +505,7 @@ export default function ManageMessages() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-sm flex items-center justify-center p-4 z-[100]"
+            className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-xs flex items-center justify-center p-4 z-100"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}

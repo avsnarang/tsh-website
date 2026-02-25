@@ -60,9 +60,9 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
               )}
             </>
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-green-light/20 to-orange-light/20" />
+            <div className="h-full w-full bg-linear-to-br from-green-light/20 to-orange-light/20" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
         </div>
 
         <div className="absolute inset-x-0 bottom-0 p-8 md:p-12 pointer-events-auto">
@@ -95,13 +95,13 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
             {invite.acceptingRsvps ? (
               <Button
                 onClick={() => onRSVP(invite.id)}
-                className="w-full md:w-auto px-8 py-3 backdrop-blur-sm bg-white/20 hover:bg-white/30 text-base md:text-lg"
+                className="w-full md:w-auto px-8 py-3 backdrop-blur-xs bg-white/20 hover:bg-white/30 text-base md:text-lg"
                 variant="outline"
               >
                 View Invitation
               </Button>
             ) : (
-              <div className="flex items-center justify-center gap-3 w-full md:w-auto px-6 py-3 bg-red-500/20 backdrop-blur-sm text-white rounded-lg text-base md:text-lg">
+              <div className="flex items-center justify-center gap-3 w-full md:w-auto px-6 py-3 bg-red-500/20 backdrop-blur-xs text-white rounded-lg text-base md:text-lg">
                 <Ban className="h-5 w-5" />
                 RSVPs Closed
               </div>
@@ -114,7 +114,7 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
 
   // Original compact card design
   return (
-    <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-500">
+    <div className="group relative aspect-4/5 overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-500">
       <div className="absolute inset-0">
         {imageSrc ? (
           <>
@@ -157,9 +157,9 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
             )}
           </>
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-green-light/20 to-orange-light/20" />
+          <div className="h-full w-full bg-linear-to-br from-green-light/20 to-orange-light/20" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
       </div>
 
       <div className="absolute inset-x-0 bottom-0 p-6">
@@ -190,13 +190,13 @@ export default function InviteCard({ invite, onRSVP, isFullScreen = false }: Inv
           {invite.acceptingRsvps ? (
             <Button
               onClick={() => onRSVP(invite.id)}
-              className="w-full backdrop-blur-sm bg-white/20 hover:bg-white/30 text-sm py-2"
+              className="w-full backdrop-blur-xs bg-white/20 hover:bg-white/30 text-sm py-2"
               variant="outline"
             >
               View Invitation
             </Button>
           ) : (
-            <div className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-red-500/20 backdrop-blur-sm text-white rounded-lg text-sm">
+            <div className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-red-500/20 backdrop-blur-xs text-white rounded-lg text-sm">
               <Ban className="h-4 w-4" />
               RSVPs Closed
             </div>

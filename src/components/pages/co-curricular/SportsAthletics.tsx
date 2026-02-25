@@ -193,7 +193,7 @@ export default function SportsAthletics() {
                             alt={`${sport.name} facilities`}
                             className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                          <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
                           <div className="absolute bottom-4 left-4 right-4">
                             <div className="flex gap-2">
                               {sport.age_groups.map((level, levelIndex) => (
@@ -255,7 +255,7 @@ export default function SportsAthletics() {
 
         {/* Facilities Section */}
         <ScrollReveal>
-          <div className="bg-gradient-to-br from-green to-green-dark text-white rounded-2xl p-8 md:p-12">
+          <div className="bg-linear-to-br from-green to-green-dark text-white rounded-2xl p-8 md:p-12">
             <div className="grid md:grid-cols-2 gap-12">
               <div>
                 <h2 className="font-display text-3xl mb-6">Our Facilities</h2>

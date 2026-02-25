@@ -125,7 +125,7 @@ export default function NotionDropdown({
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search..."
                     className="w-full px-8 py-2 bg-neutral-dark/5 rounded-md text-sm
-                      placeholder:text-neutral-dark/40 focus:outline-none"
+                      placeholder:text-neutral-dark/40 focus:outline-hidden"
                   />
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-dark/40" />
                 </div>
@@ -186,7 +186,7 @@ export default function NotionDropdown({
                       onKeyDown={handleKeyDown}
                       placeholder="Enter new option..."
                       className="flex-1 px-3 py-2 bg-neutral-dark/5 rounded-md text-sm
-                        placeholder:text-neutral-dark/40 focus:outline-none"
+                        placeholder:text-neutral-dark/40 focus:outline-hidden"
                     />
                     <button
                       onClick={handleAddNewOption}

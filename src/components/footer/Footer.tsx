@@ -31,7 +31,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative z-20 bg-gradient-to-br from-[#A65A20] to-[#7A4217] pt-16 pb-8 overflow-hidden">
+    <footer className="relative z-20 bg-linear-to-br from-[#A65A20] to-[#7A4217] pt-16 pb-8 overflow-hidden">
       {/* Background Text - Hidden on Mobile */}
       <motion.div
         initial={{ opacity: 0.15 }}
@@ -241,7 +241,7 @@ export default function Footer() {
                 Terms of Service
               </Link>
             </div>
-            <p className="text-neutral-light/60 text-sm order-first md:order-none">
+            <p className="text-neutral-light/60 text-sm order-first md:order-0">
               © {currentYear} The Scholars' Home. All rights reserved.
             </p>
             <p className="text-neutral-light/60 text-sm">

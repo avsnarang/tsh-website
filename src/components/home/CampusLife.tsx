@@ -54,9 +54,9 @@ export default function CampusLife() {
           />
         </div>
         {/* Top fade */}
-        <div className="absolute top-0 left-0 right-0 h-[15%] bg-gradient-to-b from-white to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-[15%] bg-linear-to-b from-white to-transparent" />
         {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-[15%] bg-gradient-to-t from-white to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-[15%] bg-linear-to-t from-white to-transparent" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 relative">
@@ -104,7 +104,7 @@ export default function CampusLife() {
 
               {/* Content Container */}
               <div className="relative p-6">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl" />
+                <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent rounded-2xl" />
                 <div className="relative">
                   <h3 className="text-xl font-display text-neutral-dark mb-2">
                     {activity.title}
@@ -133,15 +133,15 @@ export default function CampusLife() {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          <div className="bg-green-50/50 backdrop-blur-sm rounded-2xl p-6 border border-green-100">
+          <div className="bg-green-50/50 backdrop-blur-xs rounded-2xl p-6 border border-green-100">
             <h4 className="text-xl font-display text-green-600 mb-2">Modern Infrastructure</h4>
             <p className="text-neutral-dark/70">State-of-the-art facilities designed for optimal learning and development</p>
           </div>
-          <div className="bg-orange-50/50 backdrop-blur-sm rounded-2xl p-6 border border-orange-100">
+          <div className="bg-orange-50/50 backdrop-blur-xs rounded-2xl p-6 border border-orange-100">
             <h4 className="text-xl font-display text-orange-600 mb-2">Student Clubs</h4>
             <p className="text-neutral-dark/70">Diverse range of clubs and societies for extra-curricular engagement</p>
           </div>
-          <div className="bg-purple-50/50 backdrop-blur-sm rounded-2xl p-6 border border-purple-100">
+          <div className="bg-purple-50/50 backdrop-blur-xs rounded-2xl p-6 border border-purple-100">
             <h4 className="text-xl font-display text-purple-600 mb-2">Safe Environment</h4>
             <p className="text-neutral-dark/70">Secure and nurturing atmosphere for all students</p>
           </div>

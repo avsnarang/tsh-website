@@ -37,7 +37,7 @@ export function ProfileForm({ profile, onChange, onSubmit, saving, section }: Pr
       className="bg-white rounded-2xl p-8 shadow-lg h-full"
     >
       <form onSubmit={onSubmit} className="space-y-6 h-full flex flex-col">
-        <div className="flex-grow">
+        <div className="grow">
           {section === 'basic' && (
             <div className="space-y-4">
               <div className="space-y-2">

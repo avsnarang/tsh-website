@@ -154,7 +154,7 @@ const ManageAlumni: FC = () => {
                   placeholder="Search by name, batch year, or occupation..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-green focus:border-transparent shadow-sm"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-green focus:border-transparent shadow-xs"
                 />
               </div>
             </motion.div>
@@ -261,7 +261,7 @@ const ManageAlumni: FC = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-100">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

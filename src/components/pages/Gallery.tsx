@@ -216,12 +216,12 @@ export default function Gallery() {
 
                 {/* Filters Section */}
                 <div className="bg-white rounded-2xl shadow-xl p-4 lg:p-6 relative">
-                  <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl z-[1]" />
-                  <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl z-[1]" />
+                  <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl z-1" />
+                  <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl z-1" />
                   
-                  <div className="relative z-[2] space-y-4 pt-4 pb-4">
+                  <div className="relative z-2 space-y-4 pt-4 pb-4">
                     {/* Year Filter */}
-                    <div className="relative z-[30] flex justify-center">
+                    <div className="relative z-30 flex justify-center">
                       <NotionDropdown
                         value={selectedYear.toString()}
                         onChange={(value) => {
@@ -240,7 +240,7 @@ export default function Gallery() {
                     </div>
 
                     {/* Campus Filter */}
-                    <div className="relative z-[20] flex justify-center">
+                    <div className="relative z-20 flex justify-center">
                       <NotionDropdown
                         value={selectedCampus}
                         onChange={(value) => {
@@ -258,7 +258,7 @@ export default function Gallery() {
                     </div>
 
                     {/* Search Input */}
-                    <div className="relative z-[10] flex justify-center">
+                    <div className="relative z-10 flex justify-center">
                       <input
                         type="text"
                         placeholder="Search events..."

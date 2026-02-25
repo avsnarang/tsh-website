@@ -41,7 +41,7 @@ export default function Achievements() {
   return (
     <section className="py-24 relative bg-white">
       {/* Gradient transition continuing from MissionVision */}
-      <div className="absolute inset-0 bg-gradient-to-b from-neutral-light/50 via-white to-white" />
+      <div className="absolute inset-0 bg-linear-to-b from-neutral-light/50 via-white to-white" />
 
       {/* Background decorative elements - continuing from MissionVision */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -85,12 +85,12 @@ export default function Achievements() {
                 transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
               >
                 <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-light/20 to-transparent rounded-2xl" />
+                  <div className="absolute inset-0 bg-linear-to-br from-green-light/20 to-transparent rounded-2xl" />
                   <div className="absolute -top-2 -right-2 w-full h-full border-2 border-green rounded-2xl transform group-hover:scale-105 transition-transform duration-300" />
                   
                   <div className="relative">
                     <div className="mb-6">
-                      <div className="w-16 h-16 bg-gradient-to-br from-green-light to-green rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                      <div className="w-16 h-16 bg-linear-to-br from-green-light to-green rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
                         <IconComponent className="w-8 h-8 text-white" />
                       </div>
                     </div>

@@ -79,7 +79,7 @@ export default function BreadcrumbNav() {
         duration: 0.3,
         ease: [0.25, 0.1, 0.25, 1]
       }}
-      className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 dark:bg-neutral-dark/80 backdrop-blur-md shadow-sm border border-neutral-dark/10"
+      className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 dark:bg-neutral-dark/80 backdrop-blur-md shadow-xs border border-neutral-dark/10"
     >
       <Breadcrumb>
         <BreadcrumbList className="text-neutral-dark dark:text-white">

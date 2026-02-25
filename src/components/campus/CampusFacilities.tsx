@@ -62,7 +62,7 @@ export default function CampusFacilities({ info }: CampusFacilitiesProps) {
                 className="relative group h-full"
               >
                 {/* Card glow effect on hover */}
-                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-br from-green-light/30 to-orange-light/30 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
+                <div className="absolute -inset-1 rounded-3xl bg-linear-to-br from-green-light/30 to-orange-light/30 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
                 
                 <div className="relative bg-white rounded-3xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-all duration-300 h-full flex flex-col border border-neutral-200">
                   {/* Image */}
@@ -72,21 +72,21 @@ export default function CampusFacilities({ info }: CampusFacilitiesProps) {
                       alt={facility.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-green-dark/80 via-green-dark/20 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-green-dark/80 via-green-dark/20 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
                       <h3 className="text-xl font-display text-white drop-shadow-lg">{facility.title}</h3>
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 flex-grow">
+                  <div className="p-6 grow">
                     <p className="text-neutral-dark/70 font-body text-sm leading-relaxed">
                       {facility.description}
                     </p>
                   </div>
 
                   {/* Accent bar */}
-                  <div className="h-1 bg-gradient-to-r from-green via-green-light to-orange transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                  <div className="h-1 bg-linear-to-r from-green via-green-light to-orange transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </div>
               </motion.div>
             </ScrollReveal>

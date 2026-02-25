@@ -360,7 +360,7 @@ export default function ManageTeachers() {
       </div>
 
       <Container>
-        <div className="relative max-w-[90rem] mx-auto">
+        <div className="relative max-w-360 mx-auto">
           <ScrollReveal>
             <div className="text-center mb-12">
               <div className="flex items-center justify-between gap-4 mb-8">
@@ -486,7 +486,7 @@ export default function ManageTeachers() {
                   placeholder="Search teachers..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-none focus:ring-2 focus:ring-green/20"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-neutral-dark/10 focus:outline-hidden focus:ring-2 focus:ring-green/20"
                 />
               </div>
             </div>
@@ -566,7 +566,7 @@ export default function ManageTeachers() {
       {/* Add/Edit Form Modal */}
       <AnimatePresence>
         {(showAddForm || editingTeacher) && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
+          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-100 p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -602,7 +602,7 @@ export default function ManageTeachers() {
                           setNewTeacher({ ...newTeacher, full_name: e.target.value });
                         }
                       }}
-                      className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green/20"
+                      className="w-full p-3 border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-green/20"
                       required
                     />
                   </div>
@@ -620,7 +620,7 @@ export default function ManageTeachers() {
                           setNewTeacher({ ...newTeacher, subject: subjects.join(', ') });
                         }
                       }}
-                      className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green/20"
+                      className="w-full p-3 border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-green/20"
                       required
                       placeholder="Enter subjects (comma-separated)"
                     />
@@ -637,7 +637,7 @@ export default function ManageTeachers() {
                           setNewTeacher({ ...newTeacher, class_level: e.target.value as Teacher['class_level'] });
                         }
                       }}
-                      className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green/20"
+                      className="w-full p-3 border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-green/20"
                     >
                       {CLASS_LEVELS.map((level) => (
                         <option key={level} value={level}>{CLASS_LEVEL_LABELS[level]}</option>
@@ -657,7 +657,7 @@ export default function ManageTeachers() {
                           setNewTeacher({ ...newTeacher, designation: e.target.value });
                         }
                       }}
-                      className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green/20"
+                      className="w-full p-3 border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-green/20"
                       required
                       placeholder="e.g., Senior Mathematics Teacher"
                     />
@@ -675,7 +675,7 @@ export default function ManageTeachers() {
                           setNewTeacher({ ...newTeacher, qualifications: e.target.value });
                         }
                       }}
-                      className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green/20"
+                      className="w-full p-3 border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-green/20"
                       required
                     />
                   </div>
@@ -692,7 +692,7 @@ export default function ManageTeachers() {
                           setNewTeacher({ ...newTeacher, experience_years: parseInt(e.target.value) });
                         }
                       }}
-                      className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green/20"
+                      className="w-full p-3 border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-green/20"
                       required
                     />
                   </div>
@@ -709,7 +709,7 @@ export default function ManageTeachers() {
                           setNewTeacher({ ...newTeacher, photo_url: e.target.value });
                         }
                       }}
-                      className="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green/20"
+                      className="w-full p-3 border rounded-xl focus:outline-hidden focus:ring-2 focus:ring-green/20"
                       placeholder="https://example.com/photo.jpg"
                     />
                   </div>
@@ -743,7 +743,7 @@ export default function ManageTeachers() {
       {/* Delete Confirmation Modal */}
       <AnimatePresence>
         {showDeleteConfirm && (
-          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-[100] p-4">
+          <div className="fixed inset-0 bg-neutral-dark/50 flex items-center justify-center z-100 p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}

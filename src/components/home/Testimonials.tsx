@@ -89,7 +89,7 @@ export default function Testimonials() {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
-              className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/10"
+              className="bg-white/5 backdrop-blur-xs rounded-2xl p-8 md:p-12 border border-white/10"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
