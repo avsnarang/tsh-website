@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, X, ArrowRight } from 'lucide-react';
 import { LeadershipMessage } from '@/types/leadership';
 import Button from '@/components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '@/lib/supabase';
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -16,8 +17,35 @@ interface MessagesProps {
   messages: LeadershipMessage[];
 }
 
-export default function Messages({ messages: leadershipMessages }: MessagesProps) {
+export default function Messages({ messages: serverMessages }: MessagesProps) {
+  const [leadershipMessages, setLeadershipMessages] = useState<LeadershipMessage[]>(serverMessages);
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
+
+  // Client-side fallback: if server returned no data, try fetching from browser
+  useEffect(() => {
+    if (serverMessages.length > 0) return;
+
+    async function fetchClientSide() {
+      try {
+        const { data, error } = await supabase
+          .from('leadership_messages')
+          .select('*')
+          .order('order', { ascending: true });
+
+        if (error || !data || data.length === 0) return;
+
+        setLeadershipMessages(data.map(msg => ({
+          ...msg,
+          fullMessage: msg.full_message || '',
+          display_locations: msg.display_locations || ['all'],
+        })));
+      } catch {
+        // Silent fail — server will work in production
+      }
+    }
+
+    fetchClientSide();
+  }, [serverMessages]);
 
   return (
     <div className="relative min-h-[90vh] bg-neutral-light">
