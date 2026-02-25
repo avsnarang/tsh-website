@@ -46,8 +46,8 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
         debug: process.env.NODE_ENV === 'development',
         loaded: (ph) => {
           console.log('[PostHog] ✅ Initialized successfully')
-          console.log('[PostHog] API Host:', ph.config.api_host)
-          console.log('[PostHog] UI Host:', ph.config.ui_host)
+          console.log('[PostHog] API Host:', '/tsh-2024-data')
+          console.log('[PostHog] UI Host:', posthogHost)
           
           // Check if running on localhost
           if (typeof window !== 'undefined') {
