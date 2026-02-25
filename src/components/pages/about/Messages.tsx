@@ -5,7 +5,6 @@ import { User, X, ArrowRight } from 'lucide-react';
 import { LeadershipMessage } from '@/types/leadership';
 import Button from '@/components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useMessages } from '@/contexts/MessagesContext';
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -13,8 +12,11 @@ const fadeIn = {
   transition: { duration: 0.5 }
 };
 
-export default function Messages() {
-  const { messages: leadershipMessages, loading } = useMessages();
+interface MessagesProps {
+  messages: LeadershipMessage[];
+}
+
+export default function Messages({ messages: leadershipMessages }: MessagesProps) {
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
 
   return (
@@ -61,74 +63,38 @@ export default function Messages() {
           </p>
         </motion.div>
 
-        {/* Loading state */}
-        {loading && (
-          <div className="max-w-7xl mx-auto">
-            <div className="flex justify-center mb-8">
-              <div className="w-full max-w-2xl bg-white rounded-2xl p-8 shadow-xl animate-pulse">
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                  <div className="w-32 h-32 rounded-xl bg-neutral-200" />
-                  <div className="flex-1 space-y-3 w-full">
-                    <div className="h-6 w-48 bg-neutral-200 rounded" />
-                    <div className="h-4 w-32 bg-neutral-200 rounded" />
-                    <div className="h-4 w-full bg-neutral-200 rounded" />
-                    <div className="h-4 w-3/4 bg-neutral-200 rounded" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col md:flex-row justify-center gap-8">
-              {[1, 2].map((i) => (
-                <div key={i} className="w-full md:w-[calc(50%-1rem)] max-w-xl bg-white rounded-2xl p-8 shadow-xl animate-pulse">
-                  <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                    <div className="w-32 h-32 rounded-xl bg-neutral-200" />
-                    <div className="flex-1 space-y-3 w-full">
-                      <div className="h-6 w-48 bg-neutral-200 rounded" />
-                      <div className="h-4 w-32 bg-neutral-200 rounded" />
-                      <div className="h-4 w-full bg-neutral-200 rounded" />
-                      <div className="h-4 w-3/4 bg-neutral-200 rounded" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* Message cards */}
+        <div className="max-w-7xl mx-auto">
+          {/* First Row - Single Card Centered */}
+          <div className="flex justify-center mb-8">
+            {leadershipMessages.slice(0, 1).map((message) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="relative group w-full max-w-2xl"
+              >
+                <MessageCard message={message} setSelectedMessage={setSelectedMessage} />
+              </motion.div>
+            ))}
           </div>
-        )}
 
-        {/* New symmetrical layout for three cards */}
-        {!loading && (
-          <div className="max-w-7xl mx-auto">
-            {/* First Row - Single Card Centered */}
-            <div className="flex justify-center mb-8">
-              {leadershipMessages.slice(0, 1).map((message) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="relative group w-full max-w-2xl"
-                >
-                  <MessageCard message={message} setSelectedMessage={setSelectedMessage} />
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Second Row - Two Cards */}
-            <div className="flex flex-col md:flex-row justify-center gap-8">
-              {leadershipMessages.slice(1, 3).map((message, index) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: (index + 1) * 0.1 }}
-                  className="relative group w-full md:w-[calc(50%-1rem)] max-w-xl"
-                >
-                  <MessageCard message={message} setSelectedMessage={setSelectedMessage} />
-                </motion.div>
-              ))}
-            </div>
+          {/* Second Row - Two Cards */}
+          <div className="flex flex-col md:flex-row justify-center gap-8">
+            {leadershipMessages.slice(1, 3).map((message, index) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: (index + 1) * 0.1 }}
+                className="relative group w-full md:w-[calc(50%-1rem)] max-w-xl"
+              >
+                <MessageCard message={message} setSelectedMessage={setSelectedMessage} />
+              </motion.div>
+            ))}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Modal */}
@@ -138,13 +104,15 @@ export default function Messages() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-neutral-dark/90 backdrop-blur-xl flex items-center justify-center p-4 z-100"
+            className="fixed inset-0 bg-neutral-dark/90 backdrop-blur-xl flex items-center justify-center p-4 z-[100]"
+            onClick={() => setSelectedMessage(null)}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="bg-white rounded-3xl overflow-hidden shadow-2xl w-full max-w-4xl"
+              onClick={(e) => e.stopPropagation()}
             >
               <div className="relative p-8 border-b border-neutral-200">
                 <div className="flex items-center gap-6">
@@ -156,7 +124,7 @@ export default function Messages() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-linear-to-br from-green-light to-green flex items-center justify-center">
+                      <div className="w-full h-full bg-gradient-to-br from-green-light to-green flex items-center justify-center">
                         <User className="w-8 h-8 text-white" />
                       </div>
                     )}
@@ -192,7 +160,7 @@ export default function Messages() {
   );
 }
 
-// New MessageCard component for better code organization
+// MessageCard component
 interface MessageCardProps {
   message: LeadershipMessage;
   setSelectedMessage: (message: LeadershipMessage) => void;
@@ -204,12 +172,12 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, setSelectedMessage }
       {/* Decorative elements */}
       <div className="absolute -top-4 -right-4 w-full h-full border-2 border-orange rounded-2xl" />
       <div className="absolute -bottom-4 -left-4 w-full h-full border-2 border-green rounded-2xl" />
-      
+
       {/* Content */}
       <div className="relative p-8">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
           {/* Image */}
-          <div className="w-32 h-32 rounded-xl overflow-hidden shadow-lg bg-linear-to-br from-green-light to-green">
+          <div className="w-32 h-32 rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-green-light to-green">
             {message.photo_url ? (
               <img
                 src={message.photo_url}
