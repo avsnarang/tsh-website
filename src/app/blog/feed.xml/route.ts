@@ -1,9 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+export const dynamic = 'force-dynamic';
 
 function escapeXml(unsafe: string): string {
   return unsafe
@@ -20,6 +17,10 @@ function stripHtml(html: string): string {
 
 export async function GET() {
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
     const { data: posts, error } = await supabase
       .from('blog_posts')
       .select(`
