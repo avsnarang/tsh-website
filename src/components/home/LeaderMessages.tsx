@@ -144,12 +144,12 @@ export default function LeaderMessages({ messages, isLoading }: LeaderMessagesPr
       {/* Modal */}
       <AnimatePresence>
         {selectedMessage && (
-          <div className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-xs flex items-center justify-center p-4 z-100">
+          <div className="fixed inset-0 bg-neutral-dark/50 backdrop-blur-xs flex items-center justify-center p-4 pt-24 z-100">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden"
+              className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[85vh] flex flex-col overflow-hidden"
             >
               {/* Header - Sticky */}
               <div className="sticky top-0 bg-white p-8 border-b border-neutral-200 z-10">

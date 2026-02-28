@@ -8,6 +8,7 @@ import {
   LogOut,
   Calendar,
   Image,
+  ImagePlus,
   Bell,
   School,
   UserPlus,
@@ -100,6 +101,13 @@ export default function AdminDashboard() {
       icon: FileText,
       path: '/admin/blog',
       color: 'from-emerald-light to-emerald'
+    },
+    {
+      title: 'Photo Library',
+      description: 'Upload and manage website images',
+      icon: ImagePlus,
+      path: '/admin/photo-library',
+      color: 'from-cyan-light to-cyan'
     }
   ];
 
@@ -190,6 +198,8 @@ export default function AdminDashboard() {
                                           item.color === 'from-indigo-light to-indigo' ? 'linear-gradient(to bottom right, #C7D2FE, #4F46E5)' :
                                           item.color === 'from-red-light to-red' ? 'linear-gradient(to bottom right, #FECACA, #DC2626)' :
                                           item.color === 'from-teal-light to-teal' ? 'linear-gradient(to bottom right, #99F6E4, #0D9488)' :
+                                          item.color === 'from-cyan-light to-cyan' ? 'linear-gradient(to bottom right, #A5F3FC, #0891B2)' :
+                                          item.color === 'from-emerald-light to-emerald' ? 'linear-gradient(to bottom right, #A7F3D0, #059669)' :
                                           'linear-gradient(to bottom right, #A6D4B4, #00501B)'
                           }}
                         >

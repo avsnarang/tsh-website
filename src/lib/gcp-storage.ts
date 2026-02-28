@@ -22,9 +22,10 @@ export async function uploadToGCPStorage(
   fileBuffer: Buffer,
   fileName: string,
   contentType: string,
-  bucketName?: string
+  options?: { bucketName?: string; folder?: string }
 ): Promise<string> {
-  const bucket = bucketName || GOOGLE_STORAGE_CONFIG.BUCKET_NAME;
+  const bucket = options?.bucketName || GOOGLE_STORAGE_CONFIG.BUCKET_NAME;
+  const folderPath = options?.folder || 'events';
 
   if (!bucket) {
     throw new Error('GCP Storage bucket name not configured. Please set GCP_STORAGE_BUCKET in environment variables.');
@@ -33,10 +34,8 @@ export async function uploadToGCPStorage(
   const storage = getGCPStorageClient();
   const bucketClient = storage.bucket(bucket);
 
-  // Define the folder structure - use 'events' folder for event cover images
-  const folderPath = 'events';
   const file = bucketClient.file(`${folderPath}/${fileName}`);
-  
+
   try {
     await file.save(fileBuffer, {
       metadata: {
@@ -53,8 +52,8 @@ export async function uploadToGCPStorage(
     throw new Error(`Failed to upload file to GCP Storage: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 
-  // Return public URL
-  const publicUrl = `https://storage.googleapis.com/${bucket}/${folderPath}/${fileName}`;
+  // Return CDN URL
+  const publicUrl = `https://images.tsh.edu.in/${folderPath}/${fileName}`;
 
   console.log('File uploaded successfully:', {
     bucket,
@@ -66,16 +65,14 @@ export async function uploadToGCPStorage(
 }
 
 export async function deleteFromGCPStorage(
-  fileName: string,
+  storagePath: string,
   bucketName?: string
 ): Promise<void> {
   const bucketToUse = bucketName || GOOGLE_STORAGE_CONFIG.BUCKET_NAME;
   const storage = getGCPStorageClient();
   const bucket = storage.bucket(bucketToUse);
 
-  // Use the same folder structure as upload
-  const folderPath = 'events';
-  const file = bucket.file(`${folderPath}/${fileName}`);
+  const file = bucket.file(storagePath);
 
   await file.delete();
 }

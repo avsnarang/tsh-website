@@ -315,6 +315,26 @@ model sports_registrations {
   @@unique([admission_number, sport_id])
 }
 
+model PhotoLibraryItem {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  filename    String
+  storagePath String    @map("storage_path")
+  url         String
+  folder      String
+  tags        String[]  @default([])
+  sizeBytes   Int       @default(0) @map("size_bytes")
+  contentType String    @default("image/webp") @map("content_type")
+  width       Int       @default(0)
+  height      Int       @default(0)
+  uploadedBy  String?   @map("uploaded_by") @db.Uuid
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([folder], map: "idx_photo_library_folder")
+  @@index([tags], map: "idx_photo_library_tags", type: Gin)
+  @@index([createdAt(sort: Desc)], map: "idx_photo_library_created_at")
+  @@map("photo_library")
+}
+
 enum UserRole {
   admin
   alumni

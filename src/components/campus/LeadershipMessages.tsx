@@ -247,11 +247,11 @@ export default function LeadershipMessages({ campusName }: LeadershipMessagesPro
 
       {/* Modal */}
       {selectedMessage && (
-        <div className="fixed inset-0 bg-neutral-dark/60 backdrop-blur-xs flex items-center justify-center p-4 z-100" onClick={() => setSelectedMessage(null)}>
+        <div className="fixed inset-0 bg-neutral-dark/60 backdrop-blur-xs flex items-center justify-center p-4 pt-24 z-100" onClick={() => setSelectedMessage(null)}>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="bg-linear-to-r from-green to-green-dark p-6 text-white relative">
