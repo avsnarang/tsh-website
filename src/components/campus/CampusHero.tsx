@@ -51,16 +51,16 @@ export default function CampusHero({ info }: CampusHeroProps) {
       </div>
 
       {/* Main content */}
-      <Container className="relative z-10 flex-1 flex flex-col justify-start min-h-0 pt-4 sm:pt-2 md:pt-0 pb-8 sm:pb-0">
+      <Container className="relative z-10 shrink-0 pt-4 sm:pt-2 md:pt-0">
         {/* Centered text content */}
-        <div className="text-center max-w-3xl mx-auto mb-4 sm:mb-6 md:mb-8 shrink-0">
+        <div className="text-center max-w-3xl mx-auto mb-4 sm:mb-6 md:mb-8 lg:mb-[clamp(0.5rem,1.5svh,2rem)]">
           {/* Badge */}
           <ScrollReveal>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-green/10 text-green rounded-full mb-3 sm:mb-5"
+              className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-green/10 text-green rounded-full mb-3 sm:mb-5 lg:mb-[clamp(0.25rem,1svh,1.25rem)]"
             >
               <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span className="font-medium text-xs sm:text-sm tracking-wide">Excellence in Education</span>
@@ -71,8 +71,8 @@ export default function CampusHero({ info }: CampusHeroProps) {
           <ScrollReveal delay={0.1}>
             <TextReveal>
               <h1 className="font-display text-neutral-dark mb-2 sm:mb-3 leading-[1.1]">
-                <span className="block text-3xl sm:text-4xl md:text-6xl lg:text-7xl">The Scholars&apos; Home</span>
-                <span className="relative inline-block text-2xl sm:text-3xl md:text-5xl lg:text-6xl mt-1 sm:mt-2">
+                <span className="block text-3xl sm:text-4xl md:text-6xl lg:text-[clamp(2.5rem,5.5svh,4.5rem)]">The Scholars&apos; Home</span>
+                <span className="relative inline-block text-2xl sm:text-3xl md:text-5xl lg:text-[clamp(2rem,4.5svh,3.75rem)] mt-1 sm:mt-2">
                   <span className="text-green">{campusName}</span>
                   <motion.span
                     initial={{ scaleX: 0 }}
@@ -88,7 +88,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
           {/* Description */}
           <ScrollReveal delay={0.2}>
             <TextReveal delay={0.1}>
-              <p className="text-sm sm:text-base md:text-xl text-neutral-dark/70 max-w-2xl mx-auto mb-4 sm:mb-6 font-body leading-relaxed px-2">
+              <p className="text-sm sm:text-base md:text-xl lg:text-[clamp(0.875rem,1.8svh,1.25rem)] text-neutral-dark/70 max-w-2xl mx-auto mb-4 sm:mb-6 lg:mb-[clamp(0.5rem,1.5svh,1.5rem)] font-body leading-relaxed px-2">
                 {info.description}
               </p>
             </TextReveal>
@@ -100,17 +100,17 @@ export default function CampusHero({ info }: CampusHeroProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-4 sm:px-0"
+              className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-4 sm:px-0 lg:scale-75 lg:origin-top 2xl:scale-100"
             >
               <Link href="/admissions" className="w-full sm:w-auto">
-                <Button variant="cta" className="group text-sm sm:text-base md:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-green hover:bg-green-dark shadow-2xl shadow-green/30 w-full sm:w-auto">
+                <Button variant="cta" className="group text-sm sm:text-base lg:text-xs xl:text-lg px-6 sm:px-8 lg:px-5 xl:px-8 py-3 sm:py-4 lg:py-2 xl:py-4 bg-green hover:bg-green-dark shadow-2xl shadow-green/30 w-full sm:w-auto">
                   Apply Now
                   <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
 
               <Link href="/contact" className="w-full sm:w-auto">
-                <Button variant="outline2" className="group text-sm sm:text-base md:text-lg px-6 sm:px-8 py-3 sm:py-4 border-2 border-green text-green hover:bg-green hover:text-white inline-flex items-center justify-center gap-2 w-full sm:w-auto transition-all duration-300">
+                <Button variant="outline2" className="group text-sm sm:text-base lg:text-xs xl:text-lg px-6 sm:px-8 lg:px-5 xl:px-8 py-3 sm:py-4 lg:py-2 xl:py-4 border-2 border-green text-green hover:bg-green hover:text-white inline-flex items-center justify-center gap-2 w-full sm:w-auto transition-all duration-300">
                   Schedule a Visit
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
@@ -118,10 +118,15 @@ export default function CampusHero({ info }: CampusHeroProps) {
             </motion.div>
           </ScrollReveal>
         </div>
+      </Container>
 
-        {/* Panoramic image with floating stat cards */}
+      {/* Panoramic image with floating stat cards - outside Container for full width */}
+      <div className="relative z-10 px-4 sm:px-8 lg:px-16 pb-12 md:pb-24 lg:pb-[clamp(1rem,3svh,6rem)]">
         <ScrollReveal delay={0.3}>
-          <div className="relative max-w-6xl mx-auto w-full min-h-0">
+          <div
+            className="relative mx-auto"
+            style={{ maxWidth: 'min(1100px, calc((100svh - var(--page-top-spacing) - 380px) * 2.333))' }}
+          >
             {/* Decorative glow behind image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -238,7 +243,7 @@ export default function CampusHero({ info }: CampusHeroProps) {
             </div>
           </div>
         </ScrollReveal>
-      </Container>
+      </div>
     </section>
   );
 }
