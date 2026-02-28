@@ -5,7 +5,7 @@ import { ArrowRight, MapPin, Users, Building2, GraduationCap, Award, Sparkles } 
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import { CampusInfo } from '../../types/campus';
-import OptimizedImage from '../OptimizedImage';
+import Image from 'next/image';
 import Link from 'next/link';
 import ScrollReveal from '../animations/ScrollReveal';
 import TextReveal from '../animations/TextReveal';
@@ -151,10 +151,13 @@ export default function CampusHero({ info }: CampusHeroProps) {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]"
             >
-              <OptimizedImage
+              <Image
                 src={info.heroImage || info.facilities[0]?.image || "https://images.unsplash.com/photo-1523050854058-8df90110c9f1"}
                 alt={`${info.name} Campus`}
-                className="w-full h-full object-cover"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1152px"
               />
 
               {/* Subtle gradient overlay */}

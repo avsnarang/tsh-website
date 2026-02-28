@@ -16,7 +16,6 @@ import Button from '../ui/Button';
 import Logo from '../ui/Logo';
 import BreadcrumbNav from './BreadcrumbNav';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { supabase } from '../../lib/supabase';
 
 interface NavItem {
   icon: LucideIcon;
@@ -361,13 +360,9 @@ function Navbar() {
 
   const fetchUpdates = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from('latest_updates')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
+      const res = await fetch('/api/updates');
+      if (!res.ok) throw new Error('Failed to fetch updates');
+      const data = await res.json();
       setUpdates(data || []);
     } catch (error) {
       console.error('Error fetching updates:', error);
