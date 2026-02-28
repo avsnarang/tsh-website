@@ -185,7 +185,7 @@ export default function Hero() {
               {/* Main Image - Priority loaded */}
               <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl aspect-4/3 sm:aspect-auto">
                 <Image
-                  src="https://images.tsh.edu.in/homepage/hero.jpeg"
+                  src="https://images.tsh.edu.in/homepage/hero_1772311814283.webp"
                   alt="Students at The Scholars' Home"
                   width={800}
                   height={600}
