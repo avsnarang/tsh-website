@@ -16,6 +16,11 @@ import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
+import { LeadershipMessage } from '@/types/leadership';
+
+interface CampusHomeProps {
+  leadershipMessages?: LeadershipMessage[];
+}
 
 const getCampusKey = (urlParam: string): CampusKey | null => {
   switch (urlParam) {
@@ -26,7 +31,7 @@ const getCampusKey = (urlParam: string): CampusKey | null => {
   }
 };
 
-export default function CampusHome() {
+export default function CampusHome({ leadershipMessages = [] }: CampusHomeProps) {
   const params = useParams();
   const router = useRouter();
   const campus = params?.campus as string | undefined;
@@ -51,7 +56,7 @@ export default function CampusHome() {
     <div className="min-h-screen">
       <CampusHero info={info} />
       <CampusFeatures info={info} />
-      <LeadershipMessages campusName={campus || ''} />
+      <LeadershipMessages messages={leadershipMessages} />
       <CampusFacilities info={info} />
       <CampusAchievements info={info} />
 

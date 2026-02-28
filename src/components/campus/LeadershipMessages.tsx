@@ -1,118 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { User, ArrowRight, X, Quote, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Container from '../ui/Container';
-import { supabase } from '../../lib/supabase';
 import { LeadershipMessage } from '../../types/leadership';
 import ScrollReveal from '../animations/ScrollReveal';
 import TextReveal from '../animations/TextReveal';
-import { useAuth } from '../../contexts/AuthContext';
 
 interface LeadershipMessagesProps {
-  campusName: string;
+  messages: LeadershipMessage[];
 }
 
-export default function LeadershipMessages({ campusName }: LeadershipMessagesProps) {
-  const { loading: authLoading } = useAuth();
-  const [messages, setMessages] = useState<LeadershipMessage[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function LeadershipMessages({ messages }: LeadershipMessagesProps) {
   const [selectedMessage, setSelectedMessage] = useState<LeadershipMessage | null>(null);
-  const [fetchAttempted, setFetchAttempted] = useState(false);
 
-  useEffect(() => {
-    // Fetch messages regardless of auth state after a short delay
-    const timer = setTimeout(() => {
-      if (!fetchAttempted) {
-        fetchMessages();
-      }
-    }, 100);
-
-    // Also fetch when auth finishes loading
-    if (!authLoading && !fetchAttempted) {
-      fetchMessages();
-    }
-
-    return () => clearTimeout(timer);
-  }, [campusName, authLoading, fetchAttempted]);
-
-  const fetchMessages = async () => {
-    if (fetchAttempted) return;
-    setFetchAttempted(true);
-    
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('leadership_messages')
-        .select('*')
-        .order('order');
-
-      if (error) throw error;
-
-      const filteredMessages = (data || [])
-        .filter(message => {
-          const locations = message.display_locations || [];
-          return locations.includes('all') || locations.includes(campusName);
-        })
-        .map(message => ({
-          ...message,
-          fullMessage: message.full_message || ''
-        }));
-
-      setMessages(filteredMessages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Only hide if we've finished loading and truly have no messages
-  if (!loading && fetchAttempted && messages.length === 0) {
+  if (messages.length === 0) {
     return null;
-  }
-
-  // Show loading skeleton
-  if (loading) {
-    return (
-      <section className="relative py-24 overflow-hidden bg-white">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 -left-48 w-[500px] h-[500px] rounded-full bg-green-light/15 blur-3xl" />
-          <div className="absolute bottom-0 -right-48 w-[600px] h-[600px] rounded-full bg-orange-light/15 blur-3xl" />
-        </div>
-        <Container className="relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green/10 text-green rounded-full mb-6">
-              <MessageSquare className="h-4 w-4" />
-              <span className="font-semibold text-sm">Leadership Insights</span>
-            </div>
-            <h2 className="font-display text-4xl md:text-5xl text-neutral-dark mb-6">
-              Voices of <span className="text-green">Experience</span>
-            </h2>
-            <p className="text-xl text-neutral-dark/70 font-body max-w-2xl mx-auto">
-              Wisdom and guidance from our educational leaders shaping tomorrow's minds
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-3xl p-8 shadow-lg border border-neutral-200 animate-pulse">
-                <div className="flex flex-col items-center">
-                  <div className="w-24 h-24 rounded-full bg-neutral-200 mb-4" />
-                  <div className="h-5 w-32 bg-neutral-200 rounded mb-2" />
-                  <div className="h-4 w-24 bg-neutral-200 rounded" />
-                </div>
-                <div className="mt-6 space-y-2">
-                  <div className="h-3 bg-neutral-200 rounded" />
-                  <div className="h-3 bg-neutral-200 rounded" />
-                  <div className="h-3 bg-neutral-200 rounded w-3/4 mx-auto" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-    );
   }
 
   // Reorder: center gets first message
