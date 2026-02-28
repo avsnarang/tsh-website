@@ -174,13 +174,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* Preload hero image for instant display */}
-        <link
-          rel="preload"
-          href="https://images.tsh.edu.in/homepage/hero.jpeg"
-          as="image"
-          type="image/jpeg"
-        />
+        {/* Hero image preload removed — Next.js Image component fetches via /_next/image,
+            so preloading the raw URL causes a double download */}
 
         {/* Organization and Website structured data for SEO */}
         <script

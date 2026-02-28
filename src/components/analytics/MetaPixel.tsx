@@ -59,7 +59,7 @@ export default function MetaPixel({ pixelId }: MetaPixelProps) {
     <>
       <Script
         id="meta-pixel"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         src={`https://connect.facebook.net/en_US/fbevents.js`}
       />
       <noscript>

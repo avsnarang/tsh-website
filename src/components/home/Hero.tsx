@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { GraduationCap, ArrowRight, BookOpen, School, Users } from 'lucide-react';
 import Button from '../ui/Button';
+import { useState, useEffect } from 'react';
 
 const quickStats = [
   { icon: Users, value: "1700+", label: "Students" },
@@ -13,29 +14,28 @@ const quickStats = [
   { icon: School, value: "130+", label: "Qualified Faculty" },
 ];
 
-// Animation variants - smooth fade in from transparent
+// Animation variants - start visible, animate subtly after hydration
 const containerVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
-      duration: 0.3,
-      staggerChildren: 0.08,
-      delayChildren: 0.1,
+      staggerChildren: 0.06,
+      delayChildren: 0.05,
     },
   },
 };
 
 const itemVariants = {
   hidden: {
-    opacity: 0,
-    y: 16,
+    opacity: 0.85,
+    y: 8,
   },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.4,
+      duration: 0.35,
       ease: [0.22, 0.61, 0.36, 1] as const,
     },
   },
@@ -43,34 +43,34 @@ const itemVariants = {
 
 const imageVariants = {
   hidden: {
-    opacity: 0,
-    x: 20,
-    scale: 0.98,
+    opacity: 0.85,
+    x: 10,
+    scale: 0.99,
   },
   visible: {
     opacity: 1,
     x: 0,
     scale: 1,
     transition: {
-      duration: 0.5,
+      duration: 0.4,
       ease: [0.22, 0.61, 0.36, 1] as const,
-      delay: 0.15,
+      delay: 0.1,
     },
   },
 };
 
 const statVariants = {
   hidden: {
-    opacity: 0,
-    y: 12,
+    opacity: 0.85,
+    y: 8,
   },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.35,
+      duration: 0.3,
       ease: [0.22, 0.61, 0.36, 1] as const,
-      delay: 0.35 + (i * 0.06),
+      delay: 0.2 + (i * 0.04),
     },
   }),
 };
