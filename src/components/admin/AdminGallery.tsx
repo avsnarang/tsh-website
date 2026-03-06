@@ -239,17 +239,15 @@ export default function AdminGallery() {
   const uploadGalleryImages = useCallback(async (files: File[]): Promise<string[]> => {
     setUploading(true);
     try {
-      const BATCH_SIZE = 5;
       const allUrls: string[] = [];
 
-      for (let i = 0; i < files.length; i += BATCH_SIZE) {
-        const batch = files.slice(i, i + BATCH_SIZE);
+      for (const file of files) {
         const body = new FormData();
-        batch.forEach(file => body.append('images', file));
+        body.append('images', file);
 
         const res = await fetch('/api/upload-gallery-image', { method: 'POST', body });
         if (!res.ok) {
-          const data = await res.json().catch(() => ({ error: 'Upload failed (server error)' }));
+          const data = await res.json().catch(() => ({ error: `Upload failed for ${file.name}` }));
           throw new Error(data.error || 'Upload failed');
         }
         const data = await res.json();

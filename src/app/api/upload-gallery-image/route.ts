@@ -2,13 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { uploadToGCPStorage } from '@/lib/gcp-storage';
 import { compressImage, getOptimalCompressionSettings } from '@/lib/image-compression';
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '100mb',
-    },
-  },
-};
+export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
   try {
