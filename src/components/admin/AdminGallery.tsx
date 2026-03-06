@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Container from '../ui/Container';
 import { supabase } from '../../lib/supabase';
 import { Plus, Pencil, AlertTriangle, Calendar, MapPin, X, Star, ArrowLeft } from 'lucide-react';
@@ -8,6 +8,7 @@ import ScrollReveal from '../animations/ScrollReveal';
 import TextReveal from '../animations/TextReveal';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import FileUploader from '../ui/FileUploader';
 
 interface GalleryImage {
   id: string;
@@ -49,7 +50,7 @@ export default function AdminGallery() {
     primaryImageUrl: '',
     images: []
   });
-  const [bulkImageUrls, setBulkImageUrls] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchEvents();
@@ -235,19 +236,40 @@ export default function AdminGallery() {
     }));
   };
 
-  const handleBulkImageImport = () => {
-    if (!bulkImageUrls.trim()) return;
-    
-    const urls = bulkImageUrls.split(',').map(url => url.trim()).filter(url => url);
-    
-    const newImages = urls.map(url => ({ url, caption: '' }));
-    setFormData(prev => ({
-      ...prev,
-      images: [...prev.images, ...newImages]
-    }));
-    
-    setBulkImageUrls('');
-  };
+  const uploadGalleryImages = useCallback(async (files: File[]): Promise<string[]> => {
+    setUploading(true);
+    try {
+      const body = new FormData();
+      files.forEach(file => body.append('images', file));
+
+      const res = await fetch('/api/upload-gallery-image', { method: 'POST', body });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      return data.urls as string[];
+    } finally {
+      setUploading(false);
+    }
+  }, []);
+
+  const handlePrimaryImageUpload = useCallback(async (files: File[]): Promise<string[]> => {
+    const urls = await uploadGalleryImages(files);
+    if (urls.length > 0) {
+      setFormData(prev => ({ ...prev, primaryImageUrl: urls[0] }));
+    }
+    return urls;
+  }, [uploadGalleryImages]);
+
+  const handleAdditionalImagesUpload = useCallback(async (files: File[]): Promise<string[]> => {
+    const urls = await uploadGalleryImages(files);
+    if (urls.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, ...urls.map(url => ({ url, caption: '' }))]
+      }));
+    }
+    return urls;
+  }, [uploadGalleryImages]);
 
   const safeRemoveImage = (index: number) => {
     console.log('Attempting to remove image at index:', index);
@@ -521,80 +543,72 @@ export default function AdminGallery() {
 
               {/* Primary Image Section */}
               <div className="border border-primary rounded-lg p-4 bg-primary-light/10">
-                <h3 className="text-lg font-semibold text-primary mb-4">Primary Image</h3>
-                <div>
-                  <label className="block text-neutral-dark mb-2">Primary Image URL <span className="text-red-500">*</span></label>
-                  <input
-                    type="url"
-                    value={formData.primaryImageUrl}
-                    onChange={(e) => setFormData(prev => ({ ...prev, primaryImageUrl: e.target.value }))}
-                    placeholder="https://drive.google.com/uc?export=view&id=YOUR_FILE_ID"
-                    className="w-full px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
-                    required
-                  />
-                </div>
-                
-                {formData.primaryImageUrl && (
-                  <div className="mt-4">
-                    <p className="text-sm text-neutral-dark/70 mb-2">Image Preview:</p>
-                    <div className="aspect-video relative rounded-lg overflow-hidden border border-neutral-dark/20">
-                      <img 
-                        src={formData.primaryImageUrl} 
-                        alt="Primary image preview" 
+                <h3 className="text-lg font-semibold text-primary mb-4">Primary Image <span className="text-red-500">*</span></h3>
+
+                {formData.primaryImageUrl ? (
+                  <div>
+                    <div className="aspect-video relative rounded-lg overflow-hidden border border-neutral-dark/20 mb-3">
+                      <img
+                        src={formData.primaryImageUrl}
+                        alt="Primary image preview"
                         className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Invalid+Image+URL';
-                        }}
                       />
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, primaryImageUrl: '' }))}
+                        className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                        title="Remove image"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
                     </div>
+                    <p className="text-xs text-neutral-dark/50 truncate">{formData.primaryImageUrl}</p>
                   </div>
+                ) : (
+                  <FileUploader
+                    label="Upload primary image"
+                    description="JPEG, PNG, or WebP up to 10MB"
+                    accept="image/*"
+                    maxSize={10 * 1024 * 1024}
+                    maxFiles={1}
+                    multiple={false}
+                    onUpload={handlePrimaryImageUpload}
+                    disabled={uploading}
+                  />
                 )}
               </div>
               
               {/* Additional Images Section */}
               <div className="border border-neutral-dark/20 rounded-lg p-4">
                 <h3 className="text-lg font-semibold mb-4">Additional Images</h3>
-                
-                <div className="p-4 bg-yellow-50 rounded-lg mb-4">
-                  <label className="block text-neutral-dark mb-2">
-                    Bulk Add Images (comma-separated URLs)
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={bulkImageUrls}
-                      onChange={(e) => setBulkImageUrls(e.target.value)}
-                      placeholder="url1, url2, url3, ..."
-                      className="flex-1 px-4 py-2 rounded-lg border border-neutral-dark/20 focus:outline-hidden focus:ring-2 focus:ring-primary"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleBulkImageImport}
-                      className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors whitespace-nowrap"
-                    >
-                      Add All
-                    </button>
-                  </div>
-                </div>
-                
+
+                <FileUploader
+                  label="Upload additional images"
+                  description="JPEG, PNG, or WebP up to 10MB each. You can select multiple files."
+                  accept="image/*"
+                  maxSize={10 * 1024 * 1024}
+                  maxFiles={50}
+                  multiple={true}
+                  onUpload={handleAdditionalImagesUpload}
+                  disabled={uploading}
+                />
+
                 {formData.images.length > 0 ? (
                   <div>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mt-4">
+                    <p className="text-sm text-neutral-dark/70 mt-4 mb-2">{formData.images.length} image(s) added</p>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
                       {formData.images.map((image, index) => (
                         <div key={index} className="relative aspect-square group">
-                          <img 
-                            src={image.url} 
+                          <img
+                            src={image.url}
                             alt={`Gallery image ${index + 1}`}
                             className="w-full h-full object-cover rounded-lg border border-neutral-dark/20"
-                            onError={(e) => {
-                              e.currentTarget.src = 'https://via.placeholder.com/300x300?text=Invalid+Image';
-                            }}
                           />
-                          
+
                           <div className="absolute inset-x-0 bottom-0 bg-neutral-dark/60 text-neutral-light p-1 text-xs truncate">
                             {image.caption || 'No caption'}
                           </div>
-                          
+
                           <div className="absolute inset-0 bg-neutral-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                             <button
                               type="button"
@@ -627,7 +641,7 @@ export default function AdminGallery() {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-neutral-dark/50 italic text-center py-4">No additional images added yet.</p>
+                  <p className="text-neutral-dark/50 italic text-center py-4 mt-4">No additional images added yet.</p>
                 )}
               </div>
 
@@ -641,9 +655,10 @@ export default function AdminGallery() {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-primary text-neutral-light rounded-lg hover:bg-primary-dark transition-colors"
+                  disabled={uploading}
+                  className="px-6 py-2 bg-primary text-neutral-light rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {editingEvent ? 'Update Event' : 'Create Event'}
+                  {uploading ? 'Uploading...' : editingEvent ? 'Update Event' : 'Create Event'}
                 </button>
               </div>
             </form>  
