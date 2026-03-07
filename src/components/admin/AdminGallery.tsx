@@ -595,7 +595,7 @@ export default function AdminGallery() {
                   description="JPEG, PNG, or WebP up to 10MB each. You can select multiple files."
                   accept="image/*"
                   maxSize={10 * 1024 * 1024}
-                  maxFiles={50}
+                  maxFiles={999}
                   multiple={true}
                   onUpload={handleAdditionalImagesUpload}
                   disabled={uploading}
